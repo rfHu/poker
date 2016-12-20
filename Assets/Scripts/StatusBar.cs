@@ -14,17 +14,17 @@ public class StatusBar : MonoBehaviour {
 		power.text = ((int) GetBatteryLevel()).ToString() + "%";
 	}
 
-	void OnGUI()
-	{
-		Color color = new Color(255, 255, 255, 255);
-		Texture2D texture = new Texture2D(1, 1);
-		texture.SetPixels(new Color[]{color});
-		texture.Apply();
+	// void OnGUI()
+	// {
+	// 	Color color = new Color(255, 255, 255, 255);
+	// 	Texture2D texture = new Texture2D(1, 1);
+	// 	texture.SetPixels(new Color[]{color});
+	// 	texture.Apply();
 
-		GUIStyle style = new GUIStyle(GUI.skin.box);
-		style.normal.background = texture;
-		GUI.Box(new Rect(0, 0, 100, 100), "", style);
-	}
+	// 	GUIStyle style = new GUIStyle(GUI.skin.box);
+	// 	style.normal.background = texture;
+	// 	GUI.Box(new Rect(0, 0, 50, 30), "", style);
+	// }
 
 	public static float GetBatteryLevel()
     {
