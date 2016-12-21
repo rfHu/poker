@@ -16,7 +16,7 @@ public class Controller : MonoBehaviour {
 			buttons.Add (copySeat);
 		}
 
-		Vector2[] vectors = getVectors (numberOfPlayers);
+		Vector2[] vectors = GetVectors (numberOfPlayers);
 		int iter = 0;
 
 		foreach(Button button in buttons) {
@@ -26,7 +26,7 @@ public class Controller : MonoBehaviour {
 	}
 
 	// 逆时针生成位置信息
-	Vector2[] getVectors(int total) {
+	Vector2[] GetVectors(int total) {
 		float width = canvas.GetComponent<RectTransform>().rect.width;
 		float height = canvas.GetComponent<RectTransform>().rect.height;
 
@@ -104,5 +104,5 @@ public class Controller : MonoBehaviour {
 		return new Vector2[]{};
 	}
 
-	
+
 }
