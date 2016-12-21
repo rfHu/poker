@@ -9,16 +9,13 @@ public class UIManager : MonoBehaviour {
 	public Canvas canvas;
 	public GameObject mask;
 
-	public void HideMenu() {
-		menu.GetComponent<Animator>().SetBool("Show", false);
-	}
-
 	public void ShowMenu() {
 		menu.GetComponent<Animator>().SetBool("Show", true);
 		mask.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
 	}
 
 	public void ClickMask() {
-		Debug.Log("Click mask");
+		mask.GetComponent<RectTransform>().localScale = new Vector3(0, 1, 1);
+		menu.GetComponent<Animator>().SetBool("Show", false);
 	}
 }
