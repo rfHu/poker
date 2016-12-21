@@ -6,7 +6,8 @@ public class UIManager : MonoBehaviour {
 	}
 
 	// public GameObject menu;
-
+	public Canvas canvas;
+	
 	public void hideMenu() {
 		// Animation anim = menu.GetComponent<Animation>();
 		// anim.Play("Dropup");			
