@@ -5,16 +5,14 @@ public class UIManager : MonoBehaviour {
 
 	}
 
-	// public GameObject menu;
+	public GameObject menu;
 	public Canvas canvas;
-	
+
 	public void hideMenu() {
-		// Animation anim = menu.GetComponent<Animation>();
-		// anim.Play("Dropup");			
+		menu.GetComponent<Animator>().SetBool("Show", false);
 	}
 
 	public void showMenu() {
-		// Animation anim = menu.GetComponent<Animation>();
-		// anim.Play("Dropdown");
+		menu.GetComponent<Animator>().SetBool("Show", true);
 	}
 }
