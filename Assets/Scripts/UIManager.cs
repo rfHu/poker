@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour {
 	public GameObject menu;
 	public Canvas canvas;
 	public GameObject mask;
+	public GameObject cardTipPanel;
 
 	public void ShowMenu() {
 		menu.GetComponent<Animator>().SetBool("Show", true);
@@ -27,11 +28,12 @@ public class UIManager : MonoBehaviour {
 		Application.Quit();
 	}
 
-	public void CardTip() {
-		Debug.Log("Tip");
-	}
-
 	public void Supplement() {
 		Debug.Log("Supplement");
+	}
+
+	public void CardTip() {
+		menu.GetComponent<Animator>().SetBool("Show", false);
+		cardTipPanel.GetComponent<Animator>().SetBool("ShowCard", true);
 	}
 }

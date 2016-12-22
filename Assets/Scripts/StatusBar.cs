@@ -34,11 +34,12 @@ public class StatusBar : MonoBehaviour {
 	public static float GetBatteryLevel()
     {
         #if UNITY_IOS
-        UIDevice device = UIDevice.CurrentDevice();
-        device.batteryMonitoringEnabled = true; // need to enable this first
-        Debug.Log("Battery state: " + device.batteryState);
-        Debug.Log("Battery level: " + device.batteryLevel);
-        return device.batteryLevel*100;
+		return 100f;
+        // UIDevice device = UIDevice.CurrentDevice();
+        // device.batteryMonitoringEnabled = true; // need to enable this first
+        // Debug.Log("Battery state: " + device.batteryState);
+        // Debug.Log("Battery level: " + device.batteryLevel);
+        // return device.batteryLevel*100;
         #elif UNITY_ANDROID
  
         if (Application.platform == RuntimePlatform.Android)
