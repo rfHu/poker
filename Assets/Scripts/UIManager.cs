@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System;
+using UnityEngine.EventSystems;
 
 public class UIManager : MonoBehaviour {
 	public void SelectMenu() {
@@ -7,18 +9,30 @@ public class UIManager : MonoBehaviour {
 
 	public GameObject menu;
 	public Canvas canvas;
-	public GameObject mask;
+	public GameObject maskPrefab;
 	public GameObject cardTipPanel;
 	public GameObject scorePage;
+	public Canvas frontCanvas;
 
-	public void ShowMenu() {
-		menu.GetComponent<Animator>().SetBool("Show", true);
-		mask.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+	void showMask(Action callback) {
+		GameObject mask = Instantiate(maskPrefab);
+		mask.transform.SetParent(frontCanvas.transform, false);
+		EventTrigger trigger = mask.GetComponent<EventTrigger>();
+		EventTrigger.Entry entry = new EventTrigger.Entry();
+		entry.eventID = EventTriggerType.PointerClick;
+		entry.callback.AddListener((eventData) => {
+			callback();
+			Destroy(mask);
+		}); 
+		trigger.triggers.Add(entry);
 	}
 
-	public void ClickMask() {
-		mask.GetComponent<RectTransform>().localScale = new Vector3(0, 1, 1);
-		menu.GetComponent<Animator>().SetBool("Show", false);
+	public void ShowMenu() {
+		Animator anim = menu.GetComponent<Animator>();
+		anim.SetBool("Show", true);
+		showMask(() => {
+			anim.SetBool("Show", false);
+		});
 	}
 
 	public void Standup() {
@@ -40,5 +54,13 @@ public class UIManager : MonoBehaviour {
 	public void CardTip() {
 		menu.GetComponent<Animator>().SetBool("Show", false);
 		cardTipPanel.GetComponent<Animator>().SetBool("ShowCard", true);
+	}
+
+	public void ToggleMute() {
+		if (AudioListener.volume > 0) {
+			AudioListener.volume = 0;
+		} else {
+			AudioListener.volume = 1;
+		}
 	}
 }
