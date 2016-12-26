@@ -12,11 +12,11 @@ public class UIManager : MonoBehaviour {
 	public GameObject maskPrefab;
 	public GameObject cardTipPanel;
 	public GameObject scorePage;
-	public Canvas frontCanvas;
+	public Canvas popupCanvas;
 
-	void showMask(Action callback) {
+	GameObject ShowMask(Action callback) {
 		GameObject mask = Instantiate(maskPrefab);
-		mask.transform.SetParent(frontCanvas.transform, false);
+		mask.transform.SetParent(canvas.transform, false);
 		EventTrigger trigger = mask.GetComponent<EventTrigger>();
 		EventTrigger.Entry entry = new EventTrigger.Entry();
 		entry.eventID = EventTriggerType.PointerClick;
@@ -25,14 +25,13 @@ public class UIManager : MonoBehaviour {
 			Destroy(mask);
 		}); 
 		trigger.triggers.Add(entry);
+
+		return mask;
 	}
 
 	public void ShowMenu() {
 		Animator anim = menu.GetComponent<Animator>();
-		anim.SetBool("Show", true);
-		showMask(() => {
-			anim.SetBool("Show", false);
-		});
+		ShowPage(anim);		
 	}
 
 	public void Standup() {
@@ -48,12 +47,29 @@ public class UIManager : MonoBehaviour {
 	}
 
 	public void ScorePage() {
-		scorePage.GetComponent<Animator>().SetBool("Show", true);
+		Animator anim = scorePage.GetComponent<Animator>();
+		ShowPage(anim);
 	}
 
 	public void CardTip() {
+		Animator anim = cardTipPanel.GetComponent<Animator>();
+		ShowPage(anim);
+
+		// 隐藏menu和上一个遮罩
 		menu.GetComponent<Animator>().SetBool("Show", false);
-		cardTipPanel.GetComponent<Animator>().SetBool("ShowCard", true);
+		GameObject obj = GameObject.Find("Mask(Clone)");		
+		Destroy(obj);
+	}
+
+	void ShowPage(Animator anim, Action callback = null) {
+		anim.SetBool("Show", true);
+
+		ShowMask(() => {
+			anim.SetBool("Show", false);
+			if (callback != null) {
+				callback();
+			}
+		});		
 	}
 
 	public void ToggleMute() {
