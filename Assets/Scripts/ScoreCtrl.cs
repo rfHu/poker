@@ -5,6 +5,7 @@ using System.Linq;
 
 public class ScoreCtrl : MonoBehaviour {
 	public GameObject scoreEntry;
+	public GameObject lookHeader;
 	public GameObject viewport;
 	List<Dictionary<string, object>> playerScoreList = new List<Dictionary<string, object>>();
 
@@ -23,10 +24,11 @@ public class ScoreCtrl : MonoBehaviour {
 		foreach(Dictionary<string, object> player in playerScoreList) {
 			 GameObject  entry = Instantiate(scoreEntry);
 			 entry.transform.Find("Name").GetComponent<Text>().text = (string)player["name"];
-			 entry.transform.Find("Total").GetComponent<Text>().text = ((int)player["buy"]).ToString(); 
-			 entry.transform.Find("Score").GetComponent<Text>().text = ((int)player["gain"]).ToString();
-
+			 entry.transform.Find("Total").GetComponent<Text>().text = player["buy"].ToString(); 
+			 entry.transform.Find("Score").GetComponent<Text>().text = player["gain"].ToString();
 			 entry.transform.SetParent(viewport.transform, false);
 		}
+
+		Instantiate(lookHeader).transform.SetParent(viewport.transform, false);
 	}
 }
