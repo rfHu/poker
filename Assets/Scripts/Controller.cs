@@ -153,12 +153,12 @@ public class Controller : MonoBehaviour {
 		playerObject.transform.SetParent(canvas.transform,  false);
 		playerObject.GetComponent<RectTransform>().localPosition = vector;
 
-		DownloadImage(rawImage, player.avatar);
+		StartCoroutine(DownloadAvatar(rawImage, player.avatar));
 	}
 
-	IEnumerator<WWW> DownloadImage(RawImage img, string url) {
+	IEnumerator<WWW> DownloadAvatar(RawImage img, string url) {
 		WWW www = new WWW(url);
 		yield return www;
-		img.texture = www.texture;
+		img.texture = Extension.Circular(www.texture);
 	}		
 }
