@@ -7,7 +7,10 @@ public class ScoreCtrl : MonoBehaviour {
 	public GameObject scoreEntry;
 	public GameObject lookHeader;
 	public GameObject viewport;
+	public RawImage imagePrefab;
 	List<Dictionary<string, object>> playerScoreList = new List<Dictionary<string, object>>();
+
+
 
 	void Start()
 	{
@@ -30,5 +33,13 @@ public class ScoreCtrl : MonoBehaviour {
 		}
 
 		Instantiate(lookHeader).transform.SetParent(viewport.transform, false);
+		StartCoroutine(DownloadImage());
+	}
+
+	IEnumerator<WWW> DownloadImage() {
+		string url = "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3081053742,1983158129&fm=116&gp=0.jpg";
+		WWW www = new WWW(url);
+		yield return www;
+		imagePrefab.texture = Extension.Circular(www.texture);
 	}
 }

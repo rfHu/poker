@@ -116,14 +116,6 @@ public class Controller : MonoBehaviour {
 		return new Vector2[]{};
 	}
 
-	IEnumerator<WWW> DownloadImage(string url) {
-		WWW www = new WWW(url);
-		yield return www;
-
-		Renderer renderer = GetComponent<Renderer>();
-		renderer.material.mainTexture = www.texture;
-	}
-
 	void ShowGameInfo() {
 		gameInfoDictionary = new Dictionary<string, object>{
 			{"sb", 10},
