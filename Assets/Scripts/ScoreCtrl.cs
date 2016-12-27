@@ -37,8 +37,6 @@ public class ScoreCtrl : MonoBehaviour {
 
 		Instantiate(lookHeader).transform.SetParent(viewport.transform, false);
 
-		Debug.Log(viewport.GetComponent<RectTransform>().rect.width);
-
 		// 每个item相距30，两边留20
 		float width = 150;
 		float height = 170;
