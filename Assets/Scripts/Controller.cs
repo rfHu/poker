@@ -127,8 +127,8 @@ public class Controller : MonoBehaviour {
 
 		
 		AddGameInfo("[德州高手]");
-		AddGameInfo("注入:10/20/40");
-		AddGameInfo("IP及GPS限制");
+		AddGameInfo("盲注:10/20/40");
+		// AddGameInfo("IP、GPS限制");
 	}
 
 	void AddGameInfo(string text) {

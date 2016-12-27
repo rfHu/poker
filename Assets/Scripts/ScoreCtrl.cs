@@ -7,7 +7,10 @@ public class ScoreCtrl : MonoBehaviour {
 	public GameObject scoreEntry;
 	public GameObject lookHeader;
 	public GameObject viewport;
-	public RawImage imagePrefab;
+	public GameObject lookerPrefab;
+
+	public GameObject lookerGridLayout;
+
 	List<Dictionary<string, object>> playerScoreList = new List<Dictionary<string, object>>();
 
 
@@ -33,13 +36,31 @@ public class ScoreCtrl : MonoBehaviour {
 		}
 
 		Instantiate(lookHeader).transform.SetParent(viewport.transform, false);
-		StartCoroutine(DownloadImage());
+
+		Debug.Log(viewport.GetComponent<RectTransform>().rect.width);
+
+		// 每个item相距30，两边留20
+		float width = 150;
+		float height = 170;
+		GridLayoutGroup gridLayout = Instantiate(lookerGridLayout).GetComponent<GridLayoutGroup>();
+		gridLayout.cellSize = new Vector2(width, height);
+		gridLayout.transform.SetParent(viewport.transform, false);
+
+		for (var i = 0; i < 10; i++) {
+			GameObject obj = Instantiate(lookerPrefab);
+			
+			RawImage img = obj.transform.Find("RawImage").GetComponent<RawImage>();
+			StartCoroutine(DownloadImage(img));
+			obj.transform.Find("Text").GetComponent<Text>().text = "我是大番薯";
+
+			obj.transform.SetParent(gridLayout.transform, false);
+		}
 	}
 
-	IEnumerator<WWW> DownloadImage() {
+	IEnumerator<WWW> DownloadImage(RawImage img) {
 		string url = "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3081053742,1983158129&fm=116&gp=0.jpg";
 		WWW www = new WWW(url);
 		yield return www;
-		imagePrefab.texture = Extension.Circular(www.texture);
+		img.texture = Extension.Circular(www.texture);
 	}
 }
