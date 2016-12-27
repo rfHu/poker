@@ -14,6 +14,8 @@ public class UIManager : MonoBehaviour {
 	public GameObject scorePage;
 	public Canvas popupCanvas;
 
+	public GameObject startButton;
+
 	GameObject ShowMask(Action callback) {
 		GameObject mask = Instantiate(maskPrefab);
 		mask.transform.SetParent(canvas.transform, false);
@@ -78,5 +80,9 @@ public class UIManager : MonoBehaviour {
 		} else {
 			AudioListener.volume = 1;
 		}
+	}
+
+	public void StartGame() {
+		Destroy(startButton);
 	}
 }

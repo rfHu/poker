@@ -7,6 +7,11 @@ public class Controller : MonoBehaviour {
 	public Button seat;
 	public Canvas canvas;
 
+	public GameObject gameInfo;
+	public GameObject gameInfoParent;
+
+	public Dictionary<string, object> gameInfoDictionary;
+
 	void Start () {
 		List<Button> buttons = new List<Button>();
 
@@ -22,7 +27,14 @@ public class Controller : MonoBehaviour {
 		foreach(Button button in buttons) {
 			button.GetComponent<RectTransform> ().localPosition = vectors[iter] ;
 			iter++;
+
+			int identifer = iter;
+			button.onClick.AddListener(() => {
+				
+			});
 		}
+
+		ShowGameInfo();
 	}
 
 	// 逆时针生成位置信息
@@ -104,5 +116,32 @@ public class Controller : MonoBehaviour {
 		return new Vector2[]{};
 	}
 
+	IEnumerator<WWW> DownloadImage(string url) {
+		WWW www = new WWW(url);
+		yield return www;
 
+		Renderer renderer = GetComponent<Renderer>();
+		renderer.material.mainTexture = www.texture;
+	}
+
+	void ShowGameInfo() {
+		gameInfoDictionary = new Dictionary<string, object>{
+			{"sb", 10},
+			{"bb", 20},
+			{"owner", "singno"},
+			{"IP", true},
+			{"GPS", true}
+		};
+
+		
+		AddGameInfo("[德州高手]");
+		AddGameInfo("注入:10/20/40");
+		AddGameInfo("IP及GPS限制");
+	}
+
+	void AddGameInfo(string text) {
+		GameObject label = Instantiate(gameInfo);
+		label.GetComponent<Text>().text = text;
+		label.transform.SetParent(gameInfoParent.transform, false);
+	}		
 }
