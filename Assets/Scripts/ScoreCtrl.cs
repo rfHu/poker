@@ -59,6 +59,6 @@ public class ScoreCtrl : MonoBehaviour {
 		string url = "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3081053742,1983158129&fm=116&gp=0.jpg";
 		WWW www = new WWW(url);
 		yield return www;
-		img.texture = Extension.Circular(www.texture);
+		img.texture = Ext.Circular(www.texture);
 	}
 }

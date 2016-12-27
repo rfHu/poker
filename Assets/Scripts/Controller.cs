@@ -148,17 +148,19 @@ public class Controller : MonoBehaviour {
 
 		GameObject playerObject = Instantiate(playerPrefab);
 		playerObject.transform.Find("Name").GetComponent<Text>().text = player.name ;
-		playerObject.transform.Find("Button").transform.Find("Coins").GetComponent<Text>().text = player.score.ToString();
-		RawImage rawImage = playerObject.transform.Find("AvatarBg").Find("Avatar").GetComponent<RawImage>();
+		playerObject.transform.Find("Button").Find("Coins").GetComponent<Text>().text = player.score.ToString();
+		Transform avbg = playerObject.transform.Find("AvatarBg");
+		RawImage rawImage = avbg.Find("Avatar").GetComponent<RawImage>();
 		playerObject.transform.SetParent(canvas.transform,  false);
 		playerObject.GetComponent<RectTransform>().localPosition = vector;
 
+		// Ext.Circular(avbg.GetComponent<RawImage>().texture);
 		StartCoroutine(DownloadAvatar(rawImage, player.avatar));
 	}
 
 	IEnumerator<WWW> DownloadAvatar(RawImage img, string url) {
 		WWW www = new WWW(url);
 		yield return www;
-		img.texture = Extension.Circular(www.texture);
+		img.texture = Ext.Circular(www.texture);
 	}		
 }

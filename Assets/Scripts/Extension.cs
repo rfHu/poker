@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Extension {
+public class Ext {
     static public Texture2D Circular(Texture2D sourceTex)
     {
         Color[] c = sourceTex.GetPixels(0, 0, sourceTex.width, sourceTex.height);
