@@ -11,6 +11,7 @@ public class Controller : MonoBehaviour {
 	public GameObject gameInfoParent;
 
 	public Dictionary<string, object> gameInfoDictionary;
+	public GameObject playerPrefab;
 
 	void Start () {
 		List<Button> buttons = new List<Button>();
@@ -29,8 +30,12 @@ public class Controller : MonoBehaviour {
 
 			int identifer = iter;
 			Vector2 vector = vectors[identifer];
+
 			button.onClick.AddListener(() => {
-				// ShowPlayer(vector);	
+				GameObject playerObject = Instantiate(playerPrefab);
+				playerObject.GetComponent<PlayerObject>().ShowPlayer();
+				playerObject.transform.SetParent(canvas.transform,  false);
+				playerObject.GetComponent<RectTransform>().localPosition = vector;
 			});
 
 			iter++;

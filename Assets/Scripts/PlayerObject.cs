@@ -3,31 +3,33 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerObject : MonoBehaviour {
-	public GameObject playerPrefab;
-	public Canvas canvas;
-	Player player;
+	public Player player;
+	
+	Text nameLabel;
+	Text scoreLabel;
+	GameObject countdown;
 
-	PlayerObject(Player player, Vector2 vector) {
-		this.player = player;
-		ShowPlayer(vector);
+	public int thinkingSeconds = 15;
+
+	void Awake() {
+		nameLabel = transform.Find("Name").GetComponent<Text>();
+		scoreLabel = transform.Find("Button").Find("Coins").GetComponent<Text>();
+		countdown = transform.Find("Circle").Find("InnerCircle").gameObject;
+
+		// 倒计时隐藏
+		countdown.GetComponent<Image>().enabled = false;
 	}
 
-	GameObject ShowPlayer(Vector2 vector) {
+	public void ShowPlayer() {
 		Player player = new Player();	
 		player.avatar = "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3081053742,1983158129&fm=116&gp=0.jpg";
 		player.name = "singno";
 		player.score = 50000;
 
-		GameObject playerObject = Instantiate(playerPrefab);
-		playerObject.transform.Find("Name").GetComponent<Text>().text = player.name ;
-		playerObject.transform.Find("Button").Find("Coins").GetComponent<Text>().text = player.score.ToString();
-		RawImage rawImage = playerObject.transform.Find("Circle").Find("Avatar").GetComponent<RawImage>();
-		playerObject.transform.SetParent(canvas.transform,  false);
-		playerObject.GetComponent<RectTransform>().localPosition = vector;
-
+		nameLabel.text = player.name;
+		scoreLabel.text = player.score.ToString();
+		RawImage rawImage = transform.Find("Circle").Find("Avatar").GetComponent<RawImage>();
 		StartCoroutine(DownloadAvatar(rawImage, player.avatar));
-
-		return playerObject;
 	}
 
 	IEnumerator<WWW> DownloadAvatar(RawImage img, string url) {
