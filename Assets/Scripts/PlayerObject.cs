@@ -13,16 +13,12 @@ public class PlayerObject : MonoBehaviour {
 	public int thinkingSeconds = 15;
 
 	void Awake() {
-		// nameLabel = transform.Find("Name").GetComponent<Text>();
-		// scoreLabel = transform.Find("Button").Find("Coins").GetComponent<Text>();
-		// countdown = transform.Find("Circle").Find("InnerCircle").gameObject;
+		nameLabel = transform.Find("Name").GetComponent<Text>();
+		scoreLabel = transform.Find("Button").Find("Coins").GetComponent<Text>();
+		countdown = transform.Find("Circle").Find("InnerCircle").gameObject;
 
-		// // 倒计时隐藏
-		// countdown.GetComponent<Image>().enabled = false;
-
-		GetComponent<Variables>().GetVariables()[0].SetValue(100);
-		Debug.Log(GetComponent<Variables>().GetVariables()[0].GetValue(1));
-
+		// 倒计时隐藏
+		countdown.GetComponent<Image>().enabled = false;
 	}
 
 	public void ShowPlayer() {
