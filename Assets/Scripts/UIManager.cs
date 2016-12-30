@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using UnityEngine.EventSystems;
+using DG.Tweening;
 
 public class UIManager : MonoBehaviour {
 	public void SelectMenu() {
@@ -13,6 +14,7 @@ public class UIManager : MonoBehaviour {
 	public GameObject cardTipPanel;
 	public GameObject scorePage;
 	public Canvas popupCanvas;
+	public GameObject recallPage;
 
 	public GameObject startButton;
 
@@ -82,7 +84,12 @@ public class UIManager : MonoBehaviour {
 		}
 	}
 
-	public void StartGame() {
-		Destroy(startButton);
+	public void ShowRecalls() {
+		DOTweenAnimation anim = recallPage.GetComponent<DOTweenAnimation>();
+		anim.DOPlayById("Show");
+
+		ShowMask(() => {
+			anim.DOPlayById("Hide");			
+		});
 	}
 }
