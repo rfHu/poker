@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Deck : MonoBehaviour {
+public class BackgroundFit : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		SpriteRenderer sprite = GetComponent<SpriteRenderer> ();
