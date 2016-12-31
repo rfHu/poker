@@ -15,7 +15,7 @@ public class UIManager : MonoBehaviour {
 	public GameObject scorePage;
 	public Canvas popupCanvas;
 	public GameObject recallPage;
-
+	public GameObject supplementPopup;
 	public GameObject startButton;
 
 	GameObject ShowMask(Action callback) {
@@ -47,7 +47,9 @@ public class UIManager : MonoBehaviour {
 	}
 
 	public void Supplement() {
-		Debug.Log("Supplement");
+		DOTweenAnimation anim = supplementPopup.GetComponent<DOTweenAnimation>();
+		ShowTween(anim);
+		HideMenu();	
 	}
 
 	public void ScorePage() {
@@ -58,7 +60,10 @@ public class UIManager : MonoBehaviour {
 	public void CardTip() {
 		Animator anim = cardTipPanel.GetComponent<Animator>();
 		ShowPage(anim);
+		HideMenu();
+	}
 
+	void HideMenu() {
 		// 隐藏menu和上一个遮罩
 		menu.GetComponent<Animator>().SetBool("Show", false);
 		GameObject obj = GameObject.Find("Mask(Clone)");		
@@ -86,10 +91,14 @@ public class UIManager : MonoBehaviour {
 
 	public void ShowRecalls() {
 		DOTweenAnimation anim = recallPage.GetComponent<DOTweenAnimation>();
-		anim.DOPlayById("Show");
+		ShowTween(anim);
+	}
+
+	void ShowTween(DOTweenAnimation anim) {
+		anim.DORestartById("Show") ;
 
 		ShowMask(() => {
-			anim.DOPlayById("Hide");			
+			anim.DORestartById("Hide");			
 		});
 	}
 }
