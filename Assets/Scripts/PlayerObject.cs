@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using GameFlow;
+using System.Collections;
 
 public class PlayerObject : MonoBehaviour {
 	public Player player;
@@ -10,7 +10,8 @@ public class PlayerObject : MonoBehaviour {
 	Text scoreLabel;
 	GameObject countdown;
 
-	public int thinkingSeconds = 15;
+	public bool activated = false;
+	public float thinkTime = 15;
 
 	void Awake() {
 		nameLabel = transform.Find("Name").GetComponent<Text>();
@@ -18,7 +19,7 @@ public class PlayerObject : MonoBehaviour {
 		countdown = transform.Find("Circle").Find("InnerCircle").gameObject;
 
 		// 倒计时隐藏
-		countdown.GetComponent<Image>().enabled = false;
+		countdown.SetActive(false);
 	}
 
 	public void ShowPlayer() {
@@ -38,8 +39,19 @@ public class PlayerObject : MonoBehaviour {
 		yield return www;
 		img.texture = Ext.Circular(www.texture);
 	}	
-	
-	void Update () {
-		
+
+	public IEnumerator setActivated(float elaspe) {
+		countdown.SetActive(true);
+		activated = true;
+
+		float time = thinkTime - elaspe;
+		while (time > 0 && activated) {
+			time = time - Time.deltaTime;
+			countdown.GetComponent<Image>().fillAmount = Mathf.Min(1, time / thinkTime);
+			yield return new WaitForFixedUpdate();
+		}
+
+		activated = false;
+		countdown.SetActive(false);
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class Controller : MonoBehaviour {
 	public int numberOfPlayers = 2;
@@ -33,9 +34,13 @@ public class Controller : MonoBehaviour {
 
 			button.onClick.AddListener(() => {
 				GameObject playerObject = Instantiate(playerPrefab);
-				playerObject.GetComponent<PlayerObject>().ShowPlayer();
+				PlayerObject player = playerObject.GetComponent<PlayerObject>();
+
+				player.ShowPlayer();
 				playerObject.transform.SetParent(canvas.transform,  false);
 				playerObject.GetComponent<RectTransform>().localPosition = vector;
+
+				StartCoroutine(player.setActivated(0));				
 			});
 
 			iter++;
