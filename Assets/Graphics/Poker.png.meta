@@ -1,0 +1,887 @@
+fileFormatVersion: 2
+guid: acb32ec7c4af34649ab09bd1857d6947
+timeCreated: 1483428794
+licenseType: Pro
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: "\u6251\u514B_0"
+    21300002: "\u6251\u514B_1"
+    21300004: "\u6251\u514B_2"
+    21300006: "\u6251\u514B_3"
+    21300008: "\u6251\u514B_4"
+    21300010: "\u6251\u514B_5"
+    21300012: "\u6251\u514B_6"
+    21300014: "\u6251\u514B_7"
+    21300016: "\u6251\u514B_8"
+    21300018: "\u6251\u514B_9"
+    21300020: "\u6251\u514B_10"
+    21300022: "\u6251\u514B_11"
+    21300024: "\u6251\u514B_12"
+    21300026: "\u6251\u514B_13"
+    21300028: "\u6251\u514B_14"
+    21300030: "\u6251\u514B_15"
+    21300032: "\u6251\u514B_16"
+    21300034: "\u6251\u514B_17"
+    21300036: "\u6251\u514B_18"
+    21300038: "\u6251\u514B_19"
+    21300040: "\u6251\u514B_20"
+    21300042: "\u6251\u514B_21"
+    21300044: "\u6251\u514B_22"
+    21300046: "\u6251\u514B_23"
+    21300048: "\u6251\u514B_24"
+    21300050: "\u6251\u514B_25"
+    21300052: "\u6251\u514B_26"
+    21300054: "\u6251\u514B_27"
+    21300056: "\u6251\u514B_28"
+    21300058: "\u6251\u514B_29"
+    21300060: "\u6251\u514B_30"
+    21300062: "\u6251\u514B_31"
+    21300064: "\u6251\u514B_32"
+    21300066: "\u6251\u514B_33"
+    21300068: "\u6251\u514B_34"
+    21300070: "\u6251\u514B_35"
+    21300072: "\u6251\u514B_36"
+    21300074: "\u6251\u514B_37"
+    21300076: "\u6251\u514B_38"
+    21300078: "\u6251\u514B_39"
+    21300080: "\u6251\u514B_40"
+    21300082: "\u6251\u514B_41"
+    21300084: "\u6251\u514B_42"
+    21300086: "\u6251\u514B_43"
+    21300088: "\u6251\u514B_44"
+    21300090: "\u6251\u514B_45"
+    21300092: "\u6251\u514B_46"
+    21300094: "\u6251\u514B_47"
+    21300096: "\u6251\u514B_48"
+    21300098: "\u6251\u514B_49"
+    21300100: "\u6251\u514B_50"
+    21300102: "\u6251\u514B_51"
+    21300104: "\u6251\u514B_52"
+    21300106: Poker_0
+    21300108: Poker_1
+    21300110: Poker_2
+    21300112: Poker_3
+    21300114: Poker_4
+    21300116: Poker_5
+    21300118: Poker_6
+    21300120: Poker_7
+    21300122: Poker_8
+    21300124: Poker_9
+    21300126: Poker_10
+    21300128: Poker_11
+    21300130: Poker_12
+    21300132: Poker_13
+    21300134: Poker_14
+    21300136: Poker_15
+    21300138: Poker_16
+    21300140: Poker_17
+    21300142: Poker_18
+    21300144: Poker_19
+    21300146: Poker_20
+    21300148: Poker_21
+    21300150: Poker_22
+    21300152: Poker_23
+    21300154: Poker_24
+    21300156: Poker_25
+    21300158: Poker_26
+    21300160: Poker_27
+    21300162: Poker_28
+    21300164: Poker_29
+    21300166: Poker_30
+    21300168: Poker_31
+    21300170: Poker_32
+    21300172: Poker_33
+    21300174: Poker_34
+    21300176: Poker_35
+    21300178: Poker_36
+    21300180: Poker_37
+    21300182: Poker_38
+    21300184: Poker_39
+    21300186: Poker_40
+    21300188: Poker_41
+    21300190: Poker_42
+    21300192: Poker_43
+    21300194: Poker_44
+    21300196: Poker_45
+    21300198: Poker_46
+    21300200: Poker_47
+    21300202: Poker_48
+    21300204: Poker_49
+    21300206: Poker_50
+    21300208: Poker_51
+    21300210: Poker_52
+  serializedVersion: 4
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: -1
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Standalone
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: iPhone
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Android
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Poker_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 655
+        width: 139
+        height: 201
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_1
+      rect:
+        serializedVersion: 2
+        x: 149
+        y: 655
+        width: 141
+        height: 201
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_2
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 655
+        width: 141
+        height: 201
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_3
+      rect:
+        serializedVersion: 2
+        x: 451
+        y: 655
+        width: 141
+        height: 201
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_4
+      rect:
+        serializedVersion: 2
+        x: 602
+        y: 655
+        width: 140
+        height: 201
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_5
+      rect:
+        serializedVersion: 2
+        x: 753
+        y: 655
+        width: 140
+        height: 201
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_6
+      rect:
+        serializedVersion: 2
+        x: 903
+        y: 655
+        width: 141
+        height: 201
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_7
+      rect:
+        serializedVersion: 2
+        x: 1054
+        y: 655
+        width: 141
+        height: 201
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_8
+      rect:
+        serializedVersion: 2
+        x: 1205
+        y: 655
+        width: 141
+        height: 201
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_9
+      rect:
+        serializedVersion: 2
+        x: 1356
+        y: 655
+        width: 141
+        height: 201
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_10
+      rect:
+        serializedVersion: 2
+        x: 1507
+        y: 655
+        width: 140
+        height: 201
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_11
+      rect:
+        serializedVersion: 2
+        x: 1658
+        y: 655
+        width: 140
+        height: 201
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_12
+      rect:
+        serializedVersion: 2
+        x: 1808
+        y: 655
+        width: 141
+        height: 201
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_13
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 436
+        width: 139
+        height: 203
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_14
+      rect:
+        serializedVersion: 2
+        x: 149
+        y: 436
+        width: 141
+        height: 203
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_15
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 436
+        width: 141
+        height: 203
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_16
+      rect:
+        serializedVersion: 2
+        x: 451
+        y: 436
+        width: 141
+        height: 203
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_17
+      rect:
+        serializedVersion: 2
+        x: 602
+        y: 436
+        width: 140
+        height: 203
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_18
+      rect:
+        serializedVersion: 2
+        x: 753
+        y: 436
+        width: 140
+        height: 203
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_19
+      rect:
+        serializedVersion: 2
+        x: 903
+        y: 436
+        width: 141
+        height: 203
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_20
+      rect:
+        serializedVersion: 2
+        x: 1054
+        y: 436
+        width: 141
+        height: 203
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_21
+      rect:
+        serializedVersion: 2
+        x: 1205
+        y: 436
+        width: 141
+        height: 203
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_22
+      rect:
+        serializedVersion: 2
+        x: 1356
+        y: 436
+        width: 141
+        height: 203
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_23
+      rect:
+        serializedVersion: 2
+        x: 1507
+        y: 436
+        width: 140
+        height: 203
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_24
+      rect:
+        serializedVersion: 2
+        x: 1658
+        y: 436
+        width: 140
+        height: 203
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_25
+      rect:
+        serializedVersion: 2
+        x: 1808
+        y: 436
+        width: 141
+        height: 203
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_26
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 217
+        width: 139
+        height: 203
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_27
+      rect:
+        serializedVersion: 2
+        x: 149
+        y: 217
+        width: 141
+        height: 203
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_28
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 217
+        width: 141
+        height: 203
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_29
+      rect:
+        serializedVersion: 2
+        x: 451
+        y: 217
+        width: 141
+        height: 203
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_30
+      rect:
+        serializedVersion: 2
+        x: 602
+        y: 217
+        width: 140
+        height: 203
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_31
+      rect:
+        serializedVersion: 2
+        x: 753
+        y: 217
+        width: 140
+        height: 203
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_32
+      rect:
+        serializedVersion: 2
+        x: 903
+        y: 217
+        width: 141
+        height: 203
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_33
+      rect:
+        serializedVersion: 2
+        x: 1054
+        y: 217
+        width: 141
+        height: 203
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_34
+      rect:
+        serializedVersion: 2
+        x: 1205
+        y: 217
+        width: 141
+        height: 203
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_35
+      rect:
+        serializedVersion: 2
+        x: 1356
+        y: 217
+        width: 141
+        height: 203
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_36
+      rect:
+        serializedVersion: 2
+        x: 1507
+        y: 217
+        width: 140
+        height: 203
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_37
+      rect:
+        serializedVersion: 2
+        x: 1658
+        y: 217
+        width: 140
+        height: 203
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_38
+      rect:
+        serializedVersion: 2
+        x: 1808
+        y: 217
+        width: 141
+        height: 203
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_39
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 139
+        height: 201
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_40
+      rect:
+        serializedVersion: 2
+        x: 149
+        y: 0
+        width: 141
+        height: 201
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_41
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 0
+        width: 141
+        height: 201
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_42
+      rect:
+        serializedVersion: 2
+        x: 451
+        y: 0
+        width: 141
+        height: 201
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_43
+      rect:
+        serializedVersion: 2
+        x: 602
+        y: 0
+        width: 140
+        height: 201
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_44
+      rect:
+        serializedVersion: 2
+        x: 753
+        y: 0
+        width: 140
+        height: 201
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_45
+      rect:
+        serializedVersion: 2
+        x: 903
+        y: 0
+        width: 141
+        height: 201
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_46
+      rect:
+        serializedVersion: 2
+        x: 1054
+        y: 0
+        width: 141
+        height: 201
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_47
+      rect:
+        serializedVersion: 2
+        x: 1205
+        y: 0
+        width: 141
+        height: 201
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_48
+      rect:
+        serializedVersion: 2
+        x: 1356
+        y: 0
+        width: 141
+        height: 201
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_49
+      rect:
+        serializedVersion: 2
+        x: 1507
+        y: 0
+        width: 140
+        height: 201
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_50
+      rect:
+        serializedVersion: 2
+        x: 1658
+        y: 0
+        width: 140
+        height: 201
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_51
+      rect:
+        serializedVersion: 2
+        x: 1808
+        y: 0
+        width: 141
+        height: 201
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Poker_52
+      rect:
+        serializedVersion: 2
+        x: 1959
+        y: 0
+        width: 141
+        height: 201
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
