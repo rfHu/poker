@@ -34,8 +34,8 @@ public class UIManager : MonoBehaviour {
 	}
 
 	public void ShowMenu() {
-		Animator anim = menu.GetComponent<Animator>();
-		ShowPage(anim);		
+		DOTweenAnimation anim = menu.GetComponent<DOTweenAnimation>();
+		ShowTween(anim);
 	}
 
 	public void Standup() {
@@ -53,19 +53,19 @@ public class UIManager : MonoBehaviour {
 	}
 
 	public void ScorePage() {
-		Animator anim = scorePage.GetComponent<Animator>();
-		ShowPage(anim);
+		DOTweenAnimation anim = scorePage.GetComponent<DOTweenAnimation>();
+		ShowTween(anim);
 	}
 
 	public void CardTip() {
-		Animator anim = cardTipPanel.GetComponent<Animator>();
-		ShowPage(anim);
+		DOTweenAnimation anim = cardTipPanel.GetComponent<DOTweenAnimation>();
+		ShowTween(anim);
 		HideMenu();
 	}
 
 	void HideMenu() {
 		// 隐藏menu和上一个遮罩
-		menu.GetComponent<Animator>().SetBool("Show", false);
+		menu.GetComponent<DOTweenAnimation>().DORestartById("Hide");
 		GameObject obj = GameObject.Find("Mask(Clone)");		
 		Destroy(obj);
 	}
@@ -103,6 +103,6 @@ public class UIManager : MonoBehaviour {
 	}
 
 	public void Supplement() {
-		
+
 	}
 }
