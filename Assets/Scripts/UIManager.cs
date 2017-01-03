@@ -15,7 +15,7 @@ public class UIManager : MonoBehaviour {
 	public GameObject scorePage;
 	public Canvas popupCanvas;
 	public GameObject recallPage;
-	public GameObject supplementPopup;
+	public GameObject userPopup;
 	public GameObject startButton;
 
 	GameObject ShowMask(Action callback) {
@@ -46,8 +46,8 @@ public class UIManager : MonoBehaviour {
 		Application.Quit();
 	}
 
-	public void Supplement() {
-		DOTweenAnimation anim = supplementPopup.GetComponent<DOTweenAnimation>();
+	public void UserInfo() {
+		DOTweenAnimation anim = userPopup.GetComponent<DOTweenAnimation>();
 		ShowTween(anim);
 		HideMenu();	
 	}
@@ -100,5 +100,9 @@ public class UIManager : MonoBehaviour {
 		ShowMask(() => {
 			anim.DORestartById("Hide");			
 		});
+	}
+
+	public void Supplement() {
+		
 	}
 }
