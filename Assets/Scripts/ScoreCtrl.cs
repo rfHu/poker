@@ -17,7 +17,7 @@ public class ScoreCtrl : MonoBehaviour {
 
 	void Start()
 	{
-		foreach(int i in Enumerable.Range(0, 7)) {
+		foreach(int i in Enumerable.Range(0, 30)) {
 			playerScoreList.Add(
 			new Dictionary<string, object>(){
 				{"buy", 100},
