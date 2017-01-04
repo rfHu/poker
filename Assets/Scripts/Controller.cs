@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 
 public class Controller : MonoBehaviour {
 	public int numberOfPlayers = 2;
@@ -47,6 +46,7 @@ public class Controller : MonoBehaviour {
 		}
 
 		ShowGameInfo();
+		Connect.Setup();
 	}
 
 	// 逆时针生成位置信息

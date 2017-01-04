@@ -15,8 +15,8 @@
     <touchDisabledComponents>true</touchDisabledComponents>
     <gameObjectsFoldout>true</gameObjectsFoldout>
     <commonFoldout>false</commonFoldout>
-    <prefabsFoldout>true</prefabsFoldout>
-    <unusedFoldout>true</unusedFoldout>
+    <prefabsFoldout>false</prefabsFoldout>
+    <unusedFoldout>false</unusedFoldout>
     <neatnessFoldout>false</neatnessFoldout>
     <projectSettingsFoldout>true</projectSettingsFoldout>
     <scanGameObjects>true</scanGameObjects>
