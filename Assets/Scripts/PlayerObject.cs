@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.UI.ProceduralImage;
 
 public class PlayerObject : MonoBehaviour {
 	public Player player;
@@ -15,8 +16,8 @@ public class PlayerObject : MonoBehaviour {
 
 	void Awake() {
 		nameLabel = transform.Find("Name").GetComponent<Text>();
-		scoreLabel = transform.Find("Button").Find("Coins").GetComponent<Text>();
-		countdown = transform.Find("Circle").Find("InnerCircle").gameObject;
+		scoreLabel = transform.Find("Coins").Find("Text").GetComponent<Text>();
+		countdown = transform.Find("Circle").Find("Countdown").gameObject;
 
 		// 倒计时隐藏
 		countdown.SetActive(false);
@@ -47,7 +48,7 @@ public class PlayerObject : MonoBehaviour {
 		float time = thinkTime - elaspe;
 		while (time > 0 && activated) {
 			time = time - Time.deltaTime;
-			countdown.GetComponent<Image>().fillAmount = Mathf.Min(1, time / thinkTime);
+			countdown.GetComponent<ProceduralImage>().fillAmount = Mathf.Min(1, time / thinkTime);
 			yield return new WaitForFixedUpdate();
 		}
 
