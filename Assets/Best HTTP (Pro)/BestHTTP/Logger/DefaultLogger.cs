@@ -82,6 +82,7 @@ namespace BestHTTP.Logger
 
         public void Exception(string division, string msg, Exception ex)
         {
+
             if (Level <= Loglevels.Exception)
             {
                 try

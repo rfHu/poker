@@ -1229,8 +1229,9 @@ namespace BestHTTP
         {
             try
             {
-                if (this.Callback != null)
+                if (this.Callback != null) {
                     this.Callback(this, Response);
+                }
             }
             catch (Exception ex)
             {
