@@ -1,6 +1,9 @@
 ﻿using BestHTTP.SocketIO;
 using System;
 using System.Collections.Generic;
+using BestHTTP.SocketIO.Transports;
+using BestHTTP.Cookies;
+using UnityEngine;
 
 public class Connect  {
 	private SocketManager manager;
@@ -11,22 +14,24 @@ public class Connect  {
 	private int seq = 0;
 
 	public Connect() {
+		GameConfig.userToken = "s%3AyqZMe2unwrbWgoK7JfZ8wvrAj_cbCBk5.yCzKvWbZQbYikN5DrozgGB2iRyRjgLsvveCfwwSm42c";
+
 		SocketOptions options = new SocketOptions();
+		options.ConnectWith = TransportTypes.WebSocket;
+
 		manager = new SocketManager(new Uri(url), options);
+		manager.setCookie = (request) => {
+			var cookie = new Cookie("connect.sid", GameConfig.userToken);
+			request.Cookies.Add(cookie);
+		};
 		manager.Socket.On("connect", OnConnect);
+
 		manager.Open();	
 	}
 
 	void OnConnect(Socket socket, Packet packet, params object[] args) {
-		Dictionary<string, object> parameters = new Dictionary<string, object>{
-			{"uid", "u1226"},
-			{"passwd", "110633"}
-		};
-
 		Emit(new Dictionary<string, object>{
-			{"uid", 1},
-			{"f", "login"},
-			{"args", parameters}
+			{"f", "login"}
 		});
 	}
 
