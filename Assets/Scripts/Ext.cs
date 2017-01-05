@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class Ext {
     static public Texture2D Circular(Texture2D sourceTex)
@@ -26,5 +27,12 @@ public class Ext {
         }
         b.Apply();
         return b;
+    }
+
+    static public void Log(Dictionary<string, object> dictionary) {
+        foreach (var item in dictionary)
+        {
+            Debug.Log(string.Format("Key: {0}, Value: {1}", item.Value, item.Key));
+        }
     }
 }

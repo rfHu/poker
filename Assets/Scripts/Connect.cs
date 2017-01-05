@@ -1,6 +1,5 @@
 ﻿using BestHTTP.SocketIO;
 using System;
-using UnityEngine;
 using System.Collections.Generic;
 
 public class Connect  {
@@ -25,7 +24,6 @@ public class Connect  {
 		};
 
 		Emit(new Dictionary<string, object>{
-			{"seq", 3}, 
 			{"uid", 1},
 			{"f", "login"},
 			{"args", parameters}
@@ -36,7 +34,10 @@ public class Connect  {
 		seq++;
 		json["seq"] = seq;
 		manager.Socket.Emit("rpc", json);
-		actions.Add(seq, callback);
+
+		if (callback != null) {
+			actions.Add(seq, callback);
+		}
 	}
 
 	void Close() {
@@ -48,7 +49,15 @@ public class Connect  {
 	public static void Setup() {
 		shared = new Connect();
 		shared.manager.Socket.On("rpc_ret", (socket, packet, args) => {
-			Debug.Log(args);
+			if (args.Length == 0) {
+				return ;
+			}
+			
+			var json = args[0] as Dictionary<string, object>;
+
+			if (json != null) {
+				Ext.Log(json);
+			}
 		});
 	}
 }
