@@ -46,7 +46,6 @@ public class Controller : MonoBehaviour {
 		}
 
 		ShowGameInfo();
-		Connect.Setup();
 	}
 
 	// 逆时针生成位置信息

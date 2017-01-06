@@ -3,13 +3,14 @@ using System;
 using System.Collections.Generic;
 using BestHTTP.SocketIO.Transports;
 using BestHTTP.Cookies;
+using Extensions;
 using UnityEngine;
 
 public class Connect  {
 	private SocketManager manager;
 	private string url = "http://61.143.225.47:7001/socket.io/"; 
 
-	private Dictionary<int, Action> actions;
+	private Dictionary<int, Action<Dictionary<string, object>>> actions = new Dictionary<int, Action<Dictionary<string, object>>>();
 
 	private int seq = 0;
 
@@ -32,10 +33,17 @@ public class Connect  {
 	void OnConnect(Socket socket, Packet packet, params object[] args) {
 		Emit(new Dictionary<string, object>{
 			{"f", "login"}
+		}, (json) => {
+			// 登陆成功，写用户数据
+			SaveUserInfo(json);
 		});
 	}
 
-	public void Emit(Dictionary<string, object> json, Action callback = null) {
+	private void SaveUserInfo(Dictionary<string, object> json) {
+
+	}
+
+	public void Emit(Dictionary<string, object> json, Action<Dictionary<string, object>> callback = null) {
 		seq++;
 		json["seq"] = seq;
 		manager.Socket.Emit("rpc", json);
@@ -53,16 +61,42 @@ public class Connect  {
 
 	public static void Setup() {
 		shared = new Connect();
-		shared.manager.Socket.On("rpc_ret", (socket, packet, args) => {
+		shared._Setup();	
+	}
+
+	private void _Setup() {
+		manager.Socket.On("rpc_ret", (socket, packet, args) => {
 			if (args.Length == 0) {
 				return ;
 			}
+
+			var json = args[0] as Dictionary<string, object>;
 			
+			if (json == null) {
+				return ;
+			}
+
+			int seq = json.IntValue("seq");
+
+			if (actions.ContainsKey(seq)) {
+				actions[seq](json);
+				actions.Remove(seq);
+			} 
+		});
+
+		manager.Socket.On("rpc", (socket, packet, args) => {
+			if (args.Length == 0) {
+				return ;
+			}
+
 			var json = args[0] as Dictionary<string, object>;
 
-			if (json != null) {
-				Ext.Log(json);
+			if (json == null) {
+				return ;
 			}
+
+			
 		});
 	}
 }
+

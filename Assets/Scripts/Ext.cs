@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
+using BestHTTP.JSON;
 
 public class Ext {
     static public Texture2D Circular(Texture2D sourceTex)
@@ -31,18 +32,8 @@ public class Ext {
     }
 
     static public void Log(Dictionary<string,object> dictionary) {
-        foreach (var item in dictionary)
-        {
-            var valueDict = item.Value as Dictionary<string, object>;
-
-            if (valueDict != null) {
-                Debug.Log(string.Format("[{0}] is dictionary", item.Key));
-                Ext.Log(valueDict);
-            } else {
-                Debug.Log(string.Format("Key: {0}, Value: {1}", item.Key, item.Value));
-            } 
-        }
-    }
+        Debug.Log(Json.Encode(dictionary));
+     }
 
     static public bool isDict(object dict) {
         Type t = dict.GetType();
