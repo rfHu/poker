@@ -36,16 +36,37 @@ public class Connect  {
 		}, (json) => {
 			// 登陆成功，写用户数据
 			SaveUserInfo(json);
+
+			// 进入房间
+			EnterRoom();
+		});
+	}
+
+	void EnterRoom() {
+		Emit(new Dictionary<string, object>{
+			{"f", "entergame"},
+			{"args", GameConfig.room}
+		}, (json) => {
+			Ext.Log(json);
 		});
 	}
 
 	private void SaveUserInfo(Dictionary<string, object> json) {
+		var ret = json.Dict("ret");
+		var profile = ret.Dict("profile");
+		var token = ret.Dict("token");
 
+		GameConfig.uid = profile.String("uid");
+		GameConfig.name = profile.String("name");
+		GameConfig.avatar = profile.String("avatar");
+		GameConfig.pin = token.String("pin");
 	}
 
 	public void Emit(Dictionary<string, object> json, Action<Dictionary<string, object>> callback = null) {
 		seq++;
 		json["seq"] = seq;
+		json["pin"] = GameConfig.pin;
+		json["uid"] = GameConfig.uid;
 		manager.Socket.Emit("rpc", json);
 
 		if (callback != null) {
@@ -76,7 +97,7 @@ public class Connect  {
 				return ;
 			}
 
-			int seq = json.IntValue("seq");
+			int seq = json.Int("seq");
 
 			if (actions.ContainsKey(seq)) {
 				actions[seq](json);
@@ -95,7 +116,7 @@ public class Connect  {
 				return ;
 			}
 
-			
+			Debug.Log(json);
 		});
 	}
 }
