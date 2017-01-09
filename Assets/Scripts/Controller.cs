@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Controller : MonoBehaviour {
-	public Button seat;
+	public GameObject seat;
 	public Canvas canvas;
 
 	public GameObject gameInfo;
@@ -20,9 +21,9 @@ public class Controller : MonoBehaviour {
 		int numberOfPlayers = GConf.playerCount;
 
 		for (int i = 0; i < numberOfPlayers; i++) {
-			Button copySeat = Instantiate (seat);
+			GameObject copySeat = Instantiate (seat);
 			copySeat.transform.SetParent (canvas.transform, false);
-			buttons.Add (copySeat);
+			buttons.Add (copySeat.GetComponent<Button>());
 		}
 
 		Vector2[] vectors = GetVectors (numberOfPlayers);
