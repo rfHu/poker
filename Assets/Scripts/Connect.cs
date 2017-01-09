@@ -7,6 +7,7 @@ using Extensions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Linq;
+using BestHTTP;
 
 public class Connect  {
 	private SocketManager manager;
@@ -17,6 +18,11 @@ public class Connect  {
 	private int seq = 0;
 
 	public Connect() {
+		// Charles Proxy
+		if (Debug.isDebugBuild) {
+			HTTPManager.Proxy = new HTTPProxy(new Uri("http://localhost:8888"));
+		}
+
 		GConf.userToken = "s%3AyqZMe2unwrbWgoK7JfZ8wvrAj_cbCBk5.yCzKvWbZQbYikN5DrozgGB2iRyRjgLsvveCfwwSm42c";
 
 		SocketOptions options = new SocketOptions();
@@ -88,10 +94,10 @@ public class Connect  {
 
 	public static void Setup() {
 		shared = new Connect();
-		shared._Setup();	
+		shared.setup();	
 	}
 
-	private void _Setup() {
+	private void setup() {
 		manager.Socket.On("rpc_ret", (socket, packet, args) => {
 			if (args.Length == 0) {
 				return ;
@@ -118,6 +124,8 @@ public class Connect  {
 
 			var json = args[0] as Dictionary<string, object>;
 
+			// Ext.Log(json);
+
 			if (json == null) {
 				return ;
 			}
@@ -132,10 +140,22 @@ public class Connect  {
 			if (e == "look") {
 				EnterGame(json);
 			} else if (e == "prompt") {
-				GInfo.hasSeat = json.Dict("args").Bool("unseat");
+				GInfo.HasSeat = json.Dict("args").Bool("unseat");
 			}
 
-			Ext.Log(json);
+			var data = new DelegateArgs(json);
+
+			// 通过事件广播出去
+			switch(e) {
+                case "takeseat":
+					Delegates.shared.OnTakeSeat(data);
+					break;
+				case "takecoin":
+					Delegates.shared.OnTakeCoin(data);
+					break;
+				default:
+					break;
+			}
 		});
 	}
 

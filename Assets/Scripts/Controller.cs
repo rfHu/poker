@@ -11,7 +11,11 @@ public class Controller : MonoBehaviour {
 	public GameObject playerPrefab;
 	public GameObject startButton;
 
+	public Dictionary<int, PlayerObject> Players = new Dictionary<int, PlayerObject>();
+
 	void Start () {
+		Debug.Log(123);
+
 		List<Button> buttons = new List<Button>();
 		int numberOfPlayers = GConf.playerCount;
 
@@ -33,12 +37,21 @@ public class Controller : MonoBehaviour {
 			button.onClick.AddListener(() => {
 				GameObject playerObject = Instantiate(playerPrefab);
 				PlayerObject player = playerObject.GetComponent<PlayerObject>();
+				player.Index = identifer;
 
-				player.ShowPlayer();
-				playerObject.transform.SetParent(canvas.transform,  false);
-				playerObject.GetComponent<RectTransform>().localPosition = vector;
+				// player.ShowPlayer();
+				// playerObject.transform.SetParent(canvas.transform,  false);
+				// playerObject.GetComponent<RectTransform>().localPosition = vector;
 
-				StartCoroutine(player.setActivated(0));				
+				Players.Add(player.Index, player);
+
+				// 坐下
+				Connect.shared.Emit(
+					new Dictionary<string, object>(){
+						{"f", "takeseat"},
+						{"args", player.Index.ToString()}
+					}
+				);		
 			});
 
 			iter++;

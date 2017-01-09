@@ -3,7 +3,7 @@ using System;
 
 // 游戏全局配置
 public class GConf {
-	public static int playerCount = 9;
+	public static int playerCount;
 	public static string userToken = ""; 
 	public static string uid = "";
 	public static string pin = "";
@@ -28,6 +28,25 @@ public class GConf {
 
 // 游戏变动数据
 public class GInfo {
-	public static bool hasSeat = false;
-	public static bool canBuyCoins = false;
+	private static bool hasSeat = false;
+	public static bool HasSeat {
+		get {
+			return hasSeat;
+		}
+
+		set {
+			hasSeat = value;
+		}
+	}
+
+	private static bool canBuyCoins = false;
+	public static bool CanBuyCoins {
+		get {
+			return canBuyCoins;
+		}
+
+		set {
+			canBuyCoins = value;
+		}
+	}
 }

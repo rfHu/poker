@@ -112,4 +112,14 @@ public class UIManager : MonoBehaviour {
 	public void Supplement() {
 
 	}
+
+	void Awake()
+	{
+		Debug.Log("WTF");
+		Delegates.shared.TakeCoin += new EventHandler<DelegateArgs>(onTakeCoin);
+	}
+
+	void onTakeCoin(object sender, DelegateArgs e) {
+		Debug.Log("Take Coin");
+	} 
 }

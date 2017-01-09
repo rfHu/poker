@@ -6,6 +6,7 @@ using UnityEngine.UI.ProceduralImage;
 
 public class PlayerObject : MonoBehaviour {
 	public Player player;
+	public int Index;
 	
 	Text nameLabel;
 	Text scoreLabel;
@@ -41,7 +42,7 @@ public class PlayerObject : MonoBehaviour {
 		img.texture = Ext.Circular(www.texture);
 	}	
 
-	public IEnumerator setActivated(float elaspe) {
+	public IEnumerator MyTurn(float elaspe) {
 		countdown.SetActive(true);
 		activated = true;
 
