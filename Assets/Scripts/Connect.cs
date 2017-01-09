@@ -131,6 +131,8 @@ public class Connect  {
 			// 监听look事件，收到才进入房间
 			if (e == "look") {
 				EnterGame(json);
+			} else if (e == "prompt") {
+				GInfo.hasSeat = json.Dict("args").Bool("unseat");
 			}
 
 			Ext.Log(json);
@@ -138,8 +140,9 @@ public class Connect  {
 	}
 
 	void EnterGame(Dictionary<string, object> json) {
-		var options = json.Dict("options");
-		
+		var args = json.Dict("args");
+		var options = args.Dict("options");
+
 		GConf.isOwner = options.String("ownerid") == GConf.uid;
 		GConf.bankroll = options.ListInt("bankroll_multiple"); 
 		GConf.ante = options.Int("ant");
@@ -149,8 +152,9 @@ public class Connect  {
 		GConf.needAduit = options.Int("need_audit") == 1;
 		GConf.GPSLimit = options.Int("gps_limit") == 1;
 		GConf.IPLimit = options.Int("ip_limit") == 1;
+		GConf.roomName = args.String("name");
 
-		var bb = options.Int("bb");
+		var bb = options.Int("limit");
 		GConf.bb = bb ;
 		GConf.sb = bb / 2;
 

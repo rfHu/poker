@@ -28,5 +28,6 @@ public class GConf {
 
 // 游戏变动数据
 public class GInfo {
-
+	public static bool hasSeat = false;
+	public static bool canBuyCoins = false;
 }

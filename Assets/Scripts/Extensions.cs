@@ -16,6 +16,12 @@ namespace Extensions {
 			return Convert.ToDouble(value);
 		}	
 
+		public static bool Bool<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key) {
+			TValue value;
+			dictionary.TryGetValue(key, out value);
+			return Convert.ToBoolean(value);
+		}
+
 		public static float Float<TKey,TValue>(this Dictionary<TKey, TValue> dictionary, TKey key) {
 			TValue value;
 			dictionary.TryGetValue(key, out value);

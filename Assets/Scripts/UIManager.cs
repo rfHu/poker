@@ -2,6 +2,8 @@
 using System;
 using UnityEngine.EventSystems;
 using DG.Tweening;
+using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour {
 	public void SelectMenu() {
@@ -17,6 +19,9 @@ public class UIManager : MonoBehaviour {
 	public GameObject recallPage;
 	public GameObject userPopup;
 	public GameObject startButton;
+	
+	public List<Sprite> muteSprites;
+    public GameObject muteObj;
 
 	GameObject ShowMask(Action callback) {
 		GameObject mask = Instantiate(maskPrefab);
@@ -84,8 +89,10 @@ public class UIManager : MonoBehaviour {
 	public void ToggleMute() {
 		if (AudioListener.volume > 0) {
 			AudioListener.volume = 0;
+			muteObj.GetComponent<Image>().sprite = muteSprites[1];
 		} else {
 			AudioListener.volume = 1;
+		    muteObj.GetComponent<Image>().sprite = muteSprites[0];
 		}
 	}
 
