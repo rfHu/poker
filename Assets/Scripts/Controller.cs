@@ -3,18 +3,17 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Controller : MonoBehaviour {
-	public int numberOfPlayers = 2;
 	public Button seat;
 	public Canvas canvas;
 
 	public GameObject gameInfo;
-	public GameObject gameInfoParent;
-
-	public Dictionary<string, object> gameInfoDictionary;
+	public GameObject gameInfoWrapper;
 	public GameObject playerPrefab;
+	public GameObject startButton;
 
 	void Start () {
 		List<Button> buttons = new List<Button>();
+		int numberOfPlayers = GConf.playerCount;
 
 		for (int i = 0; i < numberOfPlayers; i++) {
 			Button copySeat = Instantiate (seat);
@@ -128,23 +127,30 @@ public class Controller : MonoBehaviour {
 	}
 
 	void ShowGameInfo() {
-		gameInfoDictionary = new Dictionary<string, object>{
-			{"sb", 10},
-			{"bb", 20},
-			{"owner", "singno"},
-			{"IP", true},
-			{"GPS", true}
-		};
+		if (GConf.isOwner) {
+			startButton.SetActive(true);
+		}
 
-		
-		AddGameInfo("[德州高手]");
-		AddGameInfo("盲注:10/20/40");
-		// AddGameInfo("IP、GPS限制");
+		AddGameInfo(string.Format("[{0}]", GConf.roomName));
+
+		if (GConf.isStraddle) {
+			AddGameInfo(string.Format("盲注:{0}/{1}/{2}", GConf.sb, GConf.bb, GConf.bb * 2));			
+ 		} else {
+			AddGameInfo(string.Format("盲注:{0}/{1}", GConf.sb, GConf.bb));
+		}
+
+        if (GConf.IPLimit && GConf.GPSLimit) {
+			AddGameInfo("IP、GPS限制");
+		} else if (GConf.GPSLimit) {
+			AddGameInfo("GPS限制");
+		} else if (GConf.IPLimit) {
+			AddGameInfo("IP限制");
+		}
 	}
 
 	void AddGameInfo(string text) {
 		GameObject label = Instantiate(gameInfo);
 		label.GetComponent<Text>().text = text;
-		label.transform.SetParent(gameInfoParent.transform, false);
+		label.transform.SetParent(gameInfoWrapper.transform, false);
 	}
 }

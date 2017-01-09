@@ -1,4 +1,8 @@
-﻿public class GameConfig {
+﻿using System.Collections.Generic;
+using System;
+
+// 游戏全局配置
+public class GConf {
 	public static int playerCount = 9;
 	public static string userToken = ""; 
 	public static string uid = "";
@@ -7,5 +11,22 @@
 	public static string avatar = "";
 	public static string coins = "";
 	public static string room = "1777";
-	// {"seq":1, "err":0, "ret":{"token":{"uid":"586df350d1c30472575f61a8", "pin":822697819449}, "profile":{"uid":"586df350d1c30472575f61a8", "name":"", "avatar":"http://cdn.fight4.cn/avatar-default-men", "coins":"0", "score":"0", "exp":"0", "level":"0"}, "cmds":{"fastsignup":null, "signup":null, "login":null, "logout":true}}}
+	public static bool isOwner = false;
+	public static int ante = 0;
+	public static List<int> bankroll;
+	public static int sb = 0;
+	public static int bb = 0;
+	public static bool isStraddle = false;
+	public static string roomName = "";
+	public static DateTime startTime = DateTime.Now;
+	public static float rake = 0;
+	public static int duration = 0;
+	public static bool needAduit = false;
+	public static bool IPLimit = false;
+	public static bool GPSLimit = false;
+}
+
+// 游戏变动数据
+public class GInfo {
+
 }
