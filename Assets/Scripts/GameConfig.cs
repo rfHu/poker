@@ -9,11 +9,11 @@ public class GConf {
 	public static string pin = "";
 	public static string name = ""; 
 	public static string avatar = "";
-	public static string coins = "";
 	public static string room = "1777";
 	public static bool isOwner = false;
 	public static int ante = 0;
 	public static List<int> bankroll;
+	public static int coins = 0;
 	public static int sb = 0;
 	public static int bb = 0;
 	public static bool isStraddle = false;

@@ -159,7 +159,16 @@ public class Connect  {
 		});
 	}
 
+	bool enter = false;
+
+	// 只允许进入一次
 	void EnterGame(Dictionary<string, object> json) {
+		if (enter) {
+			return ;
+		}
+
+		enter = true;
+
 		var args = json.Dict("args");
 		var options = args.Dict("options");
 

@@ -15,8 +15,6 @@ public class Controller : MonoBehaviour {
 	public Dictionary<int, PlayerObject> Players = new Dictionary<int, PlayerObject>();
 
 	void Start () {
-		Debug.Log(123);
-
 		List<Button> buttons = new List<Button>();
 		int numberOfPlayers = GConf.playerCount;
 
@@ -145,12 +143,12 @@ public class Controller : MonoBehaviour {
 			startButton.SetActive(true);
 		}
 
-		AddGameInfo(string.Format("[{0}]", GConf.roomName));
+		AddGameInfo(string.Format("[ {0} ]", GConf.roomName));
 
 		if (GConf.isStraddle) {
-			AddGameInfo(string.Format("盲注:{0}/{1}/{2}", GConf.sb, GConf.bb, GConf.bb * 2));			
+			AddGameInfo(string.Format("盲注：{0}/{1}/{2}", GConf.sb, GConf.bb, GConf.bb * 2));			
  		} else {
-			AddGameInfo(string.Format("盲注:{0}/{1}", GConf.sb, GConf.bb));
+			AddGameInfo(string.Format("盲注：{0}/{1}", GConf.sb, GConf.bb));
 		}
 
         if (GConf.IPLimit && GConf.GPSLimit) {

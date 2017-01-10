@@ -113,13 +113,17 @@ public class UIManager : MonoBehaviour {
 
 	}
 
-	void Awake()
-	{
-		Debug.Log("WTF");
-		Delegates.shared.TakeCoin += new EventHandler<DelegateArgs>(onTakeCoin);
-	}
-
 	void onTakeCoin(object sender, DelegateArgs e) {
 		Debug.Log("Take Coin");
 	} 
+
+	void Awake()
+	{
+		Delegates.shared.TakeCoin += new EventHandler<DelegateArgs>(onTakeCoin);
+	}
+
+	void OnDestroy()
+	{
+		Delegates.shared.TakeCoin -= new EventHandler<DelegateArgs>(onTakeCoin);
+	}
 }
