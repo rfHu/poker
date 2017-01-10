@@ -173,7 +173,7 @@ public class Connect  {
 		var options = args.Dict("options");
 
 		GConf.isOwner = options.String("ownerid") == GConf.uid;
-		GConf.bankroll = options.ListInt("bankroll_multiple"); 
+		GConf.bankroll = options.IL("bankroll_multiple"); 
 		GConf.ante = options.Int("ant");
 		GConf.playerCount = options.Int("max_seats");
 		GConf.rake = options.Float("rake_percent");

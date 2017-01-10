@@ -3,7 +3,7 @@ using DG.Tweening;
 
 public class Animations {
 	public static void ShowPopup(GameObject target) {
-		float duration = 1f;
+		float duration = 0.2f;
 		var canvasGroup = target.GetComponent<CanvasGroup>();
 		var rectTransform = target.GetComponent<RectTransform>();
 
@@ -17,7 +17,7 @@ public class Animations {
 	} 
 
 	public static void HidePopup(GameObject target) {
-		float duration = 1f;
+		float duration = 0.2f;
 		var canvasGroup = target.GetComponent<CanvasGroup>();
 		var rectTransform = target.GetComponent<RectTransform>();
 

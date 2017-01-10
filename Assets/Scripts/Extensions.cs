@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 
 namespace Extensions {
 	public static class CShapeExtensions {
@@ -41,25 +42,11 @@ namespace Extensions {
 			return result;
 		}
 
-		public static List<int> ListInt<TKey,TValue>(this Dictionary<TKey, TValue> dictionary, TKey key) {
+		public static List<int> IL<TKey,TValue>(this Dictionary<TKey, TValue> dictionary, TKey key) {
 			TValue value;
 			dictionary.TryGetValue(key, out value);
-			var result = value as List<int> ?? new List<int>();
-			return result;
-		} 
-
-		public static List<string> ListStr<TKey,TValue>(this Dictionary<TKey, TValue> dictionary, TKey key) {
-			TValue value;
-			dictionary.TryGetValue(key, out value);
-			var result = value as List<string> ?? new List<string>();
-			return result;
-		} 
-
-		public static List<object> ListObj<TKey,TValue>(this Dictionary<TKey, TValue> dictionary, TKey key) {
-			TValue value;
-			dictionary.TryGetValue(key, out value);
-			var result = value as List<object> ?? new List<object>();
-			return result;
+			var result = (List<object>)(object)value;		
+			return result.Select(o => Convert.ToInt32(o)).ToList();
 		} 
 	}
 }
