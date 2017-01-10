@@ -9,7 +9,7 @@ public class GConf {
 	public static string pin = "";
 	public static string name = ""; 
 	public static string avatar = "";
-	public static string room = "1777";
+	public static string room = "587450f87133077573039b92";
 	public static bool isOwner = false;
 	public static int ante = 0;
 	public static List<int> bankroll;

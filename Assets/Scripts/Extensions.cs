@@ -45,7 +45,7 @@ namespace Extensions {
 		public static List<int> IL<TKey,TValue>(this Dictionary<TKey, TValue> dictionary, TKey key) {
 			TValue value;
 			dictionary.TryGetValue(key, out value);
-			var result = (List<object>)(object)value;		
+			var result = (List<object>)(object)value;
 			return result.Select(o => Convert.ToInt32(o)).ToList();
 		} 
 	}
