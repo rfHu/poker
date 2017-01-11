@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using Extensions;
 
 public class UIManager : MonoBehaviour {
 	public void SelectMenu() {
@@ -44,9 +45,17 @@ public class UIManager : MonoBehaviour {
 	}
 
 	public void Standup() {
-		Debug.Log("My God");
-	}
+		var mySeat = GConf.MySeat;
 
+		if (mySeat < 0) {
+			return ;
+		}
+
+		Connect.shared.Emit(new Dictionary<string, object>(){
+			{"f", "unseat"}
+		});
+	}
+	
 	public void Exit() {
 		Application.Quit();
 	}

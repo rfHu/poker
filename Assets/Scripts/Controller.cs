@@ -189,6 +189,8 @@ public class Controller : MonoBehaviour {
 		showPlayer(player);	
 	}
 
+	Dictionary<int, PlayerObject> playerObjects = new Dictionary<int, PlayerObject>();
+
 	void showPlayer(Player data) {
 		GameObject playerObject = (GameObject)Instantiate(Resources.Load("Prefab/Player"));
 		PlayerObject playerComt = playerObject.GetComponent<PlayerObject>();
@@ -197,5 +199,19 @@ public class Controller : MonoBehaviour {
 		playerComt.ShowPlayer(data);
         playerObject.transform.SetParent(canvas.transform, false);
         playerObject.GetComponent<RectTransform>().localPosition = positions[data.Index];
+
+		playerObjects.Add(playerComt.Index, playerComt);
+	}
+
+	public void RemovePlayer(int index) {
+		PlayerObject player;
+		playerObjects.TryGetValue(index, out player);
+
+		if (player == null) {
+			return ;
+		}
+
+		playerObjects.Remove(index);
+		Destroy(player);
 	}
 }

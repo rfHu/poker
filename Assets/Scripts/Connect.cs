@@ -68,7 +68,7 @@ public class Connect  {
 		var profile = ret.Dict("profile");
 		var token = ret.Dict("token");
 
-		GConf.uid = profile.String("uid");
+		GConf.Uid = profile.String("uid");
 		GConf.name = profile.String("name");
 		GConf.avatar = profile.String("avatar");
 		GConf.pin = token.String("pin");
@@ -78,7 +78,7 @@ public class Connect  {
 		seq++;
 		json["seq"] = seq;
 		json["pin"] = GConf.pin;
-		json["uid"] = GConf.uid;
+		json["uid"] = GConf.Uid;
 		manager.Socket.Emit("rpc", json);
 
 		if (callback != null) {
@@ -174,7 +174,7 @@ public class Connect  {
 		var options = args.Dict("options");
 		var gamers = args.Dict("gamers");
 
-		GConf.isOwner = options.String("ownerid") == GConf.uid;
+		GConf.isOwner = options.String("ownerid") == GConf.Uid;
 		GConf.bankroll = options.IL("bankroll_multiple"); 
 		GConf.ante = options.Int("ant");
 		GConf.playerCount = options.Int("max_seats");
@@ -194,6 +194,10 @@ public class Connect  {
 			var index = Convert.ToInt32(entry.Key);
 			var player = new Player(dict, index);
 			GConf.Players.Add(index, player);
+
+			if (player.Uid == GConf.Uid) {
+				GConf.MySeat = index;
+			}
 		}
 
 		SceneManager.LoadScene("PokerGame");

@@ -6,7 +6,7 @@ using Extensions;
 public class GConf {
 	public static int playerCount;
 	public static string userToken = ""; 
-	public static string uid = "";
+	public static string Uid = "";
 	public static string pin = "";
 	public static string name = ""; 
 	public static string avatar = "";
@@ -27,6 +27,9 @@ public class GConf {
 	public static bool GPSLimit = false;
 
 	public static Dictionary<int, Player> Players = new Dictionary<int, Player>();
+
+	// -1表示没有座位
+	public static int MySeat = -1;
 }
 
 public class Player {
