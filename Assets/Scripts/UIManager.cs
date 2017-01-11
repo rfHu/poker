@@ -54,6 +54,8 @@ public class UIManager : MonoBehaviour {
 		Connect.shared.Emit(new Dictionary<string, object>(){
 			{"f", "unseat"}
 		});
+
+		menu.GetComponent<DOTweenAnimation>().DORestartById("hide");
 	}
 	
 	public void Exit() {

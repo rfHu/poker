@@ -154,6 +154,9 @@ public class Connect  {
 				case "takecoin":
 					Delegates.shared.OnTakeCoin(data);
 					break;
+				case "unseat":
+					Delegates.shared.OnUnSeat(data);
+					break;
 				default:
 					break;
 			}

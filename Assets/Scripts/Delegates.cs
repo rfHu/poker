@@ -13,6 +13,7 @@ public class Delegates {
 
 	public event EventHandler<DelegateArgs> TakeSeat;
 	public event EventHandler<DelegateArgs> TakeCoin;
+	public event EventHandler<DelegateArgs> UnSeat;
 
 	public void OnTakeSeat(DelegateArgs e) {
 		if (TakeSeat != null) {
@@ -23,6 +24,12 @@ public class Delegates {
 	public void OnTakeCoin(DelegateArgs e) {
 		if (TakeCoin != null) {
 			TakeCoin(this, e);
+		}
+	}
+
+	public void OnUnSeat(DelegateArgs e) {
+		if (UnSeat != null) {
+			UnSeat(this, e);
 		}
 	}
 }

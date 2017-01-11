@@ -169,10 +169,12 @@ public class Controller : MonoBehaviour {
 
 	void addListeners() {
 		Delegates.shared.TakeSeat += new EventHandler<DelegateArgs>(onTakeSeat);
+		Delegates.shared.UnSeat += new EventHandler<DelegateArgs>(onUnSeat);
 	}
 
 	void removeListeners() {
 		Delegates.shared.TakeSeat -= new EventHandler<DelegateArgs>(onTakeSeat);
+		Delegates.shared.TakeSeat -= new EventHandler<DelegateArgs>(onUnSeat);
 	}
 
 	void OnDestroy()
@@ -181,12 +183,24 @@ public class Controller : MonoBehaviour {
 	}
 
 	void  onTakeSeat(object sender, DelegateArgs e) {
-		var index = e.Data.Int("where");
-		var playerInfo = e.Data.Dict("who");
+		var args = e.Data.Dict("args");
+		var index = args.Int("where");
+		var playerInfo = args.Dict("who");
 		var player = new Player(playerInfo, index);
 		GConf.Players.Add(index, player);
 		
 		showPlayer(player);	
+	}
+
+	void onUnSeat(object sender, DelegateArgs e) {
+		var args = e.Data.Dict("args");
+
+		if (!args.ContainsKey("where")) {
+			return ;
+		}
+
+		var index = args.Int("where");
+		RemovePlayer(index);
 	}
 
 	Dictionary<int, PlayerObject> playerObjects = new Dictionary<int, PlayerObject>();
@@ -212,6 +226,7 @@ public class Controller : MonoBehaviour {
 		}
 
 		playerObjects.Remove(index);
-		Destroy(player);
+		Destroy(player.gameObject);
+		GConf.Players.Remove(index);
 	}
 }
