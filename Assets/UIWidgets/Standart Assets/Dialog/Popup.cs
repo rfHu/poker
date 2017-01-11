@@ -232,7 +232,6 @@ namespace UIWidgets {
 			}
 
 			transform.SetAsLastSibling();
-
 			transform.localPosition = (Vector3)position;
 			gameObject.SetActive(true);
 		}

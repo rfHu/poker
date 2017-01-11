@@ -5,13 +5,9 @@ using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using Extensions;
+using UIWidgets;
 
 public class UIManager : MonoBehaviour {
-	public void SelectMenu() {
-
-	}
-
-	public GameObject menu;
 	public Canvas canvas;
 	public GameObject maskPrefab;
 	public GameObject cardTipPanel;
@@ -40,8 +36,10 @@ public class UIManager : MonoBehaviour {
 	}
 
 	public void ShowMenu() {
-		DOTweenAnimation anim = menu.GetComponent<DOTweenAnimation>();
-		ShowTween(anim);
+		var popup = (GameObject)Instantiate(Resources.Load("Prefab/MenuPopup"));
+		popup.GetComponent<DOPopup>().Show(popupCanvas);	
+		// DOTweenAnimation anim = menu.GetComponent<DOTweenAnimation>();
+		// ShowTween(anim);
 	}
 
 	public void Standup() {
@@ -55,7 +53,7 @@ public class UIManager : MonoBehaviour {
 			{"f", "unseat"}
 		});
 
-		menu.GetComponent<DOTweenAnimation>().DORestartById("hide");
+		// menu.GetComponent<DOTweenAnimation>().DORestartById("Hide");
 	}
 	
 	public void Exit() {
@@ -81,7 +79,7 @@ public class UIManager : MonoBehaviour {
 
 	void HideMenu() {
 		// 隐藏menu和上一个遮罩
-		menu.GetComponent<DOTweenAnimation>().DORestartById("Hide");
+		// menu.GetComponent<DOTweenAnimation>().DORestartById("Hide");
 		GameObject obj = GameObject.Find("Mask(Clone)");		
 		Destroy(obj);
 	}

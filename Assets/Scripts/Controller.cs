@@ -188,6 +188,11 @@ public class Controller : MonoBehaviour {
 		var playerInfo = args.Dict("who");
 		var player = new Player(playerInfo, index);
 		GConf.Players.Add(index, player);
+
+		// 是我坐的
+		if (playerInfo.String("uid") == GConf.Uid) {
+			GConf.MySeat = index;
+		}
 		
 		showPlayer(player);	
 	}
