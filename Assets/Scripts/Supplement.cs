@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UIWidgets;
 using UnityEngine.Events;
 using System.Collections.Generic;
 using Extensions;
+using UnityEngine.EventSystems;
 
 public class Supplement : MonoBehaviour {
 	public Text Blind;
@@ -46,7 +46,9 @@ public class Supplement : MonoBehaviour {
 		Pay.text = (newValue * GConf.rake).ToString();
 	}
 
-	public void TakeCoin() {
+	public void TakeCoin(BaseEventData data) {
+		Debug.Log(data);
+
 		float value = slider.value;	
 		Connect.shared.Emit(new Dictionary<string, object>(){
 			{"f", "takecoin"},

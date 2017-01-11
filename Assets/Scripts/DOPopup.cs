@@ -18,9 +18,11 @@ public class DOPopup : MonoBehaviour {
 
 	int modalKey;
 
-	void Awake()
+	void Start()
 	{
 		var rectTrans = GetComponent<RectTransform>();
+
+		// @TODO: 处理ContentSizeFitter
 
 		if (Animate == AnimType.Up2Down) {
 			beginPosition = new Vector2(0, rectTrans.rect.height);
