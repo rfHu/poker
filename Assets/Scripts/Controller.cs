@@ -9,7 +9,6 @@ public class Controller : MonoBehaviour {
 
 	public GameObject gameInfo;
 	public GameObject gameInfoWrapper;
-	public GameObject playerPrefab;
 	public GameObject startButton;
 
 	public Dictionary<int, PlayerObject> Players = new Dictionary<int, PlayerObject>();
@@ -29,26 +28,14 @@ public class Controller : MonoBehaviour {
 
 		foreach(Button button in buttons) {
 			button.GetComponent<RectTransform> ().localPosition = vectors[iter] ;
-
 			int identifer = iter;
-			Vector2 vector = vectors[identifer];
 
 			button.onClick.AddListener(() => {
-				GameObject playerObject = Instantiate(playerPrefab);
-				PlayerObject player = playerObject.GetComponent<PlayerObject>();
-				player.Index = identifer;
-
-				// player.ShowPlayer();
-				// playerObject.transform.SetParent(canvas.transform,  false);
-				// playerObject.GetComponent<RectTransform>().localPosition = vector;
-
-				Players.Add(player.Index, player);
-
 				// 坐下
 				Connect.shared.Emit(
 					new Dictionary<string, object>(){
 						{"f", "takeseat"},
-						{"args", player.Index.ToString()}
+						{"args", identifer}
 					}
 				);		
 			});
@@ -57,6 +44,7 @@ public class Controller : MonoBehaviour {
 		}
 
 		ShowGameInfo();
+		AddListeners();
 	}
 
 	// 逆时针生成位置信息
@@ -143,12 +131,12 @@ public class Controller : MonoBehaviour {
 			startButton.SetActive(true);
 		}
 
-		AddGameInfo(string.Format("[ {0} ]", GConf.roomName));
+		AddGameInfo(string.Format("{0}", GConf.roomName));
 
 		if (GConf.isStraddle) {
-			AddGameInfo(string.Format("盲注：{0}/{1}/{2}", GConf.sb, GConf.bb, GConf.bb * 2));			
+			AddGameInfo(string.Format("盲注:{0}/{1}/{2}", GConf.sb, GConf.bb, GConf.bb * 2));			
  		} else {
-			AddGameInfo(string.Format("盲注：{0}/{1}", GConf.sb, GConf.bb));
+			AddGameInfo(string.Format("盲注:{0}/{1}", GConf.sb, GConf.bb));
 		}
 
         if (GConf.IPLimit && GConf.GPSLimit) {
@@ -164,5 +152,19 @@ public class Controller : MonoBehaviour {
 		GameObject label = Instantiate(gameInfo);
 		label.GetComponent<Text>().text = text;
 		label.transform.SetParent(gameInfoWrapper.transform, false);
+	}
+
+	void AddListeners() {
+		
+	}
+
+	void  onTakeSeat() {
+		// GameObject playerObject = Instantiate(playerPrefab);
+		// 		PlayerObject player = playerObject.GetComponent<PlayerObject>();
+		// 		player.Index = identifer;
+
+				// player.ShowPlayer();
+				// playerObject.transform.SetParent(canvas.transform,  false);
+				// playerObject.GetComponent<RectTransform>().localPosition = vector;
 	}
 }
