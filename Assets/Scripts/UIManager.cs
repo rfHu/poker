@@ -115,14 +115,22 @@ public class UIManager : MonoBehaviour {
 
 	void onTakeCoin(object sender, DelegateArgs e) {
 		GameObject obj = (GameObject)Instantiate(Resources.Load("Prefab/Supplement"));
-		ShowPopup(obj);
+		ShowPopup(obj, () => {
+			Connect.shared.Emit(new Dictionary<string, object>() {
+				{"f", "unseat"}
+			});
+		});
 	} 
 
-	public void ShowPopup(GameObject obj) {
+	public void ShowPopup(GameObject obj, Action callback = null) {
 		obj.transform.SetParent(popupCanvas.transform, false);
 		Animations.ShowPopup(obj);
 		ShowMask(() => {
 			Animations.HidePopup(obj);	
+
+			if (callback != null) {
+				callback();
+			}
 		});
 	}
 

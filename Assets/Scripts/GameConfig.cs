@@ -27,26 +27,26 @@ public class GConf {
 }
 
 // 游戏变动数据
-public class GInfo {
-	private static bool hasSeat = false;
-	public static bool HasSeat {
-		get {
-			return hasSeat;
-		}
+// public class GInfo {
+// 	private static bool hasSeat = false;
+// 	public static bool HasSeat {
+// 		get {
+// 			return hasSeat;
+// 		}
 
-		set {
-			hasSeat = value;
-		}
-	}
+// 		set {
+// 			hasSeat = value;
+// 		}
+// 	}
 
-	private static bool canBuyCoins = false;
-	public static bool CanBuyCoins {
-		get {
-			return canBuyCoins;
-		}
+// 	private static bool canBuyCoins = false;
+// 	public static bool CanBuyCoins {
+// 		get {
+// 			return canBuyCoins;
+// 		}
 
-		set {
-			canBuyCoins = value;
-		}
-	}
-}
+// 		set {
+// 			canBuyCoins = value;
+// 		}
+// 	}
+// }

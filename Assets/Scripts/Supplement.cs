@@ -2,6 +2,8 @@
 using UnityEngine.UI;
 using UIWidgets;
 using UnityEngine.Events;
+using System.Collections.Generic;
+using Extensions;
 
 public class Supplement : MonoBehaviour {
 	public Text Blind;
@@ -23,14 +25,6 @@ public class Supplement : MonoBehaviour {
 		slider.minValue = min;
 		slider.maxValue = max;
 		slider.onValueChanged.AddListener(OnChange);
-
-		// slider.ValueMin = GConf.bankroll[0] * score;
-		// slider.ValueMax = (GConf.bankroll[1] - GConf.bankroll[0]) * score;
-		// slider.LimitMin = slider.ValueMin;
-		// slider.LimitMax = slider.ValueMax;
-		// slider.Step = score;
-		// slider.Value = score;
-		// slider.OnValuesChange.AddListener(OnChange);
 	}
 
 	public void OnChange(float value) {
@@ -50,5 +44,19 @@ public class Supplement : MonoBehaviour {
 
 		Score.text = newValue.ToString();
 		Pay.text = (newValue * GConf.rake).ToString();
+	}
+
+	public void TakeCoin() {
+		float value = slider.value;	
+		Connect.shared.Emit(new Dictionary<string, object>(){
+			{"f", "takecoin"},
+			{"args", value}
+		}, (json) => {
+			var err = json.Int("err");
+			if (err != 0) {
+				// @TODO: TakeCoin失败
+				Debug.Log("错误");
+			}
+		});
 	}
 }

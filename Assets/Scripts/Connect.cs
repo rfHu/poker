@@ -140,7 +140,8 @@ public class Connect  {
 			if (e == "look") {
 				EnterGame(json);
 			} else if (e == "prompt") {
-				GInfo.HasSeat = json.Dict("args").Bool("unseat");
+				// @TODO: 收到操作状态变化
+				// GInfo.HasSeat = json.Dict("args").Bool("unseat");
 			}
 
 			var data = new DelegateArgs(json);
