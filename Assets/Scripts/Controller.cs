@@ -2,6 +2,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
+using System;
+using Extensions;
 
 public class Controller : MonoBehaviour {
 	public GameObject seat;
@@ -13,6 +16,8 @@ public class Controller : MonoBehaviour {
 
 	public Dictionary<int, PlayerObject> Players = new Dictionary<int, PlayerObject>();
 
+	public List<Vector2> positions = new List<Vector2>(); 
+
 	void Start () {
 		List<Button> buttons = new List<Button>();
 		int numberOfPlayers = GConf.playerCount;
@@ -23,11 +28,11 @@ public class Controller : MonoBehaviour {
 			buttons.Add (copySeat.GetComponent<Button>());
 		}
 
-		Vector2[] vectors = GetVectors (numberOfPlayers);
+		positions = GetVectors (numberOfPlayers);
 		int iter = 0;
 
 		foreach(Button button in buttons) {
-			button.GetComponent<RectTransform> ().localPosition = vectors[iter] ;
+			button.GetComponent<RectTransform> ().localPosition = positions[iter] ;
 			int identifer = iter;
 
 			button.onClick.AddListener(() => {
@@ -44,11 +49,11 @@ public class Controller : MonoBehaviour {
 		}
 
 		ShowGameInfo();
-		AddListeners();
+		addListeners();
 	}
 
 	// 逆时针生成位置信息
-	Vector2[] GetVectors(int total) {
+	List<Vector2> GetVectors(int total) {
 		float width = canvas.GetComponent<RectTransform>().rect.width;
 		float height = canvas.GetComponent<RectTransform>().rect.height;
 
@@ -60,7 +65,7 @@ public class Controller : MonoBehaviour {
 		Vector2 number1 = new Vector2 (0, bottom);
 
 		if (total == 2) {
-			return new Vector2 []{
+			return new List<Vector2>{
 				number1,
 				new Vector2(0, top)
 			};
@@ -74,7 +79,7 @@ public class Controller : MonoBehaviour {
 		float w3 = ww / 2 - ww / 3;
 
 		if (total == 6) {
-			return new Vector2[] {
+			return new List<Vector2> {
 				number1, 
 				new Vector2(right, 0 - h3),
 				new Vector2(right, 0 + h3),
@@ -85,7 +90,7 @@ public class Controller : MonoBehaviour {
 		}
 
 		if (total == 7) {
-			return new Vector2[] {
+			return new List<Vector2> {
 				number1, 
 				new Vector2(right, 0 - h3),
 				new Vector2(right, 0 + h3),
@@ -97,7 +102,7 @@ public class Controller : MonoBehaviour {
 		}
 
 		if (total == 8) {
-			return new Vector2[] {
+			return new List<Vector2> {
 				number1, 
 				new Vector2(right, 0 - h4),
 				new Vector2(right, 0),
@@ -110,7 +115,7 @@ public class Controller : MonoBehaviour {
 		}
 
 		if (total == 9) {
-			return new Vector2[] {
+			return new List<Vector2> {
 				number1, 
 				new Vector2(right, 0 - h4),
 				new Vector2(right, 0),
@@ -123,7 +128,7 @@ public class Controller : MonoBehaviour {
 			};
 		}
 
-		return new Vector2[]{};
+		throw new Exception("不支持游戏人数");
 	}
 
 	void ShowGameInfo() {
@@ -154,17 +159,29 @@ public class Controller : MonoBehaviour {
 		label.transform.SetParent(gameInfoWrapper.transform, false);
 	}
 
-	void AddListeners() {
-		
+	void addListeners() {
+		Delegates.shared.TakeSeat += new EventHandler<DelegateArgs>(onTakeSeat);
 	}
 
-	void  onTakeSeat() {
-		// GameObject playerObject = Instantiate(playerPrefab);
-		// 		PlayerObject player = playerObject.GetComponent<PlayerObject>();
-		// 		player.Index = identifer;
+	void removeListeners() {
+		Delegates.shared.TakeSeat -= new EventHandler<DelegateArgs>(onTakeSeat);
+	}
 
-				// player.ShowPlayer();
-				// playerObject.transform.SetParent(canvas.transform,  false);
-				// playerObject.GetComponent<RectTransform>().localPosition = vector;
+	void OnDestroy()
+	{
+		removeListeners();
+	}
+
+	void  onTakeSeat(object sender, DelegateArgs e) {
+		var seat = e.Data.Int("where");
+		var playerInfo = e.Data.Dict("who");
+		
+		GameObject playerObject = (GameObject)Instantiate(Resources.Load("Prefab/Player"));
+		PlayerObject player = playerObject.GetComponent<PlayerObject>();
+	 	player.Index = 0;
+
+		player.ShowPlayer();
+        playerObject.transform.SetParent(canvas.transform, false);
+        playerObject.GetComponent<RectTransform>().localPosition = positions[seat];
 	}
 }
