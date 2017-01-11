@@ -172,6 +172,7 @@ public class Connect  {
 
 		var args = json.Dict("args");
 		var options = args.Dict("options");
+		var gamers = args.Dict("gamers");
 
 		GConf.isOwner = options.String("ownerid") == GConf.uid;
 		GConf.bankroll = options.IL("bankroll_multiple"); 
@@ -187,6 +188,13 @@ public class Connect  {
 		var bb = options.Int("limit");
 		GConf.bb = bb ;
 		GConf.sb = bb / 2;
+
+		foreach(KeyValuePair<string, object> entry in gamers) {
+			var dict = entry.Value as Dictionary<string, object>;
+			var index = Convert.ToInt32(entry.Key);
+			var player = new Player(dict, index);
+			GConf.Players.Add(index, player);
+		}
 
 		SceneManager.LoadScene("PokerGame");
 	}

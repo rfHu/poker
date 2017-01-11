@@ -3,9 +3,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.UI.ProceduralImage;
+using Extensions;
 
 public class PlayerObject : MonoBehaviour {
-	public Player player;
 	public int Index;
 	
 	Text nameLabel;
@@ -24,16 +24,11 @@ public class PlayerObject : MonoBehaviour {
 		countdown.SetActive(false);
 	}
 
-	public void ShowPlayer() {
-		Player player = new Player();	
-		player.avatar = "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3081053742,1983158129&fm=116&gp=0.jpg";
-		player.name = "singno";
-		player.score = 50000;
-
-		nameLabel.text = player.name;
-		scoreLabel.text = player.score.ToString();
+	public void ShowPlayer(Player player) {
+		nameLabel.text = player.Name;
+		scoreLabel.text = "0";
 		RawImage rawImage = transform.Find("Circle").Find("Avatar").GetComponent<RawImage>();
-		StartCoroutine(DownloadAvatar(rawImage, player.avatar));
+		StartCoroutine(DownloadAvatar(rawImage, player.Avatar));
 	}
 
 	IEnumerator<WWW> DownloadAvatar(RawImage img, string url) {

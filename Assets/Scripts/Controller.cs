@@ -151,6 +151,14 @@ public class Controller : MonoBehaviour {
 		} else if (GConf.IPLimit) {
 			AddGameInfo("IP限制");
 		}
+
+		showPlayers();
+	}
+
+	void showPlayers() {
+		foreach(KeyValuePair<int, Player> entry in GConf.Players) {
+			showPlayer(entry.Value);
+		}
 	}
 
 	void AddGameInfo(string text) {
@@ -173,15 +181,21 @@ public class Controller : MonoBehaviour {
 	}
 
 	void  onTakeSeat(object sender, DelegateArgs e) {
-		var seat = e.Data.Int("where");
+		var index = e.Data.Int("where");
 		var playerInfo = e.Data.Dict("who");
+		var player = new Player(playerInfo, index);
+		GConf.Players.Add(index, player);
 		
-		GameObject playerObject = (GameObject)Instantiate(Resources.Load("Prefab/Player"));
-		PlayerObject player = playerObject.GetComponent<PlayerObject>();
-	 	player.Index = 0;
+		showPlayer(player);	
+	}
 
-		player.ShowPlayer();
+	void showPlayer(Player data) {
+		GameObject playerObject = (GameObject)Instantiate(Resources.Load("Prefab/Player"));
+		PlayerObject playerComt = playerObject.GetComponent<PlayerObject>();
+	 	playerComt.Index = data.Index;
+
+		playerComt.ShowPlayer(data);
         playerObject.transform.SetParent(canvas.transform, false);
-        playerObject.GetComponent<RectTransform>().localPosition = positions[seat];
+        playerObject.GetComponent<RectTransform>().localPosition = positions[data.Index];
 	}
 }

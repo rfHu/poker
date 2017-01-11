@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
+using Extensions;
 
 // 游戏全局配置
 public class GConf {
@@ -24,6 +25,22 @@ public class GConf {
 	public static bool needAduit = false;
 	public static bool IPLimit = false;
 	public static bool GPSLimit = false;
+
+	public static Dictionary<int, Player> Players = new Dictionary<int, Player>();
+}
+
+public class Player {
+	public string Name = "";
+	public string Avatar = "";
+	public string Uid = "";
+	public int Index;
+
+	public Player(Dictionary<string, object> json, int index) {
+		Name = json.String("name");
+		Avatar = json.String("avatar");
+		Uid = json.String("uid");
+		Index = index;
+	}
 }
 
 // 游戏变动数据
