@@ -48,6 +48,7 @@ public class ScoreCtrl : MonoBehaviour {
 			
 			// 保存当前时间
 			seconds = secs;
+			installTimer();
 
 			var list = ret.List("list");
 			var guestList = new List<Dictionary<string, object>>();
@@ -77,37 +78,33 @@ public class ScoreCtrl : MonoBehaviour {
         	}
 
 			// 游客
-			var header = (GameObject)Instantiate(Resources.Load("Prefab/Score/LookerHeader"));
+			var header = (GameObject)Instantiate(Resources.Load("Prefab/Score/GuestHeader"));
         	header.transform.SetParent(viewport.transform, false);
 			header.transform.Find("Text").GetComponent<Text>().text = string.Format("游客（{0}）", guestList.Count);
 
-			installTimer();
+			if (guestList.Count < 1) {
+				return ;
+			}
+
+			GameObject grid = (GameObject)Instantiate(Resources.Load("Prefab/Score/GridLayout"));
+			grid.transform.SetParent(viewport.transform, false);
+
+			foreach(Dictionary<string, object> guest in guestList) {
+				var guestObj = (GameObject)Instantiate(Resources.Load("Prefab/Score/Guest"));
+				guestObj.transform.SetParent(grid.transform, false);
+
+				RawImage img = guestObj.transform.Find("RawImage").GetComponent<RawImage>();
+				StartCoroutine(DownloadImage(img, guest.String("avatar")));
+				guestObj.transform.Find("Text").GetComponent<Text>().text = guest.String("name");
+			} 
         });
-
-        // // 每个item相距30，两边留20
-        // float width = 150;
-        // float height = 170;
-        // GridLayoutGroup gridLayout = Instantiate(lookerGridLayout).GetComponent<GridLayoutGroup>();
-        // gridLayout.cellSize = new Vector2(width, height);
-        // gridLayout.transform.SetParent(viewport.transform, false);
-
-        // for (var i = 0; i < 10; i++) {
-        // 	GameObject obj = Instantiate(lookerPrefab);
-
-        // 	RawImage img = obj.transform.Find("RawImage").GetComponent<RawImage>();
-        // 	StartCoroutine(DownloadImage(img));
-        // 	obj.transform.Find("Text").GetComponent<Text>().text = "我是大番薯";
-
-        // 	obj.transform.SetParent(gridLayout.transform, false);
-        // }
     }
 
 	void installTimer() {
 		InvokeRepeating("updateSecs", 1.0f, 1.0f);
 	}
 
-	IEnumerator<WWW> DownloadImage(RawImage img) {
-		string url = "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3081053742,1983158129&fm=116&gp=0.jpg";
+	IEnumerator<WWW> DownloadImage(RawImage img, string url) {
 		WWW www = new WWW(url);
 		yield return www;
 		img.texture = Ext.Circular(www.texture);

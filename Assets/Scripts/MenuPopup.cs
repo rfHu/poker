@@ -13,6 +13,9 @@ public class MenuPopup : MonoBehaviour {
 	public GameObject SuppObj;
 
 	public void Supplement() {
+		if (!GConf.MyCmd.Takecoin) {
+			return ;
+		}
 		Delegates.shared.OnTakeCoin(new DelegateArgs());	
 	}
 
