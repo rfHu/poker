@@ -170,11 +170,13 @@ public class Controller : MonoBehaviour {
 	void addListeners() {
 		Delegates.shared.TakeSeat += new EventHandler<DelegateArgs>(onTakeSeat);
 		Delegates.shared.UnSeat += new EventHandler<DelegateArgs>(onUnSeat);
+		Delegates.shared.Ready += new EventHandler<DelegateArgs>(onReady);
 	}
 
 	void removeListeners() {
 		Delegates.shared.TakeSeat -= new EventHandler<DelegateArgs>(onTakeSeat);
 		Delegates.shared.TakeSeat -= new EventHandler<DelegateArgs>(onUnSeat);
+		Delegates.shared.Ready -= new EventHandler<DelegateArgs>(onReady);
 	}
 
 	void OnDestroy()
@@ -195,6 +197,13 @@ public class Controller : MonoBehaviour {
 		}
 		
 		showPlayer(player);	
+	}
+
+	void onReady(object sender, DelegateArgs e) {
+		var args = e.Data.Dict("args");
+		var index = args.Int("where");
+		var bankroll = args.Int("bankroll");
+		Players[index].SetScore(bankroll);
 	}
 
 	void onUnSeat(object sender, DelegateArgs e) {

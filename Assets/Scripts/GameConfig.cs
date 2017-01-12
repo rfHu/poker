@@ -36,12 +36,14 @@ public class Player {
 	public string Name = "";
 	public string Avatar = "";
 	public string Uid = "";
+	public int Bankroll = 0;
 	public int Index;
 
 	public Player(Dictionary<string, object> json, int index) {
 		Name = json.String("name");
 		Avatar = json.String("avatar");
 		Uid = json.String("uid");
+		Bankroll = json.Int("bankroll");
 		Index = index;
 	}
 }

@@ -24,9 +24,13 @@ public class PlayerObject : MonoBehaviour {
 		countdown.SetActive(false);
 	}
 
+	public void SetScore(int score) {
+		scoreLabel.text = score.ToString();
+	}
+
 	public void ShowPlayer(Player player) {
 		nameLabel.text = player.Name;
-		scoreLabel.text = "0";
+		scoreLabel.text = player.Bankroll.ToString();
 		RawImage rawImage = transform.Find("Circle").Find("Avatar").GetComponent<RawImage>();
 		StartCoroutine(DownloadAvatar(rawImage, player.Avatar));
 	}

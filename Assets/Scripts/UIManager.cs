@@ -7,7 +7,6 @@ using System.Collections.Generic;
 public class UIManager : MonoBehaviour {
 	public Canvas canvas;
 	public GameObject maskPrefab;
-	public GameObject cardTipPanel;
 	public GameObject scorePage;
 	public Canvas popupCanvas;
 	public GameObject recallPage;
@@ -50,13 +49,7 @@ public class UIManager : MonoBehaviour {
 		DOTweenAnimation anim = scorePage.GetComponent<DOTweenAnimation>();
 		ShowTween(anim);
 	}
-
-	public void CardTip() {
-		DOTweenAnimation anim = cardTipPanel.GetComponent<DOTweenAnimation>();
-		ShowTween(anim);
-		HideMenu();
-	}
-
+	
 	void HideMenu() {
 		// 隐藏menu和上一个遮罩
 		// menu.GetComponent<DOTweenAnimation>().DORestartById("Hide");

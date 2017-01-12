@@ -19,7 +19,7 @@ public class DOPopup : MonoBehaviour {
 
 	int modalKey;
 
-	void Start()
+	void Awake()
 	{
 		var rectTrans = GetComponent<RectTransform>();
 
@@ -40,7 +40,7 @@ public class DOPopup : MonoBehaviour {
 		transform.SetParent(canvas.transform, false);
 		modalKey = ModalHelper.Open(this, null, new Color(0, 0, 0, 0), Close);
 		transform.SetAsLastSibling();
-        
+
 		switch(Animate) {
 			case AnimType.Up2Down: 
 				GetComponent<RectTransform>().DOAnchorPos(endPosition, duration);
@@ -49,6 +49,11 @@ public class DOPopup : MonoBehaviour {
 				gameObject.Popup();
 				break;
 		}
+	}
+
+	public void ImmediateClose() {
+		ModalHelper.Close(modalKey);
+		Destroy(gameObject);
 	}
 
 	public void Close() {

@@ -14,6 +14,7 @@ public class Delegates {
 	public event EventHandler<DelegateArgs> TakeSeat;
 	public event EventHandler<DelegateArgs> TakeCoin;
 	public event EventHandler<DelegateArgs> UnSeat;
+	public event EventHandler<DelegateArgs> Ready;
 
 	public void OnTakeSeat(DelegateArgs e) {
 		if (TakeSeat != null) {
@@ -30,6 +31,12 @@ public class Delegates {
 	public void OnUnSeat(DelegateArgs e) {
 		if (UnSeat != null) {
 			UnSeat(this, e);
+		}
+	}
+
+	public void OnReady(DelegateArgs e) {
+		if (Ready != null) {
+			Ready(this, e);
 		}
 	}
 }
