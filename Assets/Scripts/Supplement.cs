@@ -57,6 +57,8 @@ public class Supplement : MonoBehaviour {
 			if (err != 0) {
 				// @TODO: TakeCoin失败
 				Debug.Log("错误");
+			} else {
+				gameObject.GetComponent<DOPopup>().Close();
 			}
 		});
 	}
