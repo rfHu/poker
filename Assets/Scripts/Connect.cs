@@ -109,8 +109,10 @@ public class Connect  {
 				return ;
 			}
 
-			var cmds = json.Dict("ret").Dict("cmds");
-			GConf.MyCmd.SetCmd(cmds);
+			var ret = json.Dict("ret");
+			if (ret.ContainsKey("cmds")) {
+				GConf.MyCmd.SetCmd(ret.Dict("cmds"));
+			}
 
 			int seq = json.Int("seq");
 

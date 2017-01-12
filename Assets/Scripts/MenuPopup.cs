@@ -3,14 +3,26 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class MenuPopup : MonoBehaviour {
-	public List<Sprite> muteSprites;
-    public GameObject muteObj;
+	public List<Sprite> MuteSprites;
+    public GameObject MuteObj;
 
 	private Canvas parent;
+
+	public GameObject StandObj;
+	public GameObject SuppObj;
+
 	
 	void Start()
 	{
-		parent = GameObject.FindGameObjectWithTag("Canvas2").GetComponent<Canvas>();		
+		parent = GameObject.FindGameObjectWithTag("Canvas2").GetComponent<Canvas>();
+
+		if (GConf.MyCmd.Unseat) {
+			StandObj.GetComponent<CanvasGroup>().alpha = 1;
+		}
+
+		if (GConf.MyCmd.Takecoin) {
+			SuppObj.GetComponent<CanvasGroup>().alpha = 1;
+		}		
 	}
 
 	public void Standup() {
@@ -28,10 +40,10 @@ public class MenuPopup : MonoBehaviour {
 	public void ToggleMute() {
 		if (AudioListener.volume > 0) {
 			AudioListener.volume = 0;
-			muteObj.GetComponent<Image>().sprite = muteSprites[1];
+			MuteObj.GetComponent<Image>().sprite = MuteSprites[1];
 		} else {
 			AudioListener.volume = 1;
-		    muteObj.GetComponent<Image>().sprite = muteSprites[0];
+		    MuteObj.GetComponent<Image>().sprite = MuteSprites[0];
 		}
 	}
 

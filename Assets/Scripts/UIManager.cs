@@ -31,8 +31,6 @@ public class UIManager : MonoBehaviour {
 	public void ShowMenu() {
 		var popup = (GameObject)Instantiate(Resources.Load("Prefab/MenuPopup"));
 		popup.GetComponent<DOPopup>().Show(popupCanvas);	
-		// DOTweenAnimation anim = menu.GetComponent<DOTweenAnimation>();
-		// ShowTween(anim);
 	}
 	
 	public void Exit() {
@@ -42,21 +40,13 @@ public class UIManager : MonoBehaviour {
 	public void UserInfo() {
 		DOTweenAnimation anim = userPopup.GetComponent<DOTweenAnimation>();
 		ShowTween(anim);
-		HideMenu();	
 	}
 
 	public void ScorePage() {
-		DOTweenAnimation anim = scorePage.GetComponent<DOTweenAnimation>();
-		ShowTween(anim);
+		var score = (GameObject)Instantiate(Resources.Load("Prefab/ScorePage"));
+		score.GetComponent<DOPopup>().Show(popupCanvas);	
 	}
 	
-	void HideMenu() {
-		// 隐藏menu和上一个遮罩
-		// menu.GetComponent<DOTweenAnimation>().DORestartById("Hide");
-		GameObject obj = GameObject.Find("Mask(Clone)");		
-		Destroy(obj);
-	}
-
 	void ShowPage(Animator anim, Action callback = null) {
 		anim.SetBool("Show", true);
 
