@@ -109,6 +109,9 @@ public class Connect  {
 				return ;
 			}
 
+			var cmds = json.Dict("ret").Dict("cmds");
+			GConf.MyCmd.SetCmd(cmds);
+
 			int seq = json.Int("seq");
 
 			if (actions.ContainsKey(seq)) {
@@ -124,8 +127,6 @@ public class Connect  {
 
 			var json = args[0] as Dictionary<string, object>;
 
-			// Ext.Log(json);
-
 			if (json == null) {
 				return ;
 			}
@@ -140,8 +141,8 @@ public class Connect  {
 			if (e == "look") {
 				EnterGame(json);
 			} else if (e == "prompt") {
-				// @TODO: 收到操作状态变化
-				// GInfo.HasSeat = json.Dict("args").Bool("unseat");
+				var cmds = json.Dict("args");
+				GConf.MyCmd.SetCmd(cmds);
 			}
 
 			var data = new DelegateArgs(json);
@@ -157,13 +158,16 @@ public class Connect  {
 				case "unseat":
 					Delegates.shared.OnUnSeat(data);
 					break;
+				case "ready":
+					Delegates.shared.OnReady(data);
+					break;
 				default:
 					break;
 			}
 		});
 	}
 
-	bool enter = false;
+	private bool enter = false;
 
 	// 只允许进入一次
 	void EnterGame(Dictionary<string, object> json) {
@@ -197,10 +201,6 @@ public class Connect  {
 			var index = Convert.ToInt32(entry.Key);
 			var player = new Player(dict, index);
 			GConf.Players.Add(index, player);
-
-			if (player.Uid == GConf.Uid) {
-				GConf.MySeat = index;
-			}
 		}
 
 		SceneManager.LoadScene("PokerGame");

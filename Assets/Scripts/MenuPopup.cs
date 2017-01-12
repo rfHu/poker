@@ -14,9 +14,7 @@ public class MenuPopup : MonoBehaviour {
 	}
 
 	public void Standup() {
-		var mySeat = GConf.MySeat;
-
-		if (mySeat < 0) {
+		if (!GConf.MyCmd.Unseat) {
 			return ;
 		}
 

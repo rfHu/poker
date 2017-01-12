@@ -28,8 +28,20 @@ public class GConf {
 
 	public static Dictionary<int, Player> Players = new Dictionary<int, Player>();
 
-	// -1表示没有座位
-	public static int MySeat = -1;
+	public class MyCmd {
+		public static bool Takecoin = false;
+		public static bool Unseat = false;
+
+		public static void SetCmd(Dictionary<string, object> data) {
+			foreach(KeyValuePair<string, object> entry in data) {
+				if (entry.Key == "takecoin") {
+					MyCmd.Takecoin = Convert.ToBoolean(entry.Value);
+			   	} else if (entry.Key == "unseat") {
+					MyCmd.Unseat = Convert.ToBoolean(entry.Value);	   
+				}
+			}
+		}
+	}
 }
 
 public class Player {
@@ -47,28 +59,3 @@ public class Player {
 		Index = index;
 	}
 }
-
-// 游戏变动数据
-// public class GInfo {
-// 	private static bool hasSeat = false;
-// 	public static bool HasSeat {
-// 		get {
-// 			return hasSeat;
-// 		}
-
-// 		set {
-// 			hasSeat = value;
-// 		}
-// 	}
-
-// 	private static bool canBuyCoins = false;
-// 	public static bool CanBuyCoins {
-// 		get {
-// 			return canBuyCoins;
-// 		}
-
-// 		set {
-// 			canBuyCoins = value;
-// 		}
-// 	}
-// }
