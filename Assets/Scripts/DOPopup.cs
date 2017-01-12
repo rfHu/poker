@@ -5,7 +5,8 @@ using DG.Tweening;
 public enum AnimType {
 	Up2Down,
 	Left2Right,
-	Right2Left
+	Right2Left,
+	Popup
 }
 
 public class DOPopup : MonoBehaviour {
@@ -24,14 +25,14 @@ public class DOPopup : MonoBehaviour {
 
 		// @TODO: 处理ContentSizeFitter
 
-		if (Animate == AnimType.Up2Down) {
-			beginPosition = new Vector2(0, rectTrans.rect.height);
-			endPosition = new Vector2(0, 0);
-			rectTrans.anchoredPosition = beginPosition;
-		} else if (Animate == AnimType.Left2Right) {
-
-		} else if(Animate == AnimType.Right2Left) {
-
+		switch(Animate) {
+			case AnimType.Up2Down:
+				beginPosition = new Vector2(0, rectTrans.rect.height);
+				endPosition = new Vector2(0, 0);
+				rectTrans.anchoredPosition = beginPosition;
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -39,13 +40,38 @@ public class DOPopup : MonoBehaviour {
 		transform.SetParent(canvas.transform, false);
 		modalKey = ModalHelper.Open(this, null, new Color(0, 0, 0, 0), Close);
 		transform.SetAsLastSibling();
-		GetComponent<RectTransform>().DOAnchorPos(endPosition, duration);
+        
+		switch(Animate) {
+			case AnimType.Up2Down: 
+				GetComponent<RectTransform>().DOAnchorPos(endPosition, duration);
+				break;
+			case AnimType.Popup: 
+				gameObject.Popup();
+				break;
+		}
 	}
 
-	public void  Close() {
+	public void Close() {
 		ModalHelper.Close(modalKey);
-		GetComponent<RectTransform>().DOAnchorPos(beginPosition, duration).OnComplete(() => {
+		Tween tween = null;
+
+		switch(Animate) {
+			case AnimType.Up2Down:
+				tween = GetComponent<RectTransform>().DOAnchorPos(beginPosition, duration);
+				break;
+			case AnimType.Popup:
+				tween = gameObject.Popup(false);
+				break;
+			default:
+				break;
+		}
+
+		if (tween == null) {
 			Destroy(gameObject);
-		});
+		} else {
+			tween.OnComplete(() => {
+				Destroy(gameObject);
+			});
+		}
 	}
 }

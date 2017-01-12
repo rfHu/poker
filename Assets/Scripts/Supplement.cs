@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Events;
 using System.Collections.Generic;
 using Extensions;
-using UnityEngine.EventSystems;
 
+
+[RequireComponent(typeof(DOPopup))]
 public class Supplement : MonoBehaviour {
+
 	public Text Blind;
 	public Text Score;
 	public Text Coins;
@@ -46,9 +47,7 @@ public class Supplement : MonoBehaviour {
 		Pay.text = (newValue * GConf.rake).ToString();
 	}
 
-	public void TakeCoin(BaseEventData data) {
-		Debug.Log(data);
-
+	public void TakeCoin() {
 		float value = slider.value;	
 		Connect.shared.Emit(new Dictionary<string, object>(){
 			{"f", "takecoin"},
@@ -59,6 +58,13 @@ public class Supplement : MonoBehaviour {
 				// @TODO: TakeCoin失败
 				Debug.Log("错误");
 			}
+		});
+	}
+
+	void OnDestroy()
+	{
+		Connect.shared.Emit(new Dictionary<string, object>() {
+			{"f", "unseat"}
 		});
 	}
 }

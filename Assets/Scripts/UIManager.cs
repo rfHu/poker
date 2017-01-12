@@ -88,30 +88,10 @@ public class UIManager : MonoBehaviour {
 		});
 	}
 
-	public void Supplement() {
-
-	}
-
 	void onTakeCoin(object sender, DelegateArgs e) {
 		GameObject obj = (GameObject)Instantiate(Resources.Load("Prefab/Supplement"));
-		ShowPopup(obj, () => {
-			Connect.shared.Emit(new Dictionary<string, object>() {
-				{"f", "unseat"}
-			});
-		});
+		obj.GetComponent<DOPopup>().Show(popupCanvas);
 	} 
-
-	public void ShowPopup(GameObject obj, Action callback = null) {
-		obj.transform.SetParent(popupCanvas.transform, false);
-		Animations.ShowPopup(obj);
-		ShowMask(() => {
-			Animations.HidePopup(obj);	
-
-			if (callback != null) {
-				callback();
-			}
-		});
-	}
 
 	void Awake()
 	{
