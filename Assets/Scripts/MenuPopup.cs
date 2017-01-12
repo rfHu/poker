@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class MenuPopup : MonoBehaviour {
 	public List<Sprite> MuteSprites;
@@ -11,7 +12,10 @@ public class MenuPopup : MonoBehaviour {
 	public GameObject StandObj;
 	public GameObject SuppObj;
 
-	
+	public void Supplement() {
+		Delegates.shared.OnTakeCoin(new DelegateArgs());	
+	}
+
 	void Start()
 	{
 		parent = GameObject.FindGameObjectWithTag("Canvas2").GetComponent<Canvas>();

@@ -1,13 +1,38 @@
 ﻿using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 using Extensions;
 
 public class ScoreCtrl : MonoBehaviour {
 	public GameObject viewport;
 	public Text Hands;
 	public Text Countdown;
+
+	int seconds;
+
+	private string secToStr(int seconds) {
+		var hs = 3600;
+		var ms = 60;
+
+		var h = Mathf.FloorToInt(seconds / hs);		
+		var m = Mathf.FloorToInt(seconds % hs / ms);
+		var s = (seconds % ms);
+
+		return string.Format("{0}:{1}:{2}", fix(h), fix(m), fix(s));	
+	}
+
+	private string fix(int num) {
+		var str = num.ToString();
+		if (str.Length < 2) {
+			return "0" + str;
+		}
+		return str;
+	}
+
+	private void updateSecs() {
+		seconds -= 1;
+		Countdown.text = secToStr(seconds);
+	}
 
 	void Start()
 	{
@@ -16,9 +41,13 @@ public class ScoreCtrl : MonoBehaviour {
         }, (json) =>
         {
 			var ret = json.Dict("ret");
+			var secs = ret.Int("left_time");
 
-			Hands.text = ret.Int("handid").ToString();
-			Countdown.text = ret.Int("left_time").ToString();
+			Hands.text = string.Format("第{0}手", ret.Int("handid")); 
+			Countdown.text = secToStr(secs);
+			
+			// 保存当前时间
+			seconds = secs;
 
 			var list = ret.List("list");
 			var guestList = new List<Dictionary<string, object>>();
@@ -51,6 +80,8 @@ public class ScoreCtrl : MonoBehaviour {
 			var header = (GameObject)Instantiate(Resources.Load("Prefab/Score/LookerHeader"));
         	header.transform.SetParent(viewport.transform, false);
 			header.transform.Find("Text").GetComponent<Text>().text = string.Format("游客（{0}）", guestList.Count);
+
+			installTimer();
         });
 
         // // 每个item相距30，两边留20
@@ -71,10 +102,19 @@ public class ScoreCtrl : MonoBehaviour {
         // }
     }
 
+	void installTimer() {
+		InvokeRepeating("updateSecs", 1.0f, 1.0f);
+	}
+
 	IEnumerator<WWW> DownloadImage(RawImage img) {
 		string url = "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3081053742,1983158129&fm=116&gp=0.jpg";
 		WWW www = new WWW(url);
 		yield return www;
 		img.texture = Ext.Circular(www.texture);
+	}
+
+	void OnDestroy()
+	{
+		CancelInvoke();
 	}
 }

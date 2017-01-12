@@ -68,7 +68,7 @@ public class Supplement : MonoBehaviour {
 
 	void OnDestroy()
 	{
-		if (takeCoinSucc) {
+		if (takeCoinSucc || GConf.MyCmd.Unseat) {
 			return ;
 		}
 

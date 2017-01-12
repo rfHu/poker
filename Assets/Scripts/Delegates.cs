@@ -6,6 +6,8 @@ public class DelegateArgs: EventArgs {
 	public DelegateArgs(Dictionary<string, object> data) {
 		Data = data;
 	}
+
+	public DelegateArgs(){}
 }
 
 public class Delegates {

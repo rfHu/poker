@@ -14,8 +14,6 @@ public class Controller : MonoBehaviour {
 	public GameObject gameInfoWrapper;
 	public GameObject startButton;
 
-	public Dictionary<int, PlayerObject> Players = new Dictionary<int, PlayerObject>();
-
 	public List<Vector2> positions = new List<Vector2>(); 
 
 	void Start () {
@@ -36,6 +34,11 @@ public class Controller : MonoBehaviour {
 			int identifer = iter;
 
 			button.onClick.AddListener(() => {
+				// 已有座位
+				if (GConf.MyCmd.Unseat) {
+					return ;
+				}
+
 				// 坐下
 				Connect.shared.Emit(
 					new Dictionary<string, object>(){
@@ -189,6 +192,7 @@ public class Controller : MonoBehaviour {
 		var index = args.Int("where");
 		var playerInfo = args.Dict("who");
 		var player = new Player(playerInfo, index);
+		Debug.Log(string.Format("takeseat: {0}", index));
 		GConf.Players.Add(index, player);
 		showPlayer(player);	
 	}
@@ -197,7 +201,9 @@ public class Controller : MonoBehaviour {
 		var args = e.Data.Dict("args");
 		var index = args.Int("where");
 		var bankroll = args.Int("bankroll");
-		Players[index].SetScore(bankroll);
+
+		Debug.Log(string.Format("ready: {0}", index));
+		playerObjects[index].SetScore(bankroll);
 	}
 
 	void onUnSeat(object sender, DelegateArgs e) {
