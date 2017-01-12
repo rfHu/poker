@@ -2,18 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Extensions;
 
 public class ScoreCtrl : MonoBehaviour {
-	public GameObject scoreEntry;
-	public GameObject lookHeader;
 	public GameObject viewport;
-	public GameObject lookerPrefab;
-
-	public GameObject lookerGridLayout;
-
-	List<Dictionary<string, object>> playerScoreList = new List<Dictionary<string, object>>();
-
-	private Dictionary<string, object> data = new Dictionary<string, object>();
+	public Text Hands;
+	public Text Countdown;
 
 	void Start()
 	{
@@ -21,28 +15,43 @@ public class ScoreCtrl : MonoBehaviour {
         	{"f", "gamerlist"}
         }, (json) =>
         {
-			
+			var ret = json.Dict("ret");
+
+			Hands.text = ret.Int("handid").ToString();
+			Countdown.text = ret.Int("left_time").ToString();
+
+			var list = ret.List("list");
+			var guestList = new List<Dictionary<string, object>>();
+			var playerList = new List<Dictionary<string, object>>();
+
+			foreach(object item in list) {
+				var dict = item as Dictionary<string, object>;
+				if (dict == null) {
+					continue;
+				}
+
+				if (dict.Int("takecoin") > 0) {
+					playerList.Add(dict);
+				} else {
+					guestList.Add(dict);
+				}
+			}
+
+			foreach(Dictionary<string, object> player in playerList) {
+				GameObject  entry = (GameObject)Instantiate(Resources.Load("Prefab/Score/PlayerScore"));
+				var all = player.Int("takecoin");
+
+				entry.transform.Find("Name").GetComponent<Text>().text = player.String("name");
+				entry.transform.Find("Total").GetComponent<Text>().text = all.ToString(); 
+				entry.transform.Find("Score").GetComponent<Text>().text = (player.Int("bankroll") - all).ToString();
+				entry.transform.SetParent(viewport.transform, false);
+        	}
+
+			// 游客
+			var header = (GameObject)Instantiate(Resources.Load("Prefab/Score/LookerHeader"));
+        	header.transform.SetParent(viewport.transform, false);
+			header.transform.Find("Text").GetComponent<Text>().text = string.Format("游客（{0}）", guestList.Count);
         });
-
-        // foreach(int i in Enumerable.Range(0, 30)) {
-        // 	playerScoreList.Add(
-        // 	new Dictionary<string, object>(){
-        // 		{"buy", 100},
-        // 		{"gain", 1000},
-        // 		{"name", "singno"}
-        // 	}
-        // 	);
-        // }
-
-        // foreach(Dictionary<string, object> player in playerScoreList) {
-        // 	 GameObject  entry = Instantiate(scoreEntry);
-        // 	 entry.transform.Find("Name").GetComponent<Text>().text = (string)player["name"];
-        // 	 entry.transform.Find("Total").GetComponent<Text>().text = player["buy"].ToString(); 
-        // 	 entry.transform.Find("Score").GetComponent<Text>().text = player["gain"].ToString();
-        // 	 entry.transform.SetParent(viewport.transform, false);
-        // }
-
-        // Instantiate(lookHeader).transform.SetParent(viewport.transform, false);
 
         // // 每个item相距30，两边留20
         // float width = 150;
