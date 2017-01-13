@@ -2,12 +2,10 @@
 using System;
 using UnityEngine.EventSystems;
 using DG.Tweening;
-using System.Collections.Generic;
 
 public class UIManager : MonoBehaviour {
 	public Canvas canvas;
 	public GameObject maskPrefab;
-	public GameObject scorePage;
 	public Canvas popupCanvas;
 	public GameObject recallPage;
 	public GameObject userPopup;
