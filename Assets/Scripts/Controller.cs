@@ -192,7 +192,6 @@ public class Controller : MonoBehaviour {
 		var index = args.Int("where");
 		var playerInfo = args.Dict("who");
 		var player = new Player(playerInfo, index);
-		Debug.Log(string.Format("takeseat: {0}", index));
 		GConf.Players.Add(index, player);
 		showPlayer(player);	
 	}
@@ -202,7 +201,6 @@ public class Controller : MonoBehaviour {
 		var index = args.Int("where");
 		var bankroll = args.Int("bankroll");
 
-		Debug.Log(string.Format("ready: {0}", index));
 		playerObjects[index].SetScore(bankroll);
 	}
 
