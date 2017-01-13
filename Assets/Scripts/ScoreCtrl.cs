@@ -92,6 +92,7 @@ public class ScoreCtrl : MonoBehaviour {
 			foreach(Dictionary<string, object> guest in guestList) {
 				var guestObj = (GameObject)Instantiate(Resources.Load("Prefab/Score/Guest"));
 				guestObj.transform.SetParent(grid.transform, false);
+				guestObj.GetComponent<GuestHeader>().Uid = guest.String("uid");
 
 				RawImage img = guestObj.transform.Find("RawImage").GetComponent<RawImage>();
 				StartCoroutine(DownloadImage(img, guest.String("avatar")));
