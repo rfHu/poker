@@ -193,6 +193,12 @@ public class Connect  {
 		GConf.GPSLimit = options.Int("gps_limit") == 1;
 		GConf.IPLimit = options.Int("ip_limit") == 1;
 		GConf.roomName = args.String("name");
+		
+		var startTs = args.Int("begin_time");
+		if (startTs != 0)
+        {
+			GConf.GameStarted = true;
+        }
 
 		var bb = options.Int("limit");
 		GConf.bb = bb ;

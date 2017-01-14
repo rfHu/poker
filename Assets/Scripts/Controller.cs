@@ -133,7 +133,7 @@ public class Controller : MonoBehaviour {
 	}
 
 	void ShowGameInfo() {
-		if (GConf.isOwner) {
+		if (GConf.isOwner && !GConf.GameStarted) {
 			startButton.SetActive(true);
 		}
 

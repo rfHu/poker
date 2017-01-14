@@ -19,7 +19,7 @@ public class GConf {
 	public static int bb = 0;
 	public static bool isStraddle = false;
 	public static string roomName = "";
-	public static DateTime startTime = DateTime.Now;
+	public static bool GameStarted = false; 
 	public static float rake = 0;
 	public static int duration = 0;
 	public static bool needAduit = false;

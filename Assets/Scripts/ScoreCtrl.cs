@@ -102,6 +102,9 @@ public class ScoreCtrl : MonoBehaviour {
     }
 
 	void installTimer() {
+		if (!GConf.GameStarted) {
+			return ;
+		}
 		InvokeRepeating("updateSecs", 1.0f, 1.0f);
 	}
 
