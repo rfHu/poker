@@ -23,7 +23,7 @@ public class Connect  {
 			HTTPManager.Proxy = new HTTPProxy(new Uri("http://localhost:8888"));
 		}
 
-		GConf.userToken = "s%3AyqZMe2unwrbWgoK7JfZ8wvrAj_cbCBk5.yCzKvWbZQbYikN5DrozgGB2iRyRjgLsvveCfwwSm42c";
+		GConf.userToken = "s%3AcrA94QtMtHzr-iuoa701iZDK-bb_d2NS.T%2F5P%2BwnIVU9Y3AQs%2Bt5xNaKwfgzfow8PAiWXXLdNlVk";
 
 		SocketOptions options = new SocketOptions();
 		options.ConnectWith = TransportTypes.WebSocket;

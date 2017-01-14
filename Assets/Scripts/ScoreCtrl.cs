@@ -34,7 +34,7 @@ public class ScoreCtrl : MonoBehaviour {
 		Countdown.text = secToStr(seconds);
 	}
 
-	void Start()
+	void Awake()
 	{
 		Connect.shared.Emit(new Dictionary<string, object>(){
         	{"f", "gamerlist"}
@@ -78,26 +78,26 @@ public class ScoreCtrl : MonoBehaviour {
         	}
 
 			// 游客
-			var header = (GameObject)Instantiate(Resources.Load("Prefab/Score/GuestHeader"));
-        	header.transform.SetParent(viewport.transform, false);
-			header.transform.Find("Text").GetComponent<Text>().text = string.Format("游客（{0}）", guestList.Count);
+			// var header = (GameObject)Instantiate(Resources.Load("Prefab/Score/GuestHeader"));
+			// header.transform.Find("Text").GetComponent<Text>().text = string.Format("游客（{0}）", guestList.Count);
+        	// header.transform.SetParent(viewport.transform, false);
 
-			if (guestList.Count < 1) {
-				return ;
-			}
+			// if (guestList.Count < 1) {
+			// 	return ;
+			// }
 
-			GameObject grid = (GameObject)Instantiate(Resources.Load("Prefab/Score/GridLayout"));
-			grid.transform.SetParent(viewport.transform, false);
+			// GameObject grid = (GameObject)Instantiate(Resources.Load("Prefab/Score/GridLayout"));
+			// grid.transform.SetParent(viewport.transform, false);
 
-			foreach(Dictionary<string, object> guest in guestList) {
-				var guestObj = (GameObject)Instantiate(Resources.Load("Prefab/Score/Guest"));
-				guestObj.transform.SetParent(grid.transform, false);
-				guestObj.GetComponent<GuestHeader>().Uid = guest.String("uid");
+			// foreach(Dictionary<string, object> guest in guestList) {
+			// 	var guestObj = (GameObject)Instantiate(Resources.Load("Prefab/Score/Guest"));
+			// 	guestObj.GetComponent<GuestHeader>().Uid = guest.String("uid");
 
-				RawImage img = guestObj.transform.Find("RawImage").GetComponent<RawImage>();
-				StartCoroutine(DownloadImage(img, guest.String("avatar")));
-				guestObj.transform.Find("Text").GetComponent<Text>().text = guest.String("name");
-			} 
+			// 	RawImage img = guestObj.transform.Find("RawImage").GetComponent<RawImage>();
+			// 	StartCoroutine(DownloadImage(img, guest.String("avatar")));
+			// 	guestObj.transform.Find("Text").GetComponent<Text>().text = guest.String("name");
+			// 	guestObj.transform.SetParent(grid.transform, false);
+			// } 
         });
     }
 
