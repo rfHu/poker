@@ -175,6 +175,24 @@ public class Connect  {
 				case "deal":
 					Delegates.shared.OnDeal(data);
 					break;
+				case  "moveturn":
+					Delegates.shared.OnMoveTurn(data);
+					break;
+				case  "fold":
+					Delegates.shared.OnFold(data);
+					break;
+				case  "check":
+					Delegates.shared.OnCheck(data);
+					break;
+				case  "raise":
+					Delegates.shared.OnRaise(data);
+					break;
+				case  "call":
+					Delegates.shared.OnCall(data);
+					break;
+				case  "all_in":
+					Delegates.shared.OnAllIn(data);
+					break;
 				default:
 					break;
 			}

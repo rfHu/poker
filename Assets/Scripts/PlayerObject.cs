@@ -18,6 +18,7 @@ public class PlayerObject : MonoBehaviour {
 
 	public GameObject Cardfaces;
 	public GameObject MyCards;
+	public Text Chips;
 
 	void Awake() {
 		nameLabel = transform.Find("Name").GetComponent<Text>();
@@ -45,7 +46,7 @@ public class PlayerObject : MonoBehaviour {
 		img.texture = Ext.Circular(www.texture);
 	}	
 
-	public IEnumerator MyTurn(float elaspe) {
+	public IEnumerator MyTurn(float elaspe = 0) {
 		countdown.SetActive(true);
 		activated = true;
 

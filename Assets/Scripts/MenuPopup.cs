@@ -55,7 +55,9 @@ public class MenuPopup : MonoBehaviour {
 	}
 
 	public void Exit() {
-
+		Connect.shared.Emit(new Dictionary<string, object>() {
+			{"f", "exit"}
+		});
 	}
 
 	public void Tips() {

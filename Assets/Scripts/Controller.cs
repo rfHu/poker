@@ -16,6 +16,8 @@ public class Controller : MonoBehaviour {
 
 	public GameObject PublicCards;
 
+	public GameObject Pot;
+
 	void Start () {
 		List<Button> buttons = new List<Button>();
 		int numberOfPlayers = GConf.playerCount;
@@ -177,6 +179,7 @@ public class Controller : MonoBehaviour {
 		Delegates.shared.GameStart += new EventHandler<DelegateArgs>(onGameStart);
 		Delegates.shared.SeeCard += new EventHandler<DelegateArgs>(onSeeCard);
 		Delegates.shared.Deal += new EventHandler<DelegateArgs>(onDeal);
+		Delegates.shared.MoveTurn += new EventHandler<DelegateArgs>(onMoveTurn);
 	}
 
 	void removeListeners() {
@@ -186,6 +189,7 @@ public class Controller : MonoBehaviour {
 		Delegates.shared.GameStart -= new EventHandler<DelegateArgs>(onGameStart);
 		Delegates.shared.SeeCard -= new EventHandler<DelegateArgs>(onSeeCard);
 		Delegates.shared.Deal -= new EventHandler<DelegateArgs>(onDeal);
+		Delegates.shared.MoveTurn -= new EventHandler<DelegateArgs>(onMoveTurn);
 	}
 
 	void OnDestroy()
@@ -219,6 +223,11 @@ public class Controller : MonoBehaviour {
 
 		var index = args.Int("where");
 		RemovePlayer(index);
+	}
+
+	void onMoveTurn(object sender, DelegateArgs e) {
+		var index = e.Data.Dict("args").Int("seat");
+		StartCoroutine(playerObjects[index].MyTurn());
 	}
 
 	Dictionary<int, PlayerObject> playerObjects = new Dictionary<int, PlayerObject>();
@@ -288,8 +297,35 @@ public class Controller : MonoBehaviour {
         go.transform.SetParent(PublicCards.transform, false);
 	}
 
+	void updatePot(int pot, int prev) {
+		Pot.GetComponent<Pots>().PrevPot.text = prev.ToString();
+		Pot.GetComponent<Pots>().DC.text =  "底池:" + pot.ToString();
+	}
+
 	void onGameStart(object sender, DelegateArgs e) {
 		PublicCards.transform.Clear();
+		Pot.SetActive(true);
+
+		var args = e.Data.Dict("args").Dict("room");
+		var pot = args.Int("pot");
+		updatePot(pot, pot - args.Int("pr_pot"));	
+
+		var gamers = args.Dict("gamers");
+		foreach(KeyValuePair<string, object> entry in gamers) {
+			var idx = Convert.ToInt32(entry.Key);
+			var dict = entry.Value as Dictionary<string, object>;
+
+			if (dict == null) {
+				continue;
+			}
+
+			var prchips = dict.Int("pr_chips");
+
+			if (prchips != 0) {
+				playerObjects[idx].transform.Find("Chips").gameObject.SetActive(true);
+				playerObjects[idx].Chips.text = prchips.ToString();
+			}
+		}
 
 		// 发三张公共牌
 		for (int i = 0; i < 3; i++) {
