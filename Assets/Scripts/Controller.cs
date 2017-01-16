@@ -173,12 +173,15 @@ public class Controller : MonoBehaviour {
 		Delegates.shared.UnSeat += new EventHandler<DelegateArgs>(onUnSeat);
 		Delegates.shared.Ready += new EventHandler<DelegateArgs>(onReady);
 		Delegates.shared.GameStart += new EventHandler<DelegateArgs>(onGameStart);
+		Delegates.shared.SeeCard += new EventHandler<DelegateArgs>(onSeeCard);
 	}
 
 	void removeListeners() {
 		Delegates.shared.TakeSeat -= new EventHandler<DelegateArgs>(onTakeSeat);
 		Delegates.shared.TakeSeat -= new EventHandler<DelegateArgs>(onUnSeat);
 		Delegates.shared.Ready -= new EventHandler<DelegateArgs>(onReady);
+		Delegates.shared.GameStart -= new EventHandler<DelegateArgs>(onGameStart);
+		Delegates.shared.SeeCard -= new EventHandler<DelegateArgs>(onSeeCard);
 	}
 
 	void OnDestroy()
@@ -263,11 +266,54 @@ public class Controller : MonoBehaviour {
 		foreach(KeyValuePair<int, PlayerObject> entry in playerObjects) {
 			// 我自己
 			if (entry.Key == index) {
-				playerObjects[index].MyCards.SetActive(true);
+				// skip
 			} else {
 				var gameObj = entry.Value.Cardfaces;
 				gameObj.SetActive(true);
 			}
 		}
+	}
+
+	void onSeeCard(object sender, DelegateArgs e) {
+		 var index = FindMyIndex();
+		 var cards = e.Data.Dict("args").IL("cards");
+		 
+		 int[] cvs = new int[]{
+			 cardIndex(cards[0]),
+			 cardIndex(cards[1])
+		 };
+
+		 var playerObject = playerObjects[index];
+		 var first = playerObject.MyCards.transform.Find("First");
+		 var second = playerObject.MyCards.transform.Find("Second");
+
+		 first.GetComponent<Card>().Show(cvs[0]);
+		 second.GetComponent<Card>().Show(cvs[1]);
+
+		 playerObject.gameObject.SetActive(true);
+	}
+
+	int cardIndex(int number) {
+		var pairs = cardValues(number);
+		int index;
+
+		// 服务器数值为2~14
+		if (pairs[1] ==  14) {
+			index = 0;
+		} else {
+			index = pairs[1] - 1;
+		}
+
+		index = index + (4 - pairs[0]) * 13;
+
+		return index;
+	}
+
+	int[] cardValues(int number) {
+		var a = number >> 4;
+		var b = number & 0x0f;
+
+		// 第一个花色、第二个数值
+		return new int[]{a, b};
 	}
 }

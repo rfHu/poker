@@ -9,7 +9,8 @@ public class Card : MonoBehaviour {
 	void Awake() {
 		GetComponent<Image>().sprite = cardBack;
 	}
-	public void Show() {	
+	public void Show(int index) {	
+		cardIndex = index;
 		GetComponent<Image>().sprite = faces[cardIndex];
 	}
 
