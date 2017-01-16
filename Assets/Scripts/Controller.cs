@@ -172,6 +172,7 @@ public class Controller : MonoBehaviour {
 		Delegates.shared.TakeSeat += new EventHandler<DelegateArgs>(onTakeSeat);
 		Delegates.shared.UnSeat += new EventHandler<DelegateArgs>(onUnSeat);
 		Delegates.shared.Ready += new EventHandler<DelegateArgs>(onReady);
+		Delegates.shared.GameStart += new EventHandler<DelegateArgs>(onGameStart);
 	}
 
 	void removeListeners() {
@@ -216,15 +217,16 @@ public class Controller : MonoBehaviour {
 	Dictionary<int, PlayerObject> playerObjects = new Dictionary<int, PlayerObject>();
 
 	void showPlayer(Player data) {
-		GameObject playerObject = (GameObject)Instantiate(Resources.Load("Prefab/Player"));
-		PlayerObject playerComt = playerObject.GetComponent<PlayerObject>();
-	 	playerComt.Index = data.Index;
+		GameObject go = (GameObject)Instantiate(Resources.Load("Prefab/Player"));
+		PlayerObject playerObject = go.GetComponent<PlayerObject>();
+	 	playerObject.Index = data.Index;
+		playerObject.Uid = data.Uid;
 
-		playerComt.ShowPlayer(data);
+		playerObject.ShowPlayer(data);
         playerObject.transform.SetParent(canvas.transform, false);
         playerObject.GetComponent<RectTransform>().localPosition = positions[data.Index];
 
-		playerObjects.Add(playerComt.Index, playerComt);
+		playerObjects.Add(playerObject.Index, playerObject);
 	}
 
 	public void RemovePlayer(int index) {
@@ -238,5 +240,34 @@ public class Controller : MonoBehaviour {
 		playerObjects.Remove(index);
 		Destroy(player.gameObject);
 		GConf.Players.Remove(index);
+	}
+
+	void onDeal() {
+
+	}
+
+	int FindMyIndex() {
+		foreach(KeyValuePair<int, PlayerObject> entry in playerObjects) {
+			if (entry.Value.Uid == GConf.Uid) {
+				return entry.Key;
+			}
+		}
+
+		return -1;
+	}
+
+	void onGameStart(object sender, DelegateArgs e) {
+		var uid = e.Data.String("uid");
+		var index = FindMyIndex();
+
+		foreach(KeyValuePair<int, PlayerObject> entry in playerObjects) {
+			// 我自己
+			if (entry.Key == index) {
+				playerObjects[index].MyCards.SetActive(true);
+			} else {
+				var gameObj = entry.Value.Cardfaces;
+				gameObj.SetActive(true);
+			}
+		}
 	}
 }

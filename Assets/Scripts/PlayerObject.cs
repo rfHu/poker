@@ -14,8 +14,10 @@ public class PlayerObject : MonoBehaviour {
 
 	public bool activated = false;
 	public float thinkTime = 15;
+	public string Uid = "";
 
 	public GameObject Cardfaces;
+	public GameObject MyCards;
 
 	void Awake() {
 		nameLabel = transform.Find("Name").GetComponent<Text>();
