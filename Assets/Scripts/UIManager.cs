@@ -46,7 +46,11 @@ public class UIManager : MonoBehaviour {
 	}
 
 	void onExclusion(object sender, DelegateArgs e) {
-		UIManager.ShowDialog("您的账号已在其他设备登陆");
+		var type = e.Data.Dict("args").Int("type");
+		
+		if (type == 2) {
+			UIManager.ShowDialog("您的账号已在其他设备登陆");
+		}
 	}
 
 	// Test Methods
