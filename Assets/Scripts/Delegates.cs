@@ -30,6 +30,7 @@ public class Delegates {
     public event EventHandler<DelegateArgs> Call;
     public event EventHandler<DelegateArgs> AllIn;
     public event EventHandler<DelegateArgs> Raise;
+    public event EventHandler<DelegateArgs> GameOver;
 
 	// 登陆态互斥了
 	public event EventHandler<DelegateArgs> Exclusion;
@@ -120,6 +121,12 @@ public class Delegates {
 	public void OnExclusion(DelegateArgs e) {
 		if (Exclusion != null) {
 			Exclusion(this, e);
+		}
+	}
+
+	public void OnGameOver(DelegateArgs e) {
+		if (GameOver != null) {
+			GameOver(this, e);
 		}
 	}
 }

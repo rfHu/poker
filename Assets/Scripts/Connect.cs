@@ -196,6 +196,9 @@ public class Connect  {
 				case "bye":
 					Delegates.shared.OnExclusion(data);
 					break;
+				case "gameover":
+					Delegates.shared.OnGameOver(data);
+					break;
 				default:
 					break;
 			}
