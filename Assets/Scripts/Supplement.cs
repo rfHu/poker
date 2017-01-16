@@ -47,8 +47,6 @@ public class Supplement : MonoBehaviour {
 		Pay.text = (newValue * GConf.rake).ToString();
 	}
 
-	private bool takeCoinSucc = false;
-
 	public void TakeCoin() {
 		float value = slider.value;	
 		Connect.shared.Emit(new Dictionary<string, object>(){
@@ -60,7 +58,7 @@ public class Supplement : MonoBehaviour {
 				// @TODO: TakeCoin失败
 				Debug.Log("错误");
 			} else {
-				takeCoinSucc = true;
+				GConf.TakeCoinSuccess = true;
 				gameObject.GetComponent<DOPopup>().Close();
 			}
 		});
@@ -68,7 +66,7 @@ public class Supplement : MonoBehaviour {
 
 	void OnDestroy()
 	{
-		if (takeCoinSucc || GConf.MyCmd.Unseat) {
+		if (GConf.TakeCoinSuccess) {
 			return ;
 		}
 

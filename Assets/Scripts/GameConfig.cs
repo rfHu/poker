@@ -28,6 +28,8 @@ public class GConf {
 
 	public static Dictionary<int, Player> Players = new Dictionary<int, Player>();
 
+	public static bool TakeCoinSuccess = false;
+
 	public class MyCmd {
 		public static bool Takecoin = false;
 		public static bool Unseat = false;
@@ -42,6 +44,8 @@ public class GConf {
 			}
 		}
 	}
+
+	public static int DealerSeat = -1; 
 }
 
 public class Player {

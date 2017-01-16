@@ -2,6 +2,8 @@
 using System;
 using UnityEngine.EventSystems;
 using DG.Tweening;
+using UIWidgets;
+using Extensions;
 
 public class UIManager : MonoBehaviour {
 	public Canvas canvas;
@@ -10,6 +12,11 @@ public class UIManager : MonoBehaviour {
 	public GameObject recallPage;
 	public GameObject userPopup;
 	public GameObject startButton;
+
+	void Start()
+	{
+		ShowDialog();
+	}
 
 	GameObject ShowMask(Action callback) {
 		GameObject mask = Instantiate(maskPrefab);
@@ -70,6 +77,7 @@ public class UIManager : MonoBehaviour {
 	}
 
 	void onTakeCoin(object sender, DelegateArgs e) {
+		GConf.coins = e.Data.Dict("args").Int("coins");
 		GameObject obj = (GameObject)Instantiate(Resources.Load("Prefab/Supplement"));
 		obj.GetComponent<DOPopup>().Show(popupCanvas);
 	} 
@@ -82,5 +90,11 @@ public class UIManager : MonoBehaviour {
 	void OnDestroy()
 	{
 		Delegates.shared.TakeCoin -= new EventHandler<DelegateArgs>(onTakeCoin);
+	}
+
+	// Test Methods
+	void ShowDialog() {
+		// var go = (GameObject)Instantiate(Resources.Load("Prefab/DialogTemplate"));
+		// go.GetComponent<Dialog>().Show(message: "金币不足，请购买", modal: true, modalColor: new Color(0, 0, 0, 0.2f), canvas: popupCanvas);
 	}
 }

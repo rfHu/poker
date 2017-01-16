@@ -18,6 +18,12 @@ public class Delegates {
 	public event EventHandler<DelegateArgs> UnSeat;
 	public event EventHandler<DelegateArgs> Ready;
 
+	public event EventHandler<DelegateArgs> GameStart;
+
+	public event EventHandler<DelegateArgs> SeeCard;
+	public event EventHandler<DelegateArgs> Look;
+	public event EventHandler<DelegateArgs> Deal;
+
 	public void OnTakeSeat(DelegateArgs e) {
 		if (TakeSeat != null) {
 			TakeSeat(this, e);
@@ -39,6 +45,30 @@ public class Delegates {
 	public void OnReady(DelegateArgs e) {
 		if (Ready != null) {
 			Ready(this, e);
+		}
+	}
+
+	public void OnGameStart(DelegateArgs e) {
+		if (GameStart != null) {
+			GameStart(this, e);
+		}
+	}
+
+	public void OnSeeCard(DelegateArgs e) {
+		if (SeeCard != null) {
+			SeeCard(this, e);
+		}
+	}
+
+	public void OnLook(DelegateArgs e) {
+		if (Look != null) {
+			Look(this, e);
+		}
+	}
+
+	public void OnDeal(DelegateArgs e) {
+		if (Deal != null) {
+			Deal(this, e);
 		}
 	}
 }

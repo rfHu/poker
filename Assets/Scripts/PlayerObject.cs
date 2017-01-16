@@ -15,6 +15,8 @@ public class PlayerObject : MonoBehaviour {
 	public bool activated = false;
 	public float thinkTime = 15;
 
+	public GameObject Cardfaces;
+
 	void Awake() {
 		nameLabel = transform.Find("Name").GetComponent<Text>();
 		scoreLabel = transform.Find("Coins").Find("Text").GetComponent<Text>();

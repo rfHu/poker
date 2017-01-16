@@ -23,7 +23,7 @@ public class Connect  {
 			HTTPManager.Proxy = new HTTPProxy(new Uri("http://localhost:8888"));
 		}
 
-		GConf.userToken = "s%3AcrA94QtMtHzr-iuoa701iZDK-bb_d2NS.T%2F5P%2BwnIVU9Y3AQs%2Bt5xNaKwfgzfow8PAiWXXLdNlVk";
+		GConf.userToken = "s%3ATYD1Z2P08yQ7Uyu3o1KZZevf4v6K8sh1.S5l%2BfAqlAHThje7kJafU3qCKk3Yij%2B%2F5F1EHqifp540";
 
 		SocketOptions options = new SocketOptions();
 		options.ConnectWith = TransportTypes.WebSocket;
@@ -141,7 +141,7 @@ public class Connect  {
 
 			// 监听look事件，收到才进入房间
 			if (e == "look") {
-				EnterGame(json);
+				refreshGameInfo(json);
 			} else if (e == "prompt") {
 				var cmds = json.Dict("args");
 				GConf.MyCmd.SetCmd(cmds);
@@ -163,6 +163,18 @@ public class Connect  {
 				case "ready":
 					Delegates.shared.OnReady(data);
 					break;
+				case "gamestart":
+					Delegates.shared.OnGameStart(data);
+					break;
+				case "seecard":
+					Delegates.shared.OnSeeCard(data);
+					break;
+				case "look":
+					Delegates.shared.OnLook(data);
+					break;
+				case "deal":
+					Delegates.shared.OnDeal(data);
+					break;
 				default:
 					break;
 			}
@@ -172,13 +184,7 @@ public class Connect  {
 	private bool enter = false;
 
 	// 只允许进入一次
-	void EnterGame(Dictionary<string, object> json) {
-		if (enter) {
-			return ;
-		}
-
-		enter = true;
-
+	void refreshGameInfo(Dictionary<string, object> json) {
 		var args = json.Dict("args");
 		var options = args.Dict("options");
 		var gamers = args.Dict("gamers");
@@ -193,6 +199,7 @@ public class Connect  {
 		GConf.GPSLimit = options.Int("gps_limit") == 1;
 		GConf.IPLimit = options.Int("ip_limit") == 1;
 		GConf.roomName = args.String("name");
+		GConf.DealerSeat = args.Int("dealer_seat");
 		
 		var startTs = args.Int("begin_time");
 		if (startTs != 0)
@@ -211,7 +218,13 @@ public class Connect  {
 			GConf.Players.Add(index, player);
 		}
 
-		SceneManager.LoadScene("PokerGame");
+		if (enter) {
+			// @TODO: 刷新游戏界面	
+		} else {
+			SceneManager.LoadScene("PokerGame");
+		}
+
+		enter = true;
 	}
 }
 

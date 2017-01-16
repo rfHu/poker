@@ -53,6 +53,8 @@ public class DOPopup : MonoBehaviour {
 				gameObject.Popup();
 				break;
 		}
+
+		gameObject.SetActive(true);
 	}
 
 	public void ImmediateClose() {
