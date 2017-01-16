@@ -287,10 +287,10 @@ public class Controller : MonoBehaviour {
 		 var first = playerObject.MyCards.transform.Find("First");
 		 var second = playerObject.MyCards.transform.Find("Second");
 
+		 playerObject.MyCards.SetActive(true);
+
 		 first.GetComponent<Card>().Show(cvs[0]);
 		 second.GetComponent<Card>().Show(cvs[1]);
-
-		 playerObject.gameObject.SetActive(true);
 	}
 
 	int cardIndex(int number) {
