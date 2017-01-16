@@ -14,6 +14,8 @@ public class Controller : MonoBehaviour {
 
 	public List<Vector2> positions = new List<Vector2>(); 
 
+	public GameObject PublicCards;
+
 	void Start () {
 		List<Button> buttons = new List<Button>();
 		int numberOfPlayers = GConf.playerCount;
@@ -174,6 +176,7 @@ public class Controller : MonoBehaviour {
 		Delegates.shared.Ready += new EventHandler<DelegateArgs>(onReady);
 		Delegates.shared.GameStart += new EventHandler<DelegateArgs>(onGameStart);
 		Delegates.shared.SeeCard += new EventHandler<DelegateArgs>(onSeeCard);
+		Delegates.shared.Deal += new EventHandler<DelegateArgs>(onDeal);
 	}
 
 	void removeListeners() {
@@ -182,6 +185,7 @@ public class Controller : MonoBehaviour {
 		Delegates.shared.Ready -= new EventHandler<DelegateArgs>(onReady);
 		Delegates.shared.GameStart -= new EventHandler<DelegateArgs>(onGameStart);
 		Delegates.shared.SeeCard -= new EventHandler<DelegateArgs>(onSeeCard);
+		Delegates.shared.Deal -= new EventHandler<DelegateArgs>(onDeal);
 	}
 
 	void OnDestroy()
@@ -245,10 +249,6 @@ public class Controller : MonoBehaviour {
 		GConf.Players.Remove(index);
 	}
 
-	void onDeal() {
-
-	}
-
 	int FindMyIndex() {
 		foreach(KeyValuePair<int, PlayerObject> entry in playerObjects) {
 			if (entry.Value.Uid == GConf.Uid) {
@@ -259,7 +259,43 @@ public class Controller : MonoBehaviour {
 		return -1;
 	}
 
+	void onDeal(object sender, DelegateArgs e) {
+		var deals = e.Data.Dict("args").Dict("deals").IL("-1");
+		
+		if (deals.Count <= 0) {
+			return ;
+		}
+
+		foreach(int item in deals) {
+			var idx = cardIndex(item);
+			var card = (GameObject)Instantiate(Resources.Load("Prefab/Card"));
+			card.GetComponent<Card>().Show(idx);
+			card.transform.SetParent(PublicCards.transform, false);
+		}
+	}
+
+	void addPublicCard(int index = -1) {
+		var go = (GameObject)Instantiate(Resources.Load("Prefab/Card"));
+		var card = go.GetComponent<Card>();
+
+		if (index == -1) {
+			// skip
+		} else {
+			card.Show(index);
+		}
+        
+		go.GetComponent<RectTransform>().sizeDelta = new Vector2(70, 0);
+        go.transform.SetParent(PublicCards.transform, false);
+	}
+
 	void onGameStart(object sender, DelegateArgs e) {
+		PublicCards.transform.Clear();
+
+		// 发三张公共牌
+		for (int i = 0; i < 3; i++) {
+			addPublicCard();	
+		}
+
 		var uid = e.Data.String("uid");
 		var index = FindMyIndex();
 
@@ -288,6 +324,9 @@ public class Controller : MonoBehaviour {
 		 var second = playerObject.MyCards.transform.Find("Second");
 
 		 playerObject.MyCards.SetActive(true);
+
+		 // 隐藏自己的名称
+		 playerObject.transform.Find("Name").gameObject.SetActive(false);
 
 		 first.GetComponent<Card>().Show(cvs[0]);
 		 second.GetComponent<Card>().Show(cvs[1]);

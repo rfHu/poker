@@ -55,5 +55,13 @@ namespace Extensions {
 			var result = value as List<object> ?? new List<object>();
 			return result;
 		}
+
+		public static Transform Clear(this Transform transform)
+     {
+         foreach (Transform child in transform) {
+             GameObject.Destroy(child.gameObject);
+         }
+         return transform;
+     }
 	}
 }

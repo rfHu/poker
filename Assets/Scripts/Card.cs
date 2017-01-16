@@ -12,7 +12,6 @@ public class Card : MonoBehaviour {
 	public void Show(int index) {	
 		cardIndex = index;
 		GetComponent<Image>().sprite = faces[cardIndex];
-		Debug.Log(index);
 	}
 
 	public void Turnback() {
