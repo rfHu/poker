@@ -19,8 +19,9 @@ public class Controller : MonoBehaviour {
 
 	public GameObject Pot;
 
+	List<Button> buttons = new List<Button>();
+
 	void Start () {
-		List<Button> buttons = new List<Button>();
 		int numberOfPlayers = GConf.playerCount;
 
 		for (int i = 0; i < numberOfPlayers; i++) {
@@ -33,7 +34,7 @@ public class Controller : MonoBehaviour {
 		int iter = 0;
 
 		foreach(Button button in buttons) {
-			button.GetComponent<RectTransform> ().localPosition = positions[iter] ;
+			button.GetComponent<RectTransform> ().anchoredPosition = positions[iter] ;
 			int identifer = iter;
 
 			button.onClick.AddListener(() => {
@@ -63,74 +64,74 @@ public class Controller : MonoBehaviour {
 		float width = canvas.GetComponent<RectTransform>().rect.width;
 		float height = canvas.GetComponent<RectTransform>().rect.height;
 
-		float top = height / 2 - 150;
-		float bottom = -height / 2 + 300;
+		float top = height - 150;
+		float bottom = 300; 
 		float right = width / 2 - 100;
 		float left = -width / 2 + 100; 
 
-		Vector2 number1 = new Vector2 (0, bottom);
+		float hh = top - bottom;
+		float ww = width - 200;
+
+		float h3 = hh / 3;
+		float h4 = hh / 4;
+		float w3 = ww / 2 - ww / 3;
+
+		Vector2 vector = new Vector2 (0, bottom);
 
 		if (total == 2) {
 			return new List<Vector2>{
-				number1,
+				vector,
 				new Vector2(0, top)
 			};
 		}
 
-		float hh = Mathf.Abs (top) + Mathf.Abs (bottom);
-		float ww = Mathf.Abs (left) + Mathf.Abs (right);
-
-		float h3 = hh / 2 - hh / 3;
-		float h4 = hh / 4;
-		float w3 = ww / 2 - ww / 3;
-
 		if (total == 6) {
 			return new List<Vector2> {
-				number1, 
-				new Vector2(right, 0 - h3),
-				new Vector2(right, 0 + h3),
+				vector, 
+				new Vector2(right, bottom + h3),
+				new Vector2(right, bottom + 2 * h3),
 				new Vector2(0, top),
-				new Vector2(left, 0 + h3),
-				new Vector2(left, 0 - h3)
+				new Vector2(left, bottom + 2 * h3),
+				new Vector2(left, bottom + h3)
 			};
 		}
 
 		if (total == 7) {
 			return new List<Vector2> {
-				number1, 
-				new Vector2(right, 0 - h3),
-				new Vector2(right, 0 + h3),
+				vector, 
+				new Vector2(right, bottom + h3),
+				new Vector2(right, bottom + 2 * h3),
 				new Vector2(w3, top),
 				new Vector2(-w3, top),
-				new Vector2(left, 0 + h3),
-				new Vector2(left, 0 - h3)
+				new Vector2(left, bottom + 2 * h3),
+				new Vector2(left, bottom + h3)
 			};
 		}
 
 		if (total == 8) {
 			return new List<Vector2> {
-				number1, 
-				new Vector2(right, 0 - h4),
-				new Vector2(right, 0),
-				new Vector2(right, 0 + h4),
+				vector, 
+				new Vector2(right, bottom + h4),
+				new Vector2(right, bottom + 2 * h4),
+				new Vector2(right, bottom + 3 * h4),
 				new Vector2(0, top),
-				new Vector2(left, 0 + h4),
-				new Vector2(left, 0),
-				new Vector2(left, 0 - h4)
+				new Vector2(left, bottom + 3 * h4),
+				new Vector2(left, bottom + 2 * h4),
+				new Vector2(left, bottom + h4)
 			};
 		}
 
 		if (total == 9) {
 			return new List<Vector2> {
-				number1, 
-				new Vector2(right, 0 - h4),
-				new Vector2(right, 0),
-				new Vector2(right, 0 + h4),
+				vector, 
+				new Vector2(right, bottom + h4),
+				new Vector2(right, bottom + 2 * h4),
+				new Vector2(right, bottom + 3 * h4),
 				new Vector2(w3, top),
 				new Vector2(-w3, top),
-				new Vector2(left, 0 + h4),
-				new Vector2(left, 0),
-				new Vector2(left, 0 - h4)
+				new Vector2(left, bottom + 3 * h4),
+				new Vector2(left, bottom + 2 * h4),
+				new Vector2(left, bottom + h4)
 			};
 		}
 
@@ -251,7 +252,7 @@ public class Controller : MonoBehaviour {
 
 		playerObject.ShowPlayer(data);
         playerObject.transform.SetParent(canvas.transform, false);
-        playerObject.GetComponent<RectTransform>().localPosition = positions[data.Index];
+		playerObject.GetComponent<RectTransform>().localPosition = buttons[data.Index].GetComponent<RectTransform>().localPosition;
 
 		playerObjects.Add(playerObject.Index, playerObject);
 	}

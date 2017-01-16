@@ -5,12 +5,12 @@ using UIWidgets;
 using Extensions;
 
 public class UIManager : MonoBehaviour {
-	public Canvas popupCanvas;
+	public Canvas canvas;
 	public GameObject recallPage;
 
 	public void ShowMenu() {
 		var popup = (GameObject)Instantiate(Resources.Load("Prefab/MenuPopup"));
-		popup.GetComponent<DOPopup>().Show(popupCanvas);	
+		popup.GetComponent<DOPopup>().Show(canvas);	
 	}
 	
 	public void Exit() {
@@ -19,7 +19,7 @@ public class UIManager : MonoBehaviour {
 
 	public void ScorePage() {
 		var score = (GameObject)Instantiate(Resources.Load("Prefab/ScorePage"));
-		score.GetComponent<DOPopup>().Show(popupCanvas);	
+		score.GetComponent<DOPopup>().Show(canvas);	
 	}
 	
 	// public void ShowRecalls() {
@@ -30,7 +30,7 @@ public class UIManager : MonoBehaviour {
 	void onTakeCoin(object sender, DelegateArgs e) {
 		GConf.coins = e.Data.Dict("args").Int("coins");
 		GameObject obj = (GameObject)Instantiate(Resources.Load("Prefab/Supplement"));
-		obj.GetComponent<DOPopup>().Show(popupCanvas);
+		obj.GetComponent<DOPopup>().Show(canvas);
 	} 
 
 	void Awake()
