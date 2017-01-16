@@ -64,7 +64,7 @@ public class Controller : MonoBehaviour {
 		float height = canvas.GetComponent<RectTransform>().rect.height;
 
 		float top = height / 2 - 150;
-		float bottom = -height / 2 + 180;
+		float bottom = -height / 2 + 300;
 		float right = width / 2 - 100;
 		float left = -width / 2 + 100; 
 

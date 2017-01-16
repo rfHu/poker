@@ -9,7 +9,7 @@ public class GuestHeader : MonoBehaviour {
 		}
 
 		var userPopup = (GameObject)Instantiate(Resources.Load("Prefab/User"));
-		var canvas = GameObject.FindGameObjectWithTag("Canvas2").GetComponent<Canvas>();
+		var canvas = GameObject.FindGameObjectWithTag("Canvas1").GetComponent<Canvas>();
 		userPopup.GetComponent<DOPopup>().Show(canvas);
 	}
 }
