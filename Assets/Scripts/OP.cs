@@ -2,6 +2,14 @@
 using System.Collections.Generic;
 
 public class OP : MonoBehaviour {
+	public GameObject RaiseGo;
+	public GameObject FoldGo;
+	public GameObject CallGo;
+	public GameObject R1;
+	public GameObject R2;
+	public GameObject R3;
+
+
 	public void Fold() {
 		CallFunc("fold");	
 	}
