@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using Extensions;
+using UIWidgets;
 
 public class Controller : MonoBehaviour {
 	public GameObject seat;

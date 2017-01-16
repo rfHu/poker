@@ -193,6 +193,9 @@ public class Connect  {
 				case  "all_in":
 					Delegates.shared.OnAllIn(data);
 					break;
+				case "bye":
+					Delegates.shared.OnExclusion(data);
+					break;
 				default:
 					break;
 			}

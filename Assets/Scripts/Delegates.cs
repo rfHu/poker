@@ -31,6 +31,8 @@ public class Delegates {
     public event EventHandler<DelegateArgs> AllIn;
     public event EventHandler<DelegateArgs> Raise;
 
+	// 登陆态互斥了
+	public event EventHandler<DelegateArgs> Exclusion;
 	public void OnTakeSeat(DelegateArgs e) {
 		if (TakeSeat != null) {
 			TakeSeat(this, e);
@@ -112,6 +114,12 @@ public class Delegates {
 	public void OnAllIn(DelegateArgs e) {
 		if (MoveTurn != null) {
 			MoveTurn(this, e);
+		}
+	}
+
+	public void OnExclusion(DelegateArgs e) {
+		if (Exclusion != null) {
+			Exclusion(this, e);
 		}
 	}
 }
