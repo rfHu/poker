@@ -226,8 +226,18 @@ public class Controller : MonoBehaviour {
 		RemovePlayer(index);
 	}
 
+	private int prevMoveTurnIndex = -1;
+
 	void onMoveTurn(object sender, DelegateArgs e) {
+		PlayerObject prevObj;
+		playerObjects.TryGetValue(prevMoveTurnIndex, out prevObj);
+
+		if (prevObj != null) {
+			prevObj.activated = false;
+		}
+
 		var index = e.Data.Dict("args").Int("seat");
+		prevMoveTurnIndex = index;
 		StartCoroutine(playerObjects[index].MyTurn());
 	}
 
