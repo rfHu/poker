@@ -138,64 +138,64 @@ public class Connect  {
 				return ;
 			}
 
-			var data = new DelegateArgs(json.Dict("args"));
+			var evt = new DelegateArgs(json.Dict("args"));
 
 			// 监听look事件，收到才进入房间
 			if (e == "look") {
-				refreshGameInfo(data.Data);
+				refreshGameInfo(evt.Data);
 			} else if (e == "prompt") {
-				GConf.MyCmd.SetCmd(data.Data);
+				GConf.MyCmd.SetCmd(evt.Data);
 			}
 
 			// 通过事件广播出去
 			switch(e) {
                 case "takeseat":
-					Delegates.shared.OnTakeSeat(data);
+					Delegates.shared.OnTakeSeat(evt);
 					break;
 				case "takecoin":
-					Delegates.shared.OnTakeCoin(data);
+					Delegates.shared.OnTakeCoin(evt);
 					break;
 				case "unseat":
-					Delegates.shared.OnUnSeat(data);
+					Delegates.shared.OnUnSeat(evt);
 					break;
 				case "ready":
-					Delegates.shared.OnReady(data);
+					Delegates.shared.OnReady(evt);
 					break;
 				case "gamestart":
-					Delegates.shared.OnGameStart(data);
+					Delegates.shared.OnGameStart(evt);
 					break;
 				case "seecard":
-					Delegates.shared.OnSeeCard(data);
+					Delegates.shared.OnSeeCard(evt);
 					break;
 				case "look":
-					Delegates.shared.OnLook(data);
+					Delegates.shared.OnLook(evt);
 					break;
 				case "deal":
-					Delegates.shared.OnDeal(data);
+					Delegates.shared.OnDeal(evt);
 					break;
 				case  "moveturn":
-					Delegates.shared.OnMoveTurn(data);
+					Delegates.shared.OnMoveTurn(evt);
 					break;
 				case  "fold":
-					Delegates.shared.OnFold(data);
+					Delegates.shared.OnFold(evt);
 					break;
 				case  "check":
-					Delegates.shared.OnCheck(data);
+					Delegates.shared.OnCheck(evt);
 					break;
 				case  "raise":
-					Delegates.shared.OnRaise(data);
+					Delegates.shared.OnRaise(evt);
 					break;
 				case  "call":
-					Delegates.shared.OnCall(data);
+					Delegates.shared.OnCall(evt);
 					break;
 				case  "all_in":
-					Delegates.shared.OnAllIn(data);
+					Delegates.shared.OnAllIn(evt);
 					break;
 				case "bye":
-					Delegates.shared.OnExclusion(data);
+					Delegates.shared.OnExclusion(evt);
 					break;
 				case "gameover":
-					Delegates.shared.OnGameOver(data);
+					Delegates.shared.OnGameOver(evt);
 					break;
 				default:
 					break;
