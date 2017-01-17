@@ -184,6 +184,7 @@ public class Controller : MonoBehaviour {
 		Delegates.shared.SeeCard += new EventHandler<DelegateArgs>(onSeeCard);
 		Delegates.shared.Deal += new EventHandler<DelegateArgs>(onDeal);
 		Delegates.shared.MoveTurn += new EventHandler<DelegateArgs>(onMoveTurn);
+		Delegates.shared.GameOver += new EventHandler<DelegateArgs>(onGameOver);
 
 		// 游戏操作相关
 		Delegates.shared.Check += new EventHandler<DelegateArgs>(onCheck);
@@ -201,6 +202,7 @@ public class Controller : MonoBehaviour {
 		Delegates.shared.SeeCard -= new EventHandler<DelegateArgs>(onSeeCard);
 		Delegates.shared.Deal -= new EventHandler<DelegateArgs>(onDeal);
 		Delegates.shared.MoveTurn -= new EventHandler<DelegateArgs>(onMoveTurn);
+		Delegates.shared.GameOver += new EventHandler<DelegateArgs>(onGameOver);
 
 		// 游戏操作相关
 		Delegates.shared.Check -= new EventHandler<DelegateArgs>(onCheck);
@@ -429,6 +431,11 @@ public class Controller : MonoBehaviour {
 
 	void setChips(DelegateArgs e) {
 		var mop = e.Data.ToObject<Mop>();
+
+		if (!playerObjects.ContainsKey(mop.seat)) {
+			return ;
+		}
+
 		playerObjects[mop.seat].Chips.text = mop.pr_chips.ToString();
 	}
 
@@ -449,6 +456,11 @@ public class Controller : MonoBehaviour {
 	}
 	
 	void onFold(object sender, DelegateArgs e) {
+		var mop = e.Data.ToObject<Mop>();
+		playerObjects[mop.seat].GetComponent<CanvasGroup>().alpha = 0.7f;	
+	}
+
+	void onGameOver(object sender, DelegateArgs e) {
 		// @TODO: 弃牌
 		Debug.Log("弃牌");	
 	}
