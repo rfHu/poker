@@ -28,7 +28,7 @@ public class UIManager : MonoBehaviour {
 	// }
 
 	void onTakeCoin(object sender, DelegateArgs e) {
-		GConf.coins = e.Data.Dict("args").Int("coins");
+		GConf.coins = e.Data.Int("coins");
 		GameObject obj = (GameObject)Instantiate(Resources.Load("Prefab/Supplement"));
 		obj.GetComponent<DOPopup>().Show(canvas);
 	} 
@@ -46,7 +46,7 @@ public class UIManager : MonoBehaviour {
 	}
 
 	void onExclusion(object sender, DelegateArgs e) {
-		var type = e.Data.Dict("args").Int("type");
+		var type = e.Data.Int("type");
 		
 		if (type == 2) {
 			UIManager.ShowDialog("您的账号已在其他设备登陆");

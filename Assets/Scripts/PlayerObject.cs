@@ -46,6 +46,15 @@ public class PlayerObject : MonoBehaviour {
 		img.texture = Ext.Circular(www.texture);
 	}	
 
+
+	public void TurnTo(float elaspe = 0) {
+		if (Uid == GConf.Uid) {
+			showOP();
+		} else {
+			StartCoroutine(MyTurn(elaspe));				
+		}
+	}
+
 	public IEnumerator MyTurn(float elaspe = 0) {
 		countdown.SetActive(true);
 		activated = true;
@@ -59,5 +68,26 @@ public class PlayerObject : MonoBehaviour {
 
 		activated = false;
 		countdown.SetActive(false);
+	}
+
+	void showOP() {
+		var obj = (GameObject)Instantiate(Resources.Load("Prefab/OP"));	
+		var op = obj.GetComponent<OP>();
+
+		op.CallAct = () => {
+			op.Call();
+		};
+
+		op.R1Act = () => {
+			
+		};
+
+		op.R2Act = () => {
+
+		};
+
+		op.R3Act = () => {
+
+		};
 	}
 }

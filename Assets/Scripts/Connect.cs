@@ -6,7 +6,6 @@ using BestHTTP.Cookies;
 using Extensions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Linq;
 using BestHTTP;
 
 public class Connect  {
@@ -139,15 +138,14 @@ public class Connect  {
 				return ;
 			}
 
+			var data = new DelegateArgs(json.Dict("args"));
+
 			// 监听look事件，收到才进入房间
 			if (e == "look") {
-				refreshGameInfo(json);
+				refreshGameInfo(data.Data);
 			} else if (e == "prompt") {
-				var cmds = json.Dict("args");
-				GConf.MyCmd.SetCmd(cmds);
+				GConf.MyCmd.SetCmd(data.Data);
 			}
-
-			var data = new DelegateArgs(json);
 
 			// 通过事件广播出去
 			switch(e) {
@@ -209,9 +207,8 @@ public class Connect  {
 
 	// 只允许进入一次
 	void refreshGameInfo(Dictionary<string, object> json) {
-		var args = json.Dict("args");
-		var options = args.Dict("options");
-		var gamers = args.Dict("gamers");
+		var options = json.Dict("options");
+		var gamers = json.Dict("gamers");
 
 		GConf.isOwner = options.String("ownerid") == GConf.Uid;
 		GConf.bankroll = options.IL("bankroll_multiple"); 
@@ -222,10 +219,10 @@ public class Connect  {
 		GConf.needAduit = options.Int("need_audit") == 1;
 		GConf.GPSLimit = options.Int("gps_limit") == 1;
 		GConf.IPLimit = options.Int("ip_limit") == 1;
-		GConf.roomName = args.String("name");
-		GConf.DealerSeat = args.Int("dealer_seat");
+		GConf.roomName = json.String("name");
+		GConf.DealerSeat = json.Int("dealer_seat");
 		
-		var startTs = args.Int("begin_time");
+		var startTs = json.Int("begin_time");
 		if (startTs != 0)
         {
 			GConf.GameStarted = true;

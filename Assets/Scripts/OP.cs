@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class OP : MonoBehaviour {
 	public GameObject RaiseGo;
@@ -9,6 +10,35 @@ public class OP : MonoBehaviour {
 	public GameObject R2;
 	public GameObject R3;
 
+	public Action R1Act;
+	public Action R2Act;
+	public Action R3Act;
+	public Action CallAct;
+
+
+	public void OnRaiseClick() {
+		Debug.Log("OnClick");
+	}
+
+	public void OnCallClick() {
+		CallAct();
+	}
+
+	public void OnFoldClick() {
+		Fold();
+	}
+
+	public void OnR1Click() {
+		R1Act();
+	}
+
+	public void OnR2Click() {
+		R2Act();
+	}
+
+	public void OnR3Click() {
+		R3Act();
+	}
 
 	public void Fold() {
 		CallFunc("fold");	

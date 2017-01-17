@@ -202,16 +202,22 @@ public class Controller : MonoBehaviour {
 	}
 
 	void  onTakeSeat(object sender, DelegateArgs e) {
-		var args = e.Data.Dict("args");
+		var args = e.Data;
 		var index = args.Int("where");
 		var playerInfo = args.Dict("who");
 		var player = new Player(playerInfo, index);
+
+		// 存在用户的情况下，认为数据出错，强制执行删除
+		if (playerObjects.ContainsKey(index)) {
+			RemovePlayer(index);
+		}
+
 		GConf.Players.Add(index, player);
 		showPlayer(player);	
 	}
 
 	void onReady(object sender, DelegateArgs e) {
-		var args = e.Data.Dict("args");
+		var args = e.Data;
 		var index = args.Int("where");
 		var bankroll = args.Int("bankroll");
 
@@ -219,7 +225,7 @@ public class Controller : MonoBehaviour {
 	}
 
 	void onUnSeat(object sender, DelegateArgs e) {
-		var args = e.Data.Dict("args");
+		var args = e.Data;
 
 		if (!args.ContainsKey("where")) {
 			return ;
@@ -239,7 +245,7 @@ public class Controller : MonoBehaviour {
 			prevObj.activated = false;
 		}
 
-		var index = e.Data.Dict("args").Int("seat");
+		var index = e.Data.Int("seat");
 		prevMoveTurnIndex = index;
 		StartCoroutine(playerObjects[index].MyTurn());
 	}
@@ -282,7 +288,7 @@ public class Controller : MonoBehaviour {
 	}
 
 	void onDeal(object sender, DelegateArgs e) {
-		var deals = e.Data.Dict("args").Dict("deals").IL("-1");
+		var deals = e.Data.Dict("deals").IL("-1");
 		
 		if (deals.Count <= 0) {
 			return ;
@@ -319,7 +325,7 @@ public class Controller : MonoBehaviour {
 		PublicCards.transform.Clear();
 		Pot.SetActive(true);
 
-		var args = e.Data.Dict("args").Dict("room");
+		var args = e.Data.Dict("room");
 		var pot = args.Int("pot");
 		updatePot(pot, pot - args.Int("pr_pot"));	
 
@@ -361,7 +367,7 @@ public class Controller : MonoBehaviour {
 
 	void onSeeCard(object sender, DelegateArgs e) {
 		 var index = FindMyIndex();
-		 var cards = e.Data.Dict("args").IL("cards");
+		 var cards = e.Data.IL("cards");
 		 
 		 int[] cvs = new int[]{
 			 cardIndex(cards[0]),
@@ -403,5 +409,26 @@ public class Controller : MonoBehaviour {
 
 		// 第一个花色、第二个数值
 		return new int[]{a, b};
+	}
+
+	void onCheck(object sender, DelegateArgs e) {
+		// Do nothing
+	}
+
+	void onRaise(object sender, DelegateArgs e) {
+		var value = e.Data.Int("raise");
+
+	}
+
+	void onCall(object sender, DelegateArgs e) {
+		var value = e.Data.Int("call");
+	}
+	
+	void onAllIn(object sender, DelegateArgs e) {
+		var value = e.Data.Int("raise");
+	}
+	
+	void onFold(object sender, DelegateArgs e) {
+		
 	}
 }
