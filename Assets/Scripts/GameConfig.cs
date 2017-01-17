@@ -46,6 +46,7 @@ public class GConf {
 	}
 
 	public static int DealerSeat = -1; 
+	public static DateTime StartTime = new DateTime();
 }
 
 public class Player {

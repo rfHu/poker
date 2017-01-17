@@ -12,6 +12,7 @@ public class PlayerObject : MonoBehaviour {
 	Text scoreLabel;
 	GameObject countdown;
 
+	public RawImage Avatar;
 	public bool activated = false;
 	public float thinkTime = 15;
 	public string Uid = "";
@@ -33,6 +34,10 @@ public class PlayerObject : MonoBehaviour {
 		countdown.SetActive(false);
 	}
 
+	public void HideName() {
+		nameLabel.gameObject.SetActive(false);
+	}
+
 	public void SetScore(int score) {
 		scoreLabel.text = score.ToString();
 	}
@@ -47,14 +52,14 @@ public class PlayerObject : MonoBehaviour {
 	public void ShowPlayer(Player player) {
 		nameLabel.text = player.Name;
 		scoreLabel.text = player.Bankroll.ToString();
-		RawImage rawImage = transform.Find("Circle").Find("Avatar").GetComponent<RawImage>();
+		RawImage rawImage = Avatar.GetComponent<RawImage>();
 		StartCoroutine(DownloadAvatar(rawImage, player.Avatar));
 	}
 
 	IEnumerator<WWW> DownloadAvatar(RawImage img, string url) {
 		WWW www = new WWW(url);
 		yield return www;
-		img.texture = Ext.Circular(www.texture);
+		img.texture = _.Circular(www.texture);
 	}	
 
 

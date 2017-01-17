@@ -54,6 +54,6 @@ public class UserDetail : MonoBehaviour {
 	IEnumerator<WWW> downloadImage(RawImage img, string url) {
 		WWW www = new WWW(url);
 		yield return www;
-		img.texture = Ext.Circular(www.texture);
+		img.texture = _.Circular(www.texture);
 	}	
 }

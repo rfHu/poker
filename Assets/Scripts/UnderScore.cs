@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System;
 using BestHTTP.JSON;
 
-public class Ext {
+public class _ {
     static public Texture2D Circular(Texture2D sourceTex)
     {
         Color[] c = sourceTex.GetPixels(0, 0, sourceTex.width, sourceTex.height);
@@ -31,9 +31,13 @@ public class Ext {
         return b;
     }
 
-    static public void Log(Dictionary<string,object> dictionary) {
-        Debug.Log(Json.Encode(dictionary));
-     }
+    public static DateTime DateTimeFromTimeStamp(double timeStamp)
+    {
+        // Unix timestamp is seconds past epoch
+        System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+        dtDateTime = dtDateTime.AddSeconds(timeStamp).ToLocalTime();
+        return dtDateTime;
+    }
 
     static public bool isDict(object dict) {
         Type t = dict.GetType();

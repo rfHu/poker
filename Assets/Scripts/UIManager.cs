@@ -21,10 +21,10 @@ public class UIManager : MonoBehaviour {
 		score.GetComponent<DOPopup>().Show(canvas);	
 	}
 	
-	// public void ShowRecalls() {
-	// 	DOTweenAnimation anim = recallPage.GetComponent<DOTweenAnimation>();
-	// 	ShowTween(anim);
-	// }
+	public void OnShowRecalls() {
+		var recall = (GameObject)Instantiate(Resources.Load("Prefab/RecallPage"));		
+		recall.GetComponent<DOPopup>().Show(canvas);
+	}
 
 	void onTakeCoin(object sender, DelegateArgs e) {
 		GConf.coins = e.Data.Int("coins");

@@ -322,10 +322,8 @@ public class Controller : MonoBehaviour {
 			return ;
 		}
 
-
-
 		foreach(int item in deals) {
-			var idx = cardIndex(item);
+			var idx = Controller.CardIndex(item);
 			var card = findLastCard();
 
 			if (card != null) {
@@ -390,8 +388,8 @@ public class Controller : MonoBehaviour {
 		 var cards = e.Data.IL("cards");
 		 
 		 int[] cvs = new int[]{
-			 cardIndex(cards[0]),
-			 cardIndex(cards[1])
+			 Controller.CardIndex(cards[0]),
+			 Controller.CardIndex(cards[1])
 		 };
 
 		 var playerObject = playerObjects[index];
@@ -401,14 +399,13 @@ public class Controller : MonoBehaviour {
 		 playerObject.MyCards.SetActive(true);
 
 		 // 隐藏自己的名称
-		 playerObject.transform.Find("Name").gameObject.SetActive(false);
-
+		 playerObject.HideName();
 		 first.GetComponent<Card>().Show(cvs[0]);
 		 second.GetComponent<Card>().Show(cvs[1]);
 	}
 
-	int cardIndex(int number) {
-		var pairs = cardValues(number);
+	public static int CardIndex(int number) {
+		var pairs = Controller.CardValues(number);
 		int index;
 
 		// 服务器数值为2~14
@@ -423,7 +420,7 @@ public class Controller : MonoBehaviour {
 		return index;
 	}
 
-	int[] cardValues(int number) {
+	public static int[] CardValues(int number) {
 		var a = number >> 4;
 		var b = number & 0x0f;
 

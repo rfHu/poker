@@ -111,7 +111,7 @@ public class ScoreCtrl : MonoBehaviour {
 	IEnumerator<WWW> DownloadImage(RawImage img, string url) {
 		WWW www = new WWW(url);
 		yield return www;
-		img.texture = Ext.Circular(www.texture);
+		img.texture = _.Circular(www.texture);
 	}
 
 	void OnDestroy()

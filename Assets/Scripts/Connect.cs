@@ -223,6 +223,8 @@ public class Connect  {
 		GConf.DealerSeat = json.Int("dealer_seat");
 		
 		var startTs = json.Int("begin_time");
+		GConf.StartTime = _.DateTimeFromTimeStamp(startTs);
+
 		if (startTs != 0)
         {
 			GConf.GameStarted = true;

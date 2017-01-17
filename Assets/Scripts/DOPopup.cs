@@ -32,6 +32,9 @@ public class DOPopup : MonoBehaviour {
 			case AnimType.Left2Right:
 				beginPosition = new Vector2(-rectTrans.rect.width, 0);
 				break;
+			case AnimType.Right2Left:
+				beginPosition = new Vector2(rectTrans.rect.width, 0);
+				break; 
 			default:
 				return;
 		}
@@ -46,7 +49,7 @@ public class DOPopup : MonoBehaviour {
 		transform.SetAsLastSibling();
 
 		switch(Animate) {
-			case AnimType.Up2Down: case AnimType.Left2Right: 
+			case AnimType.Up2Down: case AnimType.Left2Right: case AnimType.Right2Left:
 				GetComponent<RectTransform>().DOAnchorPos(endPosition, duration);
 				break;
 			case AnimType.Popup: 
@@ -67,7 +70,7 @@ public class DOPopup : MonoBehaviour {
 		Tween tween = null;
 
 		switch(Animate) {
-			case AnimType.Up2Down: case AnimType.Left2Right:
+			case AnimType.Up2Down: case AnimType.Left2Right: case AnimType.Right2Left:
 				tween = GetComponent<RectTransform>().DOAnchorPos(beginPosition, duration);
 				break;
 			case AnimType.Popup:

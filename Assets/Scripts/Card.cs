@@ -15,11 +15,17 @@ public class Card : MonoBehaviour {
 		gameObject.SetActive(true);
 		
 		var image = GetComponent<Image>();
-
-		// 翻卡片
-		image.DOFlip();
 		image.sprite = faces[index];
 		IsBack = false;
+	}
+
+	public void ShowServer(int index) {
+		if (index == 0) {
+			return ;
+		}
+
+		var realIndex = Controller.CardIndex(index);
+		Show(realIndex);
 	}
 
 	public void Turnback() {
