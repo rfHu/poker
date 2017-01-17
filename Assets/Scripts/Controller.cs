@@ -15,7 +15,7 @@ public class Controller : MonoBehaviour {
 
 	public List<Vector2> positions = new List<Vector2>(); 
 
-	public GameObject PublicCards;
+	public List<GameObject> PublicCards;
 
 	public GameObject Pot;
 
@@ -302,6 +302,17 @@ public class Controller : MonoBehaviour {
 		return -1;
 	}
 
+	Card findLastCard() {
+		foreach(GameObject obj in PublicCards) {
+			var card = obj.GetComponent<Card>();
+			if (card.IsBack) {
+				return card;
+			}
+		}
+
+		return null;
+	}
+
 	void onDeal(object sender, DelegateArgs e) {
 		var deals = e.Data.Dict("deals").IL("-1");
 		
@@ -311,24 +322,12 @@ public class Controller : MonoBehaviour {
 
 		foreach(int item in deals) {
 			var idx = cardIndex(item);
-			var card = (GameObject)Instantiate(Resources.Load("Prefab/Card"));
-			card.GetComponent<Card>().Show(idx);
-			card.transform.SetParent(PublicCards.transform, false);
-		}
-	}
+			var card = findLastCard();
 
-	void addPublicCard(int index = -1) {
-		var go = (GameObject)Instantiate(Resources.Load("Prefab/Card"));
-		var card = go.GetComponent<Card>();
-
-		if (index == -1) {
-			// skip
-		} else {
-			card.Show(index);
+			if (card != null) {
+				card.Show(idx);
+			}
 		}
-        
-		go.GetComponent<RectTransform>().sizeDelta = new Vector2(70, 0);
-        go.transform.SetParent(PublicCards.transform, false);
 	}
 
 	void updatePot(int pot, int prev) {
@@ -336,8 +335,15 @@ public class Controller : MonoBehaviour {
 		Pot.GetComponent<Pots>().DC.text =  "底池:" + pot.ToString();
 	}
 
+	void resetAllCards() {
+		foreach(GameObject obj in PublicCards) {
+			obj.GetComponent<Card>().Turnback();
+			obj.SetActive(false);
+		}		
+	}
+
 	void onGameStart(object sender, DelegateArgs e) {
-		PublicCards.transform.Clear();
+		resetAllCards();
 		Pot.SetActive(true);
 
 		var args = e.Data.Dict("room");
@@ -359,11 +365,6 @@ public class Controller : MonoBehaviour {
 				playerObjects[idx].transform.Find("Chips").gameObject.SetActive(true);
 				playerObjects[idx].Chips.text = prchips.ToString();
 			}
-		}
-
-		// 发三张公共牌
-		for (int i = 0; i < 3; i++) {
-			addPublicCard();	
 		}
 
 		var uid = e.Data.String("uid");
