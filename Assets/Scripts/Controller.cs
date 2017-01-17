@@ -19,15 +19,17 @@ public class Controller : MonoBehaviour {
 
 	public GameObject Pot;
 
-	List<Button> buttons = new List<Button>();
+	public List<GameObject> Seats;	
 
 	void Start () {
+		List<Button> buttons = new List<Button>();
 		int numberOfPlayers = GConf.playerCount;
 
 		for (int i = 0; i < numberOfPlayers; i++) {
 			GameObject copySeat = Instantiate (seat);
 			copySeat.transform.SetParent (canvas.transform, false);
 			buttons.Add (copySeat.GetComponent<Button>());
+			Seats.Add (copySeat);
 		}
 
 		positions = GetVectors (numberOfPlayers);
@@ -251,9 +253,8 @@ public class Controller : MonoBehaviour {
 		playerObject.Uid = data.Uid;
 
 		playerObject.ShowPlayer(data);
-        playerObject.transform.SetParent(canvas.transform, false);
-		playerObject.GetComponent<RectTransform>().localPosition = buttons[data.Index].GetComponent<RectTransform>().localPosition;
-
+		playerObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
+		playerObject.transform.SetParent(Seats[data.Index].transform, false);
 		playerObjects.Add(playerObject.Index, playerObject);
 	}
 
