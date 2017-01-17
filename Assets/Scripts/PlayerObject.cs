@@ -20,6 +20,8 @@ public class PlayerObject : MonoBehaviour {
 	public GameObject MyCards;
 	public Text Chips;
 
+	GameObject OPGo;
+
 	void Awake() {
 		nameLabel = transform.Find("Name").GetComponent<Text>();
 		scoreLabel = transform.Find("Coins").Find("Text").GetComponent<Text>();
@@ -31,6 +33,13 @@ public class PlayerObject : MonoBehaviour {
 
 	public void SetScore(int score) {
 		scoreLabel.text = score.ToString();
+	}
+
+	public void MoveOut() {
+		activated = false;
+		if (OPGo != null) {
+			Destroy(OPGo);
+		}
 	}
 
 	public void ShowPlayer(Player player) {
@@ -71,8 +80,10 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	void showOP() {
-		var obj = (GameObject)Instantiate(Resources.Load("Prefab/OP"));	
-		var op = obj.GetComponent<OP>();
+		OPGo = (GameObject)Instantiate(Resources.Load("Prefab/OP"));	
+		OPGo.transform.SetParent(transform, false);
+		
+		var op = OPGo.GetComponent<OP>();
 
 		op.CallAct = () => {
 			op.Call();

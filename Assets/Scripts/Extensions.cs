@@ -65,7 +65,7 @@ namespace Extensions {
          return transform;
      }
 
-	  public static T ToObject<T>(this IDictionary<string, object> source)
+	  public static T ToObject<T>(this Dictionary<string, object> source)
         where T : class, new()
     {
             T someObject = new T();
@@ -73,13 +73,15 @@ namespace Extensions {
 
             foreach (KeyValuePair<string, object> item in source)
             {
+				Debug.Log(item.Key);
+				Debug.Log(item.Value);
                 someObjectType.GetProperty(item.Key).SetValue(someObject, item.Value, null);
             }
 
             return someObject;
     }
 
-    public static IDictionary<string, object> AsDictionary(this object source, BindingFlags bindingAttr = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance)
+    public static Dictionary<string, object> AsDictionary(this object source, BindingFlags bindingAttr = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance)
     {
         return source.GetType().GetProperties(bindingAttr).ToDictionary
         (

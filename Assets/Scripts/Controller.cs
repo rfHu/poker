@@ -256,7 +256,7 @@ public class Controller : MonoBehaviour {
 		playerObjects.TryGetValue(prevMoveTurnIndex, out prevObj);
 
 		if (prevObj != null) {
-			prevObj.activated = false;
+			prevObj.MoveOut();
 		}
 
 		var index = e.Data.Int("seat");

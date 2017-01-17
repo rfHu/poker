@@ -232,6 +232,9 @@ public class Connect  {
 		GConf.bb = bb ;
 		GConf.sb = bb / 2;
 
+		// 先清除、再添加
+		GConf.Players.Clear();
+
 		foreach(KeyValuePair<string, object> entry in gamers) {
 			var dict = entry.Value as Dictionary<string, object>;
 			var index = Convert.ToInt32(entry.Key);
