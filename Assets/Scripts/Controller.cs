@@ -66,8 +66,8 @@ public class Controller : MonoBehaviour {
 		float width = canvas.GetComponent<RectTransform>().rect.width;
 		float height = canvas.GetComponent<RectTransform>().rect.height;
 
-		float top = height - 150;
-		float bottom = 300; 
+		float top = height - 200;
+		float bottom = 250; 
 		float right = width / 2 - 100;
 		float left = -width / 2 + 100; 
 
@@ -322,6 +322,8 @@ public class Controller : MonoBehaviour {
 			return ;
 		}
 
+
+
 		foreach(int item in deals) {
 			var idx = cardIndex(item);
 			var card = findLastCard();
@@ -457,11 +459,10 @@ public class Controller : MonoBehaviour {
 	
 	void onFold(object sender, DelegateArgs e) {
 		var mop = e.Data.ToObject<Mop>();
-		playerObjects[mop.seat].GetComponent<CanvasGroup>().alpha = 0.7f;	
+		playerObjects[mop.seat].transform.Find("Info").GetComponent<CanvasGroup>().alpha = 0.7f;	
 	}
 
 	void onGameOver(object sender, DelegateArgs e) {
-		// @TODO: 弃牌
-		Debug.Log("弃牌");	
+		Debug.Log("GameOver");	
 	}
 }

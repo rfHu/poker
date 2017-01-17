@@ -73,7 +73,13 @@ namespace Extensions {
 
             foreach (KeyValuePair<string, object> item in source)
             {
-				Type propType = someObjectType.GetProperty(item.Key).PropertyType;
+				PropertyInfo property = someObjectType.GetProperty(item.Key);
+
+				if (property == null) {
+					continue;
+				}
+
+				Type propType = property.PropertyType;
                 someObjectType.GetProperty(item.Key).SetValue(someObject, Convert.ChangeType(item.Value, propType), null);
             }
 

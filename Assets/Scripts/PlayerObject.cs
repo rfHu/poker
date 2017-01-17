@@ -23,9 +23,11 @@ public class PlayerObject : MonoBehaviour {
 	GameObject OPGo;
 
 	void Awake() {
-		nameLabel = transform.Find("Name").GetComponent<Text>();
-		scoreLabel = transform.Find("Coins").Find("Text").GetComponent<Text>();
-		countdown = transform.Find("Circle").Find("Countdown").gameObject;
+		var info = transform.Find("Info");
+
+		nameLabel = info.Find("Name").GetComponent<Text>();
+		scoreLabel = info.Find("Coins").Find("Text").GetComponent<Text>();
+		countdown = info.Find("Circle").Find("Countdown").gameObject;
 
 		// 倒计时隐藏
 		countdown.SetActive(false);
