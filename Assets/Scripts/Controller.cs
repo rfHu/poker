@@ -184,6 +184,13 @@ public class Controller : MonoBehaviour {
 		Delegates.shared.SeeCard += new EventHandler<DelegateArgs>(onSeeCard);
 		Delegates.shared.Deal += new EventHandler<DelegateArgs>(onDeal);
 		Delegates.shared.MoveTurn += new EventHandler<DelegateArgs>(onMoveTurn);
+
+		// 游戏操作相关
+		Delegates.shared.Check += new EventHandler<DelegateArgs>(onCheck);
+		Delegates.shared.Fold += new EventHandler<DelegateArgs>(onFold);
+		Delegates.shared.AllIn += new EventHandler<DelegateArgs>(onAllIn);
+		Delegates.shared.Raise += new EventHandler<DelegateArgs>(onRaise);
+		Delegates.shared.Call += new EventHandler<DelegateArgs>(onCall);
 	}
 
 	void removeListeners() {
@@ -194,6 +201,13 @@ public class Controller : MonoBehaviour {
 		Delegates.shared.SeeCard -= new EventHandler<DelegateArgs>(onSeeCard);
 		Delegates.shared.Deal -= new EventHandler<DelegateArgs>(onDeal);
 		Delegates.shared.MoveTurn -= new EventHandler<DelegateArgs>(onMoveTurn);
+
+		// 游戏操作相关
+		Delegates.shared.Check -= new EventHandler<DelegateArgs>(onCheck);
+		Delegates.shared.Fold -= new EventHandler<DelegateArgs>(onFold);
+		Delegates.shared.AllIn -= new EventHandler<DelegateArgs>(onAllIn);
+		Delegates.shared.Raise -= new EventHandler<DelegateArgs>(onRaise);
+		Delegates.shared.Call -= new EventHandler<DelegateArgs>(onCall);
 	}
 
 	void OnDestroy()
@@ -411,24 +425,29 @@ public class Controller : MonoBehaviour {
 		return new int[]{a, b};
 	}
 
+	void setChips(DelegateArgs e) {
+		var mop = e.Data.ToObject<Mop>();
+		playerObjects[mop.seat].Chips.text = mop.pr_chips.ToString();
+	}
+
 	void onCheck(object sender, DelegateArgs e) {
 		// Do nothing
 	}
 
 	void onRaise(object sender, DelegateArgs e) {
-		var value = e.Data.Int("raise");
-
+		setChips(e);
 	}
 
 	void onCall(object sender, DelegateArgs e) {
-		var value = e.Data.Int("call");
+		setChips(e);		
 	}
 	
 	void onAllIn(object sender, DelegateArgs e) {
-		var value = e.Data.Int("raise");
+		setChips(e);
 	}
 	
 	void onFold(object sender, DelegateArgs e) {
-		
+		// @TODO: 弃牌
+		Debug.Log("弃牌");	
 	}
 }

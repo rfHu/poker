@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System;
-using DG.Tweening;
 using UIWidgets;
 using Extensions;
 

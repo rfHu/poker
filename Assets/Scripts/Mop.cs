@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-
+﻿
 public class Mop
 {
     public int call { get; set; }
@@ -8,9 +7,4 @@ public class Mop
     public int seat { get; set; }
     public int pr_chips { get; set; }
     public int bankroll { get; set; }
-
-	public static Mop CreateFromJSON(string jsonString)
-	{
-		return JsonUtility.FromJson<Mop>(jsonString);
-	}
 }
