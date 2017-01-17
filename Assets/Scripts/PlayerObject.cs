@@ -47,11 +47,11 @@ public class PlayerObject : MonoBehaviour {
 	}	
 
 
-	public void TurnTo(float elaspe = 0) {
+	public void TurnTo(Dictionary<string, object> dict) {
 		if (Uid == GConf.Uid) {
 			showOP();
 		} else {
-			StartCoroutine(MyTurn(elaspe));				
+			StartCoroutine(MyTurn());				
 		}
 	}
 

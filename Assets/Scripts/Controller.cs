@@ -261,7 +261,8 @@ public class Controller : MonoBehaviour {
 
 		var index = e.Data.Int("seat");
 		prevMoveTurnIndex = index;
-		StartCoroutine(playerObjects[index].MyTurn());
+
+		playerObjects[index].TurnTo(e.Data);
 	}
 
 	Dictionary<int, PlayerObject> playerObjects = new Dictionary<int, PlayerObject>();
