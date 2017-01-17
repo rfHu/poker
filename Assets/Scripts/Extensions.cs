@@ -73,9 +73,8 @@ namespace Extensions {
 
             foreach (KeyValuePair<string, object> item in source)
             {
-				Debug.Log(item.Key);
-				Debug.Log(item.Value);
-                someObjectType.GetProperty(item.Key).SetValue(someObject, item.Value, null);
+				Type propType = someObjectType.GetProperty(item.Key).PropertyType;
+                someObjectType.GetProperty(item.Key).SetValue(someObject, Convert.ChangeType(item.Value, propType), null);
             }
 
             return someObject;

@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: acb32ec7c4af34649ab09bd1857d6947
-timeCreated: 1483428794
+timeCreated: 1484639428
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
@@ -195,10 +195,10 @@ TextureImporter:
       name: Poker_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 655
-        width: 139
-        height: 201
+        x: 4
+        y: 370
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -208,10 +208,10 @@ TextureImporter:
       name: Poker_1
       rect:
         serializedVersion: 2
-        x: 149
-        y: 655
-        width: 141
-        height: 201
+        x: 90
+        y: 370
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -221,10 +221,10 @@ TextureImporter:
       name: Poker_2
       rect:
         serializedVersion: 2
-        x: 300
-        y: 655
-        width: 141
-        height: 201
+        x: 176
+        y: 370
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -234,10 +234,10 @@ TextureImporter:
       name: Poker_3
       rect:
         serializedVersion: 2
-        x: 451
-        y: 655
-        width: 141
-        height: 201
+        x: 262
+        y: 370
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -247,10 +247,10 @@ TextureImporter:
       name: Poker_4
       rect:
         serializedVersion: 2
-        x: 602
-        y: 655
-        width: 140
-        height: 201
+        x: 348
+        y: 370
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -260,10 +260,10 @@ TextureImporter:
       name: Poker_5
       rect:
         serializedVersion: 2
-        x: 753
-        y: 655
-        width: 140
-        height: 201
+        x: 434
+        y: 370
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -273,10 +273,10 @@ TextureImporter:
       name: Poker_6
       rect:
         serializedVersion: 2
-        x: 903
-        y: 655
-        width: 141
-        height: 201
+        x: 520
+        y: 370
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -286,10 +286,10 @@ TextureImporter:
       name: Poker_7
       rect:
         serializedVersion: 2
-        x: 1054
-        y: 655
-        width: 141
-        height: 201
+        x: 606
+        y: 370
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -299,10 +299,10 @@ TextureImporter:
       name: Poker_8
       rect:
         serializedVersion: 2
-        x: 1205
-        y: 655
-        width: 141
-        height: 201
+        x: 692
+        y: 370
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -312,10 +312,10 @@ TextureImporter:
       name: Poker_9
       rect:
         serializedVersion: 2
-        x: 1356
-        y: 655
-        width: 141
-        height: 201
+        x: 778
+        y: 370
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -325,10 +325,10 @@ TextureImporter:
       name: Poker_10
       rect:
         serializedVersion: 2
-        x: 1507
-        y: 655
-        width: 140
-        height: 201
+        x: 864
+        y: 370
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -338,10 +338,10 @@ TextureImporter:
       name: Poker_11
       rect:
         serializedVersion: 2
-        x: 1658
-        y: 655
-        width: 140
-        height: 201
+        x: 950
+        y: 370
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -351,10 +351,10 @@ TextureImporter:
       name: Poker_12
       rect:
         serializedVersion: 2
-        x: 1808
-        y: 655
-        width: 141
-        height: 201
+        x: 1036
+        y: 370
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -364,10 +364,10 @@ TextureImporter:
       name: Poker_13
       rect:
         serializedVersion: 2
-        x: 0
-        y: 436
-        width: 139
-        height: 203
+        x: 4
+        y: 248
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -377,10 +377,10 @@ TextureImporter:
       name: Poker_14
       rect:
         serializedVersion: 2
-        x: 149
-        y: 436
-        width: 141
-        height: 203
+        x: 90
+        y: 248
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -390,10 +390,10 @@ TextureImporter:
       name: Poker_15
       rect:
         serializedVersion: 2
-        x: 300
-        y: 436
-        width: 141
-        height: 203
+        x: 176
+        y: 248
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -403,10 +403,10 @@ TextureImporter:
       name: Poker_16
       rect:
         serializedVersion: 2
-        x: 451
-        y: 436
-        width: 141
-        height: 203
+        x: 262
+        y: 248
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -416,10 +416,10 @@ TextureImporter:
       name: Poker_17
       rect:
         serializedVersion: 2
-        x: 602
-        y: 436
-        width: 140
-        height: 203
+        x: 348
+        y: 248
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -429,10 +429,10 @@ TextureImporter:
       name: Poker_18
       rect:
         serializedVersion: 2
-        x: 753
-        y: 436
-        width: 140
-        height: 203
+        x: 434
+        y: 248
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -442,10 +442,10 @@ TextureImporter:
       name: Poker_19
       rect:
         serializedVersion: 2
-        x: 903
-        y: 436
-        width: 141
-        height: 203
+        x: 520
+        y: 248
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -455,10 +455,10 @@ TextureImporter:
       name: Poker_20
       rect:
         serializedVersion: 2
-        x: 1054
-        y: 436
-        width: 141
-        height: 203
+        x: 606
+        y: 248
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -468,10 +468,10 @@ TextureImporter:
       name: Poker_21
       rect:
         serializedVersion: 2
-        x: 1205
-        y: 436
-        width: 141
-        height: 203
+        x: 692
+        y: 248
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -481,10 +481,10 @@ TextureImporter:
       name: Poker_22
       rect:
         serializedVersion: 2
-        x: 1356
-        y: 436
-        width: 141
-        height: 203
+        x: 778
+        y: 248
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -494,10 +494,10 @@ TextureImporter:
       name: Poker_23
       rect:
         serializedVersion: 2
-        x: 1507
-        y: 436
-        width: 140
-        height: 203
+        x: 864
+        y: 248
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -507,10 +507,10 @@ TextureImporter:
       name: Poker_24
       rect:
         serializedVersion: 2
-        x: 1658
-        y: 436
-        width: 140
-        height: 203
+        x: 950
+        y: 248
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -520,10 +520,10 @@ TextureImporter:
       name: Poker_25
       rect:
         serializedVersion: 2
-        x: 1808
-        y: 436
-        width: 141
-        height: 203
+        x: 1036
+        y: 248
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -533,10 +533,10 @@ TextureImporter:
       name: Poker_26
       rect:
         serializedVersion: 2
-        x: 0
-        y: 217
-        width: 139
-        height: 203
+        x: 4
+        y: 126
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -546,10 +546,10 @@ TextureImporter:
       name: Poker_27
       rect:
         serializedVersion: 2
-        x: 149
-        y: 217
-        width: 141
-        height: 203
+        x: 90
+        y: 126
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -559,10 +559,10 @@ TextureImporter:
       name: Poker_28
       rect:
         serializedVersion: 2
-        x: 300
-        y: 217
-        width: 141
-        height: 203
+        x: 176
+        y: 126
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -572,10 +572,10 @@ TextureImporter:
       name: Poker_29
       rect:
         serializedVersion: 2
-        x: 451
-        y: 217
-        width: 141
-        height: 203
+        x: 262
+        y: 126
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -585,10 +585,10 @@ TextureImporter:
       name: Poker_30
       rect:
         serializedVersion: 2
-        x: 602
-        y: 217
-        width: 140
-        height: 203
+        x: 348
+        y: 126
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -598,10 +598,10 @@ TextureImporter:
       name: Poker_31
       rect:
         serializedVersion: 2
-        x: 753
-        y: 217
-        width: 140
-        height: 203
+        x: 434
+        y: 126
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -611,10 +611,10 @@ TextureImporter:
       name: Poker_32
       rect:
         serializedVersion: 2
-        x: 903
-        y: 217
-        width: 141
-        height: 203
+        x: 520
+        y: 126
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -624,10 +624,10 @@ TextureImporter:
       name: Poker_33
       rect:
         serializedVersion: 2
-        x: 1054
-        y: 217
-        width: 141
-        height: 203
+        x: 606
+        y: 126
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -637,10 +637,10 @@ TextureImporter:
       name: Poker_34
       rect:
         serializedVersion: 2
-        x: 1205
-        y: 217
-        width: 141
-        height: 203
+        x: 692
+        y: 126
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -650,10 +650,10 @@ TextureImporter:
       name: Poker_35
       rect:
         serializedVersion: 2
-        x: 1356
-        y: 217
-        width: 141
-        height: 203
+        x: 778
+        y: 126
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -663,10 +663,10 @@ TextureImporter:
       name: Poker_36
       rect:
         serializedVersion: 2
-        x: 1507
-        y: 217
-        width: 140
-        height: 203
+        x: 864
+        y: 126
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -676,10 +676,10 @@ TextureImporter:
       name: Poker_37
       rect:
         serializedVersion: 2
-        x: 1658
-        y: 217
-        width: 140
-        height: 203
+        x: 950
+        y: 126
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -689,10 +689,10 @@ TextureImporter:
       name: Poker_38
       rect:
         serializedVersion: 2
-        x: 1808
-        y: 217
-        width: 141
-        height: 203
+        x: 1036
+        y: 126
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -702,10 +702,10 @@ TextureImporter:
       name: Poker_39
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 139
-        height: 201
+        x: 4
+        y: 4
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -715,10 +715,10 @@ TextureImporter:
       name: Poker_40
       rect:
         serializedVersion: 2
-        x: 149
-        y: 0
-        width: 141
-        height: 201
+        x: 90
+        y: 4
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -728,10 +728,10 @@ TextureImporter:
       name: Poker_41
       rect:
         serializedVersion: 2
-        x: 300
-        y: 0
-        width: 141
-        height: 201
+        x: 176
+        y: 4
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -741,10 +741,10 @@ TextureImporter:
       name: Poker_42
       rect:
         serializedVersion: 2
-        x: 451
-        y: 0
-        width: 141
-        height: 201
+        x: 262
+        y: 4
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -754,10 +754,10 @@ TextureImporter:
       name: Poker_43
       rect:
         serializedVersion: 2
-        x: 602
-        y: 0
-        width: 140
-        height: 201
+        x: 348
+        y: 4
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -767,10 +767,10 @@ TextureImporter:
       name: Poker_44
       rect:
         serializedVersion: 2
-        x: 753
-        y: 0
-        width: 140
-        height: 201
+        x: 434
+        y: 4
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -780,10 +780,10 @@ TextureImporter:
       name: Poker_45
       rect:
         serializedVersion: 2
-        x: 903
-        y: 0
-        width: 141
-        height: 201
+        x: 520
+        y: 4
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -793,10 +793,10 @@ TextureImporter:
       name: Poker_46
       rect:
         serializedVersion: 2
-        x: 1054
-        y: 0
-        width: 141
-        height: 201
+        x: 606
+        y: 4
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -806,10 +806,10 @@ TextureImporter:
       name: Poker_47
       rect:
         serializedVersion: 2
-        x: 1205
-        y: 0
-        width: 141
-        height: 201
+        x: 692
+        y: 4
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -819,10 +819,10 @@ TextureImporter:
       name: Poker_48
       rect:
         serializedVersion: 2
-        x: 1356
-        y: 0
-        width: 141
-        height: 201
+        x: 778
+        y: 4
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -832,10 +832,10 @@ TextureImporter:
       name: Poker_49
       rect:
         serializedVersion: 2
-        x: 1507
-        y: 0
-        width: 140
-        height: 201
+        x: 864
+        y: 4
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -845,10 +845,10 @@ TextureImporter:
       name: Poker_50
       rect:
         serializedVersion: 2
-        x: 1658
-        y: 0
-        width: 140
-        height: 201
+        x: 950
+        y: 4
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -858,10 +858,10 @@ TextureImporter:
       name: Poker_51
       rect:
         serializedVersion: 2
-        x: 1808
-        y: 0
-        width: 141
-        height: 201
+        x: 1036
+        y: 4
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -871,10 +871,10 @@ TextureImporter:
       name: Poker_52
       rect:
         serializedVersion: 2
-        x: 1959
-        y: 0
-        width: 141
-        height: 201
+        x: 1122
+        y: 4
+        width: 78
+        height: 114
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
