@@ -30,6 +30,9 @@ public class GConf {
 
 	public static bool TakeCoinSuccess = false;
 
+	public static int Pot = 0;
+	public static int PrPot = 0;
+
 	public class MyCmd {
 		public static bool Takecoin = false;
 		public static bool Unseat = false;
@@ -63,6 +66,9 @@ public class GConf {
 		GConf.IPLimit = options.Int("ip_limit") == 1;
 		GConf.roomName = json.String("name");
 		GConf.DealerSeat = json.Int("dealer_seat");
+
+		Pot = json.Int("pot");
+		PrPot = json.Int("pr_pot");
 		
 		var startTs = json.Int("begin_time");
 		GConf.StartTime = _.DateTimeFromTimeStamp(startTs);

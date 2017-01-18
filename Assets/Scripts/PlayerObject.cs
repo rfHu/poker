@@ -95,6 +95,10 @@ public class PlayerObject : MonoBehaviour {
 		}
 	}
 
+	public void Fold() {
+		transform.Find("Info").GetComponent<CanvasGroup>().alpha = 0.7f;
+	}
+
 	public void SetDealer(GameObject dealer) {
 		dealer.transform.SetParent(transform, false);
 		dealer.GetComponent<RectTransform>().DOAnchorPos( new Vector2(-90, 0), animDuration);

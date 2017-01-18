@@ -210,7 +210,7 @@ public class Connect  {
 		GConf.ModifyByJson(json);	
 
 		if (enter) {
-			// @TODO: 刷新游戏界面	
+			// Skip
 		} else {
 			SceneManager.LoadScene("PokerGame");
 		}

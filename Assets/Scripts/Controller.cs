@@ -61,6 +61,7 @@ public class Controller : MonoBehaviour {
 
 		ShowGameInfo();
 		addListeners();
+		showPlayers();
 	}
 
 	// 逆时针生成位置信息
@@ -162,8 +163,6 @@ public class Controller : MonoBehaviour {
 		} else if (GConf.IPLimit) {
 			AddGameInfo("IP限制");
 		}
-
-		showPlayers();
 	}
 
 	void showPlayers() {
@@ -334,10 +333,10 @@ public class Controller : MonoBehaviour {
 		}
 	}
 
-	void updatePot(int pot, int prev) {
+	void updatePot() {
 		Pot.SetActive(true);
-		Pot.GetComponent<Pots>().PrevPot.text = prev.ToString();
-		Pot.GetComponent<Pots>().DC.text =  "底池:" + pot.ToString();
+		Pot.GetComponent<Pots>().PrevPot.text = (GConf.Pot - GConf.PrPot).ToString();
+		Pot.GetComponent<Pots>().DC.text =  "底池:" + GConf.Pot.ToString();
 	}
 
 	void resetAllCards() {
@@ -347,34 +346,24 @@ public class Controller : MonoBehaviour {
 		}		
 	}
 
-	void onGameStart(object sender, DelegateArgs e) {
-		GConf.ModifyByJson(e.Data.Dict("args").Dict("room"));
-		resetAllCards();
+	void resetAllPlayers() {
+		foreach(KeyValuePair<int, PlayerObject> item in playerObjects) {
+			playerObjects.Remove(item.Key);
+			Destroy(item.Value.gameObject);
+		}
 
+		showPlayers();
+	}
+
+	void setDealer() {
 		if (dealer == null) {
 			dealer = (GameObject)Instantiate(Resources.Load("Prefab/Dealer"));
 		}
 
 		playerObjects[GConf.DealerSeat].SetDealer(dealer);
+	}
 
-		var args = e.Data.Dict("room");
-		var pot = args.Int("pot");
-		updatePot(pot, pot - args.Int("pr_pot"));	
-
-		var gamers = args.Dict("gamers");
-		foreach(KeyValuePair<string, object> entry in gamers) {
-			var idx = Convert.ToInt32(entry.Key);
-			var dict = entry.Value as Dictionary<string, object>;
-
-			if (dict == null) {
-				continue;
-			}
-
-			var prchips = dict.Int("pr_chips");
-			playerObjects[idx].SetPrChips(prchips);
-		}
-
-		var uid = e.Data.String("uid");
+	void vertifyMe() {
 		var index = FindMyIndex();
 
 		foreach(KeyValuePair<int, PlayerObject> entry in playerObjects) {
@@ -386,6 +375,32 @@ public class Controller : MonoBehaviour {
 				gameObj.SetActive(true);
 			}
 		}
+	}
+
+	void  newTurn() {
+		resetAllCards();
+		resetAllPlayers();
+		setDealer();
+		updatePot();
+		vertifyMe();
+	}
+
+	void onGameStart(object sender, DelegateArgs e) {
+		GConf.ModifyByJson(e.Data.Dict("args").Dict("room"));
+		newTurn();
+
+		// var gamers = .Dict("gamers");
+		// foreach(KeyValuePair<string, object> entry in gamers) {
+		// 	var idx = Convert.ToInt32(entry.Key);
+		// 	var dict = entry.Value as Dictionary<string, object>;
+
+		// 	if (dict == null) {
+		// 		continue;
+		// 	}
+
+		// 	var prchips = dict.Int("pr_chips");
+		// 	playerObjects[idx].SetPrChips(prchips);
+		// }
 	}
 
 	void onSeeCard(object sender, DelegateArgs e) {
@@ -461,7 +476,7 @@ public class Controller : MonoBehaviour {
 	
 	void onFold(object sender, DelegateArgs e) {
 		var mop = e.Data.ToObject<Mop>();
-		playerObjects[mop.seat].transform.Find("Info").GetComponent<CanvasGroup>().alpha = 0.7f;	
+		playerObjects[mop.seat].Fold();	
 	}
 
 	void onGameOver(object sender, DelegateArgs e) {
