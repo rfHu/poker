@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.UI.ProceduralImage;
 using Extensions;
+using DG.Tweening;
 
 public class PlayerObject : MonoBehaviour {
 	public int Index;
@@ -22,6 +23,7 @@ public class PlayerObject : MonoBehaviour {
 	public Text Chips;
 
 	GameObject OPGo;
+	private float animDuration = 0.2f;
 
 	void Awake() {
 		var info = transform.Find("Info");
@@ -84,6 +86,18 @@ public class PlayerObject : MonoBehaviour {
 
 		activated = false;
 		countdown.SetActive(false);
+	}
+
+	public void SetPrChips(int prchips) {
+		if (prchips != 0) {
+			transform.Find("Chips").gameObject.SetActive(true);
+			Chips.text = prchips.ToString();
+		}
+	}
+
+	public void SetDealer(GameObject dealer) {
+		dealer.transform.SetParent(transform, false);
+		dealer.GetComponent<RectTransform>().DOAnchorPos( new Vector2(-90, 0), animDuration);
 	}
 
 	void showOP() {

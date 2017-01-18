@@ -21,6 +21,8 @@ public class Controller : MonoBehaviour {
 
 	public List<GameObject> Seats;	
 
+	GameObject dealer;
+
 	void Start () {
 		List<Button> buttons = new List<Button>();
 		int numberOfPlayers = GConf.playerCount;
@@ -333,6 +335,7 @@ public class Controller : MonoBehaviour {
 	}
 
 	void updatePot(int pot, int prev) {
+		Pot.SetActive(true);
 		Pot.GetComponent<Pots>().PrevPot.text = prev.ToString();
 		Pot.GetComponent<Pots>().DC.text =  "底池:" + pot.ToString();
 	}
@@ -345,8 +348,14 @@ public class Controller : MonoBehaviour {
 	}
 
 	void onGameStart(object sender, DelegateArgs e) {
+		GConf.ModifyByJson(e.Data.Dict("args").Dict("room"));
 		resetAllCards();
-		Pot.SetActive(true);
+
+		if (dealer == null) {
+			dealer = (GameObject)Instantiate(Resources.Load("Prefab/Dealer"));
+		}
+
+		playerObjects[GConf.DealerSeat].SetDealer(dealer);
 
 		var args = e.Data.Dict("room");
 		var pot = args.Int("pot");
@@ -362,11 +371,7 @@ public class Controller : MonoBehaviour {
 			}
 
 			var prchips = dict.Int("pr_chips");
-
-			if (prchips != 0) {
-				playerObjects[idx].transform.Find("Chips").gameObject.SetActive(true);
-				playerObjects[idx].Chips.text = prchips.ToString();
-			}
+			playerObjects[idx].SetPrChips(prchips);
 		}
 
 		var uid = e.Data.String("uid");

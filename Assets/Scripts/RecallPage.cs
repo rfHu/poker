@@ -14,6 +14,9 @@ public class RecallPage : MonoBehaviour {
 	public Text Current;
 	public Text Total;
 
+	private int totalNumber;
+	private int currentNumber;
+
 	void Awake()
 	{
 		request();	
@@ -38,9 +41,12 @@ public class RecallPage : MonoBehaviour {
 	void reload(Dictionary<string, object> data) {
 		var ret = data.Dict("ret");
 
+		totalNumber = ret.Int("total_hand");
+		currentNumber = ret.Int("cur_hand");
+
 		Owner.text = string.Format("{0}（{1}）", GConf.roomName, GConf.StartTime.ToString("yyyy-MM-dd")); 
-		Current.text = ret.Int("cur_hand").ToString();
-		Total.text =  string.Format("/ {0}", ret.Int("total_hand").ToString());
+		Current.text = currentNumber.ToString();
+		Total.text =  string.Format("/ {0}", totalNumber);
 
 		Cards.transform.Clear();
 		Rect.transform.Clear();
@@ -67,5 +73,23 @@ public class RecallPage : MonoBehaviour {
 			user.Show(dict);
 			user.transform.SetParent(Rect.transform, false);
 		}
+	}
+
+	public void Up() {
+		if (currentNumber >= totalNumber) {
+			return ;
+		}
+
+		currentNumber++;
+		request(currentNumber);
+	}
+
+	public void Down() {
+		if (currentNumber <= 0) {
+			return ;
+		}
+
+		currentNumber--;
+		request(currentNumber);
 	}
 }

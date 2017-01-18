@@ -207,42 +207,7 @@ public class Connect  {
 
 	// 只允许进入一次
 	void refreshGameInfo(Dictionary<string, object> json) {
-		var options = json.Dict("options");
-		var gamers = json.Dict("gamers");
-
-		GConf.isOwner = options.String("ownerid") == GConf.Uid;
-		GConf.bankroll = options.IL("bankroll_multiple"); 
-		GConf.ante = options.Int("ant");
-		GConf.playerCount = options.Int("max_seats");
-		GConf.rake = options.Float("rake_percent");
-		GConf.duration = options.Int("time_limit");
-		GConf.needAduit = options.Int("need_audit") == 1;
-		GConf.GPSLimit = options.Int("gps_limit") == 1;
-		GConf.IPLimit = options.Int("ip_limit") == 1;
-		GConf.roomName = json.String("name");
-		GConf.DealerSeat = json.Int("dealer_seat");
-		
-		var startTs = json.Int("begin_time");
-		GConf.StartTime = _.DateTimeFromTimeStamp(startTs);
-
-		if (startTs != 0)
-        {
-			GConf.GameStarted = true;
-        }
-
-		var bb = options.Int("limit");
-		GConf.bb = bb ;
-		GConf.sb = bb / 2;
-
-		// 先清除、再添加
-		GConf.Players.Clear();
-
-		foreach(KeyValuePair<string, object> entry in gamers) {
-			var dict = entry.Value as Dictionary<string, object>;
-			var index = Convert.ToInt32(entry.Key);
-			var player = new Player(dict, index);
-			GConf.Players.Add(index, player);
-		}
+		GConf.ModifyByJson(json);	
 
 		if (enter) {
 			// @TODO: 刷新游戏界面	
