@@ -87,6 +87,11 @@ public class GConf {
 
 		foreach(KeyValuePair<string, object> entry in gamers) {
 			var dict = entry.Value as Dictionary<string, object>;
+
+			if (dict == null) {
+				continue;
+			}
+
 			var index = Convert.ToInt32(entry.Key);
 			var player = new Player(dict, index);
 			GConf.Players.Add(index, player);
@@ -100,12 +105,15 @@ public class Player {
 	public string Uid = "";
 	public int Bankroll = 0;
 	public int Index;
+	public int PrChips = 0;
 
 	public Player(Dictionary<string, object> json, int index) {
 		Name = json.String("name");
 		Avatar = json.String("avatar");
 		Uid = json.String("uid");
 		Bankroll = json.Int("bankroll");
+		PrChips = json.Int("pr_chips");
+
 		Index = index;
 	}
 }

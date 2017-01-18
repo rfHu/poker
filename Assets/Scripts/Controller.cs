@@ -348,14 +348,19 @@ public class Controller : MonoBehaviour {
 
 	void resetAllPlayers() {
 		foreach(KeyValuePair<int, PlayerObject> item in playerObjects) {
-			playerObjects.Remove(item.Key);
-			Destroy(item.Value.gameObject);
+			Destroy(item.Value.gameObject);	
 		}
 
+		// 清空字典保存的对象
+		playerObjects = new Dictionary<int, PlayerObject>();
 		showPlayers();
 	}
 
 	void setDealer() {
+		if (!playerObjects.ContainsKey(GConf.DealerSeat)) {
+			return ;
+		}
+
 		if (dealer == null) {
 			dealer = (GameObject)Instantiate(Resources.Load("Prefab/Dealer"));
 		}
@@ -377,30 +382,24 @@ public class Controller : MonoBehaviour {
 		}
 	}
 
+	void updateChips() {
+		foreach(KeyValuePair<int, Player> entry in GConf.Players) {
+			playerObjects[entry.Key].SetPrChips(entry.Value.PrChips);
+		}
+	}
+
 	void  newTurn() {
 		resetAllCards();
 		resetAllPlayers();
 		setDealer();
 		updatePot();
 		vertifyMe();
+		updateChips();
 	}
 
 	void onGameStart(object sender, DelegateArgs e) {
-		GConf.ModifyByJson(e.Data.Dict("args").Dict("room"));
+		GConf.ModifyByJson(e.Data.Dict("room"));
 		newTurn();
-
-		// var gamers = .Dict("gamers");
-		// foreach(KeyValuePair<string, object> entry in gamers) {
-		// 	var idx = Convert.ToInt32(entry.Key);
-		// 	var dict = entry.Value as Dictionary<string, object>;
-
-		// 	if (dict == null) {
-		// 		continue;
-		// 	}
-
-		// 	var prchips = dict.Int("pr_chips");
-		// 	playerObjects[idx].SetPrChips(prchips);
-		// }
 	}
 
 	void onSeeCard(object sender, DelegateArgs e) {
