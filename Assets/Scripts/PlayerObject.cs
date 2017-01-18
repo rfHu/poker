@@ -100,8 +100,9 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	public void SetDealer(GameObject dealer) {
-		dealer.transform.SetParent(transform, false);
-		dealer.GetComponent<RectTransform>().DOAnchorPos( new Vector2(-90, 0), animDuration);
+		dealer.transform.SetParent(transform.parent.transform, false);
+		Debug.Log(dealer.GetComponent<RectTransform>().anchoredPosition);
+		dealer.GetComponent<RectTransform>().DOAnchorPos( new Vector2(80, -40), animDuration);
 	}
 
 	void showOP() {
