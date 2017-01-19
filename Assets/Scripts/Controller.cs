@@ -186,6 +186,8 @@ public class Controller : MonoBehaviour {
 		Delegates.shared.Deal += new EventHandler<DelegateArgs>(onDeal);
 		Delegates.shared.MoveTurn += new EventHandler<DelegateArgs>(onMoveTurn);
 		Delegates.shared.GameOver += new EventHandler<DelegateArgs>(onGameOver);
+		Delegates.shared.Started += new EventHandler<DelegateArgs>(onStart);
+		Delegates.shared.Paused += new EventHandler<DelegateArgs>(onPaused);
 
 		// 游戏操作相关
 		Delegates.shared.Check += new EventHandler<DelegateArgs>(onCheck);
@@ -193,19 +195,19 @@ public class Controller : MonoBehaviour {
 		Delegates.shared.AllIn += new EventHandler<DelegateArgs>(onAllIn);
 		Delegates.shared.Raise += new EventHandler<DelegateArgs>(onRaise);
 		Delegates.shared.Call += new EventHandler<DelegateArgs>(onCall);
-		Delegates.shared.Paused += new EventHandler<DelegateArgs>(onPaused);
 	}
 
 	void removeListeners() {
 		Delegates.shared.TakeSeat -= new EventHandler<DelegateArgs>(onTakeSeat);
-		Delegates.shared.TakeSeat -= new EventHandler<DelegateArgs>(onUnSeat);
+		Delegates.shared.UnSeat -= new EventHandler<DelegateArgs>(onUnSeat);
 		Delegates.shared.Ready -= new EventHandler<DelegateArgs>(onReady);
 		Delegates.shared.GameStart -= new EventHandler<DelegateArgs>(onGameStart);
 		Delegates.shared.SeeCard -= new EventHandler<DelegateArgs>(onSeeCard);
 		Delegates.shared.Deal -= new EventHandler<DelegateArgs>(onDeal);
 		Delegates.shared.MoveTurn -= new EventHandler<DelegateArgs>(onMoveTurn);
-		Delegates.shared.GameOver += new EventHandler<DelegateArgs>(onGameOver);
-		Delegates.shared.Start += new EventHandler<DelegateArgs>(onStart);
+		Delegates.shared.GameOver -= new EventHandler<DelegateArgs>(onGameOver);
+		Delegates.shared.Started -= new EventHandler<DelegateArgs>(onStart);	
+		Delegates.shared.Paused -= new EventHandler<DelegateArgs>(onPaused);
 
 		// 游戏操作相关
 		Delegates.shared.Check -= new EventHandler<DelegateArgs>(onCheck);
@@ -213,8 +215,6 @@ public class Controller : MonoBehaviour {
 		Delegates.shared.AllIn -= new EventHandler<DelegateArgs>(onAllIn);
 		Delegates.shared.Raise -= new EventHandler<DelegateArgs>(onRaise);
 		Delegates.shared.Call -= new EventHandler<DelegateArgs>(onCall);
-		Delegates.shared.Paused -= new EventHandler<DelegateArgs>(onPaused);
-		Delegates.shared.Start -= new EventHandler<DelegateArgs>(onStart);
 	}
 
 	void OnDestroy()

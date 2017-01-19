@@ -6,12 +6,15 @@ using UnityEngine.UI;
 public class OwnerPanel : MonoBehaviour {
 	public Text PauseText;
 
+	private string pauseStr = "暂停牌局";
+	private string continueStr = "继续牌局";
+
 	void Awake()
 	{
 		if (GConf.Paused) {
-			PauseText.text = "继续牌局";
+			PauseText.text = continueStr;
 		} else {
-			PauseText.text = "暂停牌局";
+			PauseText.text = pauseStr;
 		}
 	}
 
@@ -24,9 +27,14 @@ public class OwnerPanel : MonoBehaviour {
 	}
 
 	public void Pause() {
-		var f = "pause";
+		string f;
+
 		if (GConf.Paused) {
 			f = "start";
+			PauseText.text = pauseStr;
+		} else {
+			f = "pause";
+			PauseText.text = continueStr;
 		}
 
 		Connect.shared.Emit(new Dictionary<string, object>() {

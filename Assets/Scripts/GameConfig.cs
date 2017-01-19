@@ -73,7 +73,7 @@ public class GConf {
 
 		Pot = json.Int("pot");
 		PrPot = json.Int("pr_pot");
-		Paused = json.Int("is_pause") == 2;
+		Paused = json.Int("is_pause") != 0;
 		
 		var startTs = json.Int("begin_time");
 		GConf.StartTime = _.DateTimeFromTimeStamp(startTs);

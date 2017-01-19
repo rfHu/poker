@@ -197,8 +197,11 @@ public class Connect  {
 				case "gameover":
 					Delegates.shared.OnGameOver(evt);
 					break;
-				case "pausing":
+				case "pausing": case "paused":
 					Delegates.shared.OnPaused(evt);
+					break;
+				case "start":
+					Delegates.shared.OnStart(evt);
 					break;
 				default:
 					break;

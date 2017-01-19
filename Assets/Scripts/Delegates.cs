@@ -32,7 +32,7 @@ public class Delegates {
     public event EventHandler<DelegateArgs> Raise;
     public event EventHandler<DelegateArgs> GameOver;
     public event EventHandler<DelegateArgs> Paused;
-    public event EventHandler<DelegateArgs> Start;
+    public event EventHandler<DelegateArgs> Started;
 
 	// 登陆态互斥了
 	public event EventHandler<DelegateArgs> Exclusion;
@@ -139,8 +139,8 @@ public class Delegates {
 	}
 
 	public void OnStart(DelegateArgs e) {
-		if (Start != null) {
-			Start(this, e);
+		if (Started != null) {
+			Started(this, e);
 		}
 	}
 }
