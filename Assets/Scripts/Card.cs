@@ -1,21 +1,43 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using DG.Tweening;
 
 public class Card : MonoBehaviour {
 	public Sprite[] faces;
 	public Sprite cardBack;
 
+	public Sprite[] sfaces;
+	public Sprite scardBack;
+
 	public bool IsBack = true;
+	public bool IsSmall = false;
+
+	Sprite getCardBack() {
+		if (IsSmall) {
+			return scardBack;
+		} else {
+			return cardBack;
+		}
+	}
+
+	Sprite getCardFace(int index) {
+		if (IsSmall) {
+			return sfaces[index];
+		} else {
+			return faces[index];
+		}
+	}
 
 	void Awake() {
-		GetComponent<Image>().sprite = cardBack;
+		var img = GetComponent<Image>();
+		img.sprite = getCardBack();
 	}
+
 	public void Show(int index) {	
 		gameObject.SetActive(true);
 		
 		var image = GetComponent<Image>();
-		image.sprite = faces[index];
+		image.sprite = getCardFace(index);
+		
 		IsBack = false;
 	}
 
@@ -29,7 +51,7 @@ public class Card : MonoBehaviour {
 	}
 
 	public void Turnback() {
-		GetComponent<Image>().sprite = cardBack;
+		GetComponent<Image>().sprite = getCardBack();
 		IsBack = true;
 		gameObject.SetActive(false);
 	}
