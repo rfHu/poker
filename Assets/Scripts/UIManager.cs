@@ -6,7 +6,7 @@ using Extensions;
 public class UIManager : MonoBehaviour {
 	public Canvas canvas;
 	public GameObject recallPage;
-	GameObject auditMsg = (GameObject)Instantiate(Resources.Load("Prefab/AuditMsg"));
+	GameObject auditMsg;
 
 	public void ShowMenu() {
 		var popup = (GameObject)Instantiate(Resources.Load("Prefab/MenuPopup"));
@@ -60,6 +60,10 @@ public class UIManager : MonoBehaviour {
 
 	void onAudit(object sender, DelegateArgs e) {
 		var array = e.Data.List("ids");
+
+		if (!auditMsg) {
+			auditMsg = (GameObject)Instantiate(Resources.Load("Prefab/AuditMsg"));
+		}
 
 		if (array.Count == 0) {
 			auditMsg.GetComponent<DOPopup>().Close();

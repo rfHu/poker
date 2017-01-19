@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.UI.ProceduralImage;
 using System;
+using DG.Tweening;
 
 public class PlayerObject : MonoBehaviour {
 	public int Index;
@@ -112,8 +113,50 @@ public class PlayerObject : MonoBehaviour {
 		}
 	}
 
+	float opacity = 0.7f;
+	float animDuraion = 0.4f;
+
+	void foldCards(GameObject go, Action callback = null) {
+		var rectTrans = go.GetComponent<RectTransform>();
+		rectTrans.DOAnchorPos(new Vector2(0, 0), animDuraion);
+		rectTrans.DOScale(new Vector2(0.5f, 0.5f), animDuraion);
+
+		var image = go.GetComponent<Image>();
+		Tween tween; 
+
+		if (image != null) {
+			tween = image.DOFade(0, animDuraion);
+		} else {
+			var canvasGrp = go.GetComponent<CanvasGroup>();
+			tween = canvasGrp.DOFade(0, animDuraion);
+		}
+
+		tween.OnComplete(() => {
+			Destroy(go);
+			if (callback != null) {
+				callback();
+			}
+		});
+	}
+
 	public void Fold() {
-		transform.Find("Info").GetComponent<CanvasGroup>().alpha = 0.7f;
+		var canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
+
+		if (Uid == GConf.Uid) {
+			var copy = Instantiate(MyCards, canvas.transform, true);
+			
+			MyCards.GetComponent<CanvasGroup>().alpha = opacity;
+			MyCards.gameObject.SetActive(false);
+
+			foldCards(copy, () => {
+				MyCards.SetActive(true);
+			});
+		} else {
+			Cardfaces.transform.SetParent(canvas.transform, true);
+			foldCards(Cardfaces);			
+		}
+
+		transform.Find("Info").GetComponent<CanvasGroup>().alpha = opacity;
 	}
 
 	void showOP() {
