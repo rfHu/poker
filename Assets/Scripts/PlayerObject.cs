@@ -99,12 +99,6 @@ public class PlayerObject : MonoBehaviour {
 		transform.Find("Info").GetComponent<CanvasGroup>().alpha = 0.7f;
 	}
 
-	public void SetDealer(GameObject dealer) {
-		dealer.transform.SetParent(transform.parent.transform, false);
-		Debug.Log(dealer.GetComponent<RectTransform>().anchoredPosition);
-		dealer.GetComponent<RectTransform>().DOAnchorPos( new Vector2(80, -40), animDuration);
-	}
-
 	void showOP() {
 		OPGo = (GameObject)Instantiate(Resources.Load("Prefab/OP"));	
 		OPGo.transform.SetParent(transform, false);

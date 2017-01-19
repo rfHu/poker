@@ -21,7 +21,7 @@ public class MenuPopup : MonoBehaviour {
 
 	void Start()
 	{
-		parent = GameObject.FindGameObjectWithTag("Canvas1").GetComponent<Canvas>();
+		parent = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
 
 		if (GConf.MyCmd.Unseat) {
 			StandObj.GetComponent<CanvasGroup>().alpha = 1;

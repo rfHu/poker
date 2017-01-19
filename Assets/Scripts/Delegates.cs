@@ -31,6 +31,8 @@ public class Delegates {
     public event EventHandler<DelegateArgs> AllIn;
     public event EventHandler<DelegateArgs> Raise;
     public event EventHandler<DelegateArgs> GameOver;
+    public event EventHandler<DelegateArgs> Paused;
+    public event EventHandler<DelegateArgs> Start;
 
 	// 登陆态互斥了
 	public event EventHandler<DelegateArgs> Exclusion;
@@ -127,6 +129,18 @@ public class Delegates {
 	public void OnGameOver(DelegateArgs e) {
 		if (GameOver != null) {
 			GameOver(this, e);
+		}
+	}
+
+	public void OnPaused(DelegateArgs e) {
+		if (Paused != null) {
+			Paused(this, e);
+		}
+	}
+
+	public void OnStart(DelegateArgs e) {
+		if (Start != null) {
+			Start(this, e);
 		}
 	}
 }

@@ -22,7 +22,7 @@ public class Connect  {
 			HTTPManager.Proxy = new HTTPProxy(new Uri("http://localhost:8888"));
 		}
 
-		GConf.userToken = "s%3ATYD1Z2P08yQ7Uyu3o1KZZevf4v6K8sh1.S5l%2BfAqlAHThje7kJafU3qCKk3Yij%2B%2F5F1EHqifp540";
+		GConf.userToken = "s%3AAAIUeWW4nhjsTYWEDtKjrPudai_RuFdX.GbSJQzfSeZO%2BBacRXV4Y%2BcSIJWoUbe4LIYWNRTkxTtc";
 
 		SocketOptions options = new SocketOptions();
 		options.ConnectWith = TransportTypes.WebSocket;
@@ -196,6 +196,9 @@ public class Connect  {
 					break;
 				case "gameover":
 					Delegates.shared.OnGameOver(evt);
+					break;
+				case "pausing":
+					Delegates.shared.OnPaused(evt);
 					break;
 				default:
 					break;

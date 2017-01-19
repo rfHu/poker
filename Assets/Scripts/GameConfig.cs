@@ -19,6 +19,8 @@ public class GConf {
 	public static int bb = 0;
 	public static bool isStraddle = false;
 	public static string roomName = "";
+
+	// 游戏是否已经开始，跟暂停状态无关
 	public static bool GameStarted = false; 
 	public static float rake = 0;
 	public static int duration = 0;
@@ -32,6 +34,8 @@ public class GConf {
 
 	public static int Pot = 0;
 	public static int PrPot = 0;
+
+	public static bool Paused = false;
 
 	public class MyCmd {
 		public static bool Takecoin = false;
@@ -69,6 +73,7 @@ public class GConf {
 
 		Pot = json.Int("pot");
 		PrPot = json.Int("pr_pot");
+		Paused = json.Int("is_pause") == 2;
 		
 		var startTs = json.Int("begin_time");
 		GConf.StartTime = _.DateTimeFromTimeStamp(startTs);

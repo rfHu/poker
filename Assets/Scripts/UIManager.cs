@@ -55,7 +55,7 @@ public class UIManager : MonoBehaviour {
 	// Test Methods
 	static public void ShowDialog(string text) {
 		var go = (GameObject)Instantiate(Resources.Load("Prefab/DialogTemplate"));
-		var canvas = GameObject.FindWithTag("Canvas1").GetComponent<Canvas>();
+		var canvas = GameObject.FindWithTag("Canvas").GetComponent<Canvas>();
 		go.GetComponent<Dialog>().Show(message: text, modal: true, modalColor: new Color(0, 0, 0, 0.2f), canvas: canvas);
 	}
 }

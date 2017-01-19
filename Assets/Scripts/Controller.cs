@@ -3,7 +3,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using Extensions;
-using UIWidgets;
+using System.Linq;
+using DG.Tweening;
 
 public class Controller : MonoBehaviour {
 	public GameObject seat;
@@ -13,8 +14,6 @@ public class Controller : MonoBehaviour {
 	public GameObject gameInfoWrapper;
 	public GameObject startButton;
 
-	public List<Vector2> positions = new List<Vector2>(); 
-
 	public List<GameObject> PublicCards;
 
 	public GameObject Pot;
@@ -23,45 +22,43 @@ public class Controller : MonoBehaviour {
 
 	GameObject dealer;
 
+	List<Vector2> anchorPositions = new List<Vector2>();
+
+	public GameObject OwnerButton; 
+
 	void Start () {
-		List<Button> buttons = new List<Button>();
 		int numberOfPlayers = GConf.playerCount;
+		anchorPositions = GetVectors (numberOfPlayers);
 
 		for (int i = 0; i < numberOfPlayers; i++) {
-			GameObject copySeat = Instantiate (seat);
-			copySeat.transform.SetParent (canvas.transform, false);
-			buttons.Add (copySeat.GetComponent<Button>());
-			Seats.Add (copySeat);
+			GameObject cpseat = Instantiate (seat);
+			
+			var st = cpseat.GetComponent<Seat>();
+			st.Index = i;
+			st.Act = changePositions;
+			cpseat.transform.SetParent (canvas.transform, false);
+			cpseat.GetComponent<RectTransform>().anchoredPosition = anchorPositions[i];
+			Seats.Add (cpseat);
 		}
 
-		positions = GetVectors (numberOfPlayers);
-		int iter = 0;
-
-		foreach(Button button in buttons) {
-			button.GetComponent<RectTransform> ().anchoredPosition = positions[iter] ;
-			int identifer = iter;
-
-			button.onClick.AddListener(() => {
-				// 已有座位
-				if (GConf.MyCmd.Unseat) {
-					return ;
-				}
-
-				// 坐下
-				Connect.shared.Emit(
-					new Dictionary<string, object>(){
-						{"f", "takeseat"},
-						{"args", identifer}
-					}
-				);		
-			});
-
-			iter++;
+		if (GConf.isOwner) {
+			OwnerButton.SetActive(true);
 		}
 
 		ShowGameInfo();
 		addListeners();
 		showPlayers();
+	}
+
+	void changePositions(int index) {
+		var count = GConf.playerCount;
+		var left = anchorPositions.Skip(GConf.playerCount - index).Take(index);
+		var right = anchorPositions.Take(GConf.playerCount - index);
+		var newVectors = left.Concat(right).ToList(); 
+
+		for (var i = 0; i < Seats.Count; i++) {
+			Seats[i].GetComponent<RectTransform>().DOAnchorPos(newVectors[i], 0.15f);
+		}
 	}
 
 	// 逆时针生成位置信息
@@ -167,6 +164,9 @@ public class Controller : MonoBehaviour {
 
 	void showPlayers() {
 		foreach(KeyValuePair<int, Player> entry in GConf.Players) {
+			if (entry.Value.Uid == GConf.Uid) {
+				changePositions(entry.Value.Index);
+			}
 			showPlayer(entry.Value);
 		}
 	}
@@ -193,6 +193,7 @@ public class Controller : MonoBehaviour {
 		Delegates.shared.AllIn += new EventHandler<DelegateArgs>(onAllIn);
 		Delegates.shared.Raise += new EventHandler<DelegateArgs>(onRaise);
 		Delegates.shared.Call += new EventHandler<DelegateArgs>(onCall);
+		Delegates.shared.Paused += new EventHandler<DelegateArgs>(onPaused);
 	}
 
 	void removeListeners() {
@@ -204,6 +205,7 @@ public class Controller : MonoBehaviour {
 		Delegates.shared.Deal -= new EventHandler<DelegateArgs>(onDeal);
 		Delegates.shared.MoveTurn -= new EventHandler<DelegateArgs>(onMoveTurn);
 		Delegates.shared.GameOver += new EventHandler<DelegateArgs>(onGameOver);
+		Delegates.shared.Start += new EventHandler<DelegateArgs>(onStart);
 
 		// 游戏操作相关
 		Delegates.shared.Check -= new EventHandler<DelegateArgs>(onCheck);
@@ -211,11 +213,21 @@ public class Controller : MonoBehaviour {
 		Delegates.shared.AllIn -= new EventHandler<DelegateArgs>(onAllIn);
 		Delegates.shared.Raise -= new EventHandler<DelegateArgs>(onRaise);
 		Delegates.shared.Call -= new EventHandler<DelegateArgs>(onCall);
+		Delegates.shared.Paused -= new EventHandler<DelegateArgs>(onPaused);
+		Delegates.shared.Start -= new EventHandler<DelegateArgs>(onStart);
 	}
 
 	void OnDestroy()
 	{
 		removeListeners();
+	}
+
+	void onStart(object sender, DelegateArgs e) {
+		GConf.Paused = false;
+	}
+
+	void onPaused(object sender, DelegateArgs e) {
+		GConf.Paused = true;
 	}
 
 	void  onTakeSeat(object sender, DelegateArgs e) {
@@ -357,15 +369,16 @@ public class Controller : MonoBehaviour {
 	}
 
 	void setDealer() {
-		if (!playerObjects.ContainsKey(GConf.DealerSeat)) {
+		if (GConf.DealerSeat == -1) {
 			return ;
 		}
 
 		if (dealer == null) {
 			dealer = (GameObject)Instantiate(Resources.Load("Prefab/Dealer"));
+			dealer.transform.SetParent(canvas.transform, false);
 		}
 
-		playerObjects[GConf.DealerSeat].SetDealer(dealer);
+		Seats[GConf.DealerSeat].GetComponent<Seat>().SetDealer(dealer);
 	}
 
 	void vertifyMe() {
