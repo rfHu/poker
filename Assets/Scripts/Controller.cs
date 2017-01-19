@@ -188,6 +188,7 @@ public class Controller : MonoBehaviour {
 		Delegates.shared.GameOver += new EventHandler<DelegateArgs>(onGameOver);
 		Delegates.shared.Started += new EventHandler<DelegateArgs>(onStart);
 		Delegates.shared.Paused += new EventHandler<DelegateArgs>(onPaused);
+		Delegates.shared.GameEnd += new EventHandler<DelegateArgs>(onGameEnd);
 
 		// 游戏操作相关
 		Delegates.shared.Check += new EventHandler<DelegateArgs>(onCheck);
@@ -208,6 +209,7 @@ public class Controller : MonoBehaviour {
 		Delegates.shared.GameOver -= new EventHandler<DelegateArgs>(onGameOver);
 		Delegates.shared.Started -= new EventHandler<DelegateArgs>(onStart);	
 		Delegates.shared.Paused -= new EventHandler<DelegateArgs>(onPaused);
+		Delegates.shared.GameEnd -= new EventHandler<DelegateArgs>(onGameEnd);
 
 		// 游戏操作相关
 		Delegates.shared.Check -= new EventHandler<DelegateArgs>(onCheck);
@@ -224,6 +226,10 @@ public class Controller : MonoBehaviour {
 
 	void onStart(object sender, DelegateArgs e) {
 		GConf.Paused = false;
+	}
+
+	void onGameEnd(object sender, DelegateArgs e) {
+		Debug.Log(e.Data);
 	}
 
 	void onPaused(object sender, DelegateArgs e) {

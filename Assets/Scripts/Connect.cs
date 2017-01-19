@@ -203,6 +203,9 @@ public class Connect  {
 				case "start":
 					Delegates.shared.OnStart(evt);
 					break;
+				case "game_end":
+					Delegates.shared.OnGameEnd(evt);
+					break;
 				default:
 					break;
 			}

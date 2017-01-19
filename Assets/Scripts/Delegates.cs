@@ -36,6 +36,9 @@ public class Delegates {
 
 	// 登陆态互斥了
 	public event EventHandler<DelegateArgs> Exclusion;
+	public event EventHandler<DelegateArgs> GameEnd;
+	
+
 	public void OnTakeSeat(DelegateArgs e) {
 		if (TakeSeat != null) {
 			TakeSeat(this, e);
@@ -141,6 +144,12 @@ public class Delegates {
 	public void OnStart(DelegateArgs e) {
 		if (Started != null) {
 			Started(this, e);
+		}
+	}
+
+	public void OnGameEnd(DelegateArgs e) {
+		if (GameEnd != null) {
+			GameEnd(this, e);
 		}
 	}
 }
