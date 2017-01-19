@@ -229,6 +229,7 @@ public class Controller : MonoBehaviour {
 	}
 
 	void onGameEnd(object sender, DelegateArgs e) {
+		// @TODO: 传递给APP，让h5展示
 		Debug.Log(e.Data);
 	}
 
