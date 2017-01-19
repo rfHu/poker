@@ -5,26 +5,14 @@ public class Card : MonoBehaviour {
 	public Sprite[] faces;
 	public Sprite cardBack;
 
-	public Sprite[] sfaces;
-	public Sprite scardBack;
-
 	public bool IsBack = true;
-	public bool IsSmall = false;
 
 	Sprite getCardBack() {
-		if (IsSmall) {
-			return scardBack;
-		} else {
-			return cardBack;
-		}
+		return cardBack;
 	}
 
 	Sprite getCardFace(int index) {
-		if (IsSmall) {
-			return sfaces[index];
-		} else {
-			return faces[index];
-		}
+		return faces[index];
 	}
 
 	void Awake() {

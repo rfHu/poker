@@ -3,8 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.UI.ProceduralImage;
-using Extensions;
-using DG.Tweening;
+using System;
 
 public class PlayerObject : MonoBehaviour {
 	public int Index;
@@ -23,6 +22,7 @@ public class PlayerObject : MonoBehaviour {
 	public Text Chips;
 
 	GameObject OPGo;
+	Transform circle;
 	private float animDuration = 0.2f;
 
 	void Awake() {
@@ -30,7 +30,9 @@ public class PlayerObject : MonoBehaviour {
 
 		nameLabel = info.Find("Name").GetComponent<Text>();
 		scoreLabel = info.Find("Coins").Find("Text").GetComponent<Text>();
-		countdown = info.Find("Circle").Find("Countdown").gameObject;
+
+		circle = info.Find("Circle");
+		countdown = circle.Find("Countdown").gameObject;
 
 		// 倒计时隐藏
 		countdown.SetActive(false);
@@ -44,10 +46,26 @@ public class PlayerObject : MonoBehaviour {
 		scoreLabel.text = score.ToString();
 	}
 
+	public void AddScore(int score) {
+		var has = Convert.ToInt32(scoreLabel.text);
+		scoreLabel.text = (has + score).ToString();
+	}
+
+	void showParent() {
+		transform.parent.GetComponent<Image>().enabled = true;
+	}
+
+	void OnDestroy()
+	{
+		showParent();
+	}
+
 	public void MoveOut() {
 		activated = false;
+		
 		if (OPGo != null) {
 			Destroy(OPGo);
+			transform.gameObject.SetActive(true);
 		}
 	}
 
@@ -100,6 +118,8 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	void showOP() {
+		circle.gameObject.SetActive(false);
+
 		OPGo = (GameObject)Instantiate(Resources.Load("Prefab/OP"));	
 		OPGo.transform.SetParent(transform, false);
 		

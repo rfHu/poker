@@ -27,7 +27,10 @@ public class UIManager : MonoBehaviour {
 	}
 
 	void onTakeCoin(object sender, DelegateArgs e) {
-		GConf.coins = e.Data.Int("coins");
+		if (e.Data != null) {
+			GConf.coins = e.Data.Int("coins");
+		}
+
 		GameObject obj = (GameObject)Instantiate(Resources.Load("Prefab/Supplement"));
 		obj.GetComponent<DOPopup>().Show(canvas);
 	} 

@@ -15,6 +15,7 @@ public class Delegates {
 
 	public event EventHandler<DelegateArgs> TakeSeat;
 	public event EventHandler<DelegateArgs> TakeCoin;
+	public event EventHandler<DelegateArgs> TakeMore;
 	public event EventHandler<DelegateArgs> UnSeat;
 	public event EventHandler<DelegateArgs> Ready;
 
@@ -150,6 +151,12 @@ public class Delegates {
 	public void OnGameEnd(DelegateArgs e) {
 		if (GameEnd != null) {
 			GameEnd(this, e);
+		}
+	}
+
+	public void OnTakeMore(DelegateArgs e) {
+		if (TakeMore != null) {
+			TakeMore(this, e);
 		}
 	}
 }

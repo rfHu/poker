@@ -297,7 +297,12 @@ public class Controller : MonoBehaviour {
 
 		playerObject.ShowPlayer(data);
 		playerObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
-		playerObject.transform.SetParent(Seats[data.Index].transform, false);
+		
+		var parent = Seats[data.Index];
+
+		// 隐藏坐下按钮
+		parent.gameObject.GetComponent<Image>().enabled = false;
+		playerObject.transform.SetParent(parent.transform, false);
 		playerObjects.Add(playerObject.Index, playerObject);
 	}
 
@@ -500,5 +505,11 @@ public class Controller : MonoBehaviour {
 
 	void onGameOver(object sender, DelegateArgs e) {
 		Debug.Log("GameOver");	
+	}
+
+	void onTakeMore(object sender, DelegateArgs e) {
+		var index = e.Data.Int("where");
+		var coin = e.Data.Int("coin");
+		playerObjects[index].AddScore(coin);
 	}
 }
