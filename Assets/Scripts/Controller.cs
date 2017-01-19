@@ -299,11 +299,20 @@ public class Controller : MonoBehaviour {
 		playerObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
 		
 		var parent = Seats[data.Index];
-
-		// 隐藏坐下按钮
-		parent.gameObject.GetComponent<Image>().enabled = false;
 		playerObject.transform.SetParent(parent.transform, false);
 		playerObjects.Add(playerObject.Index, playerObject);
+		
+		var image = parent.gameObject.GetComponent<Image>();
+
+		// 隐藏坐下按钮
+		image.enabled = false;
+
+		// 销毁时还原按钮
+		playerObject.OnDes = (index) => {
+			if (!playerObjects.ContainsKey(index)) {
+				image.enabled = true;
+			}
+		};
 	}
 
 	public void RemovePlayer(int index) {

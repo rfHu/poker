@@ -206,6 +206,9 @@ public class Connect  {
 				case "game_end":
 					Delegates.shared.OnGameEnd(evt);
 					break;
+				case "un_audit":
+					Delegates.shared.OnAudit(evt);
+					break;
 				default:
 					break;
 			}

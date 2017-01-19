@@ -20,6 +20,7 @@ public class PlayerObject : MonoBehaviour {
 	public GameObject Cardfaces;
 	public GameObject MyCards;
 	public Text Chips;
+	public Action<int> OnDes;
 
 	GameObject OPGo;
 	Transform circle;
@@ -51,13 +52,11 @@ public class PlayerObject : MonoBehaviour {
 		scoreLabel.text = (has + score).ToString();
 	}
 
-	void showParent() {
-		transform.parent.GetComponent<Image>().enabled = true;
-	}
-
 	void OnDestroy()
 	{
-		showParent();
+		if (OnDes != null) {
+			OnDes(Index);
+		}
 	}
 
 	public void MoveOut() {

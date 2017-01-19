@@ -39,12 +39,14 @@ public class UIManager : MonoBehaviour {
 	{
 		Delegates.shared.TakeCoin += new EventHandler<DelegateArgs>(onTakeCoin);
 		Delegates.shared.Exclusion += new EventHandler<DelegateArgs>(onExclusion);
+		Delegates.shared.Audit += new EventHandler<DelegateArgs>(onAudit);
 	}
 
 	void OnDestroy()
 	{
 		Delegates.shared.TakeCoin -= new EventHandler<DelegateArgs>(onTakeCoin);
 		Delegates.shared.Exclusion -= new EventHandler<DelegateArgs>(onExclusion);
+		Delegates.shared.Audit -= new EventHandler<DelegateArgs>(onAudit);
 	}
 
 	void onExclusion(object sender, DelegateArgs e) {
@@ -53,6 +55,10 @@ public class UIManager : MonoBehaviour {
 		if (type == 2) {
 			UIManager.ShowDialog("您的账号已在其他设备登陆");
 		}
+	}
+
+	void onAudit(object sender, DelegateArgs e) {
+		
 	}
 
 	// Test Methods

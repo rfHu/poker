@@ -38,6 +38,7 @@ public class Delegates {
 	// 登陆态互斥了
 	public event EventHandler<DelegateArgs> Exclusion;
 	public event EventHandler<DelegateArgs> GameEnd;
+	public event EventHandler<DelegateArgs> Audit;
 	
 
 	public void OnTakeSeat(DelegateArgs e) {
@@ -157,6 +158,12 @@ public class Delegates {
 	public void OnTakeMore(DelegateArgs e) {
 		if (TakeMore != null) {
 			TakeMore(this, e);
+		}
+	}
+
+	public void OnAudit(DelegateArgs e) {
+		if (Audit != null) {
+			Audit(this, e);
 		}
 	}
 }
