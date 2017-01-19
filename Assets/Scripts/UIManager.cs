@@ -6,6 +6,7 @@ using Extensions;
 public class UIManager : MonoBehaviour {
 	public Canvas canvas;
 	public GameObject recallPage;
+	GameObject auditMsg = (GameObject)Instantiate(Resources.Load("Prefab/AuditMsg"));
 
 	public void ShowMenu() {
 		var popup = (GameObject)Instantiate(Resources.Load("Prefab/MenuPopup"));
@@ -53,18 +54,17 @@ public class UIManager : MonoBehaviour {
 		var type = e.Data.Int("type");
 		
 		if (type == 2) {
-			UIManager.ShowDialog("您的账号已在其他设备登陆");
+			PokerUI.ShowDialog("您的账号已在其他设备登陆");
 		}
 	}
 
 	void onAudit(object sender, DelegateArgs e) {
-		
-	}
+		var array = e.Data.List("ids");
 
-	// Test Methods
-	static public void ShowDialog(string text) {
-		var go = (GameObject)Instantiate(Resources.Load("Prefab/DialogTemplate"));
-		var canvas = GameObject.FindWithTag("Canvas").GetComponent<Canvas>();
-		go.GetComponent<Dialog>().Show(message: text, modal: true, modalColor: new Color(0, 0, 0, 0.2f), canvas: canvas);
+		if (array.Count == 0) {
+			auditMsg.GetComponent<DOPopup>().Close();
+		} else {
+			auditMsg.GetComponent<DOPopup>().Show(canvas);
+		}
 	}
 }

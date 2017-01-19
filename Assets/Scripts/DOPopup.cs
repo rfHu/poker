@@ -19,6 +19,8 @@ public class DOPopup : MonoBehaviour {
 
 	int modalKey;
 
+	bool show = false;
+
 	void Awake()
 	{
 		var rectTrans = GetComponent<RectTransform>();
@@ -44,6 +46,12 @@ public class DOPopup : MonoBehaviour {
 	}
 
 	public void Show(Canvas canvas) {
+		if (show) {
+			return ;
+		}
+
+		show = true;
+
 		transform.SetParent(canvas.transform, false);
 		modalKey = ModalHelper.Open(this, null, new Color(0, 0, 0, 0), Close);
 		transform.SetAsLastSibling();
