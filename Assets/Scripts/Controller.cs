@@ -301,8 +301,6 @@ public class Controller : MonoBehaviour {
 	void showPlayer(Player data) {
 		GameObject go = (GameObject)Instantiate(Resources.Load("Prefab/Player"));
 		PlayerObject playerObject = go.GetComponent<PlayerObject>();
-	 	playerObject.Index = data.Index;
-		playerObject.Uid = data.Uid;
 
 		playerObject.ShowPlayer(data);
 		playerObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
@@ -462,8 +460,6 @@ public class Controller : MonoBehaviour {
 
 		 playerObject.MyCards.SetActive(true);
 
-		 // 隐藏自己的名称
-		 playerObject.HideName();
 		 first.GetComponent<Card>().Show(cvs[0]);
 		 second.GetComponent<Card>().Show(cvs[1]);
 	}
@@ -500,7 +496,7 @@ public class Controller : MonoBehaviour {
 		}
 
 		var obj = playerObjects[mop.seat];
-		obj.Chips.text = mop.pr_chips.ToString();
+		obj.SetPrChips(mop.pr_chips);
 		obj.MoveOut();
 	}
 

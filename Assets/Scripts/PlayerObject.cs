@@ -20,12 +20,13 @@ public class PlayerObject : MonoBehaviour {
 
 	public GameObject Cardfaces;
 	public GameObject MyCards;
-	public Text Chips;
 	public Action<int> OnDes;
 
 	GameObject OPGo;
 	Transform circle;
 	private float animDuration = 0.2f;
+
+	GameObject chipsGo; 
 
 	void Awake() {
 		var info = transform.Find("Info");
@@ -40,7 +41,7 @@ public class PlayerObject : MonoBehaviour {
 		countdown.SetActive(false);
 	}
 
-	public void HideName() {
+	void hideName() {
 		nameLabel.gameObject.SetActive(false);
 	}
 
@@ -66,12 +67,20 @@ public class PlayerObject : MonoBehaviour {
 		if (OPGo != null) {
 			Destroy(OPGo);
 			OPGo = null;
+			circle.gameObject.SetActive(true); // 显示头像
 		}
 
 		Avatar.GetComponent<CircleMask>().Disable();
 	}
 
 	public void ShowPlayer(Player player) {
+		Index = player.Index;
+		Uid = player.Uid;
+
+		if (Uid == GConf.Uid) {
+			hideName();
+		}
+
 		nameLabel.text = player.Name;
 		scoreLabel.text = player.Bankroll.ToString();
 		RawImage rawImage = Avatar.GetComponent<RawImage>();
@@ -119,10 +128,42 @@ public class PlayerObject : MonoBehaviour {
 		countdown.SetActive(false);
 	}
 
+	void setChipText(int prchips) {
+		if (chipsGo == null) {
+			return ;
+		}
+
+		chipsGo.GetComponent<ChipsGo>().SetChips(prchips);
+	}
+
+	GameObject createChip(int prchips, Action<GameObject> callback = null) {
+		var chips = (GameObject)Instantiate(Resources.Load("Prefab/UpChip"));
+		chips.transform.SetParent(transform, false);
+
+		chips.GetComponent<RectTransform>()
+		.DOAnchorPos(new Vector2(80, 0), animDuraion)
+		.OnComplete(() => {
+			setChipText(prchips);
+
+			if (callback != null) {
+				callback(chips);
+			}
+		});
+
+		return chips;
+	}
+
 	public void SetPrChips(int prchips) {
-		if (prchips != 0) {
-			transform.Find("Chips").gameObject.SetActive(true);
-			Chips.text = prchips.ToString();
+		if (prchips == 0) {
+			return ;	
+		}
+
+		if (chipsGo == null) {
+			chipsGo = createChip(prchips);			
+		} else if (!chipsGo.GetComponent<ChipsGo>().Same(prchips)) {
+			createChip(prchips, (go) => {
+				Destroy(go);
+			});
 		}
 	}
 
@@ -154,7 +195,6 @@ public class PlayerObject : MonoBehaviour {
 
 	public void Fold() {
 		moveOut();
-		circle.gameObject.SetActive(true); // 显示头像
 
 		var canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
 
@@ -178,6 +218,7 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	void showOP(Dictionary<string, object> data) {
+		// 隐藏头像
 		circle.gameObject.SetActive(false);
 
 		OPGo = (GameObject)Instantiate(Resources.Load("Prefab/OP"));	
