@@ -71,6 +71,10 @@ public class PlayerObject : MonoBehaviour {
 		}
 
 		Avatar.GetComponent<CircleMask>().Disable();
+
+		if (chipsGo != null) {
+			chipsGo.GetComponent<ChipsGo>().HideChips();
+		}
 	}
 
 	public void ShowPlayer(Player player) {
