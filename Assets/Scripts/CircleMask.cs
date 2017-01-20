@@ -13,15 +13,12 @@ public class CircleMask : MonoBehaviour {
 	{
 		var go = (GameObject)Instantiate(Resources.Load("Prefab/CircleMask"));
 		proImage = go.GetComponent<ProceduralImage>();
-
-		var vector = transform.GetComponent<RectTransform>().sizeDelta;
-		proImage.GetComponent<RectTransform>().sizeDelta = vector; 
 		
 		proImage.transform.SetParent(transform, false);
 		proImage.enabled = false;
 
 		numberText = go.transform.Find("Number").GetComponent<Text>();
-		numberText.gameObject.SetActive(false);
+		numberText.enabled = false;	
 	}
 
 	public void Enable(float elaspe = 0) {
@@ -30,12 +27,14 @@ public class CircleMask : MonoBehaviour {
 		}
 
 		proImage.enabled = true;
-		numberText.gameObject.SetActive(true);
+		numberText.enabled = true;
 		StartCoroutine(run(elaspe));
 	}
 
 	public void Disable() {
 		activated = false;
+		proImage.enabled = false;
+		numberText.enabled = false;
 	}
 
 	IEnumerator run(float elaspe = 0) {
@@ -52,6 +51,11 @@ public class CircleMask : MonoBehaviour {
 	}
 
 	public void SetFillAmount(float left) {
+		if (!proImage.enabled) {
+			proImage.enabled = true;
+			numberText.enabled = true;
+		}
+
 		proImage.fillAmount = left / Duration;
 		numberText.text =  ((int)left).ToString();
 	}

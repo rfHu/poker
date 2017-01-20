@@ -100,12 +100,14 @@ public class PlayerObject : MonoBehaviour {
 		activated = true;
 
 		float time = thinkTime - elaspe;
+		var mask = Avatar.GetComponent<CircleMask>();
+
 		while (time > 0 && activated) {
 			time = time - Time.deltaTime;
 			
 			var percent = Mathf.Min(1, time / thinkTime);
 			countdown.GetComponent<ProceduralImage>().fillAmount = percent;
-			Avatar.GetComponent<CircleMask>().SetFillAmount(time);
+			mask.SetFillAmount(time);
 
 			yield return new WaitForFixedUpdate();
 		}
