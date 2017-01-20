@@ -50,6 +50,10 @@ public class CircleMask : MonoBehaviour {
 		activated = false;
 	}
 
+	public void SetTextColor(Color color) {
+		numberText.color = color;
+	}
+
 	public void SetFillAmount(float left) {
 		if (!proImage.enabled) {
 			proImage.enabled = true;

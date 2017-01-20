@@ -67,6 +67,8 @@ public class PlayerObject : MonoBehaviour {
 			Destroy(OPGo);
 			OPGo = null;
 		}
+
+		Avatar.GetComponent<CircleMask>().Disable();
 	}
 
 	public void ShowPlayer(Player player) {
@@ -101,6 +103,7 @@ public class PlayerObject : MonoBehaviour {
 
 		float time = thinkTime - elaspe;
 		var mask = Avatar.GetComponent<CircleMask>();
+		mask.SetTextColor(new Color(0, (float)255 / 255, (float)106 / 255));
 
 		while (time > 0 && activated) {
 			time = time - Time.deltaTime;
