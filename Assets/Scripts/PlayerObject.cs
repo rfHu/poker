@@ -61,11 +61,15 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	public void MoveOut() {
+		moveOut();		
+	}
+
+	void moveOut() {
 		activated = false;
-		
+
 		if (OPGo != null) {
 			Destroy(OPGo);
-			transform.gameObject.SetActive(true);
+			OPGo = null;
 		}
 	}
 
@@ -140,6 +144,8 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	public void Fold() {
+		moveOut();
+
 		var canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
 
 		if (Uid == GConf.Uid) {
