@@ -373,12 +373,14 @@ public class Controller : MonoBehaviour {
 				card.Show(idx);
 			}
 		}
+
+		GConf.Pot = e.Data.Int("pot");
+		GConf.PrPot = e.Data.Int("pr_pot");
+		updatePot();
 	}
 
 	void updatePot() {
-		Pot.SetActive(true);
-		Pot.GetComponent<Pots>().PrevPot.text = (GConf.Pot - GConf.PrPot).ToString();
-		Pot.GetComponent<Pots>().DC.text =  "底池:" + GConf.Pot.ToString();
+		Pot.GetComponent<Pots>().UpdatePot();	
 	}
 
 	void resetAllCards() {

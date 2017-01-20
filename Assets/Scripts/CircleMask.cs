@@ -2,6 +2,7 @@
 using UnityEngine.UI.ProceduralImage;
 using System.Collections;
 using UnityEngine.UI;
+using System;
 
 public class CircleMask : MonoBehaviour {
 	public int Duration = 15;
@@ -61,6 +62,6 @@ public class CircleMask : MonoBehaviour {
 		}
 
 		proImage.fillAmount = left / Duration;
-		numberText.text =  ((int)left).ToString();
+		numberText.text =  (Math.Ceiling(left)).ToString();
 	}
 }

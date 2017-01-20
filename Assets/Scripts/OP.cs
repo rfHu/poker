@@ -15,6 +15,7 @@ public class OP : MonoBehaviour {
 	public Sprite CheckSpr;
 	public Sprite CallSpr;
 	public Text CallNumber;
+	public Text CallText;
 
 	Action r1Act;
 	Action r2Act;
@@ -30,11 +31,13 @@ public class OP : MonoBehaviour {
 			callAct = OPS.check;	
 			CallGo.GetComponent<Image>().sprite = CheckSpr;
 			CallNumber.gameObject.SetActive(false);
+			CallText.text = "看牌";
 		} else {
 			callAct = OPS.call;
 			CallGo.GetComponent<Image>().sprite = CallSpr;
 			CallNumber.gameObject.SetActive(true);
 			CallNumber.text = callNum.ToString();
+			CallText.text = "跟注";
 		}
 
 		FoldGo.GetComponent<CircleMask>().Enable();
