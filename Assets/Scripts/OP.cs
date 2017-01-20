@@ -24,7 +24,7 @@ public class OP : MonoBehaviour {
 	public void StartWithCmds(Dictionary<string, object> data) {
         var cmds = data.Dict("cmds");
 		var check = data.Bool("check");
-		var callNum = "1";
+		var callNum = data.Int("call");
 
 		if (check) {
 			callAct = OPS.check;	
@@ -34,7 +34,7 @@ public class OP : MonoBehaviour {
 			callAct = OPS.call;
 			CallGo.GetComponent<Image>().sprite = CallSpr;
 			CallNumber.gameObject.SetActive(true);
-			CallNumber.text = callNum;
+			CallNumber.text = callNum.ToString();
 		}
 
 		FoldGo.GetComponent<CircleMask>().Enable();
