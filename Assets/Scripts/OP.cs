@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System;
 using Extensions;
+using UnityEngine.UI;
 
 public class OP : MonoBehaviour {
 	public GameObject RaiseGo;
@@ -11,6 +12,10 @@ public class OP : MonoBehaviour {
 	public GameObject R2;
 	public GameObject R3;
 
+	public Sprite CheckSpr;
+	public Sprite CallSpr;
+	public Text CallNumber;
+
 	Action r1Act;
 	Action r2Act;
 	Action r3Act;
@@ -19,17 +24,20 @@ public class OP : MonoBehaviour {
 	public void StartWithCmds(Dictionary<string, object> data) {
         var cmds = data.Dict("cmds");
 		var check = data.Bool("check");
-		CircleMask mask;
+		var callNum = "1";
 
 		if (check) {
-			mask = CallGo.GetComponent<CircleMask>();
 			callAct = OPS.check;	
+			CallGo.GetComponent<Image>().sprite = CheckSpr;
+			CallNumber.gameObject.SetActive(false);
 		} else {
-			mask = FoldGo.GetComponent<CircleMask>();	
 			callAct = OPS.call;
+			CallGo.GetComponent<Image>().sprite = CallSpr;
+			CallNumber.gameObject.SetActive(true);
+			CallNumber.text = callNum;
 		}
 
-		mask.Enable();
+		FoldGo.GetComponent<CircleMask>().Enable();
 	}
 
 	public void OnRaiseClick() {

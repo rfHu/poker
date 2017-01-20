@@ -490,30 +490,32 @@ public class Controller : MonoBehaviour {
 		return new int[]{a, b};
 	}
 
-	void setChips(DelegateArgs e) {
+	void setChipsThenMove(DelegateArgs e) {
 		var mop = e.Data.ToObject<Mop>();
 
 		if (!playerObjects.ContainsKey(mop.seat)) {
 			return ;
 		}
 
-		playerObjects[mop.seat].Chips.text = mop.pr_chips.ToString();
+		var obj = playerObjects[mop.seat];
+		obj.Chips.text = mop.pr_chips.ToString();
+		obj.MoveOut();
 	}
 
 	void onCheck(object sender, DelegateArgs e) {
-		// Do nothing
+		setChipsThenMove(e);
 	}
 
 	void onRaise(object sender, DelegateArgs e) {
-		setChips(e);
+		setChipsThenMove(e);
 	}
 
 	void onCall(object sender, DelegateArgs e) {
-		setChips(e);		
+		setChipsThenMove(e);		
 	}
 	
 	void onAllIn(object sender, DelegateArgs e) {
-		setChips(e);
+		setChipsThenMove(e);
 	}
 	
 	void onFold(object sender, DelegateArgs e) {
