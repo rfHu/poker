@@ -67,7 +67,7 @@ public class Controller : MonoBehaviour {
 		float height = canvas.GetComponent<RectTransform>().rect.height;
 
 		float top = height - 200;
-		float bottom = 250; 
+		float bottom = 200; 
 		float right = width / 2 - 100;
 		float left = -width / 2 + 100; 
 
@@ -145,12 +145,21 @@ public class Controller : MonoBehaviour {
 			startButton.SetActive(true);
 		}
 
-		AddGameInfo(string.Format("{0}", GConf.roomName));
+		var roomName = GConf.roomName;
+		if (String.IsNullOrEmpty(roomName)) {
+			roomName = "佚名";
+		}
+
+		AddGameInfo(string.Format("{0}", roomName));
 
 		if (GConf.isStraddle) {
 			AddGameInfo(string.Format("盲注:{0}/{1}/{2}", GConf.sb, GConf.bb, GConf.bb * 2));			
  		} else {
 			AddGameInfo(string.Format("盲注:{0}/{1}", GConf.sb, GConf.bb));
+		}
+
+		if (!string.IsNullOrEmpty(GConf.GameCode)) {
+			AddGameInfo(String.Format("邀请码:{0}", GConf.GameCode));
 		}
 
         if (GConf.IPLimit && GConf.GPSLimit) {

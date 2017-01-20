@@ -36,6 +36,7 @@ public class GConf {
 	public static int PrPot = 0;
 
 	public static bool Paused = false;
+	public static string GameCode = "";
 
 	public class MyCmd {
 		public static bool Takecoin = false;
@@ -68,6 +69,7 @@ public class GConf {
 		GConf.needAduit = options.Int("need_audit") == 1;
 		GConf.GPSLimit = options.Int("gps_limit") == 1;
 		GConf.IPLimit = options.Int("ip_limit") == 1;
+		GConf.GameCode = options.String("code");
 		GConf.roomName = json.String("name");
 		GConf.DealerSeat = json.Int("dealer_seat");
 

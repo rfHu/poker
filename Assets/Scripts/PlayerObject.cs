@@ -60,10 +60,6 @@ public class PlayerObject : MonoBehaviour {
 		}
 	}
 
-	public void MoveOut() {
-		moveOut();		
-	}
-
 	void moveOut() {
 		activated = false;
 
@@ -86,10 +82,14 @@ public class PlayerObject : MonoBehaviour {
 		img.texture = _.Circular(www.texture);
 	}	
 
+	public void MoveOut() {
+		moveOut();		
+	}
+
 
 	public void TurnTo(Dictionary<string, object> dict) {
 		if (Uid == GConf.Uid) {
-			showOP();
+			showOP(dict);
 		} else {
 			StartCoroutine(MyTurn());				
 		}
@@ -145,6 +145,7 @@ public class PlayerObject : MonoBehaviour {
 
 	public void Fold() {
 		moveOut();
+		circle.gameObject.SetActive(true); // 显示头像
 
 		var canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
 
@@ -155,7 +156,9 @@ public class PlayerObject : MonoBehaviour {
 			MyCards.gameObject.SetActive(false);
 
 			foldCards(copy, () => {
-				MyCards.SetActive(true);
+				if (MyCards != null) {
+					MyCards.SetActive(true);
+				}
 			});
 		} else {
 			Cardfaces.transform.SetParent(canvas.transform, true);
@@ -165,28 +168,13 @@ public class PlayerObject : MonoBehaviour {
 		transform.Find("Info").GetComponent<CanvasGroup>().alpha = opacity;
 	}
 
-	void showOP() {
+	void showOP(Dictionary<string, object> data) {
 		circle.gameObject.SetActive(false);
 
 		OPGo = (GameObject)Instantiate(Resources.Load("Prefab/OP"));	
 		OPGo.transform.SetParent(transform, false);
 		
 		var op = OPGo.GetComponent<OP>();
-
-		op.CallAct = () => {
-			op.Call();
-		};
-
-		op.R1Act = () => {
-			
-		};
-
-		op.R2Act = () => {
-
-		};
-
-		op.R3Act = () => {
-
-		};
+		op.StartWithCmds(data);
 	}
 }

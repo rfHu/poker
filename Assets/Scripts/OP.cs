@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
+using Extensions;
 
 public class OP : MonoBehaviour {
 	public GameObject RaiseGo;
@@ -10,62 +11,80 @@ public class OP : MonoBehaviour {
 	public GameObject R2;
 	public GameObject R3;
 
-	public Action R1Act;
-	public Action R2Act;
-	public Action R3Act;
-	public Action CallAct;
+	Action r1Act;
+	Action r2Act;
+	Action r3Act;
+	Action callAct;
 
+	public void StartWithCmds(Dictionary<string, object> data) {
+        var cmds = data.Dict("cmds");
+		var check = data.Bool("check");
+		CircleMask mask;
+
+		if (check) {
+			mask = CallGo.GetComponent<CircleMask>();
+			callAct = OPS.check;	
+		} else {
+			mask = FoldGo.GetComponent<CircleMask>();	
+			callAct = OPS.call;
+		}
+
+		mask.Enable();
+	}
 
 	public void OnRaiseClick() {
 		Debug.Log("OnClick");
 	}
 
 	public void OnCallClick() {
-		CallAct();
+		callAct();
 	}
 
 	public void OnFoldClick() {
-		Fold();
+		OPS.fold();
 	}
 
 	public void OnR1Click() {
-		R1Act();
+		r1Act();
 	}
 
 	public void OnR2Click() {
-		R2Act();
+		r2Act();
 	}
 
 	public void OnR3Click() {
-		R3Act();
+		r3Act();
 	}
 
-	public void Fold() {
-		CallFunc("fold");	
-	}
+	class OPS {
+		internal static void fold() {
+			OPS.callFunc("fold");	
+		}
 
-	public void Call() {
-		CallFunc("call");		
-	}
+		internal static void call() {
+			OPS.callFunc("call");		
+		}
 
-	public void Check() {
-		CallFunc("check");		
-	}
+		internal static void check() {
+			OPS.callFunc("check");		
+		}
 
-	public void AllIn() {
-		CallFunc("all_in");
-	}
+		internal static void allIn() {
+			OPS.callFunc("all_in");
+		}
 
-	public void Raise(int number) {
-		Connect.shared.Emit(new Dictionary<string, object>() {
-			{"f" , "raise"},
-			{"args", number.ToString()}
-		});
-	}
+		internal static void raise(int number) {
+			Connect.shared.Emit(new Dictionary<string, object>() {
+				{"f" , "raise"},
+				{"args", number.ToString()}
+			});
+		}
 
-	private void CallFunc(string f) {
-		Connect.shared.Emit(new Dictionary<string, object>() {
-			{"f" , f}
-		});
+		internal static void callFunc(string f) {
+			Connect.shared.Emit(new Dictionary<string, object>() {
+				{"f" , f}
+			});
+		}
 	}
+	
 }
