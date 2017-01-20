@@ -44,11 +44,15 @@ public class CircleMask : MonoBehaviour {
 		float time = Duration - elaspe;
 		while (time > 0 && activated) {
 			time = time - Time.deltaTime;
-			proImage.fillAmount = time / Duration;
-			numberText.text =  ((int)time).ToString();
+			SetFillAmount(time);
 			yield return new WaitForFixedUpdate();
 		}
 
 		activated = false;
-	}	
+	}
+
+	public void SetFillAmount(float left) {
+		proImage.fillAmount = left / Duration;
+		numberText.text =  ((int)left).ToString();
+	}
 }

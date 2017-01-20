@@ -102,7 +102,11 @@ public class PlayerObject : MonoBehaviour {
 		float time = thinkTime - elaspe;
 		while (time > 0 && activated) {
 			time = time - Time.deltaTime;
-			countdown.GetComponent<ProceduralImage>().fillAmount = Mathf.Min(1, time / thinkTime);
+			
+			var percent = Mathf.Min(1, time / thinkTime);
+			countdown.GetComponent<ProceduralImage>().fillAmount = percent;
+			Avatar.GetComponent<CircleMask>().SetFillAmount(time);
+
 			yield return new WaitForFixedUpdate();
 		}
 

@@ -23,8 +23,8 @@ public class OP : MonoBehaviour {
 
 	public void StartWithCmds(Dictionary<string, object> data) {
         var cmds = data.Dict("cmds");
-		var check = data.Bool("check");
-		var callNum = data.Int("call");
+		var check = cmds.Bool("check");
+		var callNum = cmds.Int("call");
 
 		if (check) {
 			callAct = OPS.check;	
