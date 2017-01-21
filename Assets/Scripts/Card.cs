@@ -42,7 +42,6 @@ public class Card : MonoBehaviour {
 	public void Turnback() {
 		GetComponent<Image>().sprite = getCardBack();
 		IsBack = true;
-		gameObject.SetActive(false);
 	}
 
 	public void Hide() {
