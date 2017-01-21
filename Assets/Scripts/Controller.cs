@@ -383,8 +383,9 @@ public class Controller : MonoBehaviour {
 
 	void resetAllCards() {
 		foreach(GameObject obj in PublicCards) {
-			obj.GetComponent<Card>().Turnback();
-			obj.SetActive(false);
+			var card = obj.GetComponent<Card>();
+			card.Turnback();
+			card.Hide();
 		}		
 	}
 

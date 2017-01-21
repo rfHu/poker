@@ -22,6 +22,7 @@ public class Card : MonoBehaviour {
 
 	public void Show(int index) {	
 		gameObject.SetActive(true);
+		GetComponent<Image>().enabled = true;
 		
 		var image = GetComponent<Image>();
 		image.sprite = getCardFace(index);
@@ -42,5 +43,9 @@ public class Card : MonoBehaviour {
 		GetComponent<Image>().sprite = getCardBack();
 		IsBack = true;
 		gameObject.SetActive(false);
+	}
+
+	public void Hide() {
+		GetComponent<Image>().enabled = false;
 	}
 }

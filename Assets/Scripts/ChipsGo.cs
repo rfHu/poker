@@ -13,7 +13,7 @@ public class ChipsGo : MonoBehaviour {
 		
 		this.chips = chips;
 		TextNumber.text = chips.ToString();
-		TextNumber.enabled = true;
+		TextNumber.gameObject.SetActive(true);
 	}
 
 	public void HideChips() {
