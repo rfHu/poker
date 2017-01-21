@@ -27,7 +27,7 @@ public class RecallPage : MonoBehaviour {
 			{"handid", num}
 		};
 
-		Connect.shared.Emit(
+		Connect.Shared.Emit(
 			new Dictionary<string, object>() {
 				{"f", "handresult"},
 				{"args", dict}

@@ -36,7 +36,7 @@ public class ScoreCtrl : MonoBehaviour {
 
 	void Awake()
 	{
-		Connect.shared.Emit(new Dictionary<string, object>(){
+		Connect.Shared.Emit(new Dictionary<string, object>(){
         	{"f", "gamerlist"}
         }, (json) =>
         {

@@ -37,7 +37,7 @@ public class MenuPopup : MonoBehaviour {
 			return ;
 		}
 
-		Connect.shared.Emit(new Dictionary<string, object>(){
+		Connect.Shared.Emit(new Dictionary<string, object>(){
 			{"f", "unseat"}
 		});
 
@@ -55,7 +55,7 @@ public class MenuPopup : MonoBehaviour {
 	}
 
 	public void Exit() {
-		Connect.shared.Emit(new Dictionary<string, object>() {
+		Connect.Shared.Emit(new Dictionary<string, object>() {
 			{"f", "exit"}
 		});
 	}

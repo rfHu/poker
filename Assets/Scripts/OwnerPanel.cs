@@ -20,7 +20,7 @@ public class OwnerPanel : MonoBehaviour {
 
 	public void Stop() {
 		// @TODO: 二次确定
-		Connect.shared.Emit(new Dictionary<string, object>() {
+		Connect.Shared.Emit(new Dictionary<string, object>() {
 			{"f", "pause"},
 			{"args", "3"}
 		});		
@@ -37,7 +37,7 @@ public class OwnerPanel : MonoBehaviour {
 			PauseText.text = continueStr;
 		}
 
-		Connect.shared.Emit(new Dictionary<string, object>() {
+		Connect.Shared.Emit(new Dictionary<string, object>() {
 			{"f", f},
 			{"args", "0"}
 		});		

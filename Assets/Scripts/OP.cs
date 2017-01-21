@@ -85,14 +85,14 @@ public class OP : MonoBehaviour {
 		}
 
 		internal static void raise(int number) {
-			Connect.shared.Emit(new Dictionary<string, object>() {
+			Connect.Shared.Emit(new Dictionary<string, object>() {
 				{"f" , "raise"},
 				{"args", number.ToString()}
 			});
 		}
 
 		internal static void callFunc(string f) {
-			Connect.shared.Emit(new Dictionary<string, object>() {
+			Connect.Shared.Emit(new Dictionary<string, object>() {
 				{"f" , f}
 			});
 		}

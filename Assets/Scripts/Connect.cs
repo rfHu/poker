@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using BestHTTP;
 
-public class Connect  {
+public sealed class Connect  {
 	private SocketManager manager;
 	private string url = "http://61.143.225.47:7001/socket.io/"; 
 
@@ -16,7 +16,7 @@ public class Connect  {
 
 	private int seq = 0;
 
-	public Connect() {
+	private Connect() {
 		// Charles Proxy
 		if (Debug.isDebugBuild) {
 			HTTPManager.Proxy = new HTTPProxy(new Uri("http://localhost:8888"));
@@ -32,24 +32,23 @@ public class Connect  {
 			var cookie = new Cookie("connect.sid", GConf.userToken);
 			request.Cookies.Add(cookie);
 		};
-		manager.Socket.On("connect", OnConnect);
-
+		manager.Socket.On("connect", onConnect);
 		manager.Open();	
 	}
 
-	void OnConnect(Socket socket, Packet packet, params object[] args) {
+	private void onConnect(Socket socket, Packet packet, params object[] args) {
 		Emit(new Dictionary<string, object>{
 			{"f", "login"}
 		}, (json) => {
 			// 登陆成功，写用户数据
-			SaveUserInfo(json);
+			saveUserInfo(json);
 
 			// 进入房间
-			EnterRoom();
+			enterRoom();
 		});
 	}
 
-	void EnterRoom() {
+	private void enterRoom() {
 		Emit(new Dictionary<string, object>{
 			{"f", "entergame"},
 			{"args", GConf.room}
@@ -62,7 +61,7 @@ public class Connect  {
 		});
 	}
 
-	private void SaveUserInfo(Dictionary<string, object> json) {
+	private void saveUserInfo(Dictionary<string, object> json) {
 		var ret = json.Dict("ret");
 		var profile = ret.Dict("profile");
 		var token = ret.Dict("token");
@@ -85,18 +84,30 @@ public class Connect  {
 		}
 	}
 
-	void Close() {
+	private void close() {
 		manager.Close();
 	}
 
-	public static Connect shared;
+	public static Connect Shared {
+		get {
+			if (instance == null) {
+				instance = new Connect();
+			}
 
-	public static void Setup() {
-		shared = new Connect();
-		shared.setup();	
+			return instance;
+		}
 	}
 
-	private void setup() {
+	private static Connect instance;
+	private bool setuped = false;
+
+	public void Setup() {
+		if (setuped) {
+			return ;
+		}
+
+		setuped = true;
+
 		manager.Socket.On("rpc_ret", (socket, packet, args) => {
 			if (args.Length == 0) {
 				return ;
@@ -215,19 +226,19 @@ public class Connect  {
 		});
 	}
 
-	private bool enter = false;
+	private bool entered = false;
 
 	// 只允许进入一次
-	void refreshGameInfo(Dictionary<string, object> json) {
+	private void refreshGameInfo(Dictionary<string, object> json) {
 		GConf.ModifyByJson(json);	
 
-		if (enter) {
+		if (entered) {
 			// Skip
 		} else {
 			SceneManager.LoadScene("PokerGame");
 		}
 
-		enter = true;
+		entered = true;
 	}
 }
 

@@ -19,7 +19,7 @@ public class UserDetail : MonoBehaviour {
 			{"uid", id}
 		};
 
-		Connect.shared.Emit(new Dictionary<string, object>() {
+		Connect.Shared.Emit(new Dictionary<string, object>() {
 			{"f", "gamerdetail"},
 			{"args", d}
 		}, (json) => {

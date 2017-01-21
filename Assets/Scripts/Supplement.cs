@@ -49,7 +49,7 @@ public class Supplement : MonoBehaviour {
 
 	public void TakeCoin() {
 		float value = slider.value;	
-		Connect.shared.Emit(new Dictionary<string, object>(){
+		Connect.Shared.Emit(new Dictionary<string, object>(){
 			{"f", "takecoin"},
 			{"args", value}
 		}, (json) => {
@@ -70,7 +70,7 @@ public class Supplement : MonoBehaviour {
 			return ;
 		}
 
-		Connect.shared.Emit(new Dictionary<string, object>() {
+		Connect.Shared.Emit(new Dictionary<string, object>() {
 			{"f", "unseat"}
 		});
 	}

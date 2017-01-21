@@ -14,7 +14,7 @@ public class Seat : MonoBehaviour {
 		}
 
 		// 坐下
-		Connect.shared.Emit(
+		Connect.Shared.Emit(
 			new Dictionary<string, object>(){
 				{"f", "takeseat"},
 				{"args", Index}

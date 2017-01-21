@@ -4,7 +4,7 @@ public class GameLoading : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		Connect.Setup();	
+		Connect.Shared.Setup();	
 	}
 	
 	// Update is called once per frame
