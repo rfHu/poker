@@ -54,7 +54,7 @@ public class RecallPage : MonoBehaviour {
 
 		// 公共牌
 		foreach(int num in comCards) {
-			var index = Controller.CardIndex(num);
+			var index = Card.CardIndex(num);
 			var go = (GameObject)Instantiate(Resources.Load("Prefab/Card"));
 			go.GetComponent<Card>().Show(index);
 			go.transform.SetParent(Cards.transform, false);

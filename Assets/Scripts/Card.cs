@@ -35,7 +35,7 @@ public class Card : MonoBehaviour {
 			return ;
 		}
 
-		var realIndex = Controller.CardIndex(index);
+		var realIndex = Card.CardIndex(index);
 		Show(realIndex);
 	}
 
@@ -46,5 +46,29 @@ public class Card : MonoBehaviour {
 
 	public void Hide() {
 		GetComponent<Image>().enabled = false;
+	}
+
+	public static int CardIndex(int number) {
+		var pairs = Card.CardValues(number);
+		int index;
+
+		// 服务器数值为2~14
+		if (pairs[1] ==  14) {
+			index = 0;
+		} else {
+			index = pairs[1] - 1;
+		}
+
+		index = index + (4 - pairs[0]) * 13;
+
+		return index;
+	}
+
+	public static int[] CardValues(int number) {
+		var a = number >> 4;
+		var b = number & 0x0f;
+
+		// 第一个花色、第二个数值
+		return new int[]{a, b};
 	}
 }

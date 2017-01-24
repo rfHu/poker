@@ -177,7 +177,7 @@ public sealed class Connect  {
 					RxSubjects.GameStart.OnNext(rxdata);
 					break;
 				case "seecard":
-					Delegates.shared.OnSeeCard(evt);
+					RxSubjects.SeeCard.OnNext(rxdata);
 					break;
 				case "look":
 					RxSubjects.Look.OnNext(rxdata);

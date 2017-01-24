@@ -50,7 +50,6 @@ public class Delegates {
 	public event EventHandler<DelegateArgs> TakeMore;
 
 
-	public event EventHandler<DelegateArgs> SeeCard;
 	public event EventHandler<DelegateArgs> Deal;
 	public event EventHandler<DelegateArgs> MoveTurn;
 
@@ -59,13 +58,6 @@ public class Delegates {
     public event EventHandler<DelegateArgs> Call;
     public event EventHandler<DelegateArgs> AllIn;
     public event EventHandler<DelegateArgs> Raise;
-
-	
-	public void OnSeeCard(DelegateArgs e) {
-		if (SeeCard != null) {
-			SeeCard(this, e);
-		}
-	}
 
 	public void OnDeal(DelegateArgs e) {
 		if (Deal != null) {

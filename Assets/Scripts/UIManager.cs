@@ -44,7 +44,7 @@ public class UIManager : MonoBehaviour {
             {
                 auditMsg.GetComponent<DOPopup>().Show(canvas);
             }
-		});
+		}).AddTo(this);
 
 		RxSubjects.Audit.Subscribe((e) => {
 			if (e.Data != null) {
@@ -53,7 +53,7 @@ public class UIManager : MonoBehaviour {
 
             GameObject obj = (GameObject)Instantiate(Resources.Load("Prefab/Supplement"));
             obj.GetComponent<DOPopup>().Show(canvas);
-		});
+		}).AddTo(this);
 
 		RxSubjects.Exclusion.Subscribe((e) => {
 			var type = e.Data.Int("type");
@@ -62,6 +62,6 @@ public class UIManager : MonoBehaviour {
             {
                 PokerUI.ShowDialog("您的账号已在其他设备登陆");
             }
-		});
+		}).AddTo(this);
 	}
 }

@@ -266,7 +266,7 @@ public class Controller : MonoBehaviour {
 		}
 
 		foreach(int item in deals) {
-			var idx = Controller.CardIndex(item);
+			var idx = Card.CardIndex(item);
 			var card = findLastCard();
 
 			if (card != null) {
@@ -312,55 +312,12 @@ public class Controller : MonoBehaviour {
 		// }
 	}
 
-	void  newTurn() {
-		resetAllCards();
-		setDealer();
-		updatePot();
-		updateChips();
-	}
-
-	// void onSeeCard(object sender, DelegateArgs e) {
-	// 	 var index = FindMyIndex();
-	// 	 var cards = e.Data.IL("cards");
-		 
-	// 	 int[] cvs = new int[]{
-	// 		 Controller.CardIndex(cards[0]),
-	// 		 Controller.CardIndex(cards[1])
-	// 	 };
-
-	// 	 var playerObject = playerObjects[index];
-	// 	 var first = playerObject.MyCards.transform.Find("First");
-	// 	 var second = playerObject.MyCards.transform.Find("Second");
-
-	// 	 playerObject.MyCards.SetActive(true);
-
-	// 	 first.GetComponent<Card>().Show(cvs[0]);
-	// 	 second.GetComponent<Card>().Show(cvs[1]);
+	// void  newTurn() {
+	// 	resetAllCards();
+	// 	setDealer();
+	// 	updatePot();
+	// 	updateChips();
 	// }
-
-	public static int CardIndex(int number) {
-		var pairs = Controller.CardValues(number);
-		int index;
-
-		// 服务器数值为2~14
-		if (pairs[1] ==  14) {
-			index = 0;
-		} else {
-			index = pairs[1] - 1;
-		}
-
-		index = index + (4 - pairs[0]) * 13;
-
-		return index;
-	}
-
-	public static int[] CardValues(int number) {
-		var a = number >> 4;
-		var b = number & 0x0f;
-
-		// 第一个花色、第二个数值
-		return new int[]{a, b};
-	}
 
 	// void setChipsThenMove(DelegateArgs e) {
 	// 	var mop = e.Data.ToObject<Mop>();

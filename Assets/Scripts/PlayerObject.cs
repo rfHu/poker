@@ -57,6 +57,29 @@ public class PlayerObject : MonoBehaviour {
 			var bankroll = data.Int("bankroll");
 			scoreLabel.text = bankroll.ToString();
 		}).AddTo(this);
+
+		if (Uid == GameData.Shared.Uid) {
+			RxSubjects.SeeCard.Subscribe((e) => {
+				if (Uid != GameData.Shared.Uid) {
+					return ;
+				}
+
+				var cards = e.Data.IL("cards");
+
+				int[] cvs = new int[]{
+					Card.CardIndex(cards[0]),
+					Card.CardIndex(cards[1])
+				};
+
+				var first = MyCards.transform.Find("First");
+				var second = MyCards.transform.Find("Second");
+
+				MyCards.SetActive(true);
+
+				first.GetComponent<Card>().Show(cvs[0]);
+				second.GetComponent<Card>().Show(cvs[1]);
+			}).AddTo(this);	
+		}
 	}
 
 	void hideName() {
