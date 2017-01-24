@@ -171,7 +171,7 @@ public sealed class Connect  {
 					RxSubjects.UnSeat.OnNext(rxdata);
 					break;
 				case "ready":
-					Delegates.shared.OnReady(evt);
+					RxSubjects.Ready.OnNext(rxdata);	
 					break;
 				case "gamestart":
 					Delegates.shared.OnGameStart(evt);

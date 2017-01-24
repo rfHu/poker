@@ -8,10 +8,6 @@ using UnityEngine;
 sealed public class GConf {
 	public static List<int> bankroll;
 	public static int coins = 0;
-	public static int sb = 0;
-	public static int bb = 0;
-	public static bool isStraddle = false;
-	public static string roomName = "";
 
 	// 游戏是否已经开始，跟暂停状态无关
 	public static bool GameStarted = false; 
@@ -27,7 +23,6 @@ sealed public class GConf {
 	public static bool Paused = false;
 
 	public static int DealerSeat = -1; 
-	public static DateTime StartTime = new DateTime();
 
 	public static void ModifyByJson(Dictionary<string, object> json) {
 		var options = json.Dict("options");
@@ -37,16 +32,11 @@ sealed public class GConf {
 		GConf.rake = options.Float("rake_percent");
 		GConf.duration = options.Int("time_limit");
 		GConf.needAduit = options.Int("need_audit") == 1;
-		GConf.roomName = json.String("name");
 		GConf.DealerSeat = json.Int("dealer_seat");
 
 		Pot = json.Int("pot");
 		PrPot = json.Int("pr_pot");
 		Paused = json.Int("is_pause") != 0;
-		
-		var bb = options.Int("limit");
-		GConf.bb = bb ;
-		GConf.sb = bb / 2;
 	}
 }
 
@@ -160,6 +150,7 @@ sealed public class GameData {
 		GameCode = options.String("code");
 		RoomName = json.String("name");
 		DealerSeat.Value = json.Int("dealer_seat");
+		Straddle = json.Int("straddle") != 0;
 
 		Pot = json.Int("pot");
 		PrPot = json.Int("pr_pot");

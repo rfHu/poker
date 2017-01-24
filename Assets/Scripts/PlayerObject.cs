@@ -20,7 +20,6 @@ public class PlayerObject : MonoBehaviour {
 
 	public GameObject Cardfaces;
 	public GameObject MyCards;
-	public Action<int> OnDes;
 
 	GameObject OPGo;
 	Transform circle;
@@ -58,10 +57,6 @@ public class PlayerObject : MonoBehaviour {
 
 	void OnDestroy()
 	{
-		if (OnDes != null) {
-			OnDes(Index);
-		}
-
 		Delegates.shared.Deal -= new EventHandler<DelegateArgs>(onDeal);
 	}
 

@@ -160,7 +160,7 @@ public class Controller : MonoBehaviour {
 		var sb = GameData.Shared.SB;
 		var bb = GameData.Shared.BB; 
 
-		if (GConf.isStraddle) {
+		if (GameData.Shared.Straddle) {
 			AddGameInfo(string.Format("盲注:{0}/{1}/{2}", sb, bb, bb * 2));			
  		} else {
 			AddGameInfo(string.Format("盲注:{0}/{1}", sb, bb));
@@ -189,7 +189,6 @@ public class Controller : MonoBehaviour {
 	}
 
 	void addListeners() {
-		Delegates.shared.Ready += new EventHandler<DelegateArgs>(onReady);
 		Delegates.shared.GameStart += new EventHandler<DelegateArgs>(onGameStart);
 		Delegates.shared.Deal += new EventHandler<DelegateArgs>(onDeal);
 		Delegates.shared.MoveTurn += new EventHandler<DelegateArgs>(onMoveTurn);
@@ -209,30 +208,28 @@ public class Controller : MonoBehaviour {
 			obj.Show(parent);	
 		};
 
+		Action<int> enableSeat = (index) => {
+			Seats[index].GetComponent<Image>().enabled = true;
+		};
+
 		GameData.Shared.Players.ObserveReplace().Subscribe((data) => {
 			data.OldValue.DestroyGo();
+			enableSeat(data.OldValue.Index);
 			showPlayer(data.NewValue);	
-		});
+		}).AddTo(this);
 
 		GameData.Shared.Players.ObserveAdd().Subscribe((data) => {
 			showPlayer(data.Value);
-		});
+		}).AddTo(this);
 
 		GameData.Shared.Players.ObserveRemove().Subscribe((data) => {
+			enableSeat(data.Value.Index);
 			data.Value.DestroyGo();
-		});
+		}).AddTo(this);
 
 		GameData.Shared.Players.ObserveReset().Subscribe((data) => {
             Debug.Log(data);
-		});
-	}
-
-	void onReady(object sender, DelegateArgs e) {
-		var args = e.Data;
-		var index = args.Int("where");
-		var bankroll = args.Int("bankroll");
-
-		// playerObjects[index].SetScore(bankroll);
+		}).AddTo(this);
 	}
 
 	private int prevMoveTurnIndex = -1;

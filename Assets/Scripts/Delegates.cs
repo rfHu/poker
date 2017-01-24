@@ -49,7 +49,6 @@ public class Delegates {
 
 	public event EventHandler<DelegateArgs> TakeCoin;
 	public event EventHandler<DelegateArgs> TakeMore;
-	public event EventHandler<DelegateArgs> Ready;
 
 	public event EventHandler<DelegateArgs> GameStart;
 
@@ -75,12 +74,6 @@ public class Delegates {
 		}
 	}
 	
-	public void OnReady(DelegateArgs e) {
-		if (Ready != null) {
-			Ready(this, e);
-		}
-	}
-
 	public void OnGameStart(DelegateArgs e) {
 		if (GameStart != null) {
 			GameStart(this, e);
