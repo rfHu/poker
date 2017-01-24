@@ -57,10 +57,15 @@ sealed public class Player {
 	public int Bankroll = 0;
 	public int Index;
 	public int PrChips = 0;
-	public PlayerObject Script;
+	private GameObject Go;
+
+	public void DestroyGo() {
+		GameObject.Destroy(Go);
+	}
 
 	public void Show(Transform parent) {
-		Script.ShowPlayer(this, parent);
+		Go = (GameObject)GameObject.Instantiate(Resources.Load("Prefab/Player"));
+		Go.GetComponent<PlayerObject>().ShowPlayer(this, parent);
 	}
 
 	public Player(Dictionary<string, object> json, int index) {
@@ -75,8 +80,6 @@ sealed public class Player {
 		PrChips = json.Int("pr_chips");
 
 		Index = index;
-
-		Script = ((GameObject)GameObject.Instantiate(Resources.Load("Prefab/Player"))).GetComponent<PlayerObject>();
 	}
 }
 

@@ -210,7 +210,7 @@ public class Controller : MonoBehaviour {
 		};
 
 		GameData.Shared.Players.ObserveReplace().Subscribe((data) => {
-			Destroy(data.OldValue.Script.gameObject);
+			data.OldValue.DestroyGo();
 			showPlayer(data.NewValue);	
 		});
 
@@ -219,7 +219,7 @@ public class Controller : MonoBehaviour {
 		});
 
 		GameData.Shared.Players.ObserveRemove().Subscribe((data) => {
-			Destroy(data.Value.Script.gameObject);
+			data.Value.DestroyGo();
 		});
 
 		GameData.Shared.Players.ObserveReset().Subscribe((data) => {
@@ -238,20 +238,18 @@ public class Controller : MonoBehaviour {
 	private int prevMoveTurnIndex = -1;
 
 	void onMoveTurn(object sender, DelegateArgs e) {
-		PlayerObject prevObj;
-		playerObjects.TryGetValue(prevMoveTurnIndex, out prevObj);
+		// PlayerObject prevObj;
+		// playerObjects.TryGetValue(prevMoveTurnIndex, out prevObj);
 
-		if (prevObj != null) {
-			prevObj.MoveOut();
-		}
+		// if (prevObj != null) {
+		// 	prevObj.MoveOut();
+		// }
 
-		var index = e.Data.Int("seat");
-		prevMoveTurnIndex = index;
+		// var index = e.Data.Int("seat");
+		// prevMoveTurnIndex = index;
 
-		playerObjects[index].TurnTo(e.Data);
+		// playerObjects[index].TurnTo(e.Data);
 	}
-
-	Dictionary<int, PlayerObject> playerObjects = new Dictionary<int, PlayerObject>();
 	
 	Card findLastCard() {
 		foreach(GameObject obj in PublicCards) {
@@ -404,12 +402,12 @@ public class Controller : MonoBehaviour {
 	
 	void onFold(object sender, DelegateArgs e) {
 		var mop = e.Data.ToObject<Mop>();
-		playerObjects[mop.seat].Fold();	
+		// playerObjects[mop.seat].Fold();	
 	}
 
 	void onTakeMore(object sender, DelegateArgs e) {
 		var index = e.Data.Int("where");
 		var coin = e.Data.Int("coin");
-		playerObjects[index].AddScore(coin);
+		// playerObjects[index].AddScore(coin);
 	}
 }
