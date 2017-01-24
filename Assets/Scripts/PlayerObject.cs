@@ -5,6 +5,8 @@ using System.Collections;
 using UnityEngine.UI.ProceduralImage;
 using System;
 using DG.Tweening;
+using UniRx;
+using Extensions;
 
 public class PlayerObject : MonoBehaviour {
 	public int Index;
@@ -40,14 +42,25 @@ public class PlayerObject : MonoBehaviour {
 		countdown.SetActive(false);
 
 		Delegates.shared.Deal += new EventHandler<DelegateArgs>(onDeal);
+
+		addRx();
+	}
+
+	private void addRx() {
+		RxSubjects.Ready.Subscribe((e) => {
+			var data = e.Data;
+
+			if (data.Int("where") != Index) {
+				return ;
+			}
+
+			var bankroll = data.Int("bankroll");
+			scoreLabel.text = bankroll.ToString();
+		}).AddTo(this);
 	}
 
 	void hideName() {
 		nameLabel.gameObject.SetActive(false);
-	}
-
-	public void SetScore(int score) {
-		scoreLabel.text = score.ToString();
 	}
 
 	public void AddScore(int score) {
@@ -108,7 +121,6 @@ public class PlayerObject : MonoBehaviour {
 	public void MoveOut() {
 		moveOut();		
 	}
-
 
 	public void TurnTo(Dictionary<string, object> dict) {
 		if (Uid == GameData.Shared.Uid) {
