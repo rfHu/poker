@@ -51,7 +51,7 @@ public sealed class Connect  {
 	private void enterRoom() {
 		Emit(new Dictionary<string, object>{
 			{"f", "entergame"},
-			{"args", GConf.room}
+			{"args", GameData.Shared.Room}
 		}, (json) => {
 			var error = json.Int("err");
 
@@ -66,17 +66,17 @@ public sealed class Connect  {
 		var profile = ret.Dict("profile");
 		var token = ret.Dict("token");
 
-		GConf.Uid = profile.String("uid");
-		GConf.name = profile.String("name");
-		GConf.avatar = profile.String("avatar");
-		GConf.pin = token.String("pin");
+		GameData.Shared.Uid = profile.String("uid");
+		GameData.Shared.Name = profile.String("name");
+		GameData.Shared.Avatar = profile.String("avatar");
+		GameData.Shared.Pin = token.String("pin");
 	}
 
 	public void Emit(Dictionary<string, object> json, Action<Dictionary<string, object>> callback = null) {
 		seq++;
 		json["seq"] = seq;
-		json["pin"] = GConf.pin;
-		json["uid"] = GConf.Uid;
+		json["pin"] = GameData.Shared.Pin;
+		json["uid"] = GameData.Shared.Uid;
 		manager.Socket.Emit("rpc", json);
 
 		if (callback != null) {
@@ -150,6 +150,7 @@ public sealed class Connect  {
 			}
 
 			var evt = new DelegateArgs(json.Dict("args"));
+			var rxdata = new RxData(json.Dict("args"));
 
 			// 监听look事件，收到才进入房间
 			if (e == "look") {
@@ -161,13 +162,13 @@ public sealed class Connect  {
 			// 通过事件广播出去
 			switch(e) {
                 case "takeseat":
-					Delegates.shared.OnTakeSeat(evt);
+					RxSubjects.TakeSeat.OnNext(rxdata);
 					break;
 				case "takecoin":
 					Delegates.shared.OnTakeCoin(evt);
 					break;
 				case "unseat":
-					Delegates.shared.OnUnSeat(evt);
+					RxSubjects.UnSeat.OnNext(rxdata);
 					break;
 				case "ready":
 					Delegates.shared.OnReady(evt);
@@ -206,16 +207,16 @@ public sealed class Connect  {
 					Delegates.shared.OnExclusion(evt);
 					break;
 				case "gameover":
-					Delegates.shared.OnGameOver(evt);
+					RxSubjects.GameOver.OnNext(rxdata);
 					break;
 				case "pausing": case "paused":
-					Delegates.shared.OnPaused(evt);
+					RxSubjects.Paused.OnNext(rxdata);
 					break;
 				case "start":
-					Delegates.shared.OnStart(evt);
+					RxSubjects.Paused.OnNext(rxdata);
 					break;
 				case "game_end":
-					Delegates.shared.OnGameEnd(evt);
+					RxSubjects.GameEnd.OnNext(rxdata);
 					break;
 				case "un_audit":
 					Delegates.shared.OnAudit(evt);

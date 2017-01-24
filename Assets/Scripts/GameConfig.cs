@@ -1,16 +1,14 @@
 ﻿using System.Collections.Generic;
 using System;
 using Extensions;
+using UniRx;
+using UnityEngine;
 
 // 游戏全局配置
-public class GConf {
+sealed public class GConf {
 	public static int playerCount;
 	public static string userToken = ""; 
 	public static string Uid = "";
-	public static string pin = "";
-	public static string name = ""; 
-	public static string avatar = "";
-	public static string room = "587450f87133077573039b92";
 	public static bool isOwner = false;
 	public static int ante = 0;
 	public static List<int> bankroll;
@@ -25,10 +23,6 @@ public class GConf {
 	public static float rake = 0;
 	public static int duration = 0;
 	public static bool needAduit = false;
-	public static bool IPLimit = false;
-	public static bool GPSLimit = false;
-
-	public static Dictionary<int, Player> Players = new Dictionary<int, Player>();
 
 	public static bool TakeCoinSuccess = false;
 
@@ -36,13 +30,13 @@ public class GConf {
 	public static int PrPot = 0;
 
 	public static bool Paused = false;
-	public static string GameCode = "";
 
 	public class MyCmd {
 		public static bool Takecoin = false;
 		public static bool Unseat = false;
 
 		public static void SetCmd(Dictionary<string, object> data) {
+			// 目前只处理带入记分牌与站起事件
 			foreach(KeyValuePair<string, object> entry in data) {
 				if (entry.Key == "takecoin") {
 					MyCmd.Takecoin = Convert.ToBoolean(entry.Value);
@@ -67,9 +61,6 @@ public class GConf {
 		GConf.rake = options.Float("rake_percent");
 		GConf.duration = options.Int("time_limit");
 		GConf.needAduit = options.Int("need_audit") == 1;
-		GConf.GPSLimit = options.Int("gps_limit") == 1;
-		GConf.IPLimit = options.Int("ip_limit") == 1;
-		GConf.GameCode = options.String("code");
 		GConf.roomName = json.String("name");
 		GConf.DealerSeat = json.Int("dealer_seat");
 
@@ -88,9 +79,139 @@ public class GConf {
 		var bb = options.Int("limit");
 		GConf.bb = bb ;
 		GConf.sb = bb / 2;
+	}
+}
+
+sealed public class Player {
+	public string Name = "";
+	public string Avatar = "";
+	public string Uid = "";
+	public int Bankroll = 0;
+	public int Index;
+	public int PrChips = 0;
+	public PlayerObject Script;
+
+	public void Show(Transform parent) {
+		Script.ShowPlayer(this, parent);
+	}
+
+	public Player(Dictionary<string, object> json, int index) {
+		Name = json.String("name");
+		Avatar = json.String("avatar");
+		Uid = json.String("uid");
+		
+		// 用户记分牌
+		Bankroll = json.Int("bankroll");
+
+		// 用户该轮上的筹码
+		PrChips = json.Int("pr_chips");
+
+		Index = index;
+
+		Script = ((GameObject)GameObject.Instantiate(Resources.Load("Prefab/Player"))).GetComponent<PlayerObject>();
+	}
+
+	~Player() {
+		GameObject.Destroy(Script.gameObject);
+	}
+}
+
+sealed public class GameData {
+	private GameData() {
+		RxSubjects.TakeSeat.AsObservable().Subscribe((e) => {
+			var index = e.Data.Int("where");
+			var playerInfo = e.Data.Dict("who");
+			var player = new Player(playerInfo, index);
+
+			GameData.Shared.Players[index] = player;
+		});
+
+		RxSubjects.Paused.AsObservable().Subscribe((e) => {
+			Paused = true;
+		});
+
+		RxSubjects.Started.AsObservable().Subscribe((e) => {
+			Paused = false;
+		});
+
+		RxSubjects.UnSeat.AsObservable().Subscribe((e) => {
+			var index = e.Data.Int("where");
+			GameData.Shared.Players.Remove(index);
+		});
+	}
+
+	public bool Owner = false;	
+	public List<int> Bankroll;
+	public int PlayerCount;
+	public string UserToken = ""; 
+	public string Uid = "";
+	public string Pin = "";
+	public string Name = ""; 
+	public string Avatar = "";
+	public string Room = "587450f87133077573039b92";
+	public int MySeat = -1;
+	public int Ante = 0;
+	public int Coins = 0;
+	public int SB = 0;
+	public int BB = 0;
+	public bool Straddle = false;
+	public string RoomName = "";
+
+	// 游戏是否已经开始，跟暂停状态无关
+	public bool GameStarted = false; 
+	public float Rake = 0;
+	public int Duration = 0;
+	public bool NeedAduit = false;
+	public bool IPLimit = false;
+	public bool GPSLimit = false;
+
+	public bool TakeCoinSuccess = false;
+
+	public int Pot = 0;
+	public int PrPot = 0;
+
+	public bool Paused = false;
+	public string GameCode = "";
+
+	public ReactiveProperty<int> DealerSeat;
+
+	public DateTime StartTime;
+
+	public void InitByJson(Dictionary<string, object> json) {
+		var options = json.Dict("options");
+		var gamers = json.Dict("gamers");
+
+		Owner = options.String("ownerid") == GConf.Uid;
+		Bankroll = options.IL("bankroll_multiple"); 
+		Ante = options.Int("ant");
+		PlayerCount = options.Int("max_seats");
+		Rake = options.Float("rake_percent");
+		Duration = options.Int("time_limit");
+		NeedAduit = options.Int("need_audit") == 1;
+		GPSLimit = options.Int("gps_limit") == 1;
+		IPLimit = options.Int("ip_limit") == 1;
+		GameCode = options.String("code");
+		RoomName = json.String("name");
+		DealerSeat.Value = json.Int("dealer_seat");
+
+		Pot = json.Int("pot");
+		PrPot = json.Int("pr_pot");
+		Paused = json.Int("is_pause") != 0;
+		
+		var startTs = json.Int("begin_time");
+		StartTime = _.DateTimeFromTimeStamp(startTs);
+
+		if (startTs != 0)
+        {
+			GameStarted = true;
+        }
+
+		var bb = options.Int("limit");
+		BB = bb ;
+		SB = bb / 2;
 
 		// 先清除、再添加
-		GConf.Players.Clear();
+		Players.Clear();
 
 		foreach(KeyValuePair<string, object> entry in gamers) {
 			var dict = entry.Value as Dictionary<string, object>;
@@ -101,26 +222,11 @@ public class GConf {
 
 			var index = Convert.ToInt32(entry.Key);
 			var player = new Player(dict, index);
-			GConf.Players.Add(index, player);
+			Players[index] = player;
 		}
 	}
-}
 
-public class Player {
-	public string Name = "";
-	public string Avatar = "";
-	public string Uid = "";
-	public int Bankroll = 0;
-	public int Index;
-	public int PrChips = 0;
+	public static GameData Shared = new GameData();
 
-	public Player(Dictionary<string, object> json, int index) {
-		Name = json.String("name");
-		Avatar = json.String("avatar");
-		Uid = json.String("uid");
-		Bankroll = json.Int("bankroll");
-		PrChips = json.Int("pr_chips");
-
-		Index = index;
-	}
+	public ReactiveDictionary<int, Player> Players; 
 }

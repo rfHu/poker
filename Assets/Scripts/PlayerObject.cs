@@ -83,7 +83,7 @@ public class PlayerObject : MonoBehaviour {
 		Avatar.GetComponent<CircleMask>().Disable();
 	}
 
-	public void ShowPlayer(Player player) {
+	public void ShowPlayer(Player player, Transform parent) {
 		Index = player.Index;
 		Uid = player.Uid;
 
@@ -95,6 +95,13 @@ public class PlayerObject : MonoBehaviour {
 		scoreLabel.text = player.Bankroll.ToString();
 		RawImage rawImage = Avatar.GetComponent<RawImage>();
 		StartCoroutine(DownloadAvatar(rawImage, player.Avatar));
+
+		GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
+		parent.SetParent(parent.transform, false);
+		
+		// 隐藏坐下按钮
+		var image = parent.gameObject.GetComponent<Image>();
+		image.enabled = false;
 	}
 
 	IEnumerator<WWW> DownloadAvatar(RawImage img, string url) {

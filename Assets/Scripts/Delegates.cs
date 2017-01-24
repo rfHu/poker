@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UniRx;
 
 public class DelegateArgs: EventArgs {
 	public Dictionary<string, object> Data;
@@ -10,13 +11,44 @@ public class DelegateArgs: EventArgs {
 	public DelegateArgs(){}
 }
 
+public class RxData: EventArgs {
+	public Dictionary<string, object> Data;
+	public RxData(Dictionary<string, object> data) {
+		Data = data;
+	}
+
+	public RxData(){}
+}
+
+public class RxSubjects {
+	public static Subject<RxData> TakeSeat = new Subject<RxData>();
+	public static Subject<RxData> TakeCoin = new Subject<RxData>();
+	public static Subject<RxData> TakeMore = new Subject<RxData>();
+	public static Subject<RxData> UnSeat = new Subject<RxData>();
+	public static Subject<RxData> Ready = new Subject<RxData>();
+	public static Subject<RxData> GameStart = new Subject<RxData>();
+	public static Subject<RxData> SeeCard = new Subject<RxData>();
+	public static Subject<RxData> Look = new Subject<RxData>();
+	public static Subject<RxData> Deal = new Subject<RxData>();
+	public static Subject<RxData> MoveTurn = new Subject<RxData>();
+	public static Subject<RxData> Fold = new Subject<RxData>();
+	public static Subject<RxData> Check = new Subject<RxData>();
+	public static Subject<RxData> Call = new Subject<RxData>();
+	public static Subject<RxData> AllIn = new Subject<RxData>();
+	public static Subject<RxData> Raise = new Subject<RxData>();
+	public static Subject<RxData> GameOver = new Subject<RxData>();
+	public static Subject<RxData> Paused = new Subject<RxData>();
+	public static Subject<RxData> Started = new Subject<RxData>();
+	public static Subject<RxData> Exclusion = new Subject<RxData>(); // 登陆互斥
+	public static Subject<RxData> GameEnd = new Subject<RxData>();
+	public static Subject<RxData> Audit = new Subject<RxData>();
+}
+
 public class Delegates {
 	public static Delegates shared = new Delegates();
 
-	public event EventHandler<DelegateArgs> TakeSeat;
 	public event EventHandler<DelegateArgs> TakeCoin;
 	public event EventHandler<DelegateArgs> TakeMore;
-	public event EventHandler<DelegateArgs> UnSeat;
 	public event EventHandler<DelegateArgs> Ready;
 
 	public event EventHandler<DelegateArgs> GameStart;
@@ -31,34 +63,18 @@ public class Delegates {
     public event EventHandler<DelegateArgs> Call;
     public event EventHandler<DelegateArgs> AllIn;
     public event EventHandler<DelegateArgs> Raise;
-    public event EventHandler<DelegateArgs> GameOver;
-    public event EventHandler<DelegateArgs> Paused;
-    public event EventHandler<DelegateArgs> Started;
 
 	// 登陆态互斥了
 	public event EventHandler<DelegateArgs> Exclusion;
-	public event EventHandler<DelegateArgs> GameEnd;
 	public event EventHandler<DelegateArgs> Audit;
 	
-
-	public void OnTakeSeat(DelegateArgs e) {
-		if (TakeSeat != null) {
-			TakeSeat(this, e);
-		}
-	}
 
 	public void OnTakeCoin(DelegateArgs e) {
 		if (TakeCoin != null) {
 			TakeCoin(this, e);
 		}
 	}
-
-	public void OnUnSeat(DelegateArgs e) {
-		if (UnSeat != null) {
-			UnSeat(this, e);
-		}
-	}
-
+	
 	public void OnReady(DelegateArgs e) {
 		if (Ready != null) {
 			Ready(this, e);
@@ -128,30 +144,6 @@ public class Delegates {
 	public void OnExclusion(DelegateArgs e) {
 		if (Exclusion != null) {
 			Exclusion(this, e);
-		}
-	}
-
-	public void OnGameOver(DelegateArgs e) {
-		if (GameOver != null) {
-			GameOver(this, e);
-		}
-	}
-
-	public void OnPaused(DelegateArgs e) {
-		if (Paused != null) {
-			Paused(this, e);
-		}
-	}
-
-	public void OnStart(DelegateArgs e) {
-		if (Started != null) {
-			Started(this, e);
-		}
-	}
-
-	public void OnGameEnd(DelegateArgs e) {
-		if (GameEnd != null) {
-			GameEnd(this, e);
 		}
 	}
 

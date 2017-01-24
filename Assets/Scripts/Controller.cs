@@ -5,6 +5,7 @@ using System;
 using Extensions;
 using System.Linq;
 using DG.Tweening;
+using UniRx;
 
 public class Controller : MonoBehaviour {
 	public GameObject seat;
@@ -28,7 +29,7 @@ public class Controller : MonoBehaviour {
 
 	void Start () {
 		int numberOfPlayers = GConf.playerCount;
-		anchorPositions = GetVectors (numberOfPlayers);
+		anchorPositions = getVectors (numberOfPlayers);
 
 		for (int i = 0; i < numberOfPlayers; i++) {
 			GameObject cpseat = Instantiate (seat);
@@ -41,13 +42,9 @@ public class Controller : MonoBehaviour {
 			Seats.Add (cpseat);
 		}
 
-		if (GConf.isOwner) {
-			OwnerButton.SetActive(true);
-		}
-
-		ShowGameInfo();
+		showGameInfo();
 		addListeners();
-		showPlayers();
+		registerRxEvents();
 	}
 
 	void changePositions(int index) {
@@ -62,7 +59,7 @@ public class Controller : MonoBehaviour {
 	}
 
 	// 逆时针生成位置信息
-	List<Vector2> GetVectors(int total) {
+	List<Vector2> getVectors(int total) {
 		float width = canvas.GetComponent<RectTransform>().rect.width;
 		float height = canvas.GetComponent<RectTransform>().rect.height;
 
@@ -140,43 +137,40 @@ public class Controller : MonoBehaviour {
 		throw new Exception("不支持游戏人数");
 	}
 
-	void ShowGameInfo() {
-		if (GConf.isOwner && !GConf.GameStarted) {
+	void showGameInfo() {
+		if (GameData.Shared.Owner && !GameData.Shared.GameStarted) {
 			startButton.SetActive(true);
 		}
 
-		var roomName = GConf.roomName;
+		var roomName = GameData.Shared.RoomName;
 		if (String.IsNullOrEmpty(roomName)) {
 			roomName = "佚名";
 		}
 
 		AddGameInfo(string.Format("{0}", roomName));
 
+		var sb = GameData.Shared.SB;
+		var bb = GameData.Shared.BB; 
+
 		if (GConf.isStraddle) {
-			AddGameInfo(string.Format("盲注:{0}/{1}/{2}", GConf.sb, GConf.bb, GConf.bb * 2));			
+			AddGameInfo(string.Format("盲注:{0}/{1}/{2}", sb, bb, bb * 2));			
  		} else {
-			AddGameInfo(string.Format("盲注:{0}/{1}", GConf.sb, GConf.bb));
+			AddGameInfo(string.Format("盲注:{0}/{1}", sb, bb));
 		}
 
-		if (!string.IsNullOrEmpty(GConf.GameCode)) {
-			AddGameInfo(String.Format("邀请码:{0}", GConf.GameCode));
+		if (!string.IsNullOrEmpty(GameData.Shared.GameCode)) {
+			AddGameInfo(String.Format("邀请码:{0}", GameData.Shared.GameCode));
 		}
 
-        if (GConf.IPLimit && GConf.GPSLimit) {
+		var ipLimit = GameData.Shared.IPLimit;
+		var gpsLimit = GameData.Shared.GPSLimit;
+
+		if (ipLimit && gpsLimit) {
 			AddGameInfo("IP、GPS限制");
-		} else if (GConf.GPSLimit) {
+		} else if (gpsLimit) {
 			AddGameInfo("GPS限制");
-		} else if (GConf.IPLimit) {
+		} else if (ipLimit) {
 			AddGameInfo("IP限制");
-		}
-	}
-
-	void showPlayers() {
-		foreach(KeyValuePair<int, Player> entry in GConf.Players) {
-			if (entry.Value.Uid == GConf.Uid) {
-				changePositions(entry.Value.Index);
-			}
-			showPlayer(entry.Value);
 		}
 	}
 
@@ -187,17 +181,11 @@ public class Controller : MonoBehaviour {
 	}
 
 	void addListeners() {
-		Delegates.shared.TakeSeat += new EventHandler<DelegateArgs>(onTakeSeat);
-		Delegates.shared.UnSeat += new EventHandler<DelegateArgs>(onUnSeat);
 		Delegates.shared.Ready += new EventHandler<DelegateArgs>(onReady);
 		Delegates.shared.GameStart += new EventHandler<DelegateArgs>(onGameStart);
 		Delegates.shared.SeeCard += new EventHandler<DelegateArgs>(onSeeCard);
 		Delegates.shared.Deal += new EventHandler<DelegateArgs>(onDeal);
 		Delegates.shared.MoveTurn += new EventHandler<DelegateArgs>(onMoveTurn);
-		Delegates.shared.GameOver += new EventHandler<DelegateArgs>(onGameOver);
-		Delegates.shared.Started += new EventHandler<DelegateArgs>(onStart);
-		Delegates.shared.Paused += new EventHandler<DelegateArgs>(onPaused);
-		Delegates.shared.GameEnd += new EventHandler<DelegateArgs>(onGameEnd);
 
 		// 游戏操作相关
 		Delegates.shared.Check += new EventHandler<DelegateArgs>(onCheck);
@@ -207,58 +195,28 @@ public class Controller : MonoBehaviour {
 		Delegates.shared.Call += new EventHandler<DelegateArgs>(onCall);
 	}
 
-	void removeListeners() {
-		Delegates.shared.TakeSeat -= new EventHandler<DelegateArgs>(onTakeSeat);
-		Delegates.shared.UnSeat -= new EventHandler<DelegateArgs>(onUnSeat);
-		Delegates.shared.Ready -= new EventHandler<DelegateArgs>(onReady);
-		Delegates.shared.GameStart -= new EventHandler<DelegateArgs>(onGameStart);
-		Delegates.shared.SeeCard -= new EventHandler<DelegateArgs>(onSeeCard);
-		Delegates.shared.Deal -= new EventHandler<DelegateArgs>(onDeal);
-		Delegates.shared.MoveTurn -= new EventHandler<DelegateArgs>(onMoveTurn);
-		Delegates.shared.GameOver -= new EventHandler<DelegateArgs>(onGameOver);
-		Delegates.shared.Started -= new EventHandler<DelegateArgs>(onStart);	
-		Delegates.shared.Paused -= new EventHandler<DelegateArgs>(onPaused);
-		Delegates.shared.GameEnd -= new EventHandler<DelegateArgs>(onGameEnd);
+	void registerRxEvents() {
+		Action<Player> showPlayer = (obj) => {
+			var parent = Seats[obj.Index].transform;
+			changePositions(obj.Index);
+			obj.Show(parent);	
+		};
 
-		// 游戏操作相关
-		Delegates.shared.Check -= new EventHandler<DelegateArgs>(onCheck);
-		Delegates.shared.Fold -= new EventHandler<DelegateArgs>(onFold);
-		Delegates.shared.AllIn -= new EventHandler<DelegateArgs>(onAllIn);
-		Delegates.shared.Raise -= new EventHandler<DelegateArgs>(onRaise);
-		Delegates.shared.Call -= new EventHandler<DelegateArgs>(onCall);
-	}
+		GameData.Shared.Players.ObserveReplace().Subscribe((data) => {
+			showPlayer(data.NewValue);	
+		});
 
-	void OnDestroy()
-	{
-		removeListeners();
-	}
+		GameData.Shared.Players.ObserveAdd().Subscribe((data) => {
+			showPlayer(data.Value);
+		});
 
-	void onStart(object sender, DelegateArgs e) {
-		GConf.Paused = false;
-	}
+		GameData.Shared.Players.ObserveRemove().Subscribe((data) => {
+			// skip
+		});
 
-	void onGameEnd(object sender, DelegateArgs e) {
-		// @TODO: 传递给APP，让h5展示
-		Debug.Log(e.Data);
-	}
-
-	void onPaused(object sender, DelegateArgs e) {
-		GConf.Paused = true;
-	}
-
-	void  onTakeSeat(object sender, DelegateArgs e) {
-		var args = e.Data;
-		var index = args.Int("where");
-		var playerInfo = args.Dict("who");
-		var player = new Player(playerInfo, index);
-
-		// 存在用户的情况下，认为数据出错，强制执行删除
-		if (playerObjects.ContainsKey(index)) {
-			RemovePlayer(index);
-		}
-
-		GConf.Players.Add(index, player);
-		showPlayer(player);	
+		GameData.Shared.Players.ObserveReset().Subscribe((data) => {
+			// skip
+		});
 	}
 
 	void onReady(object sender, DelegateArgs e) {
@@ -267,17 +225,6 @@ public class Controller : MonoBehaviour {
 		var bankroll = args.Int("bankroll");
 
 		playerObjects[index].SetScore(bankroll);
-	}
-
-	void onUnSeat(object sender, DelegateArgs e) {
-		var args = e.Data;
-
-		if (!args.ContainsKey("where")) {
-			return ;
-		}
-
-		var index = args.Int("where");
-		RemovePlayer(index);
 	}
 
 	private int prevMoveTurnIndex = -1;
@@ -297,43 +244,6 @@ public class Controller : MonoBehaviour {
 	}
 
 	Dictionary<int, PlayerObject> playerObjects = new Dictionary<int, PlayerObject>();
-
-	void showPlayer(Player data) {
-		GameObject go = (GameObject)Instantiate(Resources.Load("Prefab/Player"));
-		PlayerObject playerObject = go.GetComponent<PlayerObject>();
-
-		playerObject.ShowPlayer(data);
-		playerObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
-		
-		var parent = Seats[data.Index];
-		playerObject.transform.SetParent(parent.transform, false);
-		playerObjects.Add(playerObject.Index, playerObject);
-		
-		var image = parent.gameObject.GetComponent<Image>();
-
-		// 隐藏坐下按钮
-		image.enabled = false;
-
-		// 销毁时还原按钮
-		playerObject.OnDes = (index) => {
-			if (!playerObjects.ContainsKey(index)) {
-				image.enabled = true;
-			}
-		};
-	}
-
-	public void RemovePlayer(int index) {
-		PlayerObject player;
-		playerObjects.TryGetValue(index, out player);
-
-		if (player == null) {
-			return ;
-		}
-
-		playerObjects.Remove(index);
-		Destroy(player.gameObject);
-		GConf.Players.Remove(index);
-	}
 
 	int FindMyIndex() {
 		foreach(KeyValuePair<int, PlayerObject> entry in playerObjects) {
@@ -389,16 +299,6 @@ public class Controller : MonoBehaviour {
 		}		
 	}
 
-	void resetAllPlayers() {
-		foreach(KeyValuePair<int, PlayerObject> item in playerObjects) {
-			Destroy(item.Value.gameObject);	
-		}
-
-		// 清空字典保存的对象
-		playerObjects = new Dictionary<int, PlayerObject>();
-		showPlayers();
-	}
-
 	void setDealer() {
 		if (GConf.DealerSeat == -1) {
 			return ;
@@ -412,32 +312,16 @@ public class Controller : MonoBehaviour {
 		Seats[GConf.DealerSeat].GetComponent<Seat>().SetDealer(dealer);
 	}
 
-	void vertifyMe() {
-		var index = FindMyIndex();
-
-		foreach(KeyValuePair<int, PlayerObject> entry in playerObjects) {
-			// 我自己
-			if (entry.Key == index) {
-				// skip
-			} else {
-				var gameObj = entry.Value.Cardfaces;
-				gameObj.SetActive(true);
-			}
-		}
-	}
-
 	void updateChips() {
-		foreach(KeyValuePair<int, Player> entry in GConf.Players) {
-			playerObjects[entry.Key].SetPrChips(entry.Value.PrChips);
-		}
+		// foreach(KeyValuePair<int, Player> entry in GConf.Players) {
+		// 	playerObjects[entry.Key].SetPrChips(entry.Value.PrChips);
+		// }
 	}
 
 	void  newTurn() {
 		resetAllCards();
-		resetAllPlayers();
 		setDealer();
 		updatePot();
-		vertifyMe();
 		updateChips();
 	}
 
@@ -489,41 +373,37 @@ public class Controller : MonoBehaviour {
 		return new int[]{a, b};
 	}
 
-	void setChipsThenMove(DelegateArgs e) {
-		var mop = e.Data.ToObject<Mop>();
+	// void setChipsThenMove(DelegateArgs e) {
+	// 	var mop = e.Data.ToObject<Mop>();
 
-		if (!playerObjects.ContainsKey(mop.seat)) {
-			return ;
-		}
+	// 	if (!playerObjects.ContainsKey(mop.seat)) {
+	// 		return ;
+	// 	}
 
-		var obj = playerObjects[mop.seat];
-		obj.SetPrChips(mop.pr_chips);
-		obj.MoveOut();
-	}
+	// 	var obj = playerObjects[mop.seat];
+	// 	obj.SetPrChips(mop.pr_chips);
+	// 	obj.MoveOut();
+	// }
 
 	void onCheck(object sender, DelegateArgs e) {
-		setChipsThenMove(e);
+		// setChipsThenMove(e);
 	}
 
 	void onRaise(object sender, DelegateArgs e) {
-		setChipsThenMove(e);
+		// setChipsThenMove(e);
 	}
 
 	void onCall(object sender, DelegateArgs e) {
-		setChipsThenMove(e);		
+		// setChipsThenMove(e);		
 	}
 	
 	void onAllIn(object sender, DelegateArgs e) {
-		setChipsThenMove(e);
+		// setChipsThenMove(e);
 	}
 	
 	void onFold(object sender, DelegateArgs e) {
 		var mop = e.Data.ToObject<Mop>();
 		playerObjects[mop.seat].Fold();	
-	}
-
-	void onGameOver(object sender, DelegateArgs e) {
-		Debug.Log("GameOver");	
 	}
 
 	void onTakeMore(object sender, DelegateArgs e) {
