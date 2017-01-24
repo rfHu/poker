@@ -48,6 +48,7 @@ public class Controller : MonoBehaviour {
 		showPlayers();
 	}
 
+	// @TODO: 进入后再初始化数据
 	void showPlayers() {
 		foreach(var item in GameData.Shared.Players) {
 			var value = item.Value;
@@ -203,7 +204,6 @@ public class Controller : MonoBehaviour {
 	void registerRxEvents() {
 		Action<Player> showPlayer = (obj) => {
 			var parent = Seats[obj.Index].transform;
-			changePositions(obj.Index);
 			obj.Show(parent);	
 		};
 
@@ -227,7 +227,7 @@ public class Controller : MonoBehaviour {
 		}).AddTo(this);
 
 		GameData.Shared.Players.ObserveReset().Subscribe((data) => {
-            Debug.Log(data);
+            // Skip
 		}).AddTo(this);
 	}
 

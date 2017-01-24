@@ -3,6 +3,7 @@ using System;
 using Extensions;
 using UniRx;
 using UnityEngine;
+using System.Linq;
 
 sealed public class GConf {
 	public static int Pot = 0;
@@ -142,8 +143,10 @@ sealed public class GameData {
 		BB = bb ;
 		SB = bb / 2;
 
-		// 先清除、再添加
-		Players.Clear();
+		// 逐个删除，才能触发Remove事件
+		foreach(var key in Players.Keys.ToList()) {
+			Players.Remove(key);
+		}		
 
 		foreach(KeyValuePair<string, object> entry in gamers) {
 			var dict = entry.Value as Dictionary<string, object>;

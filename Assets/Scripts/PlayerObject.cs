@@ -24,7 +24,7 @@ public class PlayerObject : MonoBehaviour {
 	public GameObject MyCards;
 
 	GameObject OPGo;
-	Transform circle;
+	GameObject circle;
 	private float animDuration = 0.2f;
 
 	GameObject chipsGo; 
@@ -35,18 +35,17 @@ public class PlayerObject : MonoBehaviour {
 		nameLabel = info.Find("Name").GetComponent<Text>();
 		scoreLabel = info.Find("Coins").Find("Text").GetComponent<Text>();
 
-		circle = info.Find("Circle");
-		countdown = circle.Find("Countdown").gameObject;
+		var cir = info.Find("Circle");
+		circle = cir.gameObject;
+		countdown = cir.Find("Countdown").gameObject;
 
 		// 倒计时隐藏
 		countdown.SetActive(false);
 
 		Delegates.shared.Deal += new EventHandler<DelegateArgs>(onDeal);
-
-		addRx();
 	}
 
-	private void addRx() {
+	private void registerRxEvent() {
 		RxSubjects.Ready.Subscribe((e) => {
 			var data = e.Data;
 
@@ -108,7 +107,7 @@ public class PlayerObject : MonoBehaviour {
 		if (OPGo != null) {
 			Destroy(OPGo);
 			OPGo = null;
-			circle.gameObject.SetActive(true); // 显示头像
+			circle.SetActive(true); // 显示头像
 		}
 
 		Avatar.GetComponent<CircleMask>().Disable();
@@ -120,6 +119,8 @@ public class PlayerObject : MonoBehaviour {
 
 		if (Uid == GameData.Shared.Uid) {
 			hideName();
+		} else {
+			Cardfaces.SetActive(true);
 		}
 
 		nameLabel.text = player.Name;
@@ -133,6 +134,8 @@ public class PlayerObject : MonoBehaviour {
 		// 隐藏坐下按钮
 		var image = parent.gameObject.GetComponent<Image>();
 		image.enabled = false;
+
+		registerRxEvent();
 	}
 
 	IEnumerator<WWW> DownloadAvatar(RawImage img, string url) {
@@ -249,7 +252,7 @@ public class PlayerObject : MonoBehaviour {
 			var copy = Instantiate(MyCards, canvas.transform, true);
 			
 			MyCards.GetComponent<CanvasGroup>().alpha = opacity;
-			MyCards.gameObject.SetActive(false);
+			MyCards.SetActive(false);
 
 			foldCards(copy, () => {
 				if (MyCards != null) {
@@ -266,7 +269,7 @@ public class PlayerObject : MonoBehaviour {
 
 	void showOP(Dictionary<string, object> data) {
 		// 隐藏头像
-		circle.gameObject.SetActive(false);
+		circle.SetActive(false);
 
 		OPGo = (GameObject)Instantiate(Resources.Load("Prefab/OP"));	
 		OPGo.transform.SetParent(transform, false);
