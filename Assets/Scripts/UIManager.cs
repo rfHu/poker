@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using System;
-using UIWidgets;
 using Extensions;
 using UniRx;
 
@@ -30,8 +28,6 @@ public class UIManager : MonoBehaviour {
 
 	void Awake()
 	{
-		Delegates.shared.Exclusion += new EventHandler<DelegateArgs>(onExclusion);
-
 		RxSubjects.Audit.Subscribe((e) => {
 			var array = e.Data.List("ids");
 
@@ -58,13 +54,14 @@ public class UIManager : MonoBehaviour {
             GameObject obj = (GameObject)Instantiate(Resources.Load("Prefab/Supplement"));
             obj.GetComponent<DOPopup>().Show(canvas);
 		});
-	}
 
-	void onExclusion(object sender, DelegateArgs e) {
-		var type = e.Data.Int("type");
+		RxSubjects.Exclusion.Subscribe((e) => {
+			var type = e.Data.Int("type");
 		
-		if (type == 2) {
-			PokerUI.ShowDialog("您的账号已在其他设备登陆");
-		}
+			if (type == 2)
+            {
+                PokerUI.ShowDialog("您的账号已在其他设备登陆");
+            }
+		});
 	}
 }

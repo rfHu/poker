@@ -58,7 +58,7 @@ public class Supplement : MonoBehaviour {
 				// @TODO: TakeCoin失败
 				Debug.Log("错误");
 			} else {
-				GConf.TakeCoinSuccess = true;
+				GameData.Shared.TakeCoinSuccess = true;
 				gameObject.GetComponent<DOPopup>().Close();
 			}
 		});
@@ -66,7 +66,7 @@ public class Supplement : MonoBehaviour {
 
 	void OnDestroy()
 	{
-		if (GConf.TakeCoinSuccess) {
+		if (GameData.Shared.TakeCoinSuccess) {
 			return ;
 		}
 

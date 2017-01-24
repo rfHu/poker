@@ -204,7 +204,7 @@ public sealed class Connect  {
 					Delegates.shared.OnAllIn(evt);
 					break;
 				case "bye":
-					Delegates.shared.OnExclusion(evt);
+					RxSubjects.Exclusion.OnNext(rxdata);
 					break;
 				case "gameover":
 					RxSubjects.GameOver.OnNext(rxdata);
@@ -231,7 +231,6 @@ public sealed class Connect  {
 
 	// 只允许进入一次
 	private void refreshGameInfo(Dictionary<string, object> json) {
-		GConf.ModifyByJson(json);	
 		GameData.Shared.InitByJson(json);
 
 		if (entered) {

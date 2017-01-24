@@ -4,23 +4,9 @@ using Extensions;
 using UniRx;
 using UnityEngine;
 
-// 游戏全局配置
 sealed public class GConf {
-
-	// 游戏是否已经开始，跟暂停状态无关
-
-	public static bool TakeCoinSuccess = false;
-
 	public static int Pot = 0;
 	public static int PrPot = 0;
-
-	public static void ModifyByJson(Dictionary<string, object> json) {
-		var options = json.Dict("options");
-		var gamers = json.Dict("gamers");
-
-		Pot = json.Int("pot");
-		PrPot = json.Int("pr_pot");
-	}
 }
 
 sealed public class Player {
