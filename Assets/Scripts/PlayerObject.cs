@@ -87,7 +87,7 @@ public class PlayerObject : MonoBehaviour {
 		Index = player.Index;
 		Uid = player.Uid;
 
-		if (Uid == GConf.Uid) {
+		if (Uid == GameData.Shared.Uid) {
 			hideName();
 		}
 
@@ -97,7 +97,7 @@ public class PlayerObject : MonoBehaviour {
 		StartCoroutine(DownloadAvatar(rawImage, player.Avatar));
 
 		GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
-		parent.SetParent(parent.transform, false);
+		transform.SetParent(parent.transform, false);
 		
 		// 隐藏坐下按钮
 		var image = parent.gameObject.GetComponent<Image>();
@@ -116,7 +116,7 @@ public class PlayerObject : MonoBehaviour {
 
 
 	public void TurnTo(Dictionary<string, object> dict) {
-		if (Uid == GConf.Uid) {
+		if (Uid == GameData.Shared.Uid) {
 			showOP(dict);
 		} else {
 			StartCoroutine(MyTurn());				
@@ -215,7 +215,7 @@ public class PlayerObject : MonoBehaviour {
 
 		var canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
 
-		if (Uid == GConf.Uid) {
+		if (Uid == GameData.Shared.Uid) {
 			var copy = Instantiate(MyCards, canvas.transform, true);
 			
 			MyCards.GetComponent<CanvasGroup>().alpha = opacity;

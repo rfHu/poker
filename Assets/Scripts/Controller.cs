@@ -28,7 +28,7 @@ public class Controller : MonoBehaviour {
 	public GameObject OwnerButton; 
 
 	void Start () {
-		int numberOfPlayers = GConf.playerCount;
+		int numberOfPlayers = GameData.Shared.PlayerCount;
 		anchorPositions = getVectors (numberOfPlayers);
 
 		for (int i = 0; i < numberOfPlayers; i++) {
@@ -45,12 +45,20 @@ public class Controller : MonoBehaviour {
 		showGameInfo();
 		addListeners();
 		registerRxEvents();
+		showPlayers();
+	}
+
+	void showPlayers() {
+		foreach(var item in GameData.Shared.Players) {
+			var value = item.Value;
+			value.Show(Seats[value.Index].transform);
+		}
 	}
 
 	void changePositions(int index) {
-		var count = GConf.playerCount;
-		var left = anchorPositions.Skip(GConf.playerCount - index).Take(index);
-		var right = anchorPositions.Take(GConf.playerCount - index);
+		var count = GameData.Shared.PlayerCount;
+		var left = anchorPositions.Skip(count - index).Take(index);
+		var right = anchorPositions.Take(count - index);
 		var newVectors = left.Concat(right).ToList(); 
 
 		for (var i = 0; i < Seats.Count; i++) {
@@ -183,7 +191,6 @@ public class Controller : MonoBehaviour {
 	void addListeners() {
 		Delegates.shared.Ready += new EventHandler<DelegateArgs>(onReady);
 		Delegates.shared.GameStart += new EventHandler<DelegateArgs>(onGameStart);
-		Delegates.shared.SeeCard += new EventHandler<DelegateArgs>(onSeeCard);
 		Delegates.shared.Deal += new EventHandler<DelegateArgs>(onDeal);
 		Delegates.shared.MoveTurn += new EventHandler<DelegateArgs>(onMoveTurn);
 
@@ -203,6 +210,7 @@ public class Controller : MonoBehaviour {
 		};
 
 		GameData.Shared.Players.ObserveReplace().Subscribe((data) => {
+			Destroy(data.OldValue.Script.gameObject);
 			showPlayer(data.NewValue);	
 		});
 
@@ -211,11 +219,11 @@ public class Controller : MonoBehaviour {
 		});
 
 		GameData.Shared.Players.ObserveRemove().Subscribe((data) => {
-			// skip
+			Destroy(data.Value.Script.gameObject);
 		});
 
 		GameData.Shared.Players.ObserveReset().Subscribe((data) => {
-			// skip
+            Debug.Log(data);
 		});
 	}
 
@@ -224,7 +232,7 @@ public class Controller : MonoBehaviour {
 		var index = args.Int("where");
 		var bankroll = args.Int("bankroll");
 
-		playerObjects[index].SetScore(bankroll);
+		// playerObjects[index].SetScore(bankroll);
 	}
 
 	private int prevMoveTurnIndex = -1;
@@ -244,17 +252,7 @@ public class Controller : MonoBehaviour {
 	}
 
 	Dictionary<int, PlayerObject> playerObjects = new Dictionary<int, PlayerObject>();
-
-	int FindMyIndex() {
-		foreach(KeyValuePair<int, PlayerObject> entry in playerObjects) {
-			if (entry.Value.Uid == GConf.Uid) {
-				return entry.Key;
-			}
-		}
-
-		return -1;
-	}
-
+	
 	Card findLastCard() {
 		foreach(GameObject obj in PublicCards) {
 			var card = obj.GetComponent<Card>();
@@ -326,28 +324,31 @@ public class Controller : MonoBehaviour {
 	}
 
 	void onGameStart(object sender, DelegateArgs e) {
-		GConf.ModifyByJson(e.Data.Dict("room"));
+		var json = e.Data.Dict("room");
+		
+		GConf.ModifyByJson(json);
+		GameData.Shared.InitByJson(json);
 		newTurn();
 	}
 
-	void onSeeCard(object sender, DelegateArgs e) {
-		 var index = FindMyIndex();
-		 var cards = e.Data.IL("cards");
+	// void onSeeCard(object sender, DelegateArgs e) {
+	// 	 var index = FindMyIndex();
+	// 	 var cards = e.Data.IL("cards");
 		 
-		 int[] cvs = new int[]{
-			 Controller.CardIndex(cards[0]),
-			 Controller.CardIndex(cards[1])
-		 };
+	// 	 int[] cvs = new int[]{
+	// 		 Controller.CardIndex(cards[0]),
+	// 		 Controller.CardIndex(cards[1])
+	// 	 };
 
-		 var playerObject = playerObjects[index];
-		 var first = playerObject.MyCards.transform.Find("First");
-		 var second = playerObject.MyCards.transform.Find("Second");
+	// 	 var playerObject = playerObjects[index];
+	// 	 var first = playerObject.MyCards.transform.Find("First");
+	// 	 var second = playerObject.MyCards.transform.Find("Second");
 
-		 playerObject.MyCards.SetActive(true);
+	// 	 playerObject.MyCards.SetActive(true);
 
-		 first.GetComponent<Card>().Show(cvs[0]);
-		 second.GetComponent<Card>().Show(cvs[1]);
-	}
+	// 	 first.GetComponent<Card>().Show(cvs[0]);
+	// 	 second.GetComponent<Card>().Show(cvs[1]);
+	// }
 
 	public static int CardIndex(int number) {
 		var pairs = Controller.CardValues(number);

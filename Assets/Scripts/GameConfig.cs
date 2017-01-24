@@ -6,11 +6,6 @@ using UnityEngine;
 
 // 游戏全局配置
 sealed public class GConf {
-	public static int playerCount;
-	public static string userToken = ""; 
-	public static string Uid = "";
-	public static bool isOwner = false;
-	public static int ante = 0;
 	public static List<int> bankroll;
 	public static int coins = 0;
 	public static int sb = 0;
@@ -31,22 +26,6 @@ sealed public class GConf {
 
 	public static bool Paused = false;
 
-	public class MyCmd {
-		public static bool Takecoin = false;
-		public static bool Unseat = false;
-
-		public static void SetCmd(Dictionary<string, object> data) {
-			// 目前只处理带入记分牌与站起事件
-			foreach(KeyValuePair<string, object> entry in data) {
-				if (entry.Key == "takecoin") {
-					MyCmd.Takecoin = Convert.ToBoolean(entry.Value);
-			   	} else if (entry.Key == "unseat") {
-					MyCmd.Unseat = Convert.ToBoolean(entry.Value);	   
-				}
-			}
-		}
-	}
-
 	public static int DealerSeat = -1; 
 	public static DateTime StartTime = new DateTime();
 
@@ -54,10 +33,7 @@ sealed public class GConf {
 		var options = json.Dict("options");
 		var gamers = json.Dict("gamers");
 
-		GConf.isOwner = options.String("ownerid") == GConf.Uid;
 		GConf.bankroll = options.IL("bankroll_multiple"); 
-		GConf.ante = options.Int("ant");
-		GConf.playerCount = options.Int("max_seats");
 		GConf.rake = options.Float("rake_percent");
 		GConf.duration = options.Int("time_limit");
 		GConf.needAduit = options.Int("need_audit") == 1;
@@ -68,14 +44,6 @@ sealed public class GConf {
 		PrPot = json.Int("pr_pot");
 		Paused = json.Int("is_pause") != 0;
 		
-		var startTs = json.Int("begin_time");
-		GConf.StartTime = _.DateTimeFromTimeStamp(startTs);
-
-		if (startTs != 0)
-        {
-			GConf.GameStarted = true;
-        }
-
 		var bb = options.Int("limit");
 		GConf.bb = bb ;
 		GConf.sb = bb / 2;
@@ -109,10 +77,6 @@ sealed public class Player {
 		Index = index;
 
 		Script = ((GameObject)GameObject.Instantiate(Resources.Load("Prefab/Player"))).GetComponent<PlayerObject>();
-	}
-
-	~Player() {
-		GameObject.Destroy(Script.gameObject);
 	}
 }
 
@@ -173,7 +137,7 @@ sealed public class GameData {
 	public bool Paused = false;
 	public string GameCode = "";
 
-	public ReactiveProperty<int> DealerSeat;
+	public ReactiveProperty<int> DealerSeat = new ReactiveProperty<int>();
 
 	public DateTime StartTime;
 
@@ -181,7 +145,7 @@ sealed public class GameData {
 		var options = json.Dict("options");
 		var gamers = json.Dict("gamers");
 
-		Owner = options.String("ownerid") == GConf.Uid;
+		Owner = options.String("ownerid") == GameData.Shared.Uid;
 		Bankroll = options.IL("bankroll_multiple"); 
 		Ante = options.Int("ant");
 		PlayerCount = options.Int("max_seats");
@@ -228,5 +192,21 @@ sealed public class GameData {
 
 	public static GameData Shared = new GameData();
 
-	public ReactiveDictionary<int, Player> Players; 
+	public ReactiveDictionary<int, Player> Players = new ReactiveDictionary<int, Player>(); 
+
+	public class MyCmd {
+		public static bool Takecoin = false;
+		public static bool Unseat = false;
+
+		public static void SetCmd(Dictionary<string, object> data) {
+			// 目前只处理带入记分牌与站起事件
+			foreach(KeyValuePair<string, object> entry in data) {
+				if (entry.Key == "takecoin") {
+					MyCmd.Takecoin = Convert.ToBoolean(entry.Value);
+			   	} else if (entry.Key == "unseat") {
+					MyCmd.Unseat = Convert.ToBoolean(entry.Value);	   
+				}
+			}
+		}
+	}
 }

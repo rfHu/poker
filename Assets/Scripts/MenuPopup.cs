@@ -13,7 +13,7 @@ public class MenuPopup : MonoBehaviour {
 	public GameObject SuppObj;
 
 	public void Supplement() {
-		if (!GConf.MyCmd.Takecoin) {
+		if (!GameData.MyCmd.Takecoin) {
 			return ;
 		}
 		Delegates.shared.OnTakeCoin(new DelegateArgs());	
@@ -23,17 +23,17 @@ public class MenuPopup : MonoBehaviour {
 	{
 		parent = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
 
-		if (GConf.MyCmd.Unseat) {
+		if (GameData.MyCmd.Unseat) {
 			StandObj.GetComponent<CanvasGroup>().alpha = 1;
 		}
 
-		if (GConf.MyCmd.Takecoin) {
+		if (GameData.MyCmd.Takecoin) {
 			SuppObj.GetComponent<CanvasGroup>().alpha = 1;
 		}		
 	}
 
 	public void Standup() {
-		if (!GConf.MyCmd.Unseat) {
+		if (!GameData.MyCmd.Unseat) {
 			return ;
 		}
 

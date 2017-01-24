@@ -9,7 +9,7 @@ public class Seat : MonoBehaviour {
 	public Action<int> Act;
 
 	public void OnClick() {
-		if (GConf.MyCmd.Unseat) {
+		if (GameData.MyCmd.Unseat) {
 			return ;
 		}
 

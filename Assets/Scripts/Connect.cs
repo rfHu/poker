@@ -22,14 +22,14 @@ public sealed class Connect  {
 			HTTPManager.Proxy = new HTTPProxy(new Uri("http://localhost:8888"));
 		}
 
-		GConf.userToken = "s%3AERf7PZFc3sWUYmYZLGBpFUlcF8CvX99r.wu5DJl6e1Q%2BHmZvVmbQp6WAVU%2BaqNLWO63IisE5S9%2B4";
+		GameData.Shared.UserToken = "s%3AERf7PZFc3sWUYmYZLGBpFUlcF8CvX99r.wu5DJl6e1Q%2BHmZvVmbQp6WAVU%2BaqNLWO63IisE5S9%2B4";
 
 		SocketOptions options = new SocketOptions();
 		options.ConnectWith = TransportTypes.WebSocket;
 
 		manager = new SocketManager(new Uri(url), options);
 		manager.setCookie = (request) => {
-			var cookie = new Cookie("connect.sid", GConf.userToken);
+			var cookie = new Cookie("connect.sid", GameData.Shared.UserToken);
 			request.Cookies.Add(cookie);
 		};
 		manager.Socket.On("connect", onConnect);
@@ -121,7 +121,7 @@ public sealed class Connect  {
 
 			var ret = json.Dict("ret");
 			if (ret.ContainsKey("cmds")) {
-				GConf.MyCmd.SetCmd(ret.Dict("cmds"));
+				GameData.MyCmd.SetCmd(ret.Dict("cmds"));
 			}
 
 			int seq = json.Int("seq");
@@ -156,7 +156,7 @@ public sealed class Connect  {
 			if (e == "look") {
 				refreshGameInfo(evt.Data);
 			} else if (e == "prompt") {
-				GConf.MyCmd.SetCmd(evt.Data);
+				GameData.MyCmd.SetCmd(rxdata.Data);
 			}
 
 			// 通过事件广播出去
@@ -232,6 +232,7 @@ public sealed class Connect  {
 	// 只允许进入一次
 	private void refreshGameInfo(Dictionary<string, object> json) {
 		GConf.ModifyByJson(json);	
+		GameData.Shared.InitByJson(json);
 
 		if (entered) {
 			// Skip
