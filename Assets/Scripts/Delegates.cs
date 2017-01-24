@@ -47,13 +47,10 @@ public class RxSubjects {
 public class Delegates {
 	public static Delegates shared = new Delegates();
 
-	public event EventHandler<DelegateArgs> TakeCoin;
 	public event EventHandler<DelegateArgs> TakeMore;
 
-	public event EventHandler<DelegateArgs> GameStart;
 
 	public event EventHandler<DelegateArgs> SeeCard;
-	public event EventHandler<DelegateArgs> Look;
 	public event EventHandler<DelegateArgs> Deal;
 	public event EventHandler<DelegateArgs> MoveTurn;
 
@@ -65,30 +62,11 @@ public class Delegates {
 
 	// 登陆态互斥了
 	public event EventHandler<DelegateArgs> Exclusion;
-	public event EventHandler<DelegateArgs> Audit;
 	
-
-	public void OnTakeCoin(DelegateArgs e) {
-		if (TakeCoin != null) {
-			TakeCoin(this, e);
-		}
-	}
 	
-	public void OnGameStart(DelegateArgs e) {
-		if (GameStart != null) {
-			GameStart(this, e);
-		}
-	}
-
 	public void OnSeeCard(DelegateArgs e) {
 		if (SeeCard != null) {
 			SeeCard(this, e);
-		}
-	}
-
-	public void OnLook(DelegateArgs e) {
-		if (Look != null) {
-			Look(this, e);
 		}
 	}
 
@@ -143,12 +121,6 @@ public class Delegates {
 	public void OnTakeMore(DelegateArgs e) {
 		if (TakeMore != null) {
 			TakeMore(this, e);
-		}
-	}
-
-	public void OnAudit(DelegateArgs e) {
-		if (Audit != null) {
-			Audit(this, e);
 		}
 	}
 }

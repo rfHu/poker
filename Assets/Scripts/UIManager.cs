@@ -2,6 +2,7 @@
 using System;
 using UIWidgets;
 using Extensions;
+using UniRx;
 
 public class UIManager : MonoBehaviour {
 	public Canvas canvas;
@@ -27,27 +28,36 @@ public class UIManager : MonoBehaviour {
 		recall.GetComponent<DOPopup>().Show(canvas);
 	}
 
-	void onTakeCoin(object sender, DelegateArgs e) {
-		if (e.Data != null) {
-			GConf.coins = e.Data.Int("coins");
-		}
-
-		GameObject obj = (GameObject)Instantiate(Resources.Load("Prefab/Supplement"));
-		obj.GetComponent<DOPopup>().Show(canvas);
-	} 
-
 	void Awake()
 	{
-		Delegates.shared.TakeCoin += new EventHandler<DelegateArgs>(onTakeCoin);
 		Delegates.shared.Exclusion += new EventHandler<DelegateArgs>(onExclusion);
-		Delegates.shared.Audit += new EventHandler<DelegateArgs>(onAudit);
-	}
 
-	void OnDestroy()
-	{
-		Delegates.shared.TakeCoin -= new EventHandler<DelegateArgs>(onTakeCoin);
-		Delegates.shared.Exclusion -= new EventHandler<DelegateArgs>(onExclusion);
-		Delegates.shared.Audit -= new EventHandler<DelegateArgs>(onAudit);
+		RxSubjects.Audit.Subscribe((e) => {
+			var array = e.Data.List("ids");
+
+            if (!auditMsg)
+            {
+                auditMsg = (GameObject)Instantiate(Resources.Load("Prefab/AuditMsg"));
+            }
+
+            if (array.Count == 0)
+            {
+                auditMsg.GetComponent<DOPopup>().Close();
+            }
+            else
+            {
+                auditMsg.GetComponent<DOPopup>().Show(canvas);
+            }
+		});
+
+		RxSubjects.Audit.Subscribe((e) => {
+			if (e.Data != null) {
+				GameData.Shared.Coins = e.Data.Int("coins");
+            }
+
+            GameObject obj = (GameObject)Instantiate(Resources.Load("Prefab/Supplement"));
+            obj.GetComponent<DOPopup>().Show(canvas);
+		});
 	}
 
 	void onExclusion(object sender, DelegateArgs e) {
@@ -55,20 +65,6 @@ public class UIManager : MonoBehaviour {
 		
 		if (type == 2) {
 			PokerUI.ShowDialog("您的账号已在其他设备登陆");
-		}
-	}
-
-	void onAudit(object sender, DelegateArgs e) {
-		var array = e.Data.List("ids");
-
-		if (!auditMsg) {
-			auditMsg = (GameObject)Instantiate(Resources.Load("Prefab/AuditMsg"));
-		}
-
-		if (array.Count == 0) {
-			auditMsg.GetComponent<DOPopup>().Close();
-		} else {
-			auditMsg.GetComponent<DOPopup>().Show(canvas);
 		}
 	}
 }

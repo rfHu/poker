@@ -165,7 +165,7 @@ public sealed class Connect  {
 					RxSubjects.TakeSeat.OnNext(rxdata);
 					break;
 				case "takecoin":
-					Delegates.shared.OnTakeCoin(evt);
+					RxSubjects.TakeCoin.OnNext(rxdata);
 					break;
 				case "unseat":
 					RxSubjects.UnSeat.OnNext(rxdata);
@@ -174,13 +174,13 @@ public sealed class Connect  {
 					RxSubjects.Ready.OnNext(rxdata);	
 					break;
 				case "gamestart":
-					Delegates.shared.OnGameStart(evt);
+					RxSubjects.GameStart.OnNext(rxdata);
 					break;
 				case "seecard":
 					Delegates.shared.OnSeeCard(evt);
 					break;
 				case "look":
-					Delegates.shared.OnLook(evt);
+					RxSubjects.Look.OnNext(rxdata);
 					break;
 				case "deal":
 					Delegates.shared.OnDeal(evt);
@@ -219,7 +219,7 @@ public sealed class Connect  {
 					RxSubjects.GameEnd.OnNext(rxdata);
 					break;
 				case "un_audit":
-					Delegates.shared.OnAudit(evt);
+					RxSubjects.Audit.OnNext(rxdata);
 					break;
 				default:
 					break;

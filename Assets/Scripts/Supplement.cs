@@ -44,7 +44,7 @@ public class Supplement : MonoBehaviour {
 		slider.value = newValue;
 
 		Score.text = newValue.ToString();
-		Pay.text = (newValue * GConf.rake).ToString();
+		Pay.text = (newValue * GameData.Shared.Rake).ToString();
 	}
 
 	public void TakeCoin() {

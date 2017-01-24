@@ -6,37 +6,20 @@ using UnityEngine;
 
 // 游戏全局配置
 sealed public class GConf {
-	public static List<int> bankroll;
-	public static int coins = 0;
 
 	// 游戏是否已经开始，跟暂停状态无关
-	public static bool GameStarted = false; 
-	public static float rake = 0;
-	public static int duration = 0;
-	public static bool needAduit = false;
 
 	public static bool TakeCoinSuccess = false;
 
 	public static int Pot = 0;
 	public static int PrPot = 0;
 
-	public static bool Paused = false;
-
-	public static int DealerSeat = -1; 
-
 	public static void ModifyByJson(Dictionary<string, object> json) {
 		var options = json.Dict("options");
 		var gamers = json.Dict("gamers");
 
-		GConf.bankroll = options.IL("bankroll_multiple"); 
-		GConf.rake = options.Float("rake_percent");
-		GConf.duration = options.Int("time_limit");
-		GConf.needAduit = options.Int("need_audit") == 1;
-		GConf.DealerSeat = json.Int("dealer_seat");
-
 		Pot = json.Int("pot");
 		PrPot = json.Int("pr_pot");
-		Paused = json.Int("is_pause") != 0;
 	}
 }
 
@@ -94,6 +77,11 @@ sealed public class GameData {
 		RxSubjects.UnSeat.AsObservable().Subscribe((e) => {
 			var index = e.Data.Int("where");
 			GameData.Shared.Players.Remove(index);
+		});
+
+		RxSubjects.GameStart.AsObservable().Subscribe((e) => {
+			var json = e.Data.Dict("room");
+			InitByJson(json);
 		});
 	}
 

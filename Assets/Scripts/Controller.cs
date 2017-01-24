@@ -189,7 +189,6 @@ public class Controller : MonoBehaviour {
 	}
 
 	void addListeners() {
-		Delegates.shared.GameStart += new EventHandler<DelegateArgs>(onGameStart);
 		Delegates.shared.Deal += new EventHandler<DelegateArgs>(onDeal);
 		Delegates.shared.MoveTurn += new EventHandler<DelegateArgs>(onMoveTurn);
 
@@ -293,7 +292,9 @@ public class Controller : MonoBehaviour {
 	}
 
 	void setDealer() {
-		if (GConf.DealerSeat == -1) {
+		var index = GameData.Shared.DealerSeat.Value;
+
+		if (index == -1) {
 			return ;
 		}
 
@@ -302,7 +303,7 @@ public class Controller : MonoBehaviour {
 			dealer.transform.SetParent(canvas.transform, false);
 		}
 
-		Seats[GConf.DealerSeat].GetComponent<Seat>().SetDealer(dealer);
+		Seats[index].GetComponent<Seat>().SetDealer(dealer);
 	}
 
 	void updateChips() {
@@ -316,14 +317,6 @@ public class Controller : MonoBehaviour {
 		setDealer();
 		updatePot();
 		updateChips();
-	}
-
-	void onGameStart(object sender, DelegateArgs e) {
-		var json = e.Data.Dict("room");
-		
-		GConf.ModifyByJson(json);
-		GameData.Shared.InitByJson(json);
-		newTurn();
 	}
 
 	// void onSeeCard(object sender, DelegateArgs e) {

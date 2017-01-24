@@ -16,7 +16,7 @@ public class MenuPopup : MonoBehaviour {
 		if (!GameData.MyCmd.Takecoin) {
 			return ;
 		}
-		Delegates.shared.OnTakeCoin(new DelegateArgs());	
+		RxSubjects.TakeCoin.OnNext(new RxData());	
 	}
 
 	void Start()
