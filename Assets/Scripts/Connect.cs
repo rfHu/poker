@@ -186,7 +186,7 @@ public sealed class Connect  {
 					Delegates.shared.OnDeal(evt);
 					break;
 				case  "moveturn":
-					Delegates.shared.OnMoveTurn(evt);
+					RxSubjects.MoveTurn.OnNext(rxdata);
 					break;
 				case  "fold":
 					Delegates.shared.OnFold(evt);

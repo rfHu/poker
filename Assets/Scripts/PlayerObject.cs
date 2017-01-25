@@ -57,6 +57,18 @@ public class PlayerObject : MonoBehaviour {
 			scoreLabel.text = bankroll.ToString();
 		}).AddTo(this);
 
+		RxSubjects.MoveTurn.Subscribe((e) => {
+			var index = e.Data.Int("seat");
+			
+			if (index == Index) {
+				moveOut();
+			} else {
+
+			}
+
+			turnTo(e.Data);
+		});
+
 		if (Uid == GameData.Shared.Uid) {
 			RxSubjects.SeeCard.Subscribe((e) => {
 				if (Uid != GameData.Shared.Uid) {
@@ -144,11 +156,7 @@ public class PlayerObject : MonoBehaviour {
 		img.texture = _.Circular(www.texture);
 	}	
 
-	public void MoveOut() {
-		moveOut();		
-	}
-
-	public void TurnTo(Dictionary<string, object> dict) {
+	public void turnTo(Dictionary<string, object> dict) {
 		if (Uid == GameData.Shared.Uid) {
 			showOP(dict);
 		} else {

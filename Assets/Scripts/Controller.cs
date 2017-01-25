@@ -191,7 +191,6 @@ public class Controller : MonoBehaviour {
 
 	void addListeners() {
 		Delegates.shared.Deal += new EventHandler<DelegateArgs>(onDeal);
-		Delegates.shared.MoveTurn += new EventHandler<DelegateArgs>(onMoveTurn);
 
 		// 游戏操作相关
 		Delegates.shared.Check += new EventHandler<DelegateArgs>(onCheck);
@@ -230,22 +229,7 @@ public class Controller : MonoBehaviour {
             // Skip
 		}).AddTo(this);
 	}
-
-	private int prevMoveTurnIndex = -1;
-
-	void onMoveTurn(object sender, DelegateArgs e) {
-		// PlayerObject prevObj;
-		// playerObjects.TryGetValue(prevMoveTurnIndex, out prevObj);
-
-		// if (prevObj != null) {
-		// 	prevObj.MoveOut();
-		// }
-
-		// var index = e.Data.Int("seat");
-		// prevMoveTurnIndex = index;
-
-		// playerObjects[index].TurnTo(e.Data);
-	}
+	
 	
 	Card findLastCard() {
 		foreach(GameObject obj in PublicCards) {

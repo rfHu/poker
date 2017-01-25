@@ -51,7 +51,6 @@ public class Delegates {
 
 
 	public event EventHandler<DelegateArgs> Deal;
-	public event EventHandler<DelegateArgs> MoveTurn;
 
     public event EventHandler<DelegateArgs> Fold;
     public event EventHandler<DelegateArgs> Check;
@@ -62,12 +61,6 @@ public class Delegates {
 	public void OnDeal(DelegateArgs e) {
 		if (Deal != null) {
 			Deal(this, e);
-		}
-	}
-
-	public void OnMoveTurn(DelegateArgs e) {
-		if (MoveTurn != null) {
-			MoveTurn(this, e);
 		}
 	}
 
@@ -96,9 +89,9 @@ public class Delegates {
 	}
 
 	public void OnAllIn(DelegateArgs e) {
-		if (MoveTurn != null) {
-			MoveTurn(this, e);
-		}
+		// if (MoveTurn != null) {
+		// 	MoveTurn(this, e);
+		// }
 	}
 
 	public void OnTakeMore(DelegateArgs e) {
