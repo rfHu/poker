@@ -35,9 +35,8 @@ public class PlayerObject : MonoBehaviour {
 		nameLabel = info.Find("Name").GetComponent<Text>();
 		scoreLabel = info.Find("Coins").Find("Text").GetComponent<Text>();
 
-		var cir = info.Find("Circle");
-		circle = cir.gameObject;
-		countdown = cir.Find("Countdown").gameObject;
+		circle = info.Find("Circle").gameObject;
+		countdown = circle.transform.Find("Countdown").gameObject;
 
 		// 倒计时隐藏
 		countdown.SetActive(false);
@@ -61,13 +60,11 @@ public class PlayerObject : MonoBehaviour {
 			var index = e.Data.Int("seat");
 			
 			if (index == Index) {
-				moveOut();
+				turnTo(e.Data);
 			} else {
-
+				moveOut();
 			}
-
-			turnTo(e.Data);
-		});
+		}).AddTo(this);
 
 		if (Uid == GameData.Shared.Uid) {
 			RxSubjects.SeeCard.Subscribe((e) => {
