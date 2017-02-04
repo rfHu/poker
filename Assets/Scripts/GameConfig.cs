@@ -4,6 +4,7 @@ using Extensions;
 using UniRx;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 sealed public class Player {
 	public string Name = "";
@@ -15,6 +16,9 @@ sealed public class Player {
 	private GameObject Go;
 
 	public void DestroyGo() {
+		if (Go == null) {
+			return ;
+		}
 		GameObject.Destroy(Go);
 	}
 
@@ -63,12 +67,26 @@ sealed public class GameData {
 
 		RxSubjects.GameStart.AsObservable().Subscribe((e) => {
 			var json = e.Data.Dict("room");
-			InitByJson(json);
+			byJson(json);
 		});
 
 		RxSubjects.Deal.Subscribe((e) => {
 			GameData.Shared.Pot.Value = e.Data.Int("pot");
 			GameData.Shared.PrPot.Value = e.Data.Int("pr_pot");
+		});
+
+		var sceneLoaded = false; 
+		RxSubjects.Look.Subscribe((e) => {
+			byJson(e.Data.Dict("args"));
+
+			// 只允许进入一次
+			if (sceneLoaded) {
+				// Skip
+			} else {
+				SceneManager.LoadScene("PokerGame");
+			}
+
+			sceneLoaded = true;
 		});
 	}
 
@@ -109,7 +127,17 @@ sealed public class GameData {
 
 	public DateTime StartTime;
 
-	public void InitByJson(Dictionary<string, object> json) {
+	private Dictionary<string, object> jsonData;
+
+	public void Reload() {
+		if (jsonData != null) {
+			byJson(jsonData);
+		}
+	}
+
+	private void byJson(Dictionary<string, object> json) {
+		jsonData = json;
+
 		var options = json.Dict("options");
 		var gamers = json.Dict("gamers");
 

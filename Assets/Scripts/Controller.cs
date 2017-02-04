@@ -44,14 +44,10 @@ public class Controller : MonoBehaviour {
 
 		showGameInfo();
 		registerRxEvents();
-	}
 
-	// void showPlayers() {
-	// 	foreach(var item in GameData.Shared.Players) {
-	// 		var value = item.Value;
-	// 		value.Show(Seats[value.Index].transform);
-	// 	}
-	// }
+		// 数据驱动开发，在这里重新reload数据，触发事件
+		GameData.Shared.Reload();
+	}
 
 	void changePositions(int index) {
 		var count = GameData.Shared.PlayerCount;

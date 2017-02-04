@@ -5,7 +5,6 @@ using BestHTTP.SocketIO.Transports;
 using BestHTTP.Cookies;
 using Extensions;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using BestHTTP;
 
 public sealed class Connect  {
@@ -151,10 +150,7 @@ public sealed class Connect  {
 
 			var rxdata = new RxData(json.Dict("args"));
 
-			// 监听look事件，收到才进入房间
-			if (e == "look") {
-				refreshGameInfo(rxdata.Data);
-			} else if (e == "prompt") {
+			if (e == "prompt") {
 				GameData.MyCmd.SetCmd(rxdata.Data);
 			}
 
@@ -224,21 +220,6 @@ public sealed class Connect  {
 					break;
 			}
 		});
-	}
-
-	private bool entered = false;
-
-	private void refreshGameInfo(Dictionary<string, object> json) {
-		GameData.Shared.InitByJson(json);
-
-		// 只允许进入一次
-		if (entered) {
-			// Skip
-		} else {
-			SceneManager.LoadScene("PokerGame");
-		}
-
-		entered = true;
 	}
 }
 
