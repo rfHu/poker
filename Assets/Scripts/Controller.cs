@@ -36,6 +36,10 @@ public class Controller : MonoBehaviour {
 	}
 
 	void changePositions(int index) {
+		if (index == 0) {
+			return ;
+		}
+
 		var count = GameData.Shared.PlayerCount.Value;
 		var left = anchorPositions.Skip(count - index).Take(index);
 		var right = anchorPositions.Take(count - index);
@@ -179,7 +183,7 @@ public class Controller : MonoBehaviour {
 		};
 
 		var shouldSub = true;
-		GameData.Shared.PlayerCount.AsObservable().TakeWhile((_) => shouldSub).Subscribe((numberOfPlayers) => {
+		GameData.Shared.PlayerCount.AsObservable().TakeWhile((_) => shouldSub).DistinctUntilChanged().Subscribe((numberOfPlayers) => {
 			anchorPositions = getVectors (numberOfPlayers);
 
 			for (int i = 0; i < numberOfPlayers; i++) {
@@ -187,7 +191,6 @@ public class Controller : MonoBehaviour {
 				
 				var st = cpseat.GetComponent<Seat>();
 				st.Index = i;
-				st.Act = changePositions;
 				cpseat.transform.SetParent (canvas.transform, false);
 				cpseat.GetComponent<RectTransform>().anchoredPosition = anchorPositions[i];
 				Seats.Add (cpseat);
@@ -195,6 +198,10 @@ public class Controller : MonoBehaviour {
 
 			shouldSub = false;
 		}).AddTo(this);
+
+		RxSubjects.ChangeVectorsByIndex.AsObservable().DistinctUntilChanged().Subscribe((index) => {
+			changePositions(index);
+		});
 
 		GameData.Shared.Players.ObserveReplace().Subscribe((data) => {
 			data.OldValue.DestroyGo();

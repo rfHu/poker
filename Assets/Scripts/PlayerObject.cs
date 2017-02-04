@@ -121,6 +121,7 @@ public class PlayerObject : MonoBehaviour {
 
 		if (Uid == GameData.Shared.Uid) {
 			hideName();
+			RxSubjects.ChangeVectorsByIndex.OnNext(Index);
 		} else {
 			Cardfaces.SetActive(true);
 		}

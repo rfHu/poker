@@ -33,6 +33,8 @@ public class RxSubjects {
 	public static Subject<RxData> Exclusion = new Subject<RxData>(); // 登陆互斥
 	public static Subject<RxData> GameEnd = new Subject<RxData>();
 	public static Subject<RxData> Audit = new Subject<RxData>();
+
+	public static Subject<int> ChangeVectorsByIndex = new Subject<int>();
 }
 
 
