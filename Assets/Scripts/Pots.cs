@@ -1,21 +1,43 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UniRx;
 
 public class Pots : MonoBehaviour {
 	public Text DC;
 	public Text PrevPot;
+	public GameObject PrPotGo;
 
-	public void UpdatePot() {
-		gameObject.SetActive(true);
-		GetComponent<Pots>().PrevPot.text = (GConf.Pot - GConf.PrPot).ToString();
-		GetComponent<Pots>().DC.text =  "底池:" + GConf.Pot.ToString();	
+	void Start()
+	{
+		registerRx();	
+	}
 
-		var pgo = PrevPot.transform.parent.gameObject;
+	private void registerRx() {
+		GameData.Shared.PrPot.AsObservable().Subscribe((value) => {
+			toggleElement();
+			DC.text =  "底池:" + GameData.Shared.Pot.Value.ToString();	
+		}).AddTo(this);
 
-		if (GConf.PrPot == 0) {
-			pgo.SetActive(false);
-		} else {
-			pgo.SetActive(true);
-		}
+		GameData.Shared.Pot.AsObservable().Subscribe((value) => {
+			toggleElement();
+
+			var prv = GameData.Shared.PrPot.Value;
+			PrevPot.text = (GameData.Shared.Pot.Value - prv).ToString();
+
+			if (prv > 0) {
+				PrPotGo.SetActive(true);
+			} else {
+				PrPotGo.SetActive(false);
+			} 
+
+		}).AddTo(this);
+	}
+
+	private void toggleElement() {
+		if (GameData.Shared.PrPot.Value > 0 || GameData.Shared.Pot.Value > 0) {
+			PrPotGo.SetActive(true);
+ 		} else {
+			PrPotGo.SetActive(false);
+		 }
 	}
 }

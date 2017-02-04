@@ -22,7 +22,7 @@ public sealed class Connect  {
 			HTTPManager.Proxy = new HTTPProxy(new Uri("http://localhost:8888"));
 		}
 
-		GameData.Shared.UserToken = "s%3AERf7PZFc3sWUYmYZLGBpFUlcF8CvX99r.wu5DJl6e1Q%2BHmZvVmbQp6WAVU%2BaqNLWO63IisE5S9%2B4";
+		GameData.Shared.UserToken = "s%3A4jdU3rpRBKQNjMa15AS3iBusBO0Cm_4Y.QuCC9%2B7zdeAeeZgG02VobDBhTpVjNBaFz4vn8DRLEGk";
 
 		SocketOptions options = new SocketOptions();
 		options.ConnectWith = TransportTypes.WebSocket;
@@ -149,12 +149,11 @@ public sealed class Connect  {
 				return ;
 			}
 
-			var evt = new DelegateArgs(json.Dict("args"));
 			var rxdata = new RxData(json.Dict("args"));
 
 			// 监听look事件，收到才进入房间
 			if (e == "look") {
-				refreshGameInfo(evt.Data);
+				refreshGameInfo(rxdata.Data);
 			} else if (e == "prompt") {
 				GameData.MyCmd.SetCmd(rxdata.Data);
 			}
@@ -183,25 +182,25 @@ public sealed class Connect  {
 					RxSubjects.Look.OnNext(rxdata);
 					break;
 				case "deal":
-					Delegates.shared.OnDeal(evt);
+					RxSubjects.Deal.OnNext(rxdata);	
 					break;
 				case  "moveturn":
 					RxSubjects.MoveTurn.OnNext(rxdata);
 					break;
 				case  "fold":
-					Delegates.shared.OnFold(evt);
+					RxSubjects.Fold.OnNext(rxdata);
 					break;
 				case  "check":
-					Delegates.shared.OnCheck(evt);
+					RxSubjects.Check.OnNext(rxdata);
 					break;
 				case  "raise":
-					Delegates.shared.OnRaise(evt);
+					RxSubjects.Raise.OnNext(rxdata);
 					break;
 				case  "call":
-					Delegates.shared.OnCall(evt);
+					RxSubjects.Call.OnNext(rxdata);
 					break;
 				case  "all_in":
-					Delegates.shared.OnAllIn(evt);
+					RxSubjects.Raise.OnNext(rxdata);
 					break;
 				case "bye":
 					RxSubjects.Exclusion.OnNext(rxdata);
@@ -229,10 +228,10 @@ public sealed class Connect  {
 
 	private bool entered = false;
 
-	// 只允许进入一次
 	private void refreshGameInfo(Dictionary<string, object> json) {
 		GameData.Shared.InitByJson(json);
 
+		// 只允许进入一次
 		if (entered) {
 			// Skip
 		} else {

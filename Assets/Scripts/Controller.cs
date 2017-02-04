@@ -43,18 +43,15 @@ public class Controller : MonoBehaviour {
 		}
 
 		showGameInfo();
-		addListeners();
 		registerRxEvents();
-		showPlayers();
 	}
 
-	// @TODO: 进入后再初始化数据
-	void showPlayers() {
-		foreach(var item in GameData.Shared.Players) {
-			var value = item.Value;
-			value.Show(Seats[value.Index].transform);
-		}
-	}
+	// void showPlayers() {
+	// 	foreach(var item in GameData.Shared.Players) {
+	// 		var value = item.Value;
+	// 		value.Show(Seats[value.Index].transform);
+	// 	}
+	// }
 
 	void changePositions(int index) {
 		var count = GameData.Shared.PlayerCount;
@@ -189,17 +186,6 @@ public class Controller : MonoBehaviour {
 		label.transform.SetParent(gameInfoWrapper.transform, false);
 	}
 
-	void addListeners() {
-		Delegates.shared.Deal += new EventHandler<DelegateArgs>(onDeal);
-
-		// 游戏操作相关
-		Delegates.shared.Check += new EventHandler<DelegateArgs>(onCheck);
-		Delegates.shared.Fold += new EventHandler<DelegateArgs>(onFold);
-		Delegates.shared.AllIn += new EventHandler<DelegateArgs>(onAllIn);
-		Delegates.shared.Raise += new EventHandler<DelegateArgs>(onRaise);
-		Delegates.shared.Call += new EventHandler<DelegateArgs>(onCall);
-	}
-
 	void registerRxEvents() {
 		Action<Player> showPlayer = (obj) => {
 			var parent = Seats[obj.Index].transform;
@@ -228,6 +214,23 @@ public class Controller : MonoBehaviour {
 		GameData.Shared.Players.ObserveReset().Subscribe((data) => {
             // Skip
 		}).AddTo(this);
+
+		RxSubjects.Deal.Subscribe((e) => {
+			var deals = e.Data.Dict("deals").IL("-1");
+		
+			if (deals.Count <= 0) {
+				return ;
+			}
+
+			foreach(int item in deals) {
+				var idx = Card.CardIndex(item);
+				var card = findLastCard();
+
+				if (card != null) {
+					card.Show(idx);
+				}
+			}
+		}).AddTo(this);
 	}
 	
 	
@@ -240,31 +243,6 @@ public class Controller : MonoBehaviour {
 		}
 
 		return null;
-	}
-
-	void onDeal(object sender, DelegateArgs e) {
-		var deals = e.Data.Dict("deals").IL("-1");
-		
-		if (deals.Count <= 0) {
-			return ;
-		}
-
-		foreach(int item in deals) {
-			var idx = Card.CardIndex(item);
-			var card = findLastCard();
-
-			if (card != null) {
-				card.Show(idx);
-			}
-		}
-
-		GConf.Pot = e.Data.Int("pot");
-		GConf.PrPot = e.Data.Int("pr_pot");
-		updatePot();
-	}
-
-	void updatePot() {
-		Pot.GetComponent<Pots>().UpdatePot();	
 	}
 
 	void resetAllCards() {
@@ -290,55 +268,19 @@ public class Controller : MonoBehaviour {
 		Seats[index].GetComponent<Seat>().SetDealer(dealer);
 	}
 
-	void updateChips() {
-		// foreach(KeyValuePair<int, Player> entry in GConf.Players) {
-		// 	playerObjects[entry.Key].SetPrChips(entry.Value.PrChips);
-		// }
-	}
-
 	// void  newTurn() {
 	// 	resetAllCards();
 	// 	setDealer();
-	// 	updatePot();
-	// 	updateChips();
 	// }
-
-	// void setChipsThenMove(DelegateArgs e) {
+	
+	// void onFold(object sender, DelegateArgs e) {
 	// 	var mop = e.Data.ToObject<Mop>();
-
-	// 	if (!playerObjects.ContainsKey(mop.seat)) {
-	// 		return ;
-	// 	}
-
-	// 	var obj = playerObjects[mop.seat];
-	// 	obj.SetPrChips(mop.pr_chips);
-	// 	obj.MoveOut();
+	// 	// playerObjects[mop.seat].Fold();	
 	// }
 
-	void onCheck(object sender, DelegateArgs e) {
-		// setChipsThenMove(e);
-	}
-
-	void onRaise(object sender, DelegateArgs e) {
-		// setChipsThenMove(e);
-	}
-
-	void onCall(object sender, DelegateArgs e) {
-		// setChipsThenMove(e);		
-	}
-	
-	void onAllIn(object sender, DelegateArgs e) {
-		// setChipsThenMove(e);
-	}
-	
-	void onFold(object sender, DelegateArgs e) {
-		var mop = e.Data.ToObject<Mop>();
-		// playerObjects[mop.seat].Fold();	
-	}
-
-	void onTakeMore(object sender, DelegateArgs e) {
-		var index = e.Data.Int("where");
-		var coin = e.Data.Int("coin");
-		// playerObjects[index].AddScore(coin);
-	}
+	// void onTakeMore(object sender, DelegateArgs e) {
+	// 	var index = e.Data.Int("where");
+	// 	var coin = e.Data.Int("coin");
+	// 	// playerObjects[index].AddScore(coin);
+	// }
 }

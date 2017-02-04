@@ -5,11 +5,6 @@ using UniRx;
 using UnityEngine;
 using System.Linq;
 
-sealed public class GConf {
-	public static int Pot = 0;
-	public static int PrPot = 0;
-}
-
 sealed public class Player {
 	public string Name = "";
 	public string Avatar = "";
@@ -70,6 +65,11 @@ sealed public class GameData {
 			var json = e.Data.Dict("room");
 			InitByJson(json);
 		});
+
+		RxSubjects.Deal.Subscribe((e) => {
+			GameData.Shared.Pot.Value = e.Data.Int("pot");
+			GameData.Shared.PrPot.Value = e.Data.Int("pr_pot");
+		});
 	}
 
 	public bool Owner = false;	
@@ -99,8 +99,8 @@ sealed public class GameData {
 
 	public bool TakeCoinSuccess = false;
 
-	public int Pot = 0;
-	public int PrPot = 0;
+	public ReactiveProperty<int> Pot = new ReactiveProperty<int>();
+	public ReactiveProperty<int> PrPot = new ReactiveProperty<int>();
 
 	public bool Paused = false;
 	public string GameCode = "";
@@ -127,8 +127,8 @@ sealed public class GameData {
 		DealerSeat.Value = json.Int("dealer_seat");
 		Straddle = json.Int("straddle") != 0;
 
-		Pot = json.Int("pot");
-		PrPot = json.Int("pr_pot");
+		Pot.Value = json.Int("pot");
+		PrPot.Value = json.Int("pr_pot");
 		Paused = json.Int("is_pause") != 0;
 		
 		var startTs = json.Int("begin_time");

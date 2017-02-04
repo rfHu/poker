@@ -40,8 +40,6 @@ public class PlayerObject : MonoBehaviour {
 
 		// 倒计时隐藏
 		countdown.SetActive(false);
-
-		Delegates.shared.Deal += new EventHandler<DelegateArgs>(onDeal);
 	}
 
 	private void registerRxEvent() {
@@ -88,6 +86,12 @@ public class PlayerObject : MonoBehaviour {
 				second.GetComponent<Card>().Show(cvs[1]);
 			}).AddTo(this);	
 		}
+
+		RxSubjects.Deal.Subscribe((e) => {
+			if (chipsGo != null) {
+				chipsGo.GetComponent<ChipsGo>().HideChips();
+			}
+		});
 	}
 
 	void hideName() {
@@ -97,17 +101,6 @@ public class PlayerObject : MonoBehaviour {
 	public void AddScore(int score) {
 		var has = Convert.ToInt32(scoreLabel.text);
 		scoreLabel.text = (has + score).ToString();
-	}
-
-	void OnDestroy()
-	{
-		Delegates.shared.Deal -= new EventHandler<DelegateArgs>(onDeal);
-	}
-
-	void onDeal(object sender, DelegateArgs e) {
-		if (chipsGo != null) {
-			chipsGo.GetComponent<ChipsGo>().HideChips();
-		}
 	}
 
 	void moveOut() {
