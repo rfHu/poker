@@ -77,7 +77,7 @@ sealed public class GameData {
 
 		var sceneLoaded = false; 
 		RxSubjects.Look.Subscribe((e) => {
-			byJson(e.Data.Dict("args"));
+			byJson(e.Data);
 
 			// 只允许进入一次
 			if (sceneLoaded) {
@@ -92,7 +92,7 @@ sealed public class GameData {
 
 	public bool Owner = false;	
 	public List<int> Bankroll;
-	public int PlayerCount;
+	public ReactiveProperty<int> PlayerCount = new ReactiveProperty<int>();
 	public string UserToken = ""; 
 	public string Uid = "";
 	public string Pin = "";
@@ -144,7 +144,7 @@ sealed public class GameData {
 		Owner = options.String("ownerid") == GameData.Shared.Uid;
 		Bankroll = options.IL("bankroll_multiple"); 
 		Ante = options.Int("ant");
-		PlayerCount = options.Int("max_seats");
+		PlayerCount.Value = options.Int("max_seats");
 		Rake = options.Float("rake_percent");
 		Duration = options.Int("time_limit");
 		NeedAduit = options.Int("need_audit") == 1;
