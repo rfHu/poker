@@ -71,8 +71,8 @@ sealed public class GameData {
 		});
 
 		RxSubjects.Deal.Subscribe((e) => {
-			GameData.Shared.Pot.Value = e.Data.Int("pot");
-			GameData.Shared.PrPot.Value = e.Data.Int("pr_pot");
+			Pot.Value = e.Data.Int("pot");
+			PrPot.Value = Pot.Value - e.Data.Int("pr_pot");
 		});
 
 		var sceneLoaded = false; 
@@ -87,6 +87,22 @@ sealed public class GameData {
 			}
 
 			sceneLoaded = true;
+		});
+
+		RxSubjects.Deal.Subscribe((e) => {
+			var deals = e.Data.Dict("deals").IL("-1");
+		
+			if (deals.Count <= 0) {
+				return ;
+			}
+
+			foreach(int item in deals) {
+				PublicCards.Add(item);
+			}
+		});
+
+		RxSubjects.GameStart.Subscribe((e) => {
+			PublicCards.Clear();
 		});
 	}
 
@@ -156,7 +172,7 @@ sealed public class GameData {
 		Straddle = json.Int("straddle") != 0;
 
 		Pot.Value = json.Int("pot");
-		PrPot.Value = json.Int("pr_pot");
+		PrPot.Value = Pot.Value - json.Int("pr_pot");
 		Paused = json.Int("is_pause") != 0;
 		
 		var startTs = json.Int("begin_time");
@@ -192,6 +208,8 @@ sealed public class GameData {
 	public static GameData Shared = new GameData();
 
 	public ReactiveDictionary<int, Player> Players = new ReactiveDictionary<int, Player>(); 
+
+	public ReactiveCollection<int> PublicCards = new ReactiveCollection<int>();
 
 	public class MyCmd {
 		public static bool Takecoin = false;

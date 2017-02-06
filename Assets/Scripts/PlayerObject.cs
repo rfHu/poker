@@ -91,7 +91,7 @@ public class PlayerObject : MonoBehaviour {
 			if (chipsGo != null) {
 				chipsGo.GetComponent<ChipsGo>().HideChips();
 			}
-		});
+		}).AddTo(this);
 	}
 
 	void hideName() {

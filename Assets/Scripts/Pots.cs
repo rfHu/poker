@@ -13,31 +13,26 @@ public class Pots : MonoBehaviour {
 	}
 
 	private void registerRx() {
-		GameData.Shared.PrPot.AsObservable().Subscribe((value) => {
-			toggleElement();
-			DC.text =  "底池:" + GameData.Shared.Pot.Value.ToString();	
+		GameData.Shared.Pot.AsObservable().DistinctUntilChanged().Subscribe((value) => {
+			var go = DC.gameObject;
+
+			if (value > 0) {
+				go.SetActive(true);
+			} else {
+				go.SetActive(false);
+			}
+
+			DC.text =  "底池:" + value.ToString();	
 		}).AddTo(this);
 
-		GameData.Shared.Pot.AsObservable().Subscribe((value) => {
-			toggleElement();
-
-			var prv = GameData.Shared.PrPot.Value;
-			PrevPot.text = (GameData.Shared.Pot.Value - prv).ToString();
-
-			if (prv > 0) {
+		GameData.Shared.PrPot.AsObservable().DistinctUntilChanged().Subscribe((value) => {
+			if (value > 0) {
 				PrPotGo.SetActive(true);
 			} else {
 				PrPotGo.SetActive(false);
 			} 
 
+			PrevPot.text = value.ToString();
 		}).AddTo(this);
-	}
-
-	private void toggleElement() {
-		if (GameData.Shared.PrPot.Value > 0 || GameData.Shared.Pot.Value > 0) {
-			PrPotGo.SetActive(true);
- 		} else {
-			PrPotGo.SetActive(false);
-		 }
 	}
 }

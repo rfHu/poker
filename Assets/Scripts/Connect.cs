@@ -21,7 +21,7 @@ public sealed class Connect  {
 			HTTPManager.Proxy = new HTTPProxy(new Uri("http://localhost:8888"));
 		}
 
-		GameData.Shared.UserToken = "s%3AcOvQJmoH36naCMJHtaJmECCiBvZVSHMz.DAkaf%2BQzAfFH3OFS2I5v3J%2BRN5JYDkBR9i9%2F4Q87kCM";
+		GameData.Shared.UserToken = "s%3Ain-kSaNr028dcp1cNxnPSnGHMRODiia6.K7qhkS1IsS%2FXXmU21PSZMBimNUrqjTVfktxC%2FVetV4Y";
 
 		SocketOptions options = new SocketOptions();
 		options.ConnectWith = TransportTypes.WebSocket;

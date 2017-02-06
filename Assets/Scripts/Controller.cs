@@ -201,7 +201,7 @@ public class Controller : MonoBehaviour {
 
 		RxSubjects.ChangeVectorsByIndex.AsObservable().DistinctUntilChanged().Subscribe((index) => {
 			changePositions(index);
-		});
+		}).AddTo(this);
 
 		GameData.Shared.Players.ObserveReplace().Subscribe((data) => {
 			data.OldValue.DestroyGo();
@@ -222,34 +222,14 @@ public class Controller : MonoBehaviour {
             // Skip
 		}).AddTo(this);
 
-		RxSubjects.Deal.Subscribe((e) => {
-			var deals = e.Data.Dict("deals").IL("-1");
-		
-			if (deals.Count <= 0) {
-				return ;
-			}
-
-			foreach(int item in deals) {
-				var idx = Card.CardIndex(item);
-				var card = findLastCard();
-
-				if (card != null) {
-					card.Show(idx);
-				}
-			}
+		GameData.Shared.PublicCards.ObserveAdd().Subscribe((e) => {
+			var index = Card.CardIndex(e.Value);	
+			PublicCards[e.Index].GetComponent<Card>().Show(index);
 		}).AddTo(this);
-	}
-	
-	
-	Card findLastCard() {
-		foreach(GameObject obj in PublicCards) {
-			var card = obj.GetComponent<Card>();
-			if (card.IsBack) {
-				return card;
-			}
-		}
 
-		return null;
+		GameData.Shared.PublicCards.ObserveReset().Subscribe((_) => {
+			resetAllCards();
+		}).AddTo(this);
 	}
 
 	void resetAllCards() {
@@ -276,7 +256,6 @@ public class Controller : MonoBehaviour {
 	}
 
 	// void  newTurn() {
-	// 	resetAllCards();
 	// 	setDealer();
 	// }
 	
