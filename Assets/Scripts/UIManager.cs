@@ -46,7 +46,7 @@ public class UIManager : MonoBehaviour {
             }
 		}).AddTo(this);
 
-		RxSubjects.Audit.Subscribe((e) => {
+		RxSubjects.TakeCoin.Subscribe((e) => {
 			if (e.Data != null) {
 				GameData.Shared.Coins = e.Data.Int("coins");
             }
