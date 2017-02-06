@@ -96,8 +96,12 @@ public class PlayerObject : MonoBehaviour {
 			setPrChips(value);
 		}).AddTo(this);
 
-		RxSubjects.Fold.Subscribe((_) => {
-			Fold();
+		RxSubjects.Fold.Subscribe((e) => {
+			var index = e.Data.Int("args");
+
+			if (index == Index) {
+				fold();
+			}
 		}).AddTo(this);
 
 		RxSubjects.Call.Subscribe(act).AddTo(this);
@@ -243,7 +247,7 @@ public class PlayerObject : MonoBehaviour {
 		});
 	}
 
-	public void Fold() {
+	void fold() {
 		moveOut();
 
 		var canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
