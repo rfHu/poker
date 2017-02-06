@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
-using BestHTTP.JSON;
+using UnityEngine.UI;
 
 public class _ {
     static public Texture2D Circular(Texture2D sourceTex)
@@ -43,4 +43,10 @@ public class _ {
         Type t = dict.GetType();
         return t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Dictionary<,>);
     }
+
+    static  public IEnumerator<WWW> DownloadImage(RawImage img, string url) {
+		WWW www = new WWW(url);
+		yield return www;
+		img.texture = _.Circular(www.texture);
+	}
 }

@@ -9,6 +9,7 @@ public enum AnimType {
 	Popup
 }
 
+[RequireComponent(typeof(CanvasGroup))]
 public class DOPopup : MonoBehaviour {
 	public AnimType Animate;
 

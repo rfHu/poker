@@ -14,7 +14,7 @@ public class UserDetail : MonoBehaviour {
 	public Text Join;
 	public Text JoinWin; 
 
-	void ShowById(string id) {
+	public void RequestById(string id) {
 		var d = new Dictionary<string, object>(){
 			{"uid", id}
 		};
@@ -28,7 +28,7 @@ public class UserDetail : MonoBehaviour {
 			var achieve = data.Dict("achieve");
             
 			Name.text = profile.String("name");
-			Coins.text = profile.String("coins");
+			Coins.text = achieve.String("coins");
 
 			// 入池率
 			var hands = achieve.Int("total_hand_count");
@@ -37,7 +37,7 @@ public class UserDetail : MonoBehaviour {
 			Join.text = percent(entry / (float)hands);
 
 			// 摊牌率
-			float showHand = achieve.Float("showdown_hand_count")/achieve.Float("seecard_hand_count"); 
+			float showHand = achieve.Float("showdown_hand_count") / achieve.Float("seecard_hand_count"); 
 			ShowHand.text = percent(showHand);
 
 			float win = achieve.Float("win_hand_count");

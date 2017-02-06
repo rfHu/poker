@@ -91,10 +91,12 @@ public class ScoreCtrl : MonoBehaviour {
 
 			foreach(Dictionary<string, object> guest in guestList) {
 				var guestObj = (GameObject)Instantiate(Resources.Load("Prefab/Score/Guest"));
-				guestObj.GetComponent<GuestHeader>().Uid = guest.String("uid");
+				Avatar avatar = guestObj.transform.Find("Avatar").GetComponent<Avatar>();
+				avatar.SetImage(guest.String("avatar"));
+				avatar.BeforeClick = () => {
+					GetComponent<DOPopup>().Close();
+				};
 
-				RawImage img = guestObj.transform.Find("RawImage").GetComponent<RawImage>();
-				StartCoroutine(DownloadImage(img, guest.String("avatar")));
 				guestObj.transform.Find("Text").GetComponent<Text>().text = guest.String("name");
 				guestObj.transform.SetParent(grid.transform, false);
 			} 
@@ -106,12 +108,6 @@ public class ScoreCtrl : MonoBehaviour {
 			return ;
 		}
 		InvokeRepeating("updateSecs", 1.0f, 1.0f);
-	}
-
-	IEnumerator<WWW> DownloadImage(RawImage img, string url) {
-		WWW www = new WWW(url);
-		yield return www;
-		img.texture = _.Circular(www.texture);
 	}
 
 	void OnDestroy()
