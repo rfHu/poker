@@ -132,7 +132,9 @@ public class PlayerObject : MonoBehaviour {
 			cgo = chips.GetComponent<ChipsGo>();
 			cgo.Create(value);
 		} else {
-			chips.GetComponent<ChipsGo>().AddMore(value);	
+			chips.GetComponent<ChipsGo>().AddMore(() => {
+				cgo.SetChips(value);
+			});	
 		}	
 	}
 

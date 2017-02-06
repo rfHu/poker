@@ -2,10 +2,10 @@
 using UnityEngine.UI;
 using DG.Tweening;
 using UniRx;
+using System;
 
 public class ChipsGo : MonoBehaviour {
 	public Text TextNumber;
-	int chips;
 
 	void Awake() {
 		RxSubjects.Deal.Subscribe((e) => {
@@ -13,34 +13,27 @@ public class ChipsGo : MonoBehaviour {
 		}).AddTo(this);
 	}
 
-	void setChips(int chips) {
-		if (this.chips == chips) {
-			return ;
-		}
-		
-		this.chips = chips;
+	public void SetChips(int chips) {
 		TextNumber.text = chips.ToString();
-		TextNumber.gameObject.SetActive(true);
 	}
 
 	public void Create(int value) {
-		create(value);
-	}
-
-	public void AddMore(int value) {
-		create(value, true);
-	}
-
-	private void create(int value, bool add = false) {
-		GetComponent<RectTransform>()
-		.DOAnchorPos(new Vector2(80, 0), 0.4f)
-		.OnComplete(() => {
-			setChips(value);
-
-			if (add) {
-				Destroy(gameObject);	
-			}
+		doTween().OnComplete(() => {
+			SetChips(value);
 		});
+	}
+
+	public void AddMore(Action callback) {
+		TextNumber.enabled = false;
+		doTween().OnComplete(() => {
+			Destroy(gameObject);	
+			callback();
+		});
+	}
+
+	private Tweener doTween() {
+		return GetComponent<RectTransform>()
+		.DOAnchorPos(new Vector2(80, 0), 0.4f);
 	}
 
 	void hideChips() {
