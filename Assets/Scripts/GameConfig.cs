@@ -12,7 +12,7 @@ sealed public class Player {
 	public string Uid = "";
 	public int Bankroll = 0;
 	public int Index;
-	public int PrChips = 0;
+	public ReactiveProperty<int> PrChips = new ReactiveProperty<int>();
 	private GameObject Go;
 
 	public void DestroyGo() {
@@ -26,7 +26,7 @@ sealed public class Player {
 		Go = (GameObject)GameObject.Instantiate(Resources.Load("Prefab/Player"));
 		Go.GetComponent<PlayerObject>().ShowPlayer(this, parent);
 	}
-
+	
 	public Player(Dictionary<string, object> json, int index) {
 		Name = json.String("name");
 		Avatar = json.String("avatar");
@@ -36,7 +36,7 @@ sealed public class Player {
 		Bankroll = json.Int("bankroll");
 
 		// 用户该轮上的筹码
-		PrChips = json.Int("pr_chips");
+		PrChips.Value = json.Int("pr_chips");
 
 		Index = index;
 	}

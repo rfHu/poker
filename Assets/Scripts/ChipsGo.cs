@@ -1,12 +1,19 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using UniRx;
 
 public class ChipsGo : MonoBehaviour {
 	public Text TextNumber;
 	int chips;
 
-	public void SetChips(int chips) {
+	void Awake() {
+		RxSubjects.Deal.Subscribe((e) => {
+			hideChips();
+		}).AddTo(this);
+	}
+
+	void setChips(int chips) {
 		if (this.chips == chips) {
 			return ;
 		}
@@ -16,7 +23,27 @@ public class ChipsGo : MonoBehaviour {
 		TextNumber.gameObject.SetActive(true);
 	}
 
-	public void HideChips() {
+	public void Create(int value) {
+		create(value);
+	}
+
+	public void AddMore(int value) {
+		create(value, true);
+	}
+
+	private void create(int value, bool add = false) {
+		GetComponent<RectTransform>()
+		.DOAnchorPos(new Vector2(80, 0), 0.4f)
+		.OnComplete(() => {
+			setChips(value);
+
+			if (add) {
+				Destroy(gameObject);	
+			}
+		});
+	}
+
+	void hideChips() {
 		var canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
 		transform.SetParent(canvas.transform, true);
 		
@@ -25,9 +52,5 @@ public class ChipsGo : MonoBehaviour {
 		.OnComplete(() => {
 			Destroy(gameObject);
 		});
-	}
-
-	public bool Same(int chips) {
-		return this.chips == chips;
 	}
 }

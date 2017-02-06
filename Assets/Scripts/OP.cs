@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using System;
 using Extensions;
 using UnityEngine.UI;
 
@@ -17,23 +16,20 @@ public class OP : MonoBehaviour {
 	public Text CallNumber;
 	public Text CallText;
 
-	Action r1Act;
-	Action r2Act;
-	Action r3Act;
-	Action callAct;
-
 	public void StartWithCmds(Dictionary<string, object> data) {
         var cmds = data.Dict("cmds");
 		var check = cmds.Bool("check");
 		var callNum = cmds.Int("call");
 
-		if (check) {
-			callAct = OPS.check;	
+		if (check) { // 看牌
+			CallGo.GetComponent<Button>().onClick.AddListener(OPS.check);
 			CallGo.GetComponent<Image>().sprite = CheckSpr;
 			CallNumber.gameObject.SetActive(false);
 			CallText.text = "看牌";
-		} else {
-			callAct = OPS.call;
+		} else { // 跟注
+			CallGo.GetComponent<Button>().onClick.AddListener(() => {
+				OPS.call();
+			});
 			CallGo.GetComponent<Image>().sprite = CallSpr;
 			CallNumber.gameObject.SetActive(true);
 			CallNumber.text = callNum.ToString();
@@ -47,41 +43,25 @@ public class OP : MonoBehaviour {
 		Debug.Log("OnClick");
 	}
 
-	public void OnCallClick() {
-		callAct();
-	}
-
 	public void OnFoldClick() {
 		OPS.fold();
 	}
 
-	public void OnR1Click() {
-		r1Act();
-	}
-
-	public void OnR2Click() {
-		r2Act();
-	}
-
-	public void OnR3Click() {
-		r3Act();
-	}
-
 	class OPS {
 		internal static void fold() {
-			OPS.callFunc("fold");	
+			OPS.invoke("fold");	
 		}
 
 		internal static void call() {
-			OPS.callFunc("call");		
+			OPS.invoke("call");		
 		}
 
 		internal static void check() {
-			OPS.callFunc("check");		
+			OPS.invoke("check");		
 		}
 
 		internal static void allIn() {
-			OPS.callFunc("all_in");
+			OPS.invoke("all_in");
 		}
 
 		internal static void raise(int number) {
@@ -91,7 +71,7 @@ public class OP : MonoBehaviour {
 			});
 		}
 
-		internal static void callFunc(string f) {
+		internal static void invoke(string f) {
 			Connect.Shared.Emit(new Dictionary<string, object>() {
 				{"f" , f}
 			});

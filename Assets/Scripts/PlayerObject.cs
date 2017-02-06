@@ -25,9 +25,10 @@ public class PlayerObject : MonoBehaviour {
 
 	GameObject OPGo;
 	GameObject circle;
-	private float animDuration = 0.2f;
 
-	GameObject chipsGo; 
+	private ChipsGo cgo; 
+
+	private Player player;
 
 	void Awake() {
 		var info = transform.Find("Info");
@@ -87,21 +88,58 @@ public class PlayerObject : MonoBehaviour {
 			}).AddTo(this);	
 		}
 
-		RxSubjects.Deal.Subscribe((e) => {
-			if (chipsGo != null) {
-				chipsGo.GetComponent<ChipsGo>().HideChips();
+		player.PrChips.AsObservable().DistinctUntilChanged().Subscribe((value) => {
+			if (value == 0) {
+				return ;
 			}
+
+			setPrChips(value);
 		}).AddTo(this);
+
+		RxSubjects.Fold.Subscribe((_) => {
+			Fold();
+		}).AddTo(this);
+
+		RxSubjects.Call.Subscribe(act).AddTo(this);
+
+		RxSubjects.AllIn.Subscribe(act).AddTo(this);
+
+		RxSubjects.Check.Subscribe(act).AddTo(this);
+
+		RxSubjects.Raise.Subscribe(act).AddTo(this);
+	}
+
+	private void act(RxData e) {
+		var mop = e.Data.ToObject<Mop>();
+
+		if (mop.seat != Index) {
+			return ;
+		}	
+
+		player.PrChips.Value = mop.pr_chips;
+		moveOut();
+	}
+
+	void setPrChips(int value) {
+		var chips = (GameObject)Instantiate(Resources.Load("Prefab/UpChip"));
+		chips.transform.SetParent(transform, false);
+
+		if (cgo == null) {
+			cgo = chips.GetComponent<ChipsGo>();
+			cgo.Create(value);
+		} else {
+			chips.GetComponent<ChipsGo>().AddMore(value);	
+		}	
 	}
 
 	void hideName() {
 		nameLabel.gameObject.SetActive(false);
 	}
 
-	public void AddScore(int score) {
-		var has = Convert.ToInt32(scoreLabel.text);
-		scoreLabel.text = (has + score).ToString();
-	}
+	// public void AddScore(int score) {
+	// 	var has = Convert.ToInt32(scoreLabel.text);
+	// 	scoreLabel.text = (has + score).ToString();
+	// }
 
 	void moveOut() {
 		activated = false;
@@ -118,6 +156,8 @@ public class PlayerObject : MonoBehaviour {
 	public void ShowPlayer(Player player, Transform parent) {
 		Index = player.Index;
 		Uid = player.Uid;
+
+		this.player = player;
 
 		if (Uid == GameData.Shared.Uid) {
 			hideName();
@@ -147,15 +187,15 @@ public class PlayerObject : MonoBehaviour {
 		img.texture = _.Circular(www.texture);
 	}	
 
-	public void turnTo(Dictionary<string, object> dict) {
+	private void turnTo(Dictionary<string, object> dict) {
 		if (Uid == GameData.Shared.Uid) {
 			showOP(dict);
 		} else {
-			StartCoroutine(MyTurn());				
+			StartCoroutine(myTurn());				
 		}
 	}
 
-	public IEnumerator MyTurn(float elaspe = 0) {
+	private IEnumerator myTurn(float elaspe = 0) {
 		countdown.SetActive(true);
 		activated = true;
 
@@ -177,61 +217,22 @@ public class PlayerObject : MonoBehaviour {
 		countdown.SetActive(false);
 	}
 
-	void setChipText(int prchips) {
-		if (chipsGo == null) {
-			return ;
-		}
-
-		chipsGo.GetComponent<ChipsGo>().SetChips(prchips);
-	}
-
-	GameObject createChip(int prchips, Action<GameObject> callback = null) {
-		var chips = (GameObject)Instantiate(Resources.Load("Prefab/UpChip"));
-		chips.transform.SetParent(transform, false);
-
-		chips.GetComponent<RectTransform>()
-		.DOAnchorPos(new Vector2(80, 0), animDuraion)
-		.OnComplete(() => {
-			setChipText(prchips);
-
-			if (callback != null) {
-				callback(chips);
-			}
-		});
-
-		return chips;
-	}
-
-	public void SetPrChips(int prchips) {
-		if (prchips == 0) {
-			return ;	
-		}
-
-		if (chipsGo == null) {
-			chipsGo = createChip(prchips);			
-		} else if (!chipsGo.GetComponent<ChipsGo>().Same(prchips)) {
-			createChip(prchips, (go) => {
-				Destroy(go);
-			});
-		}
-	}
-
 	float opacity = 0.7f;
-	float animDuraion = 0.4f;
+	float animDuration = 0.4f;
 
 	void foldCards(GameObject go, Action callback = null) {
 		var rectTrans = go.GetComponent<RectTransform>();
-		rectTrans.DOAnchorPos(new Vector2(0, 0), animDuraion);
-		rectTrans.DOScale(new Vector2(0.5f, 0.5f), animDuraion);
+		rectTrans.DOAnchorPos(new Vector2(0, 0), animDuration);
+		rectTrans.DOScale(new Vector2(0.5f, 0.5f), animDuration);
 
 		var image = go.GetComponent<Image>();
 		Tween tween; 
 
 		if (image != null) {
-			tween = image.DOFade(0, animDuraion);
+			tween = image.DOFade(0, animDuration);
 		} else {
 			var canvasGrp = go.GetComponent<CanvasGroup>();
-			tween = canvasGrp.DOFade(0, animDuraion);
+			tween = canvasGrp.DOFade(0, animDuration);
 		}
 
 		tween.OnComplete(() => {
