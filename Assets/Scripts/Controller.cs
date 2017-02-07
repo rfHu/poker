@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System;
-using Extensions;
 using System.Linq;
 using DG.Tweening;
 using UniRx;
@@ -254,19 +253,4 @@ public class Controller : MonoBehaviour {
 
 		Seats[index].GetComponent<Seat>().SetDealer(dealer);
 	}
-
-	// void  newTurn() {
-	// 	setDealer();
-	// }
-	
-	// void onFold(object sender, DelegateArgs e) {
-	// 	var mop = e.Data.ToObject<Mop>();
-	// 	// playerObjects[mop.seat].Fold();	
-	// }
-
-	// void onTakeMore(object sender, DelegateArgs e) {
-	// 	var index = e.Data.Int("where");
-	// 	var coin = e.Data.Int("coin");
-	// 	// playerObjects[index].AddScore(coin);
-	// }
 }

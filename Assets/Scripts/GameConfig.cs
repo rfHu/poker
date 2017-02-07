@@ -10,7 +10,7 @@ sealed public class Player {
 	public string Name = "";
 	public string Avatar = "";
 	public string Uid = "";
-	public int Bankroll = 0;
+	public ReactiveProperty<int> Bankroll = new ReactiveProperty<int>();
 	public int Index;
 	public ReactiveProperty<int> PrChips = new ReactiveProperty<int>();
 	private GameObject Go;
@@ -33,7 +33,7 @@ sealed public class Player {
 		Uid = json.String("uid");
 		
 		// 用户记分牌
-		Bankroll = json.Int("bankroll");
+		Bankroll.Value = json.Int("bankroll");
 
 		// 用户该轮上的筹码
 		PrChips.Value = json.Int("pr_chips");
@@ -103,6 +103,15 @@ sealed public class GameData {
 
 		RxSubjects.GameStart.Subscribe((e) => {
 			PublicCards.Clear();
+		});
+
+		RxSubjects.TakeMore.Subscribe((e) => {
+			var index = e.Data.Int("where");
+			var coin = e.Data.Int("coin");
+
+			if (Players.ContainsKey(index)) {
+				Players[index].Bankroll.Value += coin;
+			}
 		});
 	}
 

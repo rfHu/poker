@@ -111,6 +111,10 @@ public class PlayerObject : MonoBehaviour {
 		RxSubjects.Check.Subscribe(act).AddTo(this);
 
 		RxSubjects.Raise.Subscribe(act).AddTo(this);
+
+		player.Bankroll.Subscribe((value) => {
+			scoreLabel.text = value.ToString();
+		}).AddTo(this);
 	}
 
 	private void act(RxData e) {
@@ -141,11 +145,6 @@ public class PlayerObject : MonoBehaviour {
 	void hideName() {
 		nameLabel.gameObject.SetActive(false);
 	}
-
-	// public void AddScore(int score) {
-	// 	var has = Convert.ToInt32(scoreLabel.text);
-	// 	scoreLabel.text = (has + score).ToString();
-	// }
 
 	void moveOut() {
 		activated = false;
