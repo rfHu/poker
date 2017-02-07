@@ -4,8 +4,10 @@ using UniRx;
 
 public class RxData: EventArgs {
 	public Dictionary<string, object> Data;
-	public RxData(Dictionary<string, object> data) {
+	public string E;
+	public RxData(Dictionary<string, object> data, string e) {
 		Data = data;
+		E = e;
 	}
 
 	public RxData(){}

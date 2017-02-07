@@ -5,6 +5,15 @@ using UniRx;
 using System.Linq;
 using UnityEngine.SceneManagement;
 
+public enum ActionState {
+	None = 0,
+	Fold = 1,
+	Check = 2,
+	Allin = 3,
+	Call = 4,
+	Raise= 5
+}
+
 sealed public class Player {
 	public string Name = "";
 	public string Avatar = "";
@@ -12,6 +21,10 @@ sealed public class Player {
 	public ReactiveProperty<int> Bankroll = new ReactiveProperty<int>();
 	public int Index;
 	public ReactiveProperty<int> PrChips = new ReactiveProperty<int>();
+
+	public ReactiveProperty<ActionState> ActState = new ReactiveProperty<ActionState>();
+
+	public ReactiveProperty<List<int>> Cards = new ReactiveProperty<List<int>>();
 	
 	public Player(Dictionary<string, object> json, int index) {
 		Name = json.String("name");
@@ -25,6 +38,12 @@ sealed public class Player {
 		PrChips.Value = json.Int("pr_chips");
 
 		Index = index;
+	}
+
+	public ReactiveProperty<bool> Destroyed = new ReactiveProperty<bool>(false);
+
+	public void Destroy() {
+		Destroyed.Value = true;
 	}
 }
 
@@ -105,6 +124,38 @@ sealed public class GameData {
 			var index = e.Data.Int("where");
 			var bankroll = e.Data.Int("bankroll");
 			Players[index].Bankroll.Value = bankroll;	
+		});
+
+		RxSubjects.Fold.Subscribe((e) => {
+			var index = e.Data.Int("seat");
+			Players[index].ActState.Value = ActionState.Fold;
+		});
+
+		Action<RxData> act = (e) => {
+			var mop = e.Data.ToObject<Mop>();
+			var map = new Dictionary<string, ActionState>() {
+				{"call", ActionState.Call},
+				{"check", ActionState.Check},
+				{"allin", ActionState.Allin},
+				{"raise", ActionState.Raise}
+			};
+
+			Pot.Value = mop.pot;
+			
+			var player = Players[mop.seat];
+			player.PrChips.Value = mop.pr_chips;
+			player.ActState.Value = map[e.E];	
+		};
+
+		RxSubjects.Call.Subscribe(act);
+		RxSubjects.AllIn.Subscribe(act);
+		RxSubjects.Check.Subscribe(act);
+		RxSubjects.Raise.Subscribe(act);
+
+		RxSubjects.SeeCard.Subscribe((e) => {
+			var cards = e.Data.IL("cards");
+			var index = e.Data.Int("seat");
+			Players[index].Cards.Value = cards;
 		});
 	}
 

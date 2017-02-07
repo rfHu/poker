@@ -5,7 +5,6 @@ using System;
 using System.Linq;
 using DG.Tweening;
 using UniRx;
-using Extensions;
 
 public class Controller : MonoBehaviour {
 	public GameObject seat;
@@ -172,26 +171,11 @@ public class Controller : MonoBehaviour {
 		label.transform.SetParent(gameInfoWrapper.transform, false);
 	}
 
-	private Dictionary<int, PlayerObject> players = new Dictionary<int, PlayerObject>();
-
-	private void destroyPlayer(int index) {
-		if (!players.ContainsKey(index)) {
-			return ;
-		}
-
-		var item = players[index];
-		players.Remove(index);
-		Destroy(item);
-	}
-
 	void registerRxEvents() {
 		Action<Player> showPlayer = (obj) => {
 			var parent = Seats[obj.Index].transform;
 			var go = (GameObject)GameObject.Instantiate(Resources.Load("Prefab/Player"));
-			var po = go.GetComponent<PlayerObject>();
-			
-			players[obj.Index] = po;
-			po.ShowPlayer(obj, parent);
+			go.GetComponent<PlayerObject>().ShowPlayer(obj, parent);
 		};
 
 		Action<int> enableSeat = (index) => {
@@ -220,7 +204,7 @@ public class Controller : MonoBehaviour {
 		}).AddTo(this);
 
 		GameData.Shared.Players.ObserveReplace().Subscribe((data) => {
-			destroyPlayer(data.OldValue.Index);
+			data.OldValue.Destroy();
 			enableSeat(data.OldValue.Index);
 			showPlayer(data.NewValue);	
 		}).AddTo(this);
@@ -231,7 +215,7 @@ public class Controller : MonoBehaviour {
 
 		GameData.Shared.Players.ObserveRemove().Subscribe((data) => {
 			enableSeat(data.Value.Index);
-			destroyPlayer(data.Value.Index);
+			data.Value.Destroy();
 		}).AddTo(this);
 
 		GameData.Shared.Players.ObserveReset().Subscribe((data) => {
@@ -255,27 +239,6 @@ public class Controller : MonoBehaviour {
 
 			Seats[value].GetComponent<Seat>().SetDealer(dealer);
 		}).AddTo(this);
-
-		RxSubjects.SeeCard.Subscribe((e) => {
-			var cards = e.Data.IL("cards");
-			var index = e.Data.Int("seat");
-			players[index].SeeCard(cards);	
-		}).AddTo(this);
-
-		RxSubjects.Fold.Subscribe((e) => {
-			var index = e.Data.Int("seat");
-			players[index].Fold();
-		}).AddTo(this);
-
-		Action<RxData> act = (e) => {
-			var mop = e.Data.ToObject<Mop>();
-			players[mop.seat].Act(mop);
-		};
-
-		RxSubjects.Call.Subscribe(act).AddTo(this);
-		RxSubjects.AllIn.Subscribe(act).AddTo(this);
-		RxSubjects.Check.Subscribe(act).AddTo(this);
-		RxSubjects.Raise.Subscribe(act).AddTo(this);
 	}
 
 	void resetAllCards() {

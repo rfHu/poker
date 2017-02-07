@@ -148,7 +148,7 @@ public sealed class Connect  {
 				return ;
 			}
 
-			var rxdata = new RxData(json.Dict("args"));
+			var rxdata = new RxData(json.Dict("args"), json.String("e"));
 
 			if (e == "prompt") {
 				GameData.MyCmd.SetCmd(rxdata.Data);

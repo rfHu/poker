@@ -44,16 +44,6 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	private void registerRxEvent() {
-		RxSubjects.MoveTurn.Subscribe((e) => {
-			var index = e.Data.Int("seat");
-			
-			if (index == Index) {
-				turnTo(e.Data);
-			} else {
-				moveOut();
-			}
-		}).AddTo(this);
-
 		player.PrChips.AsObservable().DistinctUntilChanged().Subscribe((value) => {
 			if (value == 0) {
 				return ;
@@ -64,6 +54,37 @@ public class PlayerObject : MonoBehaviour {
 
 		player.Bankroll.Subscribe((value) => {
 			scoreLabel.text = value.ToString();
+		}).AddTo(this);
+
+		player.ActState.Subscribe((e) => {
+			if (e == ActionState.None) {
+				return ;
+			}
+
+			if (e == ActionState.Fold) {
+				Fold();
+			} else {
+				moveOut();
+			}
+		}).AddTo(this);
+
+		player.Destroyed.AsObservable().Where((v) => v).Subscribe((_) => {
+			Destroy(gameObject);
+		}).AddTo(this);
+
+		// @TODO: 这段逻辑放这里不是很好
+		RxSubjects.MoveTurn.Subscribe((e) => {
+			var index = e.Data.Int("seat");
+			
+			if (index == Index) {
+				turnTo(e.Data);
+			} else {
+				moveOut();
+			}
+		}).AddTo(this);
+
+		player.Cards.AsObservable().Where((cards) => cards != null && cards.Count == 2).Subscribe((cards) => {
+			SeeCard(cards);
 		}).AddTo(this);
 	}
 
@@ -84,12 +105,6 @@ public class PlayerObject : MonoBehaviour {
 
 	public void Gameover() {
 
-	}
-
-	public void Act(Mop mop) {
-		GameData.Shared.Pot.Value = mop.pot;
-		player.PrChips.Value = mop.pr_chips;
-		moveOut();
 	}
 
 	void setPrChips(int value) {
