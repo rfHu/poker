@@ -229,6 +229,15 @@ public class Controller : MonoBehaviour {
 		GameData.Shared.PublicCards.ObserveReset().Subscribe((_) => {
 			resetAllCards();
 		}).AddTo(this);
+
+		GameData.Shared.DealerSeat.Subscribe((value) => {
+			if (dealer == null) {
+				dealer = (GameObject)Instantiate(Resources.Load("Prefab/Dealer"));
+				dealer.transform.SetParent(canvas.transform, false);
+			}
+
+			Seats[value].GetComponent<Seat>().SetDealer(dealer);
+		});
 	}
 
 	void resetAllCards() {
@@ -237,20 +246,5 @@ public class Controller : MonoBehaviour {
 			card.Turnback();
 			card.Hide();
 		}		
-	}
-
-	void setDealer() {
-		var index = GameData.Shared.DealerSeat.Value;
-
-		if (index == -1) {
-			return ;
-		}
-
-		if (dealer == null) {
-			dealer = (GameObject)Instantiate(Resources.Load("Prefab/Dealer"));
-			dealer.transform.SetParent(canvas.transform, false);
-		}
-
-		Seats[index].GetComponent<Seat>().SetDealer(dealer);
 	}
 }
