@@ -138,34 +138,34 @@ public class Controller : MonoBehaviour {
 			roomName = "佚名";
 		}
 
-		AddGameInfo(string.Format("{0}", roomName));
+		addGameInfo(string.Format("{0}", roomName));
 
 		var sb = GameData.Shared.SB;
 		var bb = GameData.Shared.BB; 
 
 		if (GameData.Shared.Straddle) {
-			AddGameInfo(string.Format("盲注:{0}/{1}/{2}", sb, bb, bb * 2));			
+			addGameInfo(string.Format("盲注:{0}/{1}/{2}", sb, bb, bb * 2));			
  		} else {
-			AddGameInfo(string.Format("盲注:{0}/{1}", sb, bb));
+			addGameInfo(string.Format("盲注:{0}/{1}", sb, bb));
 		}
 
 		if (!string.IsNullOrEmpty(GameData.Shared.GameCode)) {
-			AddGameInfo(String.Format("邀请码:{0}", GameData.Shared.GameCode));
+			addGameInfo(String.Format("邀请码:{0}", GameData.Shared.GameCode));
 		}
 
 		var ipLimit = GameData.Shared.IPLimit;
 		var gpsLimit = GameData.Shared.GPSLimit;
 
 		if (ipLimit && gpsLimit) {
-			AddGameInfo("IP、GPS限制");
+			addGameInfo("IP、GPS限制");
 		} else if (gpsLimit) {
-			AddGameInfo("GPS限制");
+			addGameInfo("GPS限制");
 		} else if (ipLimit) {
-			AddGameInfo("IP限制");
+			addGameInfo("IP限制");
 		}
 	}
 
-	void AddGameInfo(string text) {
+	private void addGameInfo(string text) {
 		GameObject label = Instantiate(gameInfo);
 		label.GetComponent<Text>().text = text;
 		label.transform.SetParent(gameInfoWrapper.transform, false);
@@ -230,14 +230,14 @@ public class Controller : MonoBehaviour {
 			resetAllCards();
 		}).AddTo(this);
 
-		GameData.Shared.DealerSeat.Subscribe((value) => {
+		GameData.Shared.DealerSeat.AsObservable().Where((value) => value > 0).Subscribe((value) => {
 			if (dealer == null) {
 				dealer = (GameObject)Instantiate(Resources.Load("Prefab/Dealer"));
 				dealer.transform.SetParent(canvas.transform, false);
 			}
 
 			Seats[value].GetComponent<Seat>().SetDealer(dealer);
-		});
+		}).AddTo(this);
 	}
 
 	void resetAllCards() {

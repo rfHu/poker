@@ -124,6 +124,7 @@ public class PlayerObject : MonoBehaviour {
 			return ;
 		}	
 
+		GameData.Shared.Pot.Value = mop.pot;
 		player.PrChips.Value = mop.pr_chips;
 		moveOut();
 	}

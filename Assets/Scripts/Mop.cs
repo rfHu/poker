@@ -7,4 +7,5 @@ public class Mop
     public int seat { get; set; }
     public int pr_chips { get; set; }
     public int bankroll { get; set; }
+    public int pot {get; set;}
 }

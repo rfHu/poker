@@ -20,6 +20,7 @@ public class OP : MonoBehaviour {
         var cmds = data.Dict("cmds");
 		var check = cmds.Bool("check");
 		var callNum = cmds.Int("call");
+		var raise = cmds.IL("raise");
 
 		if (check) { // 看牌
 			CallGo.GetComponent<Button>().onClick.AddListener(OPS.check);
@@ -37,6 +38,32 @@ public class OP : MonoBehaviour {
 		}
 
 		FoldGo.GetComponent<CircleMask>().Enable();
+		setRaiseButtons(raise, callNum);
+	}
+
+	private void setRaiseButtons(List<int> range, int call) {
+		// 底池小于二倍	
+		var pot = GameData.Shared.Pot.Value;
+		var bb = GameData.Shared.BB;
+
+		if (pot < 2 * bb) {
+			addProperty(R1, string.Format("X2\n盲注"), 2 * bb);	
+			addProperty(R1, string.Format("X3\n盲注"), 3 * bb);	
+			addProperty(R1, string.Format("X4\n盲注"), 4 * bb);	
+		} else {
+			var nextPot = pot + call;
+			addProperty(R1, string.Format("1/2\n底池"), nextPot / 2 + call);
+			addProperty(R1, string.Format("2/3\n底池"), nextPot * 2 / 3 + call);
+			addProperty(R1, string.Format("1倍\n底池"), nextPot + call);
+		}
+	}
+
+	private void addProperty(GameObject go, string text, int value) {
+		go.transform.Find("Text").GetComponent<Text>().text = text;
+		go.transform.Find("Number").GetComponent<Text>().text = value.ToString();
+		go.GetComponent<Button>().onClick.AddListener(() => {
+			OPS.raise(value);
+		});
 	}
 
 	public void OnRaiseClick() {
