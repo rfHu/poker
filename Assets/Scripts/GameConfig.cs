@@ -42,8 +42,34 @@ sealed public class Player {
 
 	public ReactiveProperty<bool> Destroyed = new ReactiveProperty<bool>(false);
 
+	public ReactiveProperty<GameoverJson> Winner = new ReactiveProperty<GameoverJson>();
+
 	public void Destroy() {
 		Destroyed.Value = true;
+	}
+}
+
+public class GameoverJson {
+	public List<int> cards { get; set; }
+	public int prize { get; set; }
+	public int chips {get; set;}
+	public string uid { get; set; }
+	public int seat { get; set; }
+
+	public bool IsWinner() {
+		return prize - chips >= 0 && chips > 0;
+	}
+
+	public int Gain() {
+		return prize - chips;
+	}
+
+	public GameoverJson(Dictionary<string, object> dict) {
+		prize = dict.Int("prize");
+		chips = dict.Int("chips");
+		uid = dict.String("uid");
+		seat = dict.Int("seat");
+		cards = dict.IL("cards");
 	}
 }
 
@@ -145,6 +171,7 @@ sealed public class GameData {
 			var player = Players[mop.seat];
 			player.PrChips.Value = mop.pr_chips;
 			player.ActState.Value = map[e.E];	
+			player.Bankroll.Value = mop.bankroll;
 		};
 
 		RxSubjects.Call.Subscribe(act);
@@ -157,10 +184,20 @@ sealed public class GameData {
 			var index = e.Data.Int("seat");
 			Players[index].Cards.Value = cards;
 		});
+
+		RxSubjects.GameOver.Subscribe((e) => {
+			foreach(KeyValuePair<string, object> item in e.Data) {
+				var dict = (Dictionary<string, object>)item.Value;
+				var json = new GameoverJson(dict); 
+				if (json.IsWinner()) {
+					Players[Convert.ToInt32(item.Key)].Winner.Value = json;
+				}
+			}
+		});
 	}
 
 	public bool Owner = false;	
-	public List<int> Bankroll;
+	public List<int> BankrollMul;
 	public ReactiveProperty<int> PlayerCount = new ReactiveProperty<int>();
 	public string UserToken = ""; 
 	public string Uid = "";
@@ -211,7 +248,7 @@ sealed public class GameData {
 		var gamers = json.Dict("gamers");
 
 		Owner = options.String("ownerid") == GameData.Shared.Uid;
-		Bankroll = options.IL("bankroll_multiple"); 
+		BankrollMul = options.IL("bankroll_multiple"); 
 		Ante = options.Int("ant");
 		PlayerCount.Value = options.Int("max_seats");
 		Rake = options.Float("rake_percent");

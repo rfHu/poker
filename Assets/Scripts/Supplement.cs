@@ -16,8 +16,8 @@ public class Supplement : MonoBehaviour {
 	// Use this for initialization
 	void Start() {
 		int score = GameData.Shared.BB * 100; 
-		int min = GameData.Shared.Bankroll[0] * score;
-		int max = GameData.Shared.Bankroll[1] * score;
+		int min = GameData.Shared.BankrollMul[0] * score;
+		int max = GameData.Shared.BankrollMul[1] * score;
 
 		Blind.text = string.Format("{0}/{1}", GameData.Shared.BB / 2, GameData.Shared.BB);
 		Coins.text = GameData.Shared.Coins.ToString();

@@ -68,22 +68,22 @@ namespace Extensions {
 	  public static T ToObject<T>(this Dictionary<string, object> source)
         where T : class, new()
     {
-            T someObject = new T();
-            Type someObjectType = someObject.GetType();
+            T result = new T();
+            Type type = result.GetType();
 
-            foreach (KeyValuePair<string, object> item in source)
+            foreach (var item in source)
             {
-				PropertyInfo property = someObjectType.GetProperty(item.Key);
+				PropertyInfo property = type.GetProperty(item.Key);
 
 				if (property == null) {
 					continue;
 				}
 
 				Type propType = property.PropertyType;
-                someObjectType.GetProperty(item.Key).SetValue(someObject, Convert.ChangeType(item.Value, propType), null);
+				property.SetValue(result, Convert.ChangeType(item.Value, propType), null);
             }
 
-            return someObject;
+            return result;
     }
 
     public static Dictionary<string, object> AsDictionary(this object source, BindingFlags bindingAttr = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance)

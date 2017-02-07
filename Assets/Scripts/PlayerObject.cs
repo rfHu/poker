@@ -30,6 +30,9 @@ public class PlayerObject : MonoBehaviour {
 
 	private Player player;
 
+	public GameObject Stars;
+	public Text WinNumber;
+
 	void Awake() {
 		var info = transform.Find("Info");
 
@@ -86,6 +89,16 @@ public class PlayerObject : MonoBehaviour {
 		player.Cards.AsObservable().Where((cards) => cards != null && cards.Count == 2).Subscribe((cards) => {
 			SeeCard(cards);
 		}).AddTo(this);
+
+		player.Winner.AsObservable().Where((winner) => winner != null).Subscribe((winner) => {
+			var gain = winner.Gain();
+			if (gain > 0) {
+				Stars.SetActive(true);
+			}
+
+			WinNumber.transform.parent.gameObject.SetActive(true); 
+			WinNumber.text = gain.ToString();
+		}).AddTo(this);
 	}
 
 	public void SeeCard(List<int> cards) {
@@ -101,10 +114,6 @@ public class PlayerObject : MonoBehaviour {
 
 		first.GetComponent<Card>().Show(cvs[0]);
 		second.GetComponent<Card>().Show(cvs[1]);
-	}
-
-	public void Gameover() {
-
 	}
 
 	void setPrChips(int value) {
