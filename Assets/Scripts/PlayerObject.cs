@@ -44,17 +44,6 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	private void registerRxEvent() {
-		RxSubjects.Ready.Subscribe((e) => {
-			var data = e.Data;
-
-			if (data.Int("where") != Index) {
-				return ;
-			}
-
-			var bankroll = data.Int("bankroll");
-			scoreLabel.text = bankroll.ToString();
-		}).AddTo(this);
-
 		RxSubjects.MoveTurn.Subscribe((e) => {
 			var index = e.Data.Int("seat");
 			
@@ -65,29 +54,6 @@ public class PlayerObject : MonoBehaviour {
 			}
 		}).AddTo(this);
 
-		if (Uid == GameData.Shared.Uid) {
-			RxSubjects.SeeCard.Subscribe((e) => {
-				if (Uid != GameData.Shared.Uid) {
-					return ;
-				}
-
-				var cards = e.Data.IL("cards");
-
-				int[] cvs = new int[]{
-					Card.CardIndex(cards[0]),
-					Card.CardIndex(cards[1])
-				};
-
-				var first = MyCards.transform.Find("First");
-				var second = MyCards.transform.Find("Second");
-
-				MyCards.SetActive(true);
-
-				first.GetComponent<Card>().Show(cvs[0]);
-				second.GetComponent<Card>().Show(cvs[1]);
-			}).AddTo(this);	
-		}
-
 		player.PrChips.AsObservable().DistinctUntilChanged().Subscribe((value) => {
 			if (value == 0) {
 				return ;
@@ -96,34 +62,31 @@ public class PlayerObject : MonoBehaviour {
 			setPrChips(value);
 		}).AddTo(this);
 
-		RxSubjects.Fold.Subscribe((e) => {
-			var index = e.Data.Int("args");
-
-			if (index == Index) {
-				fold();
-			}
-		}).AddTo(this);
-
-		RxSubjects.Call.Subscribe(act).AddTo(this);
-
-		RxSubjects.AllIn.Subscribe(act).AddTo(this);
-
-		RxSubjects.Check.Subscribe(act).AddTo(this);
-
-		RxSubjects.Raise.Subscribe(act).AddTo(this);
-
 		player.Bankroll.Subscribe((value) => {
 			scoreLabel.text = value.ToString();
 		}).AddTo(this);
 	}
 
-	private void act(RxData e) {
-		var mop = e.Data.ToObject<Mop>();
+	public void SeeCard(List<int> cards) {
+		int[] cvs = new int[]{
+			Card.CardIndex(cards[0]),
+			Card.CardIndex(cards[1])
+		};
 
-		if (mop.seat != Index) {
-			return ;
-		}	
+		var first = MyCards.transform.Find("First");
+		var second = MyCards.transform.Find("Second");
 
+		MyCards.SetActive(true);
+
+		first.GetComponent<Card>().Show(cvs[0]);
+		second.GetComponent<Card>().Show(cvs[1]);
+	}
+
+	public void Gameover() {
+
+	}
+
+	public void Act(Mop mop) {
 		GameData.Shared.Pot.Value = mop.pot;
 		player.PrChips.Value = mop.pr_chips;
 		moveOut();
@@ -249,7 +212,7 @@ public class PlayerObject : MonoBehaviour {
 		});
 	}
 
-	void fold() {
+	public void Fold() {
 		moveOut();
 
 		var canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();

@@ -48,13 +48,13 @@ public class OP : MonoBehaviour {
 
 		if (pot < 2 * bb) {
 			addProperty(R1, string.Format("X2\n盲注"), 2 * bb);	
-			addProperty(R1, string.Format("X3\n盲注"), 3 * bb);	
-			addProperty(R1, string.Format("X4\n盲注"), 4 * bb);	
+			addProperty(R2, string.Format("X3\n盲注"), 3 * bb);	
+			addProperty(R3, string.Format("X4\n盲注"), 4 * bb);	
 		} else {
 			var nextPot = pot + call;
 			addProperty(R1, string.Format("1/2\n底池"), nextPot / 2 + call);
-			addProperty(R1, string.Format("2/3\n底池"), nextPot * 2 / 3 + call);
-			addProperty(R1, string.Format("1倍\n底池"), nextPot + call);
+			addProperty(R2, string.Format("2/3\n底池"), nextPot * 2 / 3 + call);
+			addProperty(R3, string.Format("1倍\n底池"), nextPot + call);
 		}
 	}
 

@@ -2,7 +2,6 @@
 using System;
 using Extensions;
 using UniRx;
-using UnityEngine;
 using System.Linq;
 using UnityEngine.SceneManagement;
 
@@ -13,19 +12,6 @@ sealed public class Player {
 	public ReactiveProperty<int> Bankroll = new ReactiveProperty<int>();
 	public int Index;
 	public ReactiveProperty<int> PrChips = new ReactiveProperty<int>();
-	private GameObject Go;
-
-	public void DestroyGo() {
-		if (Go == null) {
-			return ;
-		}
-		GameObject.Destroy(Go);
-	}
-
-	public void Show(Transform parent) {
-		Go = (GameObject)GameObject.Instantiate(Resources.Load("Prefab/Player"));
-		Go.GetComponent<PlayerObject>().ShowPlayer(this, parent);
-	}
 	
 	public Player(Dictionary<string, object> json, int index) {
 		Name = json.String("name");
@@ -73,6 +59,11 @@ sealed public class GameData {
 		RxSubjects.Deal.Subscribe((e) => {
 			Pot.Value = e.Data.Int("pot");
 			PrPot.Value = Pot.Value - e.Data.Int("pr_pot");
+
+			// 发下一张牌的时候，重置所有prchips
+			foreach(Player player in Players.Values) {
+				player.PrChips.Value = 0;
+			}
 		});
 
 		var sceneLoaded = false; 
@@ -100,11 +91,7 @@ sealed public class GameData {
 				PublicCards.Add(item);
 			}
 		});
-
-		RxSubjects.GameStart.Subscribe((e) => {
-			PublicCards.Clear();
-		});
-
+		
 		RxSubjects.TakeMore.Subscribe((e) => {
 			var index = e.Data.Int("where");
 			var coin = e.Data.Int("coin");
@@ -112,6 +99,12 @@ sealed public class GameData {
 			if (Players.ContainsKey(index)) {
 				Players[index].Bankroll.Value += coin;
 			}
+		});
+
+		RxSubjects.Ready.Subscribe((e) => {
+			var index = e.Data.Int("where");
+			var bankroll = e.Data.Int("bankroll");
+			Players[index].Bankroll.Value = bankroll;	
 		});
 	}
 
@@ -183,6 +176,13 @@ sealed public class GameData {
 		Pot.Value = json.Int("pot");
 		PrPot.Value = Pot.Value - json.Int("pr_pot");
 		Paused = json.Int("is_pause") != 0;
+
+		// 删除公共牌重新添加
+		var cards = json.IL("shared_cards");
+		PublicCards.Clear();
+		foreach(int value in cards) {
+			PublicCards.Add(value);
+		}
 		
 		var startTs = json.Int("begin_time");
 		StartTime = _.DateTimeFromTimeStamp(startTs);
