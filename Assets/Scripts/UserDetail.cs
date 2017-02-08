@@ -48,6 +48,10 @@ public class UserDetail : MonoBehaviour {
 	}
 
 	private string percent(float number) {
+		if (float.IsNaN(number)) { 
+			number = 0;
+		}
+
 		return Math.Round(number * 100, 2).ToString() + "%"; 
 	}
 

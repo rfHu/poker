@@ -27,10 +27,10 @@ public sealed class Connect  {
 		options.ConnectWith = TransportTypes.WebSocket;
 
 		manager = new SocketManager(new Uri(url), options);
-		manager.setCookie = (request) => {
-			var cookie = new Cookie("connect.sid", GameData.Shared.UserToken);
-			request.Cookies.Add(cookie);
-		};
+		// manager.setCookie = (request) => {
+		// 	var cookie = new Cookie("connect.sid", GameData.Shared.UserToken);
+		// 	request.Cookies.Add(cookie);
+		// };
 		manager.Socket.On("connect", onConnect);
 		manager.Open();	
 	}
