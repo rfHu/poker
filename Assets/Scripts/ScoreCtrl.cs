@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Extensions;
+using System;
 
 public class ScoreCtrl : MonoBehaviour {
 	public GameObject viewport;
@@ -66,6 +67,13 @@ public class ScoreCtrl : MonoBehaviour {
 					guestList.Add(dict);
 				}
 			}
+
+			playerList.Sort((a, b) => {
+				var ar = a.Int("bankroll") - a.Int("takecoin");
+				var br = b.Int("bankroll") - b.Int("takecoin");
+
+				return br - ar;
+			});
 
 			foreach(Dictionary<string, object> player in playerList) {
 				GameObject  entry = (GameObject)Instantiate(Resources.Load("Prefab/Score/PlayerScore"));

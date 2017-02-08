@@ -30,6 +30,11 @@ public class Card : MonoBehaviour {
 		IsBack = false;
 	}
 
+	public void SetSize(Vector2 size) {
+		var rectTrans = GetComponent<RectTransform>();
+		rectTrans.sizeDelta = size;
+	}
+
 	public void ShowServer(int index) {
 		if (index == 0) {
 			return ;

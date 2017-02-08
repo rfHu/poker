@@ -10,6 +10,8 @@ using Extensions;
 
 public class PlayerObject : MonoBehaviour {
 	public int Index;
+
+	public GameObject WinImageGo;
 	
 	Text nameLabel;
 	Text scoreLabel;
@@ -98,7 +100,30 @@ public class PlayerObject : MonoBehaviour {
 
 			WinNumber.transform.parent.gameObject.SetActive(true); 
 			WinNumber.text = gain.ToString();
+			scoreLabel.gameObject.SetActive(false);
+
+			if (Uid == GameData.Shared.Uid) {
+				WinImageGo.SetActive(true);
+			}
+
+			// 2s后隐藏动画
+			Invoke("hideAnim", 2);			
 		}).AddTo(this);
+	}
+
+	private void hideAnim() {
+		var duration = 0.3f;
+		Stars.GetComponent<CanvasGroup>().DOFade(0,duration).OnComplete(() => {
+			scoreLabel.gameObject.SetActive(true);
+			WinNumber.transform.parent.gameObject.SetActive(false);
+			Stars.SetActive(false);
+		});
+
+		if (WinImageGo.activeSelf) {
+			WinImageGo.GetComponent<RawImage>().DOFade(0,duration).OnComplete(() => {
+				WinImageGo.SetActive(false);
+			});
+		}
 	}
 
 	public void SeeCard(List<int> cards) {
