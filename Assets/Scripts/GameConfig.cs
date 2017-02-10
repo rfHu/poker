@@ -19,7 +19,7 @@ sealed public class Player {
 	public string Avatar = "";
 	public string Uid = "";
 	public ReactiveProperty<int> Bankroll = new ReactiveProperty<int>();
-	public int Index;
+	public int Index = -1;
 	public ReactiveProperty<int> PrChips = new ReactiveProperty<int>();
 
 	public ReactiveProperty<ActionState> ActState = new ReactiveProperty<ActionState>();
@@ -39,6 +39,8 @@ sealed public class Player {
 
 		Index = index;
 	}
+
+	public Player() {}
 
 	public ReactiveProperty<bool> Destroyed = new ReactiveProperty<bool>(false);
 
@@ -149,12 +151,18 @@ sealed public class GameData {
 		RxSubjects.Ready.Subscribe((e) => {
 			var index = e.Data.Int("where");
 			var bankroll = e.Data.Int("bankroll");
-			Players[index].Bankroll.Value = bankroll;	
+
+			if (Players.ContainsKey(index)) {
+				Players[index].Bankroll.Value = bankroll;	
+			}
 		});
 
 		RxSubjects.Fold.Subscribe((e) => {
 			var index = e.Data.Int("seat");
-			Players[index].ActState.Value = ActionState.Fold;
+
+			if (Players.ContainsKey(index)) {
+				Players[index].ActState.Value = ActionState.Fold;
+			}
 		});
 
 		Action<RxData> act = (e) => {
@@ -182,7 +190,9 @@ sealed public class GameData {
 		RxSubjects.SeeCard.Subscribe((e) => {
 			var cards = e.Data.IL("cards");
 			var index = e.Data.Int("seat");
-			Players[index].Cards.Value = cards;
+			if (Players.ContainsKey(index)) {
+				Players[index].Cards.Value = cards;
+			}
 		});
 
 		RxSubjects.GameOver.Subscribe((e) => {
@@ -198,7 +208,7 @@ sealed public class GameData {
 
 	public bool Owner = false;	
 	public List<int> BankrollMul;
-	public ReactiveProperty<int> PlayerCount = new ReactiveProperty<int>();
+	public int PlayerCount;
 	public string UserToken = ""; 
 	public string Uid = "";
 	public string Pin = "";
@@ -250,7 +260,7 @@ sealed public class GameData {
 		Owner = options.String("ownerid") == GameData.Shared.Uid;
 		BankrollMul = options.IL("bankroll_multiple"); 
 		Ante = options.Int("ant");
-		PlayerCount.Value = options.Int("max_seats");
+		PlayerCount = options.Int("max_seats");
 		Rake = options.Float("rake_percent");
 		Duration = options.Int("time_limit");
 		NeedAduit = options.Int("need_audit") == 1;
@@ -305,6 +315,14 @@ sealed public class GameData {
 	public static GameData Shared = new GameData();
 
 	public ReactiveDictionary<int, Player> Players = new ReactiveDictionary<int, Player>(); 
+
+	public Player GetPlayer(int index) {
+		if (Players.ContainsKey(index)) {
+			return Players[index];
+		}
+
+		return new Player();
+	}
 
 	public ReactiveCollection<int> PublicCards = new ReactiveCollection<int>();
 

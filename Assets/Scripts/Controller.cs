@@ -27,6 +27,7 @@ public class Controller : MonoBehaviour {
 	public GameObject OwnerButton; 
 
 	void Start () {
+		setupSeats();
 		registerRxEvents();
 
 		// 数据驱动开发，在这里重新reload数据，触发事件
@@ -39,7 +40,7 @@ public class Controller : MonoBehaviour {
 			return ;
 		}
 
-		var count = GameData.Shared.PlayerCount.Value;
+		var count = GameData.Shared.PlayerCount;
 		var left = anchorPositions.Skip(count - index).Take(index);
 		var right = anchorPositions.Take(count - index);
 		var newVectors = left.Concat(right).ToList(); 
@@ -171,6 +172,22 @@ public class Controller : MonoBehaviour {
 		label.transform.SetParent(gameInfoWrapper.transform, false);
 	}
 
+	private void setupSeats() {
+		var numberOfPlayers = GameData.Shared.PlayerCount;
+
+		anchorPositions = getVectors (numberOfPlayers);
+
+		for (int i = 0; i < numberOfPlayers; i++) {
+			GameObject cpseat = Instantiate (seat);
+			
+			var st = cpseat.GetComponent<Seat>();
+			st.Index = i;
+			cpseat.transform.SetParent (canvas.transform, false);
+			cpseat.GetComponent<RectTransform>().anchoredPosition = anchorPositions[i];
+			Seats.Add (cpseat);
+		}
+	}
+
 	void registerRxEvents() {
 		Action<Player> showPlayer = (obj) => {
 			var parent = Seats[obj.Index].transform;
@@ -181,23 +198,6 @@ public class Controller : MonoBehaviour {
 		Action<int> enableSeat = (index) => {
 			Seats[index].GetComponent<Image>().enabled = true;
 		};
-
-		var shouldSub = true;
-		GameData.Shared.PlayerCount.AsObservable().TakeWhile((_) => shouldSub).Subscribe((numberOfPlayers) => {
-			anchorPositions = getVectors (numberOfPlayers);
-
-			for (int i = 0; i < numberOfPlayers; i++) {
-				GameObject cpseat = Instantiate (seat);
-				
-				var st = cpseat.GetComponent<Seat>();
-				st.Index = i;
-				cpseat.transform.SetParent (canvas.transform, false);
-				cpseat.GetComponent<RectTransform>().anchoredPosition = anchorPositions[i];
-				Seats.Add (cpseat);
-			}
-
-			shouldSub = false;
-		}).AddTo(this);
 
 		RxSubjects.ChangeVectorsByIndex.AsObservable().DistinctUntilChanged().Subscribe((index) => {
 			changePositions(index);

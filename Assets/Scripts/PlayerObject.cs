@@ -35,6 +35,8 @@ public class PlayerObject : MonoBehaviour {
 	public GameObject Stars;
 	public Text WinNumber;
 
+	public List<Card> ShowCards;
+
 	void Awake() {
 		var info = transform.Find("Info");
 
@@ -104,11 +106,25 @@ public class PlayerObject : MonoBehaviour {
 
 			if (Uid == GameData.Shared.Uid) {
 				WinImageGo.SetActive(true);
+				showTheCards(winner.cards);
 			}
 
 			// 2s后隐藏动画
 			Invoke("hideAnim", 2);			
 		}).AddTo(this);
+	}
+
+	private void showTheCards(List<int> cards) {
+		if (cards.Count < 2) {
+			return ;
+		}
+
+		// 显示GameObject
+		ShowCards[0].transform.parent.gameObject.SetActive(true);
+
+		// 显示手牌
+		ShowCards[0].ShowServer(cards[0]);
+		ShowCards[1].ShowServer(cards[1]);
 	}
 
 	private void hideAnim() {
