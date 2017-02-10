@@ -223,8 +223,7 @@ public class Controller : MonoBehaviour {
 		}).AddTo(this);
 
 		GameData.Shared.PublicCards.ObserveAdd().Subscribe((e) => {
-			var index = Card.CardIndex(e.Value);	
-			PublicCards[e.Index].GetComponent<Card>().Show(index);
+			PublicCards[e.Index].GetComponent<Card>().ShowServer(e.Value, true);
 		}).AddTo(this);
 
 		GameData.Shared.PublicCards.ObserveReset().Subscribe((_) => {

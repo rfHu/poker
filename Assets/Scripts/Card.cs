@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class Card : MonoBehaviour {
 	public Sprite[] faces;
@@ -7,25 +8,30 @@ public class Card : MonoBehaviour {
 
 	public bool IsBack = true;
 
-	Sprite getCardBack() {
-		return cardBack;
-	}
+	public AnimationCurve scaleCurve;
 
-	Sprite getCardFace(int index) {
-		return faces[index];
-	}
+	private float duration = 0.5f;
 
 	void Awake() {
 		var img = GetComponent<Image>();
-		img.sprite = getCardBack();
+		img.sprite = cardBack;
+
+		scaleCurve = new AnimationCurve();
+		scaleCurve.AddKey(0, 1);
+		scaleCurve.AddKey(0.5f, 0);
+		scaleCurve.AddKey(1, 1);
 	}
 
-	public void Show(int index) {	
+	private void show(int index, bool anim = false) {	
 		gameObject.SetActive(true);
 		GetComponent<Image>().enabled = true;
-		
 		var image = GetComponent<Image>();
-		image.sprite = getCardFace(index);
+		
+		if (anim) {
+			StartCoroutine(flipCard(index));
+		} else {
+			image.sprite = faces[index];
+		}
 		
 		IsBack = false;
 	}
@@ -35,17 +41,38 @@ public class Card : MonoBehaviour {
 		rectTrans.sizeDelta = size;
 	}
 
-	public void ShowServer(int index) {
+	public void ShowServer(int index, bool anim = false) {
 		if (index == 0) {
 			return ;
 		}
 
 		var realIndex = Card.CardIndex(index);
-		Show(realIndex);
+		show(realIndex, anim);
+	}
+
+	IEnumerator flipCard(int index) {
+		float time = 0f;
+		var image = GetComponent<Image>();
+		var rectTrans = GetComponent<RectTransform>();
+		
+		while(time <= 1f) {
+			float scale = scaleCurve.Evaluate(time);
+			time = time + Time.deltaTime / duration;
+
+			Vector2 vector = rectTrans.localScale;
+			vector.x = scale;
+			rectTrans.localScale = vector;
+
+			if (time >= 0.5) {
+				image.sprite = faces[index];
+			}
+
+			yield return new WaitForFixedUpdate();
+		}
 	}
 
 	public void Turnback() {
-		GetComponent<Image>().sprite = getCardBack();
+		GetComponent<Image>().sprite = cardBack;
 		IsBack = true;
 	}
 

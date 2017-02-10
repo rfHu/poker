@@ -123,8 +123,8 @@ public class PlayerObject : MonoBehaviour {
 		ShowCards[0].transform.parent.gameObject.SetActive(true);
 
 		// 显示手牌
-		ShowCards[0].ShowServer(cards[0]);
-		ShowCards[1].ShowServer(cards[1]);
+		ShowCards[0].ShowServer(cards[0], true);
+		ShowCards[1].ShowServer(cards[1], true);
 	}
 
 	private void hideAnim() {
@@ -143,18 +143,13 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	public void SeeCard(List<int> cards) {
-		int[] cvs = new int[]{
-			Card.CardIndex(cards[0]),
-			Card.CardIndex(cards[1])
-		};
-
 		var first = MyCards.transform.Find("First");
 		var second = MyCards.transform.Find("Second");
 
 		MyCards.SetActive(true);
 
-		first.GetComponent<Card>().Show(cvs[0]);
-		second.GetComponent<Card>().Show(cvs[1]);
+		first.GetComponent<Card>().ShowServer(cards[0], true);
+		second.GetComponent<Card>().ShowServer(cards[1], true);
 	}
 
 	void setPrChips(int value) {
