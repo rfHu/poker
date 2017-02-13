@@ -202,8 +202,10 @@ sealed public class GameData {
 			foreach(KeyValuePair<string, object> item in e.Data) {
 				var dict = (Dictionary<string, object>)item.Value;
 				var json = new GameoverJson(dict); 
-				if (json.IsWinner()) {
-					Players[Convert.ToInt32(item.Key)].Winner.Value = json;
+				var index = Convert.ToInt32(item.Key);
+
+				if (Players.ContainsKey(index) && json.IsWinner()) {
+					Players[index].Winner.Value = json;
 				}
 			}
 		});

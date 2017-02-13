@@ -170,11 +170,12 @@ public class PlayerObject : MonoBehaviour {
 			}
 
 			WinNumber.transform.parent.gameObject.SetActive(true); 
-			WinNumber.text = gain.ToString();
+			WinNumber.text = num2Text(gain);
 			scoreLabel.gameObject.SetActive(false);
 
 			if (Uid == GameData.Shared.Uid) {
 				WinImageGo.SetActive(true);
+			} else {
 				showTheCards(winner.cards);
 			}
 
@@ -193,17 +194,33 @@ public class PlayerObject : MonoBehaviour {
 		}).AddTo(this);
 	}
 
+	private string num2Text(int num) {
+		if (num <= 0) {
+			return num.ToString();
+		}
+
+		return "+" + num.ToString();
+	}
+
 	private void showTheCards(List<int> cards) {
 		if (cards.Count < 2) {
 			return ;
 		}
 
-		// 显示GameObject
-		ShowCards[0].transform.parent.gameObject.SetActive(true);
+		if (GameData.Shared.Uid == Uid) {
+			return ;
+		}
 
-		// 显示手牌
-		ShowCards[0].ShowServer(cards[0], true);
-		ShowCards[1].ShowServer(cards[1], true);
+		if (cards[0] > 0 && cards[1] > 0) {
+			// 显示GameObject
+			ShowCards[0].transform.parent.gameObject.SetActive(true);
+
+			// 显示手牌
+			ShowCards[0].ShowServer(cards[0], true);
+			ShowCards[1].ShowServer(cards[1], true);
+
+			Cardfaces.SetActive(false);
+		}
 	}
 
 	private void hideAnim() {
