@@ -7,6 +7,8 @@ using System;
 public class ChipsGo : MonoBehaviour {
 	public Text TextNumber;
 
+	private bool isLeft;
+
 	void Awake() {
 		RxSubjects.Deal.Subscribe((e) => {
 			hideChips();
@@ -17,14 +19,18 @@ public class ChipsGo : MonoBehaviour {
 		TextNumber.text = chips.ToString();
 	}
 
-	public void Create(int value) {
+	public void Create(int value, bool isLeft) {
+		this.isLeft = isLeft;
+
 		doTween().OnComplete(() => {
 			SetChips(value);
+			TextNumber.enabled = true;
 		});
 	}
 
-	public void AddMore(Action callback) {
-		TextNumber.enabled = false;
+	public void AddMore(Action callback, bool isLeft) {
+		this.isLeft = isLeft;
+
 		doTween().OnComplete(() => {
 			Destroy(gameObject);	
 			callback();
@@ -32,8 +38,10 @@ public class ChipsGo : MonoBehaviour {
 	}
 
 	private Tweener doTween() {
+		var vector = isLeft ? new Vector2(80, 0) : new Vector2(-80, 0);
+
 		return GetComponent<RectTransform>()
-		.DOAnchorPos(new Vector2(80, 0), 0.4f);
+		.DOAnchorPos(vector, 0.4f);
 	}
 
 	void hideChips() {

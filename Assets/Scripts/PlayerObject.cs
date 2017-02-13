@@ -72,7 +72,7 @@ public class PlayerObject : MonoBehaviour {
 
 		this.player = player;
 
-		if (Uid == GameData.Shared.Uid) {
+		if (isSelf()) {
 			hideName();
 			RxSubjects.ChangeVectorsByIndex.OnNext(Index);
 		} else if(player.InGame) { 
@@ -94,7 +94,6 @@ public class PlayerObject : MonoBehaviour {
 		// 隐藏坐下按钮
 		var image = parent.gameObject.GetComponent<Image>();
 		image.enabled = false;
-
 		registerRxEvent();
 	}
 
@@ -103,7 +102,7 @@ public class PlayerObject : MonoBehaviour {
 
 		var canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
 
-		if (Uid == GameData.Shared.Uid) {
+		if (isSelf()) {
 			var copy = Instantiate(MyCards, canvas.transform, true);
 			
 			MyCards.GetComponent<CanvasGroup>().alpha = foldOpacity;
@@ -122,12 +121,20 @@ public class PlayerObject : MonoBehaviour {
 		transform.Find("Info").GetComponent<CanvasGroup>().alpha = foldOpacity;
 	}
 
+	private bool isLeft() {
+		return transform.parent.GetComponent<Seat>().IsLeft();
+	}
+
 	private void setAlpha() {
-		if (Uid == GameData.Shared.Uid) {
+		if (isSelf()) {
 			MyCards.GetComponent<CanvasGroup>().alpha = foldOpacity;
 		}
 
 		transform.Find("Info").GetComponent<CanvasGroup>().alpha = foldOpacity;
+	}
+
+	private bool isSelf() {
+		return Uid == GameData.Shared.Uid;
 	}
 
 	private void registerRxEvent() {
@@ -167,15 +174,17 @@ public class PlayerObject : MonoBehaviour {
 			var gain = winner.Gain();
 			if (gain > 0) {
 				Stars.SetActive(true);
-			}
 
+				if (isSelf()) {
+					WinImageGo.SetActive(true);
+				}
+			}
+			
 			WinNumber.transform.parent.gameObject.SetActive(true); 
 			WinNumber.text = num2Text(gain);
 			scoreLabel.gameObject.SetActive(false);
 
-			if (Uid == GameData.Shared.Uid) {
-				WinImageGo.SetActive(true);
-			} else {
+			if (!isSelf()) {
 				showTheCards(winner.cards);
 			}
 
@@ -206,11 +215,7 @@ public class PlayerObject : MonoBehaviour {
 		if (cards.Count < 2) {
 			return ;
 		}
-
-		if (GameData.Shared.Uid == Uid) {
-			return ;
-		}
-
+	
 		if (cards[0] > 0 && cards[1] > 0) {
 			// 显示GameObject
 			ShowCards[0].transform.parent.gameObject.SetActive(true);
@@ -225,11 +230,14 @@ public class PlayerObject : MonoBehaviour {
 
 	private void hideAnim() {
 		var duration = 0.3f;
-		Stars.GetComponent<CanvasGroup>().DOFade(0,duration).OnComplete(() => {
-			scoreLabel.gameObject.SetActive(true);
-			WinNumber.transform.parent.gameObject.SetActive(false);
-			Stars.SetActive(false);
-		});
+
+		if (Stars.activeSelf) {
+			Stars.GetComponent<CanvasGroup>().DOFade(0,duration).OnComplete(() => {
+				scoreLabel.gameObject.SetActive(true);
+				WinNumber.transform.parent.gameObject.SetActive(false);
+				Stars.SetActive(false);
+			});
+		}
 
 		if (WinImageGo.activeSelf) {
 			WinImageGo.GetComponent<RawImage>().DOFade(0,duration).OnComplete(() => {
@@ -244,11 +252,11 @@ public class PlayerObject : MonoBehaviour {
 
 		if (cgo == null) {
 			cgo = chips.GetComponent<ChipsGo>();
-			cgo.Create(value);
+			cgo.Create(value, isLeft());
 		} else {
 			chips.GetComponent<ChipsGo>().AddMore(() => {
 				cgo.SetChips(value);
-			});	
+			}, isLeft());	
 		}	
 	}
 
@@ -263,7 +271,7 @@ public class PlayerObject : MonoBehaviour {
 	}	
 
 	private void TurnTo(Dictionary<string, object> dict) {
-		if (Uid == GameData.Shared.Uid) {
+		if (isSelf()) {
 			showOP(dict);
 		} else {
 			StartCoroutine(myTurn());				

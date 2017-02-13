@@ -20,6 +20,16 @@ public class Seat : MonoBehaviour {
 		);		
 	}
 
+	public bool IsLeft() {
+		var trans = transform.parent.GetComponent<RectTransform>();
+
+		if (trans.localPosition.x <= 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public void SetDealer(GameObject dealer) {
 		var position = gameObject.GetComponent<RectTransform>().anchoredPosition;
 		var newPos = new Vector2(position.x + 90, position.y);

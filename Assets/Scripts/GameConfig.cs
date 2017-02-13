@@ -60,10 +60,6 @@ public class GameoverJson {
 	public string uid { get; set; }
 	public int seat { get; set; }
 
-	public bool IsWinner() {
-		return prize - chips >= 0 && chips > 0;
-	}
-
 	public int Gain() {
 		return prize - chips;
 	}
@@ -204,7 +200,7 @@ sealed public class GameData {
 				var json = new GameoverJson(dict); 
 				var index = Convert.ToInt32(item.Key);
 
-				if (Players.ContainsKey(index) && json.IsWinner()) {
+				if (Players.ContainsKey(index))  {
 					Players[index].Winner.Value = json;
 				}
 			}
