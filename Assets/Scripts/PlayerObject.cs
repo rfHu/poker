@@ -10,32 +10,26 @@ using Extensions;
 
 public class PlayerObject : MonoBehaviour {
 	public int Index;
-
 	public GameObject WinImageGo;
-	
-	Text nameLabel;
-	Text scoreLabel;
-	GameObject countdown;
-
 	public RawImage Avatar;
 	public bool activated = false;
 	public float thinkTime = 15;
 	public string Uid = "";
-
 	public GameObject Cardfaces;
 	public GameObject MyCards;
-
-	GameObject OPGo;
-	GameObject circle;
-
-	private ChipsGo cgo; 
-
-	private Player player;
-
 	public GameObject Stars;
 	public Text WinNumber;
-
 	public List<Card> ShowCards;
+
+	private Text nameLabel;
+	private Text scoreLabel;
+	private GameObject countdown;
+	private GameObject OPGo;
+	private GameObject circle;
+	private ChipsGo cgo; 
+	private Player player;
+	private float opacity = 0.7f;
+	private float animDuration = 0.4f;
 
 	void Awake() {
 		var info = transform.Find("Info");
@@ -50,98 +44,6 @@ public class PlayerObject : MonoBehaviour {
 		countdown.SetActive(false);
 	}
 
-	private void registerRxEvent() {
-		player.PrChips.AsObservable().DistinctUntilChanged().Subscribe((value) => {
-			if (value == 0) {
-				return ;
-			}
-
-			setPrChips(value);
-		}).AddTo(this);
-
-		player.Bankroll.Subscribe((value) => {
-			scoreLabel.text = value.ToString();
-		}).AddTo(this);
-
-		player.ActState.Subscribe((e) => {
-			if (e == ActionState.None) {
-				return ;
-			}
-
-			if (e == ActionState.Fold) {
-				Fold();
-			} else {
-				moveOut();
-			}
-		}).AddTo(this);
-
-		player.Destroyed.AsObservable().Where((v) => v).Subscribe((_) => {
-			Destroy(gameObject);
-		}).AddTo(this);
-
-		// @TODO: 这段逻辑放这里不是很好
-		RxSubjects.MoveTurn.Subscribe((e) => {
-			var index = e.Data.Int("seat");
-			
-			if (index == Index) {
-				turnTo(e.Data);
-			} else {
-				moveOut();
-			}
-		}).AddTo(this);
-
-		player.Cards.AsObservable().Where((cards) => cards != null && cards.Count == 2).Subscribe((cards) => {
-			SeeCard(cards);
-		}).AddTo(this);
-
-		player.Winner.AsObservable().Where((winner) => winner != null).Subscribe((winner) => {
-			var gain = winner.Gain();
-			if (gain > 0) {
-				Stars.SetActive(true);
-			}
-
-			WinNumber.transform.parent.gameObject.SetActive(true); 
-			WinNumber.text = gain.ToString();
-			scoreLabel.gameObject.SetActive(false);
-
-			if (Uid == GameData.Shared.Uid) {
-				WinImageGo.SetActive(true);
-				showTheCards(winner.cards);
-			}
-
-			// 2s后隐藏动画
-			Invoke("hideAnim", 2);			
-		}).AddTo(this);
-	}
-
-	private void showTheCards(List<int> cards) {
-		if (cards.Count < 2) {
-			return ;
-		}
-
-		// 显示GameObject
-		ShowCards[0].transform.parent.gameObject.SetActive(true);
-
-		// 显示手牌
-		ShowCards[0].ShowServer(cards[0], true);
-		ShowCards[1].ShowServer(cards[1], true);
-	}
-
-	private void hideAnim() {
-		var duration = 0.3f;
-		Stars.GetComponent<CanvasGroup>().DOFade(0,duration).OnComplete(() => {
-			scoreLabel.gameObject.SetActive(true);
-			WinNumber.transform.parent.gameObject.SetActive(false);
-			Stars.SetActive(false);
-		});
-
-		if (WinImageGo.activeSelf) {
-			WinImageGo.GetComponent<RawImage>().DOFade(0,duration).OnComplete(() => {
-				WinImageGo.SetActive(false);
-			});
-		}
-	}
-
 	public void SeeCard(List<int> cards) {
 		var first = MyCards.transform.Find("First");
 		var second = MyCards.transform.Find("Second");
@@ -152,25 +54,7 @@ public class PlayerObject : MonoBehaviour {
 		second.GetComponent<Card>().ShowServer(cards[1], true);
 	}
 
-	void setPrChips(int value) {
-		var chips = (GameObject)Instantiate(Resources.Load("Prefab/UpChip"));
-		chips.transform.SetParent(transform, false);
-
-		if (cgo == null) {
-			cgo = chips.GetComponent<ChipsGo>();
-			cgo.Create(value);
-		} else {
-			chips.GetComponent<ChipsGo>().AddMore(() => {
-				cgo.SetChips(value);
-			});	
-		}	
-	}
-
-	void hideName() {
-		nameLabel.gameObject.SetActive(false);
-	}
-
-	void moveOut() {
+	public void MoveOut() {
 		activated = false;
 
 		if (OPGo != null) {
@@ -210,13 +94,146 @@ public class PlayerObject : MonoBehaviour {
 		registerRxEvent();
 	}
 
-	IEnumerator<WWW> DownloadAvatar(RawImage img, string url) {
+	public void Fold() {
+		MoveOut();
+
+		var canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
+
+		if (Uid == GameData.Shared.Uid) {
+			var copy = Instantiate(MyCards, canvas.transform, true);
+			
+			MyCards.GetComponent<CanvasGroup>().alpha = opacity;
+			MyCards.SetActive(false);
+
+			foldCards(copy, () => {
+				if (MyCards != null) {
+					MyCards.SetActive(true);
+				}
+			});
+		} else {
+			Cardfaces.transform.SetParent(canvas.transform, true);
+			foldCards(Cardfaces);			
+		}
+
+		transform.Find("Info").GetComponent<CanvasGroup>().alpha = opacity;
+	}
+
+	private void registerRxEvent() {
+		player.PrChips.AsObservable().DistinctUntilChanged().Subscribe((value) => {
+			if (value == 0) {
+				return ;
+			}
+
+			setPrChips(value);
+		}).AddTo(this);
+
+		player.Bankroll.Subscribe((value) => {
+			scoreLabel.text = value.ToString();
+		}).AddTo(this);
+
+		player.ActState.Subscribe((e) => {
+			if (e == ActionState.None) {
+				return ;
+			}
+
+			if (e == ActionState.Fold) {
+				Fold();
+			} else {
+				MoveOut();
+			}
+		}).AddTo(this);
+
+		player.Destroyed.AsObservable().Where((v) => v).Subscribe((_) => {
+			Destroy(gameObject);
+		}).AddTo(this);
+
+		player.Cards.AsObservable().Where((cards) => cards != null && cards.Count == 2).Subscribe((cards) => {
+			SeeCard(cards);
+		}).AddTo(this);
+
+		player.Winner.AsObservable().Where((winner) => winner != null).Subscribe((winner) => {
+			var gain = winner.Gain();
+			if (gain > 0) {
+				Stars.SetActive(true);
+			}
+
+			WinNumber.transform.parent.gameObject.SetActive(true); 
+			WinNumber.text = gain.ToString();
+			scoreLabel.gameObject.SetActive(false);
+
+			if (Uid == GameData.Shared.Uid) {
+				WinImageGo.SetActive(true);
+				showTheCards(winner.cards);
+			}
+
+			// 2s后隐藏动画
+			Invoke("hideAnim", 2);			
+		}).AddTo(this);
+
+		RxSubjects.MoveTurn.Subscribe((e) => {
+			var index = e.Data.Int("seat");
+			
+			if (index == Index) {
+				TurnTo(e.Data);
+			} else {
+				MoveOut();
+			}
+		}).AddTo(this);
+	}
+
+	private void showTheCards(List<int> cards) {
+		if (cards.Count < 2) {
+			return ;
+		}
+
+		// 显示GameObject
+		ShowCards[0].transform.parent.gameObject.SetActive(true);
+
+		// 显示手牌
+		ShowCards[0].ShowServer(cards[0], true);
+		ShowCards[1].ShowServer(cards[1], true);
+	}
+
+	private void hideAnim() {
+		var duration = 0.3f;
+		Stars.GetComponent<CanvasGroup>().DOFade(0,duration).OnComplete(() => {
+			scoreLabel.gameObject.SetActive(true);
+			WinNumber.transform.parent.gameObject.SetActive(false);
+			Stars.SetActive(false);
+		});
+
+		if (WinImageGo.activeSelf) {
+			WinImageGo.GetComponent<RawImage>().DOFade(0,duration).OnComplete(() => {
+				WinImageGo.SetActive(false);
+			});
+		}
+	}
+
+	private void setPrChips(int value) {
+		var chips = (GameObject)Instantiate(Resources.Load("Prefab/UpChip"));
+		chips.transform.SetParent(transform, false);
+
+		if (cgo == null) {
+			cgo = chips.GetComponent<ChipsGo>();
+			cgo.Create(value);
+		} else {
+			chips.GetComponent<ChipsGo>().AddMore(() => {
+				cgo.SetChips(value);
+			});	
+		}	
+	}
+
+	private void hideName() {
+		nameLabel.gameObject.SetActive(false);
+	}
+
+	private IEnumerator<WWW> DownloadAvatar(RawImage img, string url) {
 		WWW www = new WWW(url);
 		yield return www;
 		img.texture = _.Circular(www.texture);
 	}	
 
-	private void turnTo(Dictionary<string, object> dict) {
+	private void TurnTo(Dictionary<string, object> dict) {
 		if (Uid == GameData.Shared.Uid) {
 			showOP(dict);
 		} else {
@@ -246,10 +263,7 @@ public class PlayerObject : MonoBehaviour {
 		countdown.SetActive(false);
 	}
 
-	float opacity = 0.7f;
-	float animDuration = 0.4f;
-
-	void foldCards(GameObject go, Action callback = null) {
+	private void foldCards(GameObject go, Action callback = null) {
 		var rectTrans = go.GetComponent<RectTransform>();
 		rectTrans.DOAnchorPos(new Vector2(0, 0), animDuration);
 		rectTrans.DOScale(new Vector2(0.5f, 0.5f), animDuration);
@@ -272,31 +286,7 @@ public class PlayerObject : MonoBehaviour {
 		});
 	}
 
-	public void Fold() {
-		moveOut();
-
-		var canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
-
-		if (Uid == GameData.Shared.Uid) {
-			var copy = Instantiate(MyCards, canvas.transform, true);
-			
-			MyCards.GetComponent<CanvasGroup>().alpha = opacity;
-			MyCards.SetActive(false);
-
-			foldCards(copy, () => {
-				if (MyCards != null) {
-					MyCards.SetActive(true);
-				}
-			});
-		} else {
-			Cardfaces.transform.SetParent(canvas.transform, true);
-			foldCards(Cardfaces);			
-		}
-
-		transform.Find("Info").GetComponent<CanvasGroup>().alpha = opacity;
-	}
-
-	void showOP(Dictionary<string, object> data) {
+	private void showOP(Dictionary<string, object> data) {
 		// 隐藏头像
 		circle.SetActive(false);
 
