@@ -21,6 +21,7 @@ sealed public class Player {
 	public ReactiveProperty<int> Bankroll = new ReactiveProperty<int>();
 	public int Index = -1;
 	public ReactiveProperty<int> PrChips = new ReactiveProperty<int>();
+	public bool InGame = false;
 
 	public ReactiveProperty<ActionState> ActState = new ReactiveProperty<ActionState>();
 
@@ -38,6 +39,7 @@ sealed public class Player {
 		PrChips.Value = json.Int("pr_chips");
 
 		Index = index;
+		InGame = json.Bool("is_ingame");		
 	}
 
 	public Player() {}
@@ -153,7 +155,8 @@ sealed public class GameData {
 			var bankroll = e.Data.Int("bankroll");
 
 			if (Players.ContainsKey(index)) {
-				Players[index].Bankroll.Value = bankroll;	
+				var player = Players[index];
+				player.Bankroll.Value = bankroll;	
 			}
 		});
 
@@ -242,6 +245,7 @@ sealed public class GameData {
 	public ReactiveProperty<int> DealerSeat = new ReactiveProperty<int>();
 
 	public DateTime StartTime;
+	public bool InGame = false;  
 
 	private Dictionary<string, object> jsonData;
 
@@ -274,6 +278,7 @@ sealed public class GameData {
 		Pot.Value = json.Int("pot");
 		PrPot.Value = Pot.Value - json.Int("pr_pot");
 		Paused = json.Int("is_pause") != 0;
+		InGame = json.Bool("is_ingame");
 
 		// 删除公共牌重新添加
 		var cards = json.IL("shared_cards");

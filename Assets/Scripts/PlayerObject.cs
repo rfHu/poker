@@ -28,7 +28,7 @@ public class PlayerObject : MonoBehaviour {
 	private GameObject circle;
 	private ChipsGo cgo; 
 	private Player player;
-	private float opacity = 0.7f;
+	private float foldOpacity = 0.7f;
 	private float animDuration = 0.4f;
 
 	void Awake() {
@@ -75,8 +75,12 @@ public class PlayerObject : MonoBehaviour {
 		if (Uid == GameData.Shared.Uid) {
 			hideName();
 			RxSubjects.ChangeVectorsByIndex.OnNext(Index);
-		} else {
+		} else if(player.InGame) { 
 			Cardfaces.SetActive(true);
+		}
+
+		if (GameData.Shared.InGame && !player.InGame) {
+			setAlpha();
 		}
 
 		nameLabel.text = player.Name;
@@ -102,7 +106,7 @@ public class PlayerObject : MonoBehaviour {
 		if (Uid == GameData.Shared.Uid) {
 			var copy = Instantiate(MyCards, canvas.transform, true);
 			
-			MyCards.GetComponent<CanvasGroup>().alpha = opacity;
+			MyCards.GetComponent<CanvasGroup>().alpha = foldOpacity;
 			MyCards.SetActive(false);
 
 			foldCards(copy, () => {
@@ -115,7 +119,15 @@ public class PlayerObject : MonoBehaviour {
 			foldCards(Cardfaces);			
 		}
 
-		transform.Find("Info").GetComponent<CanvasGroup>().alpha = opacity;
+		transform.Find("Info").GetComponent<CanvasGroup>().alpha = foldOpacity;
+	}
+
+	private void setAlpha() {
+		if (Uid == GameData.Shared.Uid) {
+			MyCards.GetComponent<CanvasGroup>().alpha = foldOpacity;
+		}
+
+		transform.Find("Info").GetComponent<CanvasGroup>().alpha = foldOpacity;
 	}
 
 	private void registerRxEvent() {
