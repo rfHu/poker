@@ -13,7 +13,7 @@ public class RecallUser : MonoBehaviour {
 	private string[] colors = new string[]{
 		"#ff1744",
 		"#ffffff",
-		"00c853"
+		"#00c853"
 	};
 
 	public void Show(Dictionary<string, object> dict) {
@@ -44,17 +44,17 @@ public class RecallUser : MonoBehaviour {
 
 	void setScoreColor(int earn) {
 		var color = new Color();
-		string str;
+		string c;
 
 		if (earn > 0) {
-			str = colors[0];
+			c = colors[0];
 		} else if (earn < 0) {
-			str = colors[2];
+			c = colors[2];
 		} else {
-			str = colors[1];
+			c = colors[1];
 		}
 
-		ColorUtility.TryParseHtmlString(str, out color);
+		ColorUtility.TryParseHtmlString(c, out color);
 		Score.color = color;
 	}
 

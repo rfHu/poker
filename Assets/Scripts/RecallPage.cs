@@ -5,7 +5,6 @@ using Extensions;
 
 public class RecallPage : MonoBehaviour {
 	public Text Owner;
-	// 红：f50057  绿：00c853
 	public GameObject Cards;
 	public GameObject Rect;
 	public GameObject LeftIndicator;
