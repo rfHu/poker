@@ -102,7 +102,7 @@ public class PlayerObject : MonoBehaviour {
 	public void Fold() {
 		MoveOut();
 
-		var canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
+		var canvas = G.Cvs;
 
 		if (isSelf()) {
 			var copy = Instantiate(MyCards, canvas.transform, true);

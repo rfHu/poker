@@ -2,6 +2,12 @@
 using System.Collections.Generic;
 using DG.Tweening;
 
+public enum SeatPosition {
+	Top,
+	Left,
+	Right
+}
+
 public class Seat : MonoBehaviour {
 	public int Index;
 	float duration = 0.15f;

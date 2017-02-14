@@ -18,9 +18,7 @@ public class Avatar : MonoBehaviour {
 		}	
 
 		var userPopup = (GameObject)Instantiate(Resources.Load("Prefab/User"));
-		var canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
-		userPopup.GetComponent<DOPopup>().Show(canvas);
-
+		userPopup.GetComponent<DOPopup>().Show(G.Cvs);
 		userPopup.GetComponent<UserDetail>().RequestById(Uid);
 	}
 

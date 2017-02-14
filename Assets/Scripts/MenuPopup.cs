@@ -7,8 +7,6 @@ public class MenuPopup : MonoBehaviour {
 	public List<Sprite> MuteSprites;
     public GameObject MuteObj;
 
-	private Canvas parent;
-
 	public GameObject StandObj;
 	public GameObject SuppObj;
 
@@ -21,8 +19,6 @@ public class MenuPopup : MonoBehaviour {
 
 	void Start()
 	{
-		parent = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
-
 		if (GameData.MyCmd.Unseat) {
 			StandObj.GetComponent<CanvasGroup>().alpha = 1;
 		}
@@ -62,7 +58,7 @@ public class MenuPopup : MonoBehaviour {
 
 	public void Tips() {
 		var tip = (GameObject)Instantiate(Resources.Load("Prefab/CardTip"));
-		tip.GetComponent<DOPopup>().Show(parent);
+		tip.GetComponent<DOPopup>().Show(G.Cvs);
 		gameObject.GetComponent<DOPopup>().ImmediateClose();
 	}
 

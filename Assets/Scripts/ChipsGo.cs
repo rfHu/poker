@@ -45,8 +45,7 @@ public class ChipsGo : MonoBehaviour {
 	}
 
 	void hideChips() {
-		var canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
-		transform.SetParent(canvas.transform, true);
+		transform.SetParent(G.Cvs.transform, true);
 		
 		var rect = GetComponent<RectTransform>();
 		rect.DOAnchorPos(new Vector2(0, 0), 0.4f)
