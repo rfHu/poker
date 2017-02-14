@@ -20,6 +20,7 @@ public class PlayerObject : MonoBehaviour {
 	public GameObject Stars;
 	public Text WinNumber;
 	public List<Card> ShowCards;
+	public GameObject AvatarMask;
 
 	private Text nameLabel;
 	private Text scoreLabel;
@@ -56,6 +57,7 @@ public class PlayerObject : MonoBehaviour {
 
 	public void MoveOut() {
 		activated = false;
+		AvatarMask.SetActive(false);
 
 		if (OPGo != null) {
 			Destroy(OPGo);
@@ -286,6 +288,7 @@ public class PlayerObject : MonoBehaviour {
 	private IEnumerator myTurn(float elaspe = 0) {
 		countdown.SetActive(true);
 		activated = true;
+		AvatarMask.SetActive(true);
 
 		float time = thinkTime - elaspe;
 		var mask = Avatar.GetComponent<CircleMask>();

@@ -24,7 +24,7 @@ public class ChipsGo : MonoBehaviour {
 
 		doTween().OnComplete(() => {
 			SetChips(value);
-			TextNumber.enabled = true;
+			TextNumber.gameObject.SetActive(true);
 		});
 	}
 
