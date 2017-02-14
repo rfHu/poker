@@ -100,6 +100,7 @@ public class ScoreCtrl : MonoBehaviour {
 			foreach(Dictionary<string, object> guest in guestList) {
 				var guestObj = (GameObject)Instantiate(Resources.Load("Prefab/Score/Guest"));
 				Avatar avatar = guestObj.transform.Find("Avatar").GetComponent<Avatar>();
+				avatar.Uid = guest.String("uid");
 				avatar.SetImage(guest.String("avatar"));
 				avatar.BeforeClick = () => {
 					GetComponent<DOPopup>().Close();

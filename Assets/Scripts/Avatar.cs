@@ -9,7 +9,7 @@ public class Avatar : MonoBehaviour {
 	public Action BeforeClick;
 
 	void onClick() {
-		if (Uid == null) {
+		if (Uid == null || string.IsNullOrEmpty(Uid)) {
 			return ;
 		}
 

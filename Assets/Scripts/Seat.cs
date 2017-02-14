@@ -21,7 +21,7 @@ public class Seat : MonoBehaviour {
 	}
 
 	public bool IsLeft() {
-		var trans = transform.parent.GetComponent<RectTransform>();
+		var trans = transform.GetComponent<RectTransform>();
 
 		if (trans.localPosition.x <= 0) {
 			return true;
