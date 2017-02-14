@@ -37,7 +37,7 @@ public class Seat : MonoBehaviour {
 			return SeatPosition.Top;
 		}
 		
-		if (trans.localPosition.x <= 0) {
+		if (x <= 0) {
 			return SeatPosition.Left;
 		}	
 

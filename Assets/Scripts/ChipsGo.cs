@@ -43,7 +43,7 @@ public class ChipsGo : MonoBehaviour {
 		if (pos == SeatPosition.Right) {
 			vector = new Vector2(-80, 0);
 		} else if (pos == SeatPosition.Top) {
-			vector = new Vector2(0, 40);
+			vector = new Vector2(0, -120);
 		}
 
 		return GetComponent<RectTransform>()
