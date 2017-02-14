@@ -57,8 +57,8 @@ public class Controller : MonoBehaviour {
 
 		float top = height - 200;
 		float bottom = 200; 
-		float right = width / 2 - 100;
-		float left = -width / 2 + 100; 
+		float right = width / 2 - 70;
+		float left = -width / 2 + 70; 
 
 		float hh = top - bottom;
 		float ww = width - 200;

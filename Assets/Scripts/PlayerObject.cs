@@ -86,7 +86,7 @@ public class PlayerObject : MonoBehaviour {
 		nameLabel.text = player.Name;
 		scoreLabel.text = player.Bankroll.ToString();
 		RawImage rawImage = Avatar.GetComponent<RawImage>();
-		StartCoroutine(DownloadAvatar(rawImage, player.Avatar));
+		StartCoroutine(downloadAvatar(rawImage, player.Avatar));
 
 		GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
 		transform.SetParent(parent.transform, false);
@@ -201,6 +201,11 @@ public class PlayerObject : MonoBehaviour {
 				MoveOut();
 			}
 		}).AddTo(this);
+
+		// Gameover 应该清掉所有状态
+		RxSubjects.GameOver.Subscribe((e) => {
+			MoveOut();
+		}).AddTo(this);
 	}
 
 	private string num2Text(int num) {
@@ -264,7 +269,7 @@ public class PlayerObject : MonoBehaviour {
 		nameLabel.gameObject.SetActive(false);
 	}
 
-	private IEnumerator<WWW> DownloadAvatar(RawImage img, string url) {
+	private IEnumerator<WWW> downloadAvatar(RawImage img, string url) {
 		WWW www = new WWW(url);
 		yield return www;
 		img.texture = _.Circular(www.texture);
