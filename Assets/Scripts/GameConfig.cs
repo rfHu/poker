@@ -11,7 +11,7 @@ public enum ActionState {
 	Check = 2,
 	Allin = 3,
 	Call = 4,
-	Raise= 5
+	Raise = 5
 }
 
 sealed public class Player {

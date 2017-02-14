@@ -45,8 +45,15 @@ public class Seat : MonoBehaviour {
 	}
 
 	public void SetDealer(GameObject dealer) {
+		var pos = Pos();
 		var position = gameObject.GetComponent<RectTransform>().anchoredPosition;
-		var newPos = new Vector2(position.x + 90, position.y);
-		dealer.GetComponent<RectTransform>().DOAnchorPos(newPos, duration);
+		var y = position.y - 45;
+		var x = position.x + 70;
+
+		if (pos == SeatPosition.Right) {
+			x =  position.x - 70;
+		}
+
+		dealer.GetComponent<RectTransform>().DOAnchorPos(new Vector2(x, y), duration);
 	}
 }

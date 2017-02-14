@@ -230,7 +230,7 @@ public class Controller : MonoBehaviour {
 			resetAllCards();
 		}).AddTo(this);
 
-		GameData.Shared.DealerSeat.AsObservable().Where((value) => value > 0).Subscribe((value) => {
+		GameData.Shared.DealerSeat.AsObservable().Where((value) => value >= 0).Subscribe((value) => {
 			if (dealer == null) {
 				dealer = (GameObject)Instantiate(Resources.Load("Prefab/Dealer"));
 				dealer.transform.SetParent(canvas.transform, false);

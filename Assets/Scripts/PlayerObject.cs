@@ -21,6 +21,9 @@ public class PlayerObject : MonoBehaviour {
 	public Text WinNumber;
 	public List<Card> ShowCards;
 	public GameObject AvatarMask;
+	public Image ActImage;
+	// 0:看牌   1:加注    2:跟注    3:弃牌    4:All In
+	public Sprite[] ActSprites;
 
 	private Text nameLabel;
 	private Text scoreLabel;
@@ -123,6 +126,23 @@ public class PlayerObject : MonoBehaviour {
 		transform.Find("Info").GetComponent<CanvasGroup>().alpha = foldOpacity;
 	}
 
+	public void HideAct() {
+		ActImage.gameObject.SetActive(false);
+	}
+
+	private void setAct(ActionState state) {
+		var map = new Dictionary<ActionState, int>{
+			{ActionState.Check, 0},
+			{ActionState.Raise, 1},
+			{ActionState.Call, 2},
+			{ActionState.Fold, 3},
+			{ActionState.Allin, 4}
+		};	
+
+		ActImage.gameObject.SetActive(true);
+		ActImage.sprite = ActSprites[map[state]];
+	}
+
 	private SeatPosition pos() {
 		var seat = transform.parent.GetComponent<Seat>();
 		return seat.Pos();
@@ -163,6 +183,8 @@ public class PlayerObject : MonoBehaviour {
 			} else {
 				MoveOut();
 			}
+
+			setAct(e);
 		}).AddTo(this);
 
 		player.Destroyed.AsObservable().Where((v) => v).Subscribe((_) => {
@@ -200,6 +222,7 @@ public class PlayerObject : MonoBehaviour {
 			
 			if (index == Index) {
 				TurnTo(e.Data);
+				ActImage.gameObject.SetActive(false);
 			} else {
 				MoveOut();
 			}
@@ -208,6 +231,7 @@ public class PlayerObject : MonoBehaviour {
 		// Gameover 应该清掉所有状态
 		RxSubjects.GameOver.Subscribe((e) => {
 			MoveOut();
+			ActImage.gameObject.SetActive(false);
 		}).AddTo(this);
 	}
 
