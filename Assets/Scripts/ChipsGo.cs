@@ -7,7 +7,7 @@ using System;
 public class ChipsGo : MonoBehaviour {
 	public Text TextNumber;
 
-	private bool isLeft;
+	private SeatPosition pos;
 
 	void Awake() {
 		RxSubjects.Deal.Subscribe((e) => {
@@ -19,8 +19,8 @@ public class ChipsGo : MonoBehaviour {
 		TextNumber.text = chips.ToString();
 	}
 
-	public void Create(int value, bool isLeft) {
-		this.isLeft = isLeft;
+	public void Create(int value, SeatPosition pos) {
+		this.pos = pos;
 
 		doTween().OnComplete(() => {
 			SetChips(value);
@@ -28,8 +28,8 @@ public class ChipsGo : MonoBehaviour {
 		});
 	}
 
-	public void AddMore(Action callback, bool isLeft) {
-		this.isLeft = isLeft;
+	public void AddMore(Action callback, SeatPosition pos) {
+		this.pos = pos;
 
 		doTween().OnComplete(() => {
 			Destroy(gameObject);	
@@ -38,7 +38,13 @@ public class ChipsGo : MonoBehaviour {
 	}
 
 	private Tweener doTween() {
-		var vector = isLeft ? new Vector2(80, 0) : new Vector2(-80, 0);
+		var vector = new Vector2(80, 0);
+
+		if (pos == SeatPosition.Right) {
+			vector = new Vector2(-80, 0);
+		} else if (pos == SeatPosition.Top) {
+			vector = new Vector2(0, 40);
+		}
 
 		return GetComponent<RectTransform>()
 		.DOAnchorPos(vector, 0.4f);

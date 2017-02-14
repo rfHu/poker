@@ -123,8 +123,9 @@ public class PlayerObject : MonoBehaviour {
 		transform.Find("Info").GetComponent<CanvasGroup>().alpha = foldOpacity;
 	}
 
-	private bool isLeft() {
-		return transform.parent.GetComponent<Seat>().IsLeft();
+	private SeatPosition pos() {
+		var seat = transform.parent.GetComponent<Seat>();
+		return seat.Pos();
 	}
 
 	private void setAlpha() {
@@ -259,11 +260,11 @@ public class PlayerObject : MonoBehaviour {
 
 		if (cgo == null) {
 			cgo = chips.GetComponent<ChipsGo>();
-			cgo.Create(value, isLeft());
+			cgo.Create(value, pos());
 		} else {
 			chips.GetComponent<ChipsGo>().AddMore(() => {
 				cgo.SetChips(value);
-			}, isLeft());	
+			}, pos());	
 		}	
 	}
 

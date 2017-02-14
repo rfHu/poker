@@ -26,14 +26,22 @@ public class Seat : MonoBehaviour {
 		);		
 	}
 
-	public bool IsLeft() {
+	public SeatPosition Pos() {
+		var h = G.Cvs.GetComponent<RectTransform>().rect.height;
 		var trans = transform.GetComponent<RectTransform>();
+		var x = trans.anchoredPosition.x;
+		var y = trans.anchoredPosition3D.y;
 
-		if (trans.localPosition.x <= 0) {
-			return true;
-		} else {
-			return false;
+		// y轴距顶部不超过210，则认为是顶部
+		if (h - y < 210) {
+			return SeatPosition.Top;
 		}
+		
+		if (trans.localPosition.x <= 0) {
+			return SeatPosition.Left;
+		}	
+
+		return SeatPosition.Right;
 	}
 
 	public void SetDealer(GameObject dealer) {
