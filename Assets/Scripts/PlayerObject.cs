@@ -141,6 +141,15 @@ public class PlayerObject : MonoBehaviour {
 
 		ActImage.gameObject.SetActive(true);
 		ActImage.sprite = ActSprites[map[state]];
+		setActPos();
+	}
+
+	private void setActPos() {
+		if (pos() == SeatPosition.Right) {
+			var trans = ActImage.GetComponent<RectTransform>();
+			var v = trans.anchoredPosition;
+			trans.anchoredPosition = new Vector2(-v.x, v.y);	
+		}
 	}
 
 	private SeatPosition pos() {
