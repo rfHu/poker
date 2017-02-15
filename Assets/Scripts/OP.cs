@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Extensions;
 using UnityEngine.UI;
+using System;
 
 public class OP : MonoBehaviour {
 	public GameObject RaiseGo;
@@ -52,8 +53,8 @@ public class OP : MonoBehaviour {
 			addProperty(R3, string.Format("X4\n盲注"), 4 * bb);	
 		} else {
 			var nextPot = pot + call;
-			addProperty(R1, string.Format("1/2\n底池"), nextPot / 2 + call);
-			addProperty(R2, string.Format("2/3\n底池"), nextPot * 2 / 3 + call);
+			addProperty(R1, string.Format("1/2\n底池"), Mathf.CeilToInt(nextPot / 2f) + call);
+			addProperty(R2, string.Format("2/3\n底池"), Mathf.CeilToInt(nextPot * 2f / 3f) + call);
 			addProperty(R3, string.Format("1倍\n底池"), nextPot + call);
 		}
 	}

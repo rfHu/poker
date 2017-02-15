@@ -233,6 +233,10 @@ public class PlayerObject : MonoBehaviour {
 			MoveOut();
 			ActImage.gameObject.SetActive(false);
 		}).AddTo(this);
+
+		RxSubjects.Deal.Subscribe((e) => {
+			ActImage.gameObject.SetActive(false);
+		}).AddTo(this);
 	}
 
 	private string num2Text(int num) {
