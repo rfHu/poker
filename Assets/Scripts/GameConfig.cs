@@ -174,11 +174,19 @@ sealed public class GameData {
 			};
 
 			Pot.Value = mop.pot;
+
+			var index = mop.seat;
+			if (!Players.ContainsKey(index)) {
+				return ;
+			}
 			
-			var player = Players[mop.seat];
+			var player = Players[index];
 			player.PrChips.Value = mop.pr_chips;
-			player.ActState.Value = map[e.E];	
 			player.Bankroll.Value = mop.bankroll;
+
+			// @FIXME: 直接修改居然不触发事件
+			player.ActState.Value = ActionState.None;
+			player.ActState.Value = map[e.E];	
 		};
 
 		RxSubjects.Call.Subscribe(act);

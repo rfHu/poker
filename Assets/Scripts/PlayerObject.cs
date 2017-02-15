@@ -173,7 +173,7 @@ public class PlayerObject : MonoBehaviour {
 			scoreLabel.text = value.ToString();
 		}).AddTo(this);
 
-		player.ActState.Subscribe((e) => {
+		player.ActState.AsObservable().Subscribe((e) => {
 			if (e == ActionState.None) {
 				return ;
 			}

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Extensions;
 using UnityEngine.UI;
-using System;
 
 public class OP : MonoBehaviour {
 	public GameObject RaiseGo;
