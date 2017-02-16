@@ -54,8 +54,8 @@ public class PlayerObject : MonoBehaviour {
 
 		MyCards.SetActive(true);
 
-		first.GetComponent<Card>().ShowServer(cards[0], true);
-		second.GetComponent<Card>().ShowServer(cards[1], true);
+		first.GetComponent<Card>().Show(cards[0], true);
+		second.GetComponent<Card>().Show(cards[1], true);
 	}
 
 	public void MoveOut() {
@@ -284,8 +284,8 @@ public class PlayerObject : MonoBehaviour {
 			getShowCard().SetActive(true);
 
 			// 显示手牌
-			ShowCards[0].ShowServer(cards[0], true);
-			ShowCards[1].ShowServer(cards[1], true);
+			ShowCards[0].Show(cards[0], true);
+			ShowCards[1].Show(cards[1], true);
 
 			Cardfaces.SetActive(false);
 		}

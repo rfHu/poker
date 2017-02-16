@@ -58,6 +58,9 @@ sealed public class Player {
 
 			Countdown.OnNext(dt);
 		}
+
+		var cards = json.IL("cards");
+		Cards.Value = cards;
 	}
 
 	public Player() {}

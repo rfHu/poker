@@ -56,7 +56,7 @@ public class RecallPage : MonoBehaviour {
 			var go = (GameObject)Instantiate(Resources.Load("Prefab/Card"));
 			var card = go.GetComponent<Card>();
 			card.SetSize(new Vector2(68, 98));
-			card.ShowServer(num);
+			card.Show(num);
 			go.transform.SetParent(Cards.transform, false);
 		}
 

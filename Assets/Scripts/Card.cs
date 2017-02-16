@@ -41,7 +41,7 @@ public class Card : MonoBehaviour {
 		rectTrans.sizeDelta = size;
 	}
 
-	public void ShowServer(int index, bool anim = false) {
+	public void Show(int index, bool anim = false) {
 		if (index == 0) {
 			return ;
 		}

@@ -29,8 +29,8 @@ public class RecallUser : MonoBehaviour {
 			return ;
 		}	
 
-		Cards[0].GetComponent<Card>().ShowServer(cards[0]);
-		Cards[1].GetComponent<Card>().ShowServer(cards[1]);
+		Cards[0].GetComponent<Card>().Show(cards[0]);
+		Cards[1].GetComponent<Card>().Show(cards[1]);
 	}
 
 	private string earnStr(int earn) {
