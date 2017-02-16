@@ -25,7 +25,7 @@ public class OP : MonoBehaviour {
 	private List<int> range;
 	private int modalKey;
 	
-	public void StartWithCmds(Dictionary<string, object> data) {
+	public void StartWithCmds(Dictionary<string, object> data, int elaspe) {
         var cmds = data.Dict("cmds");
 		var check = cmds.Bool("check");
 		var callNum = cmds.Int("call");
@@ -47,7 +47,7 @@ public class OP : MonoBehaviour {
 			CallText.text = "跟注";
 		}
 
-		FoldGo.GetComponent<CircleMask>().Enable();
+		FoldGo.GetComponent<CircleMask>().Enable(elaspe);
 		setRaiseButtons(callNum);
 	}
 

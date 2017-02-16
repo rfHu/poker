@@ -13,7 +13,6 @@ public class PlayerObject : MonoBehaviour {
 	public GameObject WinImageGo;
 	public RawImage Avatar;
 	public bool activated = false;
-	public float thinkTime = 15;
 	public string Uid = "";
 	public GameObject Cardfaces;
 	public GameObject MyCards;
@@ -231,11 +230,17 @@ public class PlayerObject : MonoBehaviour {
 			Invoke("hideAnim", 2);			
 		}).AddTo(this);
 
+		// 中途复原行动
+		player.Countdown.AsObservable().Where((obj) => obj.seconds > 0).Subscribe((obj) => {
+			var elaspe = GameData.Shared.ThinkTime - obj.seconds;
+			turnTo(obj.data, elaspe);	
+		});
+
 		RxSubjects.MoveTurn.Subscribe((e) => {
 			var index = e.Data.Int("seat");
 			
 			if (index == Index) {
-				TurnTo(e.Data);
+				turnTo(e.Data, 0);
 				ActImage.gameObject.SetActive(false);
 			} else {
 				MoveOut();
@@ -332,27 +337,27 @@ public class PlayerObject : MonoBehaviour {
 		img.texture = _.Circular(www.texture);
 	}	
 
-	private void TurnTo(Dictionary<string, object> dict) {
+	private void turnTo(Dictionary<string, object> dict, int elaspe) {
 		if (isSelf()) {
-			showOP(dict);
+			showOP(dict, elaspe);
 		} else {
-			StartCoroutine(myTurn());				
+			StartCoroutine(yourTurn(elaspe));				
 		}
 	}
 
-	private IEnumerator myTurn(float elaspe = 0) {
+	private IEnumerator yourTurn(float elaspe) {
 		countdown.SetActive(true);
 		activated = true;
 		AvatarMask.SetActive(true);
 
-		float time = thinkTime - elaspe;
+		float time = GameData.Shared.ThinkTime - elaspe;
 		var mask = Avatar.GetComponent<CircleMask>();
 		mask.SetTextColor(new Color(0, (float)255 / 255, (float)106 / 255));
 
 		while (time > 0 && activated) {
 			time = time - Time.deltaTime;
 			
-			var percent = Mathf.Min(1, time / thinkTime);
+			var percent = Mathf.Min(1, time / GameData.Shared.ThinkTime);
 			countdown.GetComponent<ProceduralImage>().fillAmount = percent;
 			mask.SetFillAmount(time);
 
@@ -361,6 +366,20 @@ public class PlayerObject : MonoBehaviour {
 
 		activated = false;
 		countdown.SetActive(false);
+	}
+
+	private void showOP(Dictionary<string, object> data, int elaspe) {
+		// 隐藏头像
+		circle.SetActive(false);
+
+		var pos = transform.parent.position;
+
+		OPGo = (GameObject)Instantiate(Resources.Load("Prefab/OP"));	
+		OPGo.transform.SetParent(G.Cvs.transform, false);
+		OPGo.transform.position = pos;
+		
+		var op = OPGo.GetComponent<OP>();
+		op.StartWithCmds(data, elaspe);
 	}
 
 	private void foldCards(GameObject go, Action callback = null) {
@@ -384,19 +403,5 @@ public class PlayerObject : MonoBehaviour {
 				callback();
 			}
 		});
-	}
-
-	private void showOP(Dictionary<string, object> data) {
-		// 隐藏头像
-		circle.SetActive(false);
-
-		var pos = transform.parent.position;
-
-		OPGo = (GameObject)Instantiate(Resources.Load("Prefab/OP"));	
-		OPGo.transform.SetParent(G.Cvs.transform, false);
-		OPGo.transform.position = pos;
-		
-		var op = OPGo.GetComponent<OP>();
-		op.StartWithCmds(data);
 	}
 }

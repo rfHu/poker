@@ -5,7 +5,6 @@ using UnityEngine.UI;
 using System;
 
 public class CircleMask : MonoBehaviour {
-	public int Duration = 15;
 	bool activated = false;
 	ProceduralImage proImage;
 	Text numberText;
@@ -22,8 +21,8 @@ public class CircleMask : MonoBehaviour {
 		numberText.enabled = false;	
 	}
 
-	public void Enable(float elaspe = 0) {
-		if (elaspe > Duration || elaspe < 0) {
+	public void Enable(float elaspe) {
+		if (elaspe > GameData.Shared.ThinkTime || elaspe < 0) {
 			return ;
 		}
 
@@ -41,7 +40,7 @@ public class CircleMask : MonoBehaviour {
 	IEnumerator run(float elaspe = 0) {
 		activated = true;
 
-		float time = Duration - elaspe;
+		float time = GameData.Shared.ThinkTime - elaspe;
 		while (time > 0 && activated) {
 			time = time - Time.deltaTime;
 			SetFillAmount(time);
@@ -61,7 +60,7 @@ public class CircleMask : MonoBehaviour {
 			numberText.enabled = true;
 		}
 
-		proImage.fillAmount = left / Duration;
+		proImage.fillAmount = left / GameData.Shared.ThinkTime;
 		numberText.text =  (Math.Ceiling(left)).ToString();
 	}
 }

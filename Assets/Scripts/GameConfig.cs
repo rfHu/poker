@@ -15,6 +15,11 @@ public enum ActionState {
 }
 
 sealed public class Player {
+	sealed public class RestoreData {
+		public int seconds = 0;
+		public Dictionary<string, object> data; 
+	}
+
 	public string Name = "";
 	public string Avatar = "";
 	public string Uid = "";
@@ -23,7 +28,9 @@ sealed public class Player {
 	public ReactiveProperty<int> PrChips = new ReactiveProperty<int>();
 	public bool InGame = false;
 
-	public ReactiveProperty<ActionState> ActState = new ReactiveProperty<ActionState>();
+	public BehaviorSubject<RestoreData> Countdown = new BehaviorSubject<RestoreData>(new RestoreData());
+
+	public Subject<ActionState> ActState = new Subject<ActionState>();
 
 	public ReactiveProperty<List<int>> Cards = new ReactiveProperty<List<int>>();
 	
@@ -39,7 +46,18 @@ sealed public class Player {
 		PrChips.Value = json.Int("pr_chips");
 
 		Index = index;
-		InGame = json.Bool("is_ingame");		
+		InGame = json.Bool("is_ingame");	
+
+		var cd = json.Int("turn_countdown");
+		if (cd > 0) {
+			var dt = new RestoreData();
+			dt.seconds = cd;
+			dt.data = new Dictionary<string, object>{
+				{"cmds", json.Dict("cmds")}
+			};
+
+			Countdown.OnNext(dt);
+		}
 	}
 
 	public Player() {}
@@ -160,7 +178,7 @@ sealed public class GameData {
 			var index = e.Data.Int("seat");
 
 			if (Players.ContainsKey(index)) {
-				Players[index].ActState.Value = ActionState.Fold;
+				Players[index].ActState.OnNext(ActionState.Fold);
 			}
 		});
 
@@ -184,9 +202,7 @@ sealed public class GameData {
 			player.PrChips.Value = mop.pr_chips;
 			player.Bankroll.Value = mop.bankroll;
 
-			// @FIXME: 直接修改居然不触发事件
-			player.ActState.Value = ActionState.None;
-			player.ActState.Value = map[e.E];	
+			player.ActState.OnNext(map[e.E]);
 		};
 
 		RxSubjects.Call.Subscribe(act);
@@ -215,6 +231,7 @@ sealed public class GameData {
 		});
 	}
 
+	public int ThinkTime = 15;
 	public bool Owner = false;	
 	public List<int> BankrollMul;
 	public int PlayerCount;
