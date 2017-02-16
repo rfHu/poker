@@ -212,7 +212,11 @@ public class PlayerObject : MonoBehaviour {
 		}).AddTo(this);
 
 		player.Cards.AsObservable().Where((cards) => cards != null && cards.Count == 2).Subscribe((cards) => {
-			SeeCard(cards);
+			if (isSelf()) {
+				SeeCard(cards);
+			} else {
+				showTheCards(cards);
+			}
 		}).AddTo(this);
 
 		player.Winner.AsObservable().Where((winner) => winner != null).Subscribe((winner) => {
@@ -229,7 +233,7 @@ public class PlayerObject : MonoBehaviour {
 			WinNumber.text = num2Text(gain);
 			scoreLabel.gameObject.SetActive(false);
 
-			if (!isSelf()) {
+			if (!isSelf() && !AllinAnim.activeSelf) {
 				showTheCards(winner.cards);
 			}
 

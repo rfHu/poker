@@ -147,15 +147,29 @@ sealed public class GameData {
 		});
 
 		RxSubjects.Deal.Subscribe((e) => {
-			var deals = e.Data.Dict("deals").IL("-1");
-		
-			if (deals.Count <= 0) {
-				return ;
+			var data = e.Data.Dict("deals");
+
+			foreach(KeyValuePair<string, object>item in data) {
+				var list = item.Value as List<int>;
+				if (list.Count <= 0) {
+					continue;
+				}
+
+				if (item.Key == "-1") {
+					foreach(int pb in list) {
+						PublicCards.Add(pb);
+					}
+				} else {
+					var k = Convert.ToInt16(item.Key);
+					if (!Players.ContainsKey(k)) {
+						continue;
+					}
+
+					Players[k].Cards.Value = list;
+				}
 			}
 
-			foreach(int item in deals) {
-				PublicCards.Add(item);
-			}
+			
 		});
 		
 		RxSubjects.TakeMore.Subscribe((e) => {

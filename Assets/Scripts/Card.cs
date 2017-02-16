@@ -46,6 +46,10 @@ public class Card : MonoBehaviour {
 			return ;
 		}
 
+		if (!IsBack) {
+			return ;
+		}
+
 		var realIndex = Card.CardIndex(index);
 		show(realIndex, anim);
 	}

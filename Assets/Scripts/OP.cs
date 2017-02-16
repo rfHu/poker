@@ -51,6 +51,11 @@ public class OP : MonoBehaviour {
 		setRaiseButtons(callNum);
 	}
 
+	void OnDestroy()
+	{
+		UIWidgets.ModalHelper.Close(modalKey);
+	}
+
 	private void setRaiseButtons(int call) {
 		// 底池小于二倍	
 		var pot = GameData.Shared.Pot.Value;
