@@ -24,6 +24,7 @@ public class PlayerObject : MonoBehaviour {
 	public Image ActImage;
 	// 0:看牌   1:加注    2:跟注    3:弃牌    4:All In
 	public Sprite[] ActSprites;
+	public GameObject AllinAnim;
 
 	private Text nameLabel;
 	private Text scoreLabel;
@@ -130,7 +131,7 @@ public class PlayerObject : MonoBehaviour {
 		ActImage.gameObject.SetActive(false);
 	}
 
-	private void setAct(ActionState state) {
+	private void dealAct(ActionState state) {
 		var map = new Dictionary<ActionState, int>{
 			{ActionState.Check, 0},
 			{ActionState.Raise, 1},
@@ -142,6 +143,10 @@ public class PlayerObject : MonoBehaviour {
 		ActImage.gameObject.SetActive(true);
 		ActImage.sprite = ActSprites[map[state]];
 		setActPos();
+
+		if (state == ActionState.Allin) {
+			AllinAnim.SetActive(true);
+		}
 	}
 
 	private void setActPos() {
@@ -193,7 +198,7 @@ public class PlayerObject : MonoBehaviour {
 				MoveOut();
 			}
 
-			setAct(e);
+			dealAct(e);
 		}).AddTo(this);
 
 		player.Destroyed.AsObservable().Where((v) => v).Subscribe((_) => {
@@ -241,6 +246,7 @@ public class PlayerObject : MonoBehaviour {
 		RxSubjects.GameOver.Subscribe((e) => {
 			MoveOut();
 			ActImage.gameObject.SetActive(false);
+			AllinAnim.SetActive(false);
 		}).AddTo(this);
 
 		RxSubjects.Deal.Subscribe((e) => {
@@ -263,7 +269,7 @@ public class PlayerObject : MonoBehaviour {
 	
 		if (cards[0] > 0 && cards[1] > 0) {
 			// 显示GameObject
-			ShowCards[0].transform.parent.gameObject.SetActive(true);
+			getShowCard().SetActive(true);
 
 			// 显示手牌
 			ShowCards[0].ShowServer(cards[0], true);
@@ -271,6 +277,10 @@ public class PlayerObject : MonoBehaviour {
 
 			Cardfaces.SetActive(false);
 		}
+	}
+
+	private GameObject getShowCard() {
+		return ShowCards[0].transform.parent.gameObject;
 	}
 
 	private void hideAnim() {
@@ -287,6 +297,13 @@ public class PlayerObject : MonoBehaviour {
 		if (WinImageGo.activeSelf) {
 			WinImageGo.GetComponent<RawImage>().DOFade(0,duration).OnComplete(() => {
 				WinImageGo.SetActive(false);
+			});
+		}
+
+		var showCard = getShowCard();
+		if (showCard.activeSelf) {
+			showCard.GetComponent<CanvasGroup>().DOFade(0, duration).OnComplete(() => {
+				showCard.SetActive(false);
 			});
 		}
 	}

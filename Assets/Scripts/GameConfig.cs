@@ -169,7 +169,7 @@ sealed public class GameData {
 			var map = new Dictionary<string, ActionState>() {
 				{"call", ActionState.Call},
 				{"check", ActionState.Check},
-				{"allin", ActionState.Allin},
+				{"all_in", ActionState.Allin},
 				{"raise", ActionState.Raise}
 			};
 
