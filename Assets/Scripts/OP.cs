@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Extensions;
 using UnityEngine.UI;
+using UniRx;
 
 public class OP : MonoBehaviour {
 	public GameObject RaiseGo;
@@ -15,12 +16,18 @@ public class OP : MonoBehaviour {
 	public Sprite CallSpr;
 	public Text CallNumber;
 	public Text CallText;
+	public Slider Slid;
+	public GameObject Allin;
+	public Text RaiseNumber;
+
+	private List<int> range;
 
 	public void StartWithCmds(Dictionary<string, object> data) {
         var cmds = data.Dict("cmds");
 		var check = cmds.Bool("check");
 		var callNum = cmds.Int("call");
-		var raise = cmds.IL("raise");
+
+		this.range = cmds.IL("raise");
 
 		if (check) { // 看牌
 			CallGo.GetComponent<Button>().onClick.AddListener(OPS.check);
@@ -38,10 +45,10 @@ public class OP : MonoBehaviour {
 		}
 
 		FoldGo.GetComponent<CircleMask>().Enable();
-		setRaiseButtons(raise, callNum);
+		setRaiseButtons(callNum);
 	}
 
-	private void setRaiseButtons(List<int> range, int call) {
+	private void setRaiseButtons(int call) {
 		// 底池小于二倍	
 		var pot = GameData.Shared.Pot.Value;
 		var bb = GameData.Shared.BB;
@@ -67,11 +74,32 @@ public class OP : MonoBehaviour {
 	}
 
 	public void OnRaiseClick() {
-		Debug.Log("OnClick");
+		Slid.gameObject.SetActive(true);
+		Slid.value = Slid.minValue = range[0];
+		Slid.maxValue = range[1];
+		Slid.wholeNumbers = true;
+
+		Slid.OnValueChangedAsObservable().Subscribe((value) => {
+			if (value < range[1]) {
+				Allin.SetActive(false);
+			} else {
+				Allin.SetActive(true);
+			}
+			
+			RaiseNumber.text = value.ToString();
+		}).AddTo(this);
+
+		set3Acts(false);
 	}
 
 	public void OnFoldClick() {
 		OPS.fold();
+	}
+
+	private void set3Acts(bool active = true) {
+		R1.SetActive(active);	
+		R2.SetActive(active);	
+		R3.SetActive(active);	
 	}
 
 	class OPS {
