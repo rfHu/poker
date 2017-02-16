@@ -71,6 +71,13 @@ public class PlayerObject : MonoBehaviour {
 		Avatar.GetComponent<CircleMask>().Disable();
 	}
 
+	void OnDestroy()
+	{
+		if (OPGo != null) {
+			Destroy(OPGo);
+		}
+	}
+
 	public void ShowPlayer(Player player, Transform parent) {
 		Index = player.Index;
 		Uid = player.Uid;

@@ -32,6 +32,7 @@ public sealed class Connect  {
 		// 	request.Cookies.Add(cookie);
 		// };
 		manager.Socket.On("connect", onConnect);
+
 		manager.Open();	
 	}
 
