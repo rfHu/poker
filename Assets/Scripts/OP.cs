@@ -19,9 +19,12 @@ public class OP : MonoBehaviour {
 	public Slider Slid;
 	public GameObject Allin;
 	public Text RaiseNumber;
+	public Text MaxText;
+	public Button SlidOK;
 
 	private List<int> range;
-
+	private int modalKey;
+	
 	public void StartWithCmds(Dictionary<string, object> data) {
         var cmds = data.Dict("cmds");
 		var check = cmds.Bool("check");
@@ -78,6 +81,7 @@ public class OP : MonoBehaviour {
 		Slid.value = Slid.minValue = range[0];
 		Slid.maxValue = range[1];
 		Slid.wholeNumbers = true;
+		MaxText.text = range[1].ToString();
 
 		Slid.OnValueChangedAsObservable().Subscribe((value) => {
 			if (value < range[1]) {
@@ -89,17 +93,38 @@ public class OP : MonoBehaviour {
 			RaiseNumber.text = value.ToString();
 		}).AddTo(this);
 
-		set3Acts(false);
+		// 展示遮罩
+		modalKey = UIWidgets.ModalHelper.Open(this, null, new Color(0, 0, 0, 0), close);
+		transform.SetAsLastSibling();
+
+		setToggle(false);
 	}
 
 	public void OnFoldClick() {
 		OPS.fold();
 	}
 
-	private void set3Acts(bool active = true) {
+	public void OnSliderOK() {
+		var value = (int)Slid.value;
+
+		if (value >= range[1]) {
+			OPS.allIn();
+		} else {
+			OPS.raise(value);
+		}
+	}
+
+	private void close() {
+		UIWidgets.ModalHelper.Close(modalKey);
+		Slid.gameObject.SetActive(false);
+		setToggle(true);
+	}
+
+	private void setToggle(bool active = true) {
 		R1.SetActive(active);	
 		R2.SetActive(active);	
 		R3.SetActive(active);	
+		RaiseGo.SetActive(active);
 	}
 
 	class OPS {

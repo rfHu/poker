@@ -373,8 +373,11 @@ public class PlayerObject : MonoBehaviour {
 		// 隐藏头像
 		circle.SetActive(false);
 
+		var pos = transform.parent.position;
+
 		OPGo = (GameObject)Instantiate(Resources.Load("Prefab/OP"));	
-		OPGo.transform.SetParent(transform, false);
+		OPGo.transform.SetParent(G.Cvs.transform, false);
+		OPGo.transform.position = pos;
 		
 		var op = OPGo.GetComponent<OP>();
 		op.StartWithCmds(data);
