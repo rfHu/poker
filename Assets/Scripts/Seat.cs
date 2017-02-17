@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using DG.Tweening;
+using UniRx;
 
 public enum SeatPosition {
 	Top,
@@ -10,7 +11,15 @@ public enum SeatPosition {
 
 public class Seat : MonoBehaviour {
 	public int Index;
-	float duration = 0.15f;
+	public ReactiveProperty<SeatPosition> SeatPos  = new ReactiveProperty<SeatPosition>();
+
+	private float duration = 0.15f;
+
+	void Awake() {
+		// SeatPos.Subscribe((value) => {
+
+		// });
+	}
 
 	public void OnClick() {
 		if (GameData.MyCmd.Unseat) {
@@ -26,7 +35,7 @@ public class Seat : MonoBehaviour {
 		);		
 	}
 
-	public SeatPosition Pos() {
+	public SeatPosition GetPos() {
 		var h = G.Cvs.GetComponent<RectTransform>().rect.height;
 		var trans = transform.GetComponent<RectTransform>();
 		var x = trans.anchoredPosition.x;
@@ -45,7 +54,7 @@ public class Seat : MonoBehaviour {
 	}
 
 	public void SetDealer(GameObject dealer) {
-		var pos = Pos();
+		var pos = GetPos();
 		var position = gameObject.GetComponent<RectTransform>().anchoredPosition;
 		var y = position.y - 45;
 		var x = position.x + 70;

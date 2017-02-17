@@ -7,7 +7,7 @@ using System;
 public class ChipsGo : MonoBehaviour {
 	public Text TextNumber;
 
-	private SeatPosition pos;
+	private Seat theSeat;
 
 	void Awake() {
 		RxSubjects.Deal.Subscribe((e) => {
@@ -19,17 +19,21 @@ public class ChipsGo : MonoBehaviour {
 		TextNumber.text = chips.ToString();
 	}
 
-	public void Create(int value, SeatPosition pos) {
-		this.pos = pos;
+	public void Create(int value, Seat seat) {
+		theSeat = seat;
 
 		doTween().OnComplete(() => {
 			SetChips(value);
 			TextNumber.gameObject.SetActive(true);
 		});
+
+		theSeat.SeatPos.Subscribe((pos) => {
+			GetComponent<RectTransform>().anchoredPosition = getVector(pos);
+		}).AddTo(this);
 	}
 
-	public void AddMore(Action callback, SeatPosition pos) {
-		this.pos = pos;
+	public void AddMore(Action callback, Seat seat) {
+		theSeat = seat;
 
 		doTween().OnComplete(() => {
 			Destroy(gameObject);	
@@ -38,6 +42,13 @@ public class ChipsGo : MonoBehaviour {
 	}
 
 	private Tweener doTween() {
+		var pos = theSeat.GetPos();
+
+		return GetComponent<RectTransform>()
+		.DOAnchorPos(getVector(pos), 0.4f);
+	}
+
+	private Vector2 getVector(SeatPosition pos) {
 		var vector = new Vector2(80, 0);
 
 		if (pos == SeatPosition.Right) {
@@ -46,15 +57,14 @@ public class ChipsGo : MonoBehaviour {
 			vector = new Vector2(0, -120);
 		}
 
-		return GetComponent<RectTransform>()
-		.DOAnchorPos(vector, 0.4f);
+		return vector;
 	}
 
-	void hideChips() {
+	private void hideChips() {
 		transform.SetParent(G.Cvs.transform, true);
 		
 		var rect = GetComponent<RectTransform>();
-		rect.DOAnchorPos(new Vector2(0, 0), 0.4f)
+		rect.DOAnchorPos(new Vector2(0, 250), 0.4f)
 		.OnComplete(() => {
 			Destroy(gameObject);
 		});

@@ -169,8 +169,6 @@ sealed public class GameData {
 					Players[k].Cards.Value = list;
 				}
 			}
-
-			
 		});
 		
 		RxSubjects.TakeMore.Subscribe((e) => {

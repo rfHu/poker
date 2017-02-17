@@ -35,6 +35,12 @@ public class PlayerObject : MonoBehaviour {
 	private float foldOpacity = 0.7f;
 	private float animDuration = 0.4f;
 
+	private Seat theSeat {
+		get {
+			return  transform.parent.GetComponent<Seat>();
+		}
+	}
+
 	void Awake() {
 		var info = transform.Find("Info");
 
@@ -148,24 +154,10 @@ public class PlayerObject : MonoBehaviour {
 
 		ActImage.gameObject.SetActive(true);
 		ActImage.sprite = ActSprites[map[state]];
-		setActPos();
 
 		if (state == ActionState.Allin) {
 			AllinAnim.SetActive(true);
 		}
-	}
-
-	private void setActPos() {
-		if (pos() == SeatPosition.Right) {
-			var trans = ActImage.GetComponent<RectTransform>();
-			var v = trans.anchoredPosition;
-			trans.anchoredPosition = new Vector2(-v.x, v.y);	
-		}
-	}
-
-	private SeatPosition pos() {
-		var seat = transform.parent.GetComponent<Seat>();
-		return seat.Pos();
 	}
 
 	private void setAlpha() {
@@ -181,7 +173,7 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	private void registerRxEvent() {
-		player.PrChips.AsObservable().DistinctUntilChanged().Subscribe((value) => {
+		player.PrChips.AsObservable().Subscribe((value) => {
 			if (value == 0) {
 				return ;
 			}
@@ -268,6 +260,18 @@ public class PlayerObject : MonoBehaviour {
 		RxSubjects.Deal.Subscribe((e) => {
 			ActImage.gameObject.SetActive(false);
 		}).AddTo(this);
+
+		theSeat.SeatPos.Subscribe((pos) => {
+			var trans = ActImage.GetComponent<RectTransform>();
+			var v = trans.anchoredPosition;
+			var x = Math.Abs(v.x);
+
+			if (pos == SeatPosition.Right) {
+				trans.anchoredPosition = new Vector2(-x, v.y);	
+			} else {
+				trans.anchoredPosition = new Vector2(x, v.y);
+			}
+		}).AddTo(this);
 	}
 
 	private string num2Text(int num) {
@@ -330,11 +334,11 @@ public class PlayerObject : MonoBehaviour {
 
 		if (cgo == null) {
 			cgo = chips.GetComponent<ChipsGo>();
-			cgo.Create(value, pos());
+			cgo.Create(value, theSeat);
 		} else {
 			chips.GetComponent<ChipsGo>().AddMore(() => {
 				cgo.SetChips(value);
-			}, pos());	
+			}, theSeat);	
 		}	
 	}
 
