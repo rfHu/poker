@@ -31,7 +31,7 @@ public class Seat : MonoBehaviour {
 		var h = G.Cvs.GetComponent<RectTransform>().rect.height;
 		var trans = transform.GetComponent<RectTransform>();
 		var x = trans.anchoredPosition.x;
-		var y = trans.anchoredPosition3D.y;
+		var y = trans.anchoredPosition.y;
 
 		// y轴距顶部不超过210，则认为是顶部
 		if (h - y < 210) {
