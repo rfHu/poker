@@ -25,6 +25,22 @@ public class OP : MonoBehaviour {
 
 	private List<int> range;
 	private int modalKey;
+
+	private static OP instance; 
+
+	void Awake()
+	{
+		if (instance != null) {
+			Destroy(instance);
+		}
+
+		instance = this;
+	}
+
+	void OnDestroy()
+	{
+		UIWidgets.ModalHelper.Close(modalKey);
+	}
 	
 	public void StartWithCmds(Dictionary<string, object> data, int elaspe) {
         var cmds = data.Dict("cmds");
@@ -64,11 +80,6 @@ public class OP : MonoBehaviour {
 			set3Acts(false);
 			RaiseGo.SetActive(false);
 		}	
-	}
-
-	void OnDestroy()
-	{
-		UIWidgets.ModalHelper.Close(modalKey);
 	}
 
 	private void setRaiseButtons(int call) {
