@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using System.Linq;
-using DG.Tweening;
 using UniRx;
 
 public class Controller : MonoBehaviour {
@@ -20,8 +19,6 @@ public class Controller : MonoBehaviour {
 
 	public List<GameObject> Seats;	
 
-	GameObject dealer;
-
 	List<Vector2> anchorPositions = new List<Vector2>();
 
 	public GameObject OwnerButton; 
@@ -33,6 +30,7 @@ public class Controller : MonoBehaviour {
 		// 数据驱动开发，在这里重新reload数据，触发事件
 		GameData.Shared.Reload();
 		showGameInfo();
+		setupDealer();
 	}
 
 	void changePositions(int index) {
@@ -46,7 +44,7 @@ public class Controller : MonoBehaviour {
 		var newVectors = left.Concat(right).ToList(); 
 
 		for (var i = 0; i < Seats.Count; i++) {
-			Seats[i].GetComponent<RectTransform>().DOAnchorPos(newVectors[i], 0.15f);
+			Seats[i].GetComponent<Seat>().ChgPos(newVectors[i]);
 		}
 	}
 
@@ -166,6 +164,11 @@ public class Controller : MonoBehaviour {
 		}
 	}
 
+	private void setupDealer() {
+		var dealer = (GameObject)Instantiate(Resources.Load("Prefab/Dealer"));
+		dealer.GetComponent<Dealer>().Init(Seats);
+	}
+
 	private void addGameInfo(string text) {
 		GameObject label = Instantiate(gameInfo);
 		label.GetComponent<Text>().text = text;
@@ -181,9 +184,7 @@ public class Controller : MonoBehaviour {
 			GameObject cpseat = Instantiate (seat);
 			
 			var st = cpseat.GetComponent<Seat>();
-			st.Index = i;
-			cpseat.transform.SetParent (canvas.transform, false);
-			cpseat.GetComponent<RectTransform>().anchoredPosition = anchorPositions[i];
+			st.Init(i, anchorPositions[i]);		
 			Seats.Add (cpseat);
 		}
 	}
@@ -228,15 +229,6 @@ public class Controller : MonoBehaviour {
 
 		GameData.Shared.PublicCards.ObserveReset().Subscribe((_) => {
 			resetAllCards();
-		}).AddTo(this);
-
-		GameData.Shared.DealerSeat.AsObservable().Where((value) => value >= 0).Subscribe((value) => {
-			if (dealer == null) {
-				dealer = (GameObject)Instantiate(Resources.Load("Prefab/Dealer"));
-				dealer.transform.SetParent(canvas.transform, false);
-			}
-
-			Seats[value].GetComponent<Seat>().SetDealer(dealer);
 		}).AddTo(this);
 	}
 

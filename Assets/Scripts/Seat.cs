@@ -13,14 +13,6 @@ public class Seat : MonoBehaviour {
 	public int Index;
 	public ReactiveProperty<SeatPosition> SeatPos  = new ReactiveProperty<SeatPosition>();
 
-	private float duration = 0.15f;
-
-	void Awake() {
-		// SeatPos.Subscribe((value) => {
-
-		// });
-	}
-
 	public void OnClick() {
 		if (GameData.MyCmd.Unseat) {
 			return ;
@@ -53,16 +45,17 @@ public class Seat : MonoBehaviour {
 		return SeatPosition.Right;
 	}
 
-	public void SetDealer(GameObject dealer) {
-		var pos = GetPos();
-		var position = gameObject.GetComponent<RectTransform>().anchoredPosition;
-		var y = position.y - 45;
-		var x = position.x + 70;
+	public void ChgPos(Vector2 vector) {
+		GetComponent<RectTransform>().DOAnchorPos(vector, 0.15f).OnComplete(() => {
+			SeatPos.Value = GetPos();
+		});
+	}
 
-		if (pos == SeatPosition.Right) {
-			x =  position.x - 70;
-		}
+	public void Init(int index, Vector2 vector) {
+		Index = index;
+		transform.SetParent (G.Cvs.transform, false);
+		GetComponent<RectTransform>().anchoredPosition = vector;
 
-		dealer.GetComponent<RectTransform>().DOAnchorPos(new Vector2(x, y), duration);
+		SeatPos.Value = GetPos();
 	}
 }
