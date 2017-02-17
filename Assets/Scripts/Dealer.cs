@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using DG.Tweening;
@@ -17,32 +16,31 @@ public class Dealer : MonoBehaviour {
 	public void Init(List<GameObject> seats) {
 		this.seats = seats;
 		transform.SetParent(G.Cvs.transform, false);
-		GameData.Shared.DealerSeat.AsObservable().Where((value) => value >= 0).Subscribe(subs).AddTo(this);
+		GameData.Shared.DealerSeat.AsObservable().Subscribe(subs).AddTo(this);
 	} 
 
 	private void subs(int value) {
+		if (value < 0) {
+			gameObject.SetActive(false);
+			return ;
+		}
+
 		gameObject.SetActive(true);
-		setPosition(value);
 
 		if (cancel != null) {
 			cancel.Dispose();
 		}
 
-		cancel = seats[value].GetComponent<Seat>().SeatPos.Subscribe(
+		var seat = seats[value].GetComponent<Seat>();
+		cancel = seat.GetComponent<Seat>().SeatPos.Subscribe(
 			(pos) => {
-				setPosition(pos);
+				var anchor = seat.GetComponent<RectTransform>().anchoredPosition;
+				setPosition(pos, anchor);
 			}
 		).AddTo(this);
 	}
 
-	private void setPosition(int index) {
-		var seat = seats[index].GetComponent<Seat>();
-		var pos = seat.GetPos();
-		setPosition(pos);	
-	}
-
-	private void setPosition(SeatPosition pos) {
-		var position = gameObject.GetComponent<RectTransform>().anchoredPosition;
+	private void setPosition(SeatPosition pos, Vector2 position) {
 		var y = position.y - 45;
 		var x = position.x + 70;
 
