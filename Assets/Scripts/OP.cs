@@ -14,6 +14,7 @@ public class OP : MonoBehaviour {
 
 	public Sprite CheckSpr;
 	public Sprite CallSpr;
+	public Sprite AllinSpr;
 	public Text CallNumber;
 	public Text CallText;
 	public Slider Slid;
@@ -29,15 +30,16 @@ public class OP : MonoBehaviour {
         var cmds = data.Dict("cmds");
 		var check = cmds.Bool("check");
 		var callNum = cmds.Int("call");
+		var allin = cmds.Bool("all_in");
 
-		this.range = cmds.IL("raise");
+		range = cmds.IL("raise");
 
 		if (check) { // 看牌
 			CallGo.GetComponent<Button>().onClick.AddListener(OPS.check);
 			CallGo.GetComponent<Image>().sprite = CheckSpr;
 			CallNumber.gameObject.SetActive(false);
 			CallText.text = "看牌";
-		} else { // 跟注
+		} else if (callNum > 0) { // 跟注
 			CallGo.GetComponent<Button>().onClick.AddListener(() => {
 				OPS.call();
 			});
@@ -45,10 +47,23 @@ public class OP : MonoBehaviour {
 			CallNumber.gameObject.SetActive(true);
 			CallNumber.text = callNum.ToString();
 			CallText.text = "跟注";
+		} else if (allin) {
+			CallGo.GetComponent<Button>().onClick.AddListener(OPS.allIn);
+			CallGo.GetComponent<Image>().sprite = AllinSpr;
+			CallNumber.gameObject.SetActive(false);
+			CallText.enabled = false;
+		} else {
+			CallGo.SetActive(false);
 		}
 
 		FoldGo.GetComponent<CircleMask>().Enable(elaspe);
-		setRaiseButtons(callNum);
+		
+		if (range.Count >= 2) {
+			setRaiseButtons(callNum);
+		} else {
+			set3Acts(false);
+			RaiseGo.SetActive(false);
+		}	
 	}
 
 	void OnDestroy()
@@ -61,15 +76,41 @@ public class OP : MonoBehaviour {
 		var pot = GameData.Shared.Pot.Value;
 		var bb = GameData.Shared.BB;
 
+		List<int> values = new List<int>(); 
+		List<string> names = new List<string>();
+
 		if (pot < 2 * bb) {
-			addProperty(R1, string.Format("X2\n盲注"), 2 * bb);	
-			addProperty(R2, string.Format("X3\n盲注"), 3 * bb);	
-			addProperty(R3, string.Format("X4\n盲注"), 4 * bb);	
+			values.Add(2 * bb);
+			values.Add(3 * bb);
+			values.Add(4 * bb);
+
+			names.Add("X2\n盲注");
+			names.Add("X3\n盲注");
+			names.Add("X4\n盲注");
 		} else {
 			var nextPot = pot + call;
-			addProperty(R1, string.Format("1/2\n底池"), Mathf.CeilToInt(nextPot / 2f) + call);
-			addProperty(R2, string.Format("2/3\n底池"), Mathf.CeilToInt(nextPot * 2f / 3f) + call);
-			addProperty(R3, string.Format("1倍\n底池"), nextPot + call);
+			
+			values.Add(Mathf.CeilToInt(nextPot / 2f) + call);
+			values.Add(Mathf.CeilToInt(nextPot * 2f / 3f) + call);
+			values.Add(nextPot + call);
+
+			names.Add("1/2\n底池");
+			names.Add("2/3\n底池");
+			names.Add("1倍\n底池");
+		}
+
+		addProperty(R1, names[0], values[0]);	
+		addProperty(R2, names[1], values[1]);	
+		addProperty(R3, names[2], values[2]);
+
+		var max = range[1];
+		if (values[0] > max) {
+			set3Acts(false);
+		} else if (values[1] > max) {
+			R2.SetActive(false);
+			R3.SetActive(false);
+		} else if (values[2] > max) {
+			R3.SetActive(false);
 		}
 	}
 
@@ -126,10 +167,14 @@ public class OP : MonoBehaviour {
 	}
 
 	private void setToggle(bool active = true) {
+		set3Acts(active);
+		RaiseGo.SetActive(active);
+	}
+
+	private void set3Acts(bool active = true) {
 		R1.SetActive(active);	
 		R2.SetActive(active);	
-		R3.SetActive(active);	
-		RaiseGo.SetActive(active);
+		R3.SetActive(active);
 	}
 
 	class OPS {

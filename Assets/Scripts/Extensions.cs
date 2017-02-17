@@ -50,6 +50,11 @@ namespace Extensions {
 			return result.Select(o => Convert.ToInt32(o)).ToList();
 		} 
 
+		public static List<int> GetIL(this object obj) {
+			var result = obj as List<object> ?? new List<object>();
+			return result.Select(o => Convert.ToInt32(o)).ToList();
+		}
+
 		public static List<object> List<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key) {
 			TValue value;
 			dictionary.TryGetValue(key, out value);

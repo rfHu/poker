@@ -150,8 +150,9 @@ sealed public class GameData {
 			var data = e.Data.Dict("deals");
 
 			foreach(KeyValuePair<string, object>item in data) {
-				var list = item.Value as List<int>;
-				if (list.Count <= 0) {
+				var list = item.Value.GetIL();
+
+				if (list == null || list.Count <= 0) {
 					continue;
 				}
 
