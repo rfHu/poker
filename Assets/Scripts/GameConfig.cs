@@ -171,16 +171,6 @@ sealed public class GameData {
 			}
 		});
 		
-		// 不需要更新了
-		// RxSubjects.TakeMore.Subscribe((e) => {
-		// 	var index = e.Data.Int("where");
-		// 	var coin = e.Data.Int("coin");
-
-		// 	if (Players.ContainsKey(index)) {
-		// 		Players[index].Bankroll.Value += coin;
-		// 	}
-		// });
-
 		RxSubjects.Ready.Subscribe((e) => {
 			var index = e.Data.Int("where");
 			var bankroll = e.Data.Int("bankroll");

@@ -16,7 +16,6 @@ public class RxData: EventArgs {
 public class RxSubjects {
 	public static Subject<RxData> TakeSeat = new Subject<RxData>();
 	public static Subject<RxData> TakeCoin = new Subject<RxData>();
-	public static Subject<RxData> TakeMore = new Subject<RxData>();
 	public static Subject<RxData> UnSeat = new Subject<RxData>();
 	public static Subject<RxData> Ready = new Subject<RxData>();
 	public static Subject<RxData> GameStart = new Subject<RxData>();
