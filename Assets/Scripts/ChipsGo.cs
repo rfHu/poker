@@ -25,11 +25,11 @@ public class ChipsGo : MonoBehaviour {
 		doTween().OnComplete(() => {
 			SetChips(value);
 			TextNumber.gameObject.SetActive(true);
+			
+			theSeat.SeatPos.AsObservable().Subscribe((pos) => {
+				GetComponent<RectTransform>().anchoredPosition = getVector(pos);
+			}).AddTo(this);
 		});
-
-		theSeat.SeatPos.Subscribe((pos) => {
-			GetComponent<RectTransform>().anchoredPosition = getVector(pos);
-		}).AddTo(this);
 	}
 
 	public void AddMore(Action callback, Seat seat) {

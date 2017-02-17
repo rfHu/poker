@@ -13,6 +13,8 @@ public class Seat : MonoBehaviour {
 	public int Index;
 	public ReactiveProperty<SeatPosition> SeatPos  = new ReactiveProperty<SeatPosition>();
 
+	private Vector2 realVector;
+
 	public void OnClick() {
 		if (GameData.MyCmd.Unseat) {
 			return ;
@@ -29,9 +31,8 @@ public class Seat : MonoBehaviour {
 
 	public SeatPosition GetPos() {
 		var h = G.Cvs.GetComponent<RectTransform>().rect.height;
-		var trans = transform.GetComponent<RectTransform>();
-		var x = trans.anchoredPosition.x;
-		var y = trans.anchoredPosition.y;
+		var x = realVector.x;
+		var y = realVector.y;
 
 		// y轴距顶部不超过210，则认为是顶部
 		if (h - y < 210) {
@@ -46,12 +47,14 @@ public class Seat : MonoBehaviour {
 	}
 
 	public void ChgPos(Vector2 vector) {
+		realVector = vector;
 		GetComponent<RectTransform>().DOAnchorPos(vector, 0.15f).OnComplete(() => {
 			SeatPos.Value = GetPos();
 		});
 	}
 
 	public void Init(int index, Vector2 vector) {
+		realVector = vector;
 		Index = index;
 		transform.SetParent (G.Cvs.transform, false);
 		GetComponent<RectTransform>().anchoredPosition = vector;
