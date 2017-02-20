@@ -11,7 +11,7 @@ using Extensions;
 public class PlayerObject : MonoBehaviour {
 	public int Index;
 	public GameObject WinImageGo;
-	public RawImage Avatar;
+	public RawImage Avt;
 	public bool activated = false;
 	public string Uid = "";
 	public GameObject Cardfaces;
@@ -74,7 +74,7 @@ public class PlayerObject : MonoBehaviour {
 			circle.SetActive(true); // 显示头像
 		}
 
-		Avatar.GetComponent<CircleMask>().Disable();
+		Avt.GetComponent<CircleMask>().Disable();
 	}
 
 	void OnDestroy()
@@ -103,8 +103,7 @@ public class PlayerObject : MonoBehaviour {
 
 		nameLabel.text = player.Name;
 		scoreLabel.text = player.Bankroll.ToString();
-		RawImage rawImage = Avatar.GetComponent<RawImage>();
-		StartCoroutine(downloadAvatar(rawImage, player.Avatar));
+		Avt.GetComponent<Avatar>().SetImage(player.Avatar);	
 
 		GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
 		transform.SetParent(parent.transform, false);
@@ -368,12 +367,6 @@ public class PlayerObject : MonoBehaviour {
 		nameLabel.gameObject.SetActive(false);
 	}
 
-	private IEnumerator<WWW> downloadAvatar(RawImage img, string url) {
-		WWW www = new WWW(url);
-		yield return www;
-		img.texture = _.Circular(www.texture);
-	}	
-
 	private void turnTo(Dictionary<string, object> dict, int elaspe) {
 		if (isSelf()) {
 			showOP(dict, elaspe);
@@ -388,7 +381,7 @@ public class PlayerObject : MonoBehaviour {
 		AvatarMask.SetActive(true);
 
 		float time = GameData.Shared.ThinkTime - elaspe;
-		var mask = Avatar.GetComponent<CircleMask>();
+		var mask = Avt.GetComponent<CircleMask>();
 		mask.SetTextColor(new Color(0, (float)255 / 255, (float)106 / 255));
 
 		while (time > 0 && activated) {
