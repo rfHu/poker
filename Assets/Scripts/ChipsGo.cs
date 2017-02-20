@@ -18,7 +18,7 @@ public class ChipsGo : MonoBehaviour {
 	}
 
 	public void SetChips(int chips) {
-		TextNumber.text = chips.ToString();
+		TextNumber.text = _.Num2Text(chips);
 	}
 
 	public void Create(int value, Seat seat) {

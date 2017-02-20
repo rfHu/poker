@@ -33,7 +33,7 @@ public class Pots : MonoBehaviour {
 				go.SetActive(false);
 			}
 
-			DC.text =  "底池:" + value.ToString();	
+			DC.text =  "底池:" + _.Num2Text<int>(value);	
 		}).AddTo(this);
 
 		GameData.Shared.PrPot.AsObservable().Subscribe((value) => {
@@ -43,7 +43,7 @@ public class Pots : MonoBehaviour {
 				PrPotGo.SetActive(false);
 			} 
 
-			PrevPot.text = value.ToString();
+			PrevPot.text = _.Num2Text<int>(value); 
 		}).AddTo(this);
 	}
 }
