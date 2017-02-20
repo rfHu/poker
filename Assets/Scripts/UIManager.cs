@@ -3,13 +3,15 @@ using Extensions;
 using UniRx;
 
 public class UIManager : MonoBehaviour {
-	public Canvas canvas;
 	public GameObject recallPage;
 	GameObject auditMsg;
 
+	private DOPopup menuPopup;
+
 	public void ShowMenu() {
 		var popup = (GameObject)Instantiate(Resources.Load("Prefab/MenuPopup"));
-		popup.GetComponent<DOPopup>().Show(canvas);	
+		menuPopup = popup.GetComponent<DOPopup>();
+		menuPopup.Show(G.Cvs);	
 	}
 	
 	public void Exit() {
@@ -18,12 +20,12 @@ public class UIManager : MonoBehaviour {
 
 	public void ScorePage() {
 		var score = (GameObject)Instantiate(Resources.Load("Prefab/ScorePage"));
-		score.GetComponent<DOPopup>().Show(canvas);	
+		score.GetComponent<DOPopup>().Show(G.Cvs);	
 	}
 	
 	public void OnShowRecalls() {
 		var recall = (GameObject)Instantiate(Resources.Load("Prefab/RecallPage"));		
-		recall.GetComponent<DOPopup>().Show(canvas);
+		recall.GetComponent<DOPopup>().Show(G.Cvs);
 	}
 
 	void Awake()
@@ -42,7 +44,7 @@ public class UIManager : MonoBehaviour {
             }
             else
             {
-                auditMsg.GetComponent<DOPopup>().Show(canvas);
+                auditMsg.GetComponent<DOPopup>().Show(G.Cvs);
             }
 		}).AddTo(this);
 
@@ -51,8 +53,12 @@ public class UIManager : MonoBehaviour {
 				GameData.Shared.Coins = e.Data.Int("coins");
             }
 
+			if (menuPopup != null) {
+				menuPopup.Close();
+			}
+
             GameObject obj = (GameObject)Instantiate(Resources.Load("Prefab/Supplement"));
-            obj.GetComponent<DOPopup>().Show(canvas);
+            obj.GetComponent<DOPopup>().Show(G.Cvs);
 		}).AddTo(this);
 
 		RxSubjects.Exclusion.Subscribe((e) => {
