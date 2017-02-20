@@ -231,7 +231,7 @@ public class PlayerObject : MonoBehaviour {
 
 			// 收回大于0，要做筹码动画
 			if (winner.prize > 0) {
-				Invoke("doChipsAnim", 0.1f);
+				Invoke("doChipsAnim", 1f);
 			}
 			
 			WinNumber.transform.parent.gameObject.SetActive(true); 
@@ -268,7 +268,10 @@ public class PlayerObject : MonoBehaviour {
 			MoveOut();
 			ActImage.gameObject.SetActive(false);
 			AllinAnim.SetActive(false);
-			cgo.Hide();
+
+			if (cgo != null) {
+			 	cgo.Hide();
+			}
 		}).AddTo(this);
 
 		RxSubjects.Deal.Subscribe((e) => {
@@ -289,13 +292,8 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	private void doChipsAnim() {
-		Action act = () =>
-        {
-            var grp = Pots.CloneChips();
-            grp.ToPlayer(this);
-        };
-
-       cgo.OnComplete(act);
+		var grp = Pots.CloneChips();
+        grp.ToPlayer(this);
 	}
 
 	private string num2Text(int num) {

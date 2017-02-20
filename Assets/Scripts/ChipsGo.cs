@@ -9,7 +9,6 @@ public class ChipsGo : MonoBehaviour {
 
 	private Seat theSeat;
 	private bool hided = false;
-	private ReactiveProperty<bool> completed = new ReactiveProperty<bool>(false);
 
 
 	void Awake() {
@@ -55,19 +54,12 @@ public class ChipsGo : MonoBehaviour {
 		transform.SetParent(G.Cvs.transform, true);
 		
 		var rect = GetComponent<RectTransform>();
-		rect.DOAnchorPos(new Vector2(0, 250), 0.4f)
+		rect.DOAnchorPos(new Vector2(-70, 250), 0.4f)
 		.OnComplete(() => {
 			Destroy(gameObject);
-			completed.Value = true;
 		});
 	}
-
-	public void OnComplete(Action act) {
-		completed.AsObservable().Where((value) => value).Subscribe((value) => {
-			act();
-		});	
-	}
-
+	
 	private Tweener doTween() {
 		var pos = theSeat.GetPos();
 

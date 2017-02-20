@@ -14,6 +14,8 @@ public class ChipsGrp : MonoBehaviour {
 		doAnim(Chips[0], 0);	
 		doAnim(Chips[1], 0.05f);	
 		doAnim(Chips[2], 0.1f);	
+
+		Destroy(gameObject);
 	} 
 
 	private void doAnim(GameObject go, float delay) {
