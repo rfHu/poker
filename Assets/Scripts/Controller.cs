@@ -7,15 +7,12 @@ using UniRx;
 
 public class Controller : MonoBehaviour {
 	public GameObject seat;
-	public Canvas canvas;
 
 	public GameObject gameInfo;
 	public GameObject gameInfoWrapper;
 	public GameObject startButton;
 
 	public List<GameObject> PublicCards;
-
-	public GameObject Pot;
 
 	public List<GameObject> Seats;	
 
@@ -46,8 +43,8 @@ public class Controller : MonoBehaviour {
 
 	// 逆时针生成位置信息
 	List<Vector2> getVectors(int total) {
-		float width = canvas.GetComponent<RectTransform>().rect.width;
-		float height = canvas.GetComponent<RectTransform>().rect.height;
+		float width = G.Cvs.GetComponent<RectTransform>().rect.width;
+		float height = G.Cvs.GetComponent<RectTransform>().rect.height;
 
 		float top = height - 200;
 		float bottom = 200; 

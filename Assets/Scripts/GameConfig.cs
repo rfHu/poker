@@ -226,7 +226,9 @@ sealed public class GameData {
 		});
 
 		RxSubjects.GameOver.Subscribe((e) => {
-			foreach(KeyValuePair<string, object> item in e.Data) {
+			var data = e.Data.Dict("scorelist");
+
+			foreach(KeyValuePair<string, object> item in data) {
 				var dict = (Dictionary<string, object>)item.Value;
 				var json = new GameoverJson(dict); 
 				var index = Convert.ToInt32(item.Key);
@@ -235,7 +237,21 @@ sealed public class GameData {
 					Players[index].Winner.Value = json;
 				}
 			}
+
+			var room = e.Data.Dict("room");
+			Pot.Value = room.Int("pot");
+			PrPot.Value = Pot.Value - room.Int("pr_pot");
 		});
+	}
+
+	public Player FindMyPlayer() {
+		foreach (var player in Players) {
+			if (player.Value.Uid == Uid) {
+				return player.Value;
+			}
+		}
+
+		return null;
 	}
 
 	public int ThinkTime = 15;
@@ -263,8 +279,6 @@ sealed public class GameData {
 	public bool NeedAduit = false;
 	public bool IPLimit = false;
 	public bool GPSLimit = false;
-
-	public bool TakeCoinSuccess = false;
 
 	public ReactiveProperty<int> Pot = new ReactiveProperty<int>();
 	public ReactiveProperty<int> PrPot = new ReactiveProperty<int>();

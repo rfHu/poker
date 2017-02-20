@@ -8,10 +8,13 @@ public class ChipsGo : MonoBehaviour {
 	public Text TextNumber;
 
 	private Seat theSeat;
+	private bool hided = false;
+	private ReactiveProperty<bool> completed = new ReactiveProperty<bool>(false);
+
 
 	void Awake() {
 		RxSubjects.Deal.Subscribe((e) => {
-			hideChips();
+			Hide();
 		}).AddTo(this);
 	}
 
@@ -41,6 +44,30 @@ public class ChipsGo : MonoBehaviour {
 		});
 	}
 
+	public void Hide() {
+		if (hided) {
+			return ;
+		}
+
+		hided = true;
+
+		TextNumber.gameObject.SetActive(false);
+		transform.SetParent(G.Cvs.transform, true);
+		
+		var rect = GetComponent<RectTransform>();
+		rect.DOAnchorPos(new Vector2(0, 250), 0.4f)
+		.OnComplete(() => {
+			Destroy(gameObject);
+			completed.Value = true;
+		});
+	}
+
+	public void OnComplete(Action act) {
+		completed.AsObservable().Where((value) => value).Subscribe((value) => {
+			act();
+		});	
+	}
+
 	private Tweener doTween() {
 		var pos = theSeat.GetPos();
 
@@ -58,15 +85,5 @@ public class ChipsGo : MonoBehaviour {
 		}
 
 		return vector;
-	}
-
-	private void hideChips() {
-		transform.SetParent(G.Cvs.transform, true);
-		
-		var rect = GetComponent<RectTransform>();
-		rect.DOAnchorPos(new Vector2(0, 250), 0.4f)
-		.OnComplete(() => {
-			Destroy(gameObject);
-		});
 	}
 }

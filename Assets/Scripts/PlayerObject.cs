@@ -228,6 +228,11 @@ public class PlayerObject : MonoBehaviour {
 					WinImageGo.SetActive(true);
 				}
 			}
+
+			// 收回大于0，要做筹码动画
+			if (winner.prize > 0) {
+				Invoke("doChipsAnim", 0.1f);
+			}
 			
 			WinNumber.transform.parent.gameObject.SetActive(true); 
 			WinNumber.text = num2Text(gain);
@@ -263,6 +268,7 @@ public class PlayerObject : MonoBehaviour {
 			MoveOut();
 			ActImage.gameObject.SetActive(false);
 			AllinAnim.SetActive(false);
+			cgo.Hide();
 		}).AddTo(this);
 
 		RxSubjects.Deal.Subscribe((e) => {
@@ -280,6 +286,16 @@ public class PlayerObject : MonoBehaviour {
 				trans.anchoredPosition = new Vector2(x, v.y);
 			}
 		}).AddTo(this);
+	}
+
+	private void doChipsAnim() {
+		Action act = () =>
+        {
+            var grp = Pots.CloneChips();
+            grp.ToPlayer(this);
+        };
+
+       cgo.OnComplete(act);
 	}
 
 	private string num2Text(int num) {
@@ -395,11 +411,8 @@ public class PlayerObject : MonoBehaviour {
 		// 隐藏头像
 		circle.SetActive(false);
 
-		var pos = transform.parent.position;
-
 		OPGo = (GameObject)Instantiate(Resources.Load("Prefab/OP"));	
 		OPGo.transform.SetParent(G.Cvs.transform, false);
-		OPGo.transform.position = pos;
 		
 		var op = OPGo.GetComponent<OP>();
 		op.StartWithCmds(data, elaspe);

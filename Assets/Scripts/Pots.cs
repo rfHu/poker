@@ -7,13 +7,24 @@ public class Pots : MonoBehaviour {
 	public Text PrevPot;
 	public GameObject PrPotGo;
 
-	void Start()
+	public GameObject Grp;
+
+	private static Pots pots;
+
+	void Awake()
 	{
 		registerRx();	
+		pots = this;
+	}
+
+	public static ChipsGrp CloneChips() {
+		var go = Instantiate(pots.Grp, pots.PrPotGo.transform, true);
+		go.SetActive(true);
+		return go.GetComponent<ChipsGrp>();
 	}
 
 	private void registerRx() {
-		GameData.Shared.Pot.AsObservable().DistinctUntilChanged().Subscribe((value) => {
+		GameData.Shared.Pot.AsObservable().Subscribe((value) => {
 			var go = DC.gameObject;
 
 			if (value > 0) {
@@ -25,7 +36,7 @@ public class Pots : MonoBehaviour {
 			DC.text =  "底池:" + value.ToString();	
 		}).AddTo(this);
 
-		GameData.Shared.PrPot.AsObservable().DistinctUntilChanged().Subscribe((value) => {
+		GameData.Shared.PrPot.AsObservable().Subscribe((value) => {
 			if (value > 0) {
 				PrPotGo.SetActive(true);
 			} else {
