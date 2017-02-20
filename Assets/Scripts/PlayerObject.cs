@@ -203,7 +203,15 @@ public class PlayerObject : MonoBehaviour {
 			Destroy(gameObject);
 		}).AddTo(this);
 
-		player.Cards.AsObservable().Where((cards) => cards != null && cards.Count == 2).Subscribe((cards) => {
+		player.Cards.AsObservable().Where((cards) => {
+			if (cards != null && cards.Count == 2) {
+				if (cards[0] > 0 && cards[1] > 0) {
+					return true;
+				}
+			}
+
+			return false;
+		}).Subscribe((cards) => {
 			if (isSelf()) {
 				SeeCard(cards);
 			} else {
