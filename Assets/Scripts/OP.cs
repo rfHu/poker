@@ -39,8 +39,11 @@ public class OP : MonoBehaviour {
 		// 设置位置等信息
 		transform.SetParent(G.Cvs.transform, false);
 		var popup = FindObjectOfType<DOPopup>();
-		var index = popup.GetSiblingIndex();
-		transform.SetSiblingIndex(index - 1);
+
+		if (popup != null) {
+			var index = popup.GetSiblingIndex();
+			transform.SetSiblingIndex(index - 1);
+		}
 	}
 
 	void OnDestroy()
