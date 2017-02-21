@@ -61,7 +61,7 @@ public class Card : MonoBehaviour {
 		
 		while(time <= 1f) {
 			float scale = scaleCurve.Evaluate(time);
-			time = time + Time.deltaTime / duration;
+			time = Mathf.Min(time + Time.deltaTime / duration, 1);
 
 			Vector2 vector = rectTrans.localScale;
 			vector.x = scale;

@@ -11,7 +11,7 @@ using Extensions;
 public class PlayerObject : MonoBehaviour {
 	public int Index;
 	public GameObject WinImageGo;
-	public RawImage Avt;
+	public GameObject Avt;
 	public bool activated = false;
 	public string Uid = "";
 	public GameObject Cardfaces;
