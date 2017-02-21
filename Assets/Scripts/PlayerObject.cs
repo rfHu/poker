@@ -90,6 +90,9 @@ public class PlayerObject : MonoBehaviour {
 
 		this.player = player;
 
+		// 头像点击事件
+		Avt.GetComponent<Avatar>().Uid = Uid;
+
 		if (isSelf()) {
 			hideName();
 			RxSubjects.ChangeVectorsByIndex.OnNext(Index);

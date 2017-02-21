@@ -67,10 +67,10 @@ public class Supplement : MonoBehaviour {
 	{
 		var player = GameData.Shared.FindMyPlayer();
 
-		if (player == null || player.Uid == GameData.Shared.Uid) {
+		if (player == null || player.Bankroll.Value > 0)  {
 			return ;
 		}
-
+		
 		Connect.Shared.Emit(new Dictionary<string, object>() {
 			{"f", "unseat"}
 		});
