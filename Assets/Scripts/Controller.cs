@@ -164,6 +164,7 @@ public class Controller : MonoBehaviour {
 
 	private void addGameInfo(string text) {
 		GameObject label = Instantiate(gameInfo);
+		label.SetActive(true);
 		label.GetComponent<Text>().text = text;
 		label.transform.SetParent(gameInfoWrapper.transform, false);
 	}
