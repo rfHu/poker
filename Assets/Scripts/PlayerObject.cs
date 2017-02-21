@@ -403,8 +403,6 @@ public class PlayerObject : MonoBehaviour {
 		circle.SetActive(false);
 
 		OPGo = (GameObject)Instantiate(Resources.Load("Prefab/OP"));	
-		OPGo.transform.SetParent(G.Cvs.transform, false);
-		
 		var op = OPGo.GetComponent<OP>();
 		op.StartWithCmds(data, elaspe);
 	}

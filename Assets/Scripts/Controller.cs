@@ -16,6 +16,8 @@ public class Controller : MonoBehaviour {
 
 	public List<GameObject> Seats;	
 
+	// public GameObject Cutoff;
+
 	List<Vector2> anchorPositions = new List<Vector2>();
 
 	public GameObject OwnerButton; 
@@ -176,6 +178,7 @@ public class Controller : MonoBehaviour {
 
 		for (int i = 0; i < numberOfPlayers; i++) {
 			GameObject cpseat = Instantiate (seat);
+			cpseat.SetActive(true);
 			
 			var st = cpseat.GetComponent<Seat>();
 			st.Init(i, anchorPositions[i]);		
