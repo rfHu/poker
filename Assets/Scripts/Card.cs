@@ -59,7 +59,7 @@ public class Card : MonoBehaviour {
 		var image = GetComponent<Image>();
 		var rectTrans = GetComponent<RectTransform>();
 		
-		while(time <= 1f) {
+		while(time < 1f) {
 			float scale = scaleCurve.Evaluate(time);
 			time = Mathf.Min(time + Time.deltaTime / duration, 1);
 
