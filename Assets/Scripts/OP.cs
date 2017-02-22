@@ -156,10 +156,15 @@ public class OP : MonoBehaviour {
 		// 未按下时，隐藏加注提示
 		RoundTipsGo.SetActive(false);
 
+		var pointerDown = false;
+
 		Slid.OnValueChangedAsObservable().Subscribe((value) => {
 			if (value < range[1]) {
 				Allin.SetActive(false);
-				RoundTipsGo.SetActive(true);
+
+				if (pointerDown) {
+					RoundTipsGo.SetActive(true);
+				}
 			} else {
 				Allin.SetActive(true);
 				RoundTipsGo.SetActive(false);
@@ -170,10 +175,12 @@ public class OP : MonoBehaviour {
 		}).AddTo(this);
 
 		Slid.OnPointerDownAsObservable().Subscribe((_) => {
+			pointerDown = true;
 			RoundTipsGo.SetActive(true);
 		}).AddTo(this);
 
 		Slid.OnPointerUpAsObservable().Subscribe((_) => {
+			pointerDown = false;
 			RoundTipsGo.SetActive(false);
 		}).AddTo(this);
 
