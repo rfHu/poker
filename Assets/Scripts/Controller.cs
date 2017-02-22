@@ -43,7 +43,7 @@ public class Controller : MonoBehaviour {
 		}
 	}
 
-	// 逆时针生成位置信息
+	// 顺时针生成位置信息
 	List<Vector2> getVectors(int total) {
 		float width = G.Cvs.GetComponent<RectTransform>().rect.width;
 		float height = G.Cvs.GetComponent<RectTransform>().rect.height;
@@ -65,57 +65,57 @@ public class Controller : MonoBehaviour {
 		if (total == 2) {
 			return new List<Vector2>{
 				vector,
-				new Vector2(0, top)
+				new Vector2(0, top),
 			};
 		}
 
 		if (total == 6) {
 			return new List<Vector2> {
 				vector, 
-				new Vector2(right, bottom + h3),
-				new Vector2(right, bottom + 2 * h3),
-				new Vector2(0, top),
+				new Vector2(left, bottom + h3),
 				new Vector2(left, bottom + 2 * h3),
-				new Vector2(left, bottom + h3)
+				new Vector2(0, top),
+				new Vector2(right, bottom + 2 * h3),
+				new Vector2(right, bottom + h3),
 			};
 		}
 
 		if (total == 7) {
 			return new List<Vector2> {
 				vector, 
-				new Vector2(right, bottom + h3),
-				new Vector2(right, bottom + 2 * h3),
-				new Vector2(w3, top),
-				new Vector2(-w3, top),
+				new Vector2(left, bottom + h3),
 				new Vector2(left, bottom + 2 * h3),
-				new Vector2(left, bottom + h3)
+				new Vector2(-w3, top),
+				new Vector2(w3, top),
+				new Vector2(right, bottom + 2 * h3),
+				new Vector2(right, bottom + h3),
 			};
 		}
 
 		if (total == 8) {
 			return new List<Vector2> {
 				vector, 
-				new Vector2(right, bottom + h4),
-				new Vector2(right, bottom + 2 * h4),
-				new Vector2(right, bottom + 3 * h4),
-				new Vector2(0, top),
-				new Vector2(left, bottom + 3 * h4),
+				new Vector2(left, bottom + h4),
 				new Vector2(left, bottom + 2 * h4),
-				new Vector2(left, bottom + h4)
+				new Vector2(left, bottom + 3 * h4),
+				new Vector2(0, top),
+				new Vector2(right, bottom + 3 * h4),
+				new Vector2(right, bottom + 2 * h4),
+				new Vector2(right, bottom + h4),
 			};
 		}
 
 		if (total == 9) {
 			return new List<Vector2> {
 				vector, 
-				new Vector2(right, bottom + h4),
-				new Vector2(right, bottom + 2 * h4),
-				new Vector2(right, bottom + 3 * h4),
-				new Vector2(w3, top),
-				new Vector2(-w3, top),
-				new Vector2(left, bottom + 3 * h4),
+				new Vector2(left, bottom + h4),
 				new Vector2(left, bottom + 2 * h4),
-				new Vector2(left, bottom + h4)
+				new Vector2(left, bottom + 3 * h4),
+				new Vector2(-w3, top),
+				new Vector2(w3, top),
+				new Vector2(right, bottom + 3 * h4),
+				new Vector2(right, bottom + 2 * h4),
+				new Vector2(right, bottom + h4),
 			};
 		}
 

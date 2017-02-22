@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: bc575e472bca74769addb15f529d538b
-timeCreated: 1487225789
+timeCreated: 1487680448
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
@@ -96,8 +96,8 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 150
-        height: 150
+        width: 163
+        height: 160
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -107,10 +107,10 @@ TextureImporter:
       name: AllinAnim_1
       rect:
         serializedVersion: 2
-        x: 150
+        x: 163
         y: 0
-        width: 150
-        height: 150
+        width: 163
+        height: 160
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -120,10 +120,10 @@ TextureImporter:
       name: AllinAnim_2
       rect:
         serializedVersion: 2
-        x: 300
+        x: 326
         y: 0
-        width: 150
-        height: 150
+        width: 163
+        height: 160
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -133,23 +133,10 @@ TextureImporter:
       name: AllinAnim_3
       rect:
         serializedVersion: 2
-        x: 450
+        x: 489
         y: 0
-        width: 150
-        height: 150
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: AllinAnim_4
-      rect:
-        serializedVersion: 2
-        x: 600
-        y: 0
-        width: 150
-        height: 150
+        width: 163
+        height: 160
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
