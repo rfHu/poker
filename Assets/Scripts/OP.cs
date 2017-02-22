@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Extensions;
 using UnityEngine.UI;
 using UniRx;
+using UniRx.Triggers;
 
 public class OP : MonoBehaviour {
 	public GameObject RaiseGo;
@@ -22,6 +23,9 @@ public class OP : MonoBehaviour {
 	public Text RaiseNumber;
 	public Text MaxText;
 	public Button SlidOK;
+
+	public GameObject RoundTipsGo;
+	public Text TipsText;
 
 	private List<int> range;
 	private int modalKey;
@@ -149,14 +153,28 @@ public class OP : MonoBehaviour {
 		Slid.wholeNumbers = true;
 		MaxText.text = range[1].ToString();
 
+		// 未按下时，隐藏加注提示
+		RoundTipsGo.SetActive(false);
+
 		Slid.OnValueChangedAsObservable().Subscribe((value) => {
 			if (value < range[1]) {
 				Allin.SetActive(false);
+				RoundTipsGo.SetActive(true);
 			} else {
 				Allin.SetActive(true);
+				RoundTipsGo.SetActive(false);
 			}
 			
 			RaiseNumber.text = value.ToString();
+			TipsText.text = value.ToString();
+		}).AddTo(this);
+
+		Slid.OnPointerDownAsObservable().Subscribe((_) => {
+			RoundTipsGo.SetActive(true);
+		}).AddTo(this);
+
+		Slid.OnPointerUpAsObservable().Subscribe((_) => {
+			RoundTipsGo.SetActive(false);
 		}).AddTo(this);
 
 		// 展示遮罩

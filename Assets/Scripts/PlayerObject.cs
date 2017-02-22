@@ -245,8 +245,8 @@ public class PlayerObject : MonoBehaviour {
 				showTheCards(winner.cards);
 			}
 
-			// 2s后隐藏动画
-			Invoke("hideAnim", 2);			
+			// 4s后隐藏动画
+			Invoke("hideAnim", 4);			
 		}).AddTo(this);
 
 		// 中途复原行动
