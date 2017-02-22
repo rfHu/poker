@@ -119,6 +119,7 @@ sealed public class GameData {
 
 		RxSubjects.GameStart.AsObservable().Subscribe((e) => {
 			var json = e.Data.Dict("room");
+			GameStartState = true;
 			byJson(json);
 		});
 
@@ -134,6 +135,7 @@ sealed public class GameData {
 
 		var sceneLoaded = false; 
 		RxSubjects.Look.Subscribe((e) => {
+			GameStartState = false;
 			byJson(e.Data);
 
 			// 只允许进入一次
@@ -253,6 +255,8 @@ sealed public class GameData {
 
 		return null;
 	}
+
+	public bool GameStartState = false;
 
 	public int ThinkTime = 15;
 	public bool Owner = false;	

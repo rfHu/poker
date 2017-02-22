@@ -219,12 +219,51 @@ public class Controller : MonoBehaviour {
 		}).AddTo(this);
 
 		GameData.Shared.PublicCards.ObserveAdd().Subscribe((e) => {
-			PublicCards[e.Index].GetComponent<Card>().Show(e.Value, true);
+			if (GameData.Shared.GameStartState) {
+				var data = GameData.Shared.PublicCards;
+
+				if (data.Count < 3) {
+					return ;
+				}
+
+				if (data.Count == 3) {
+					showCards();
+				} else {
+					getCardFrom(e.Index).Show(e.Value, true);
+				}
+			} else {
+				getCardFrom(e.Index).Show(e.Value, false);
+			}
 		}).AddTo(this);
 
 		GameData.Shared.PublicCards.ObserveReset().Subscribe((_) => {
 			resetAllCards();
 		}).AddTo(this);
+	}
+	
+	private Card getCardFrom(int index) {
+		return PublicCards[index].GetComponent<Card>();
+	}
+
+	private void showCards() {
+		var cards = GameData.Shared.PublicCards.ToList();
+
+		if (cards.Count != 3) {
+			return ;
+		}
+
+		for(var i = 0; i < cards.Count; i++) {
+			var time = i * 0.2;
+			var local = i;
+
+			if (time == 0) {
+				getCardFrom(local).Show(cards[local], true);
+			} else {
+				Observable.Timer(TimeSpan.FromSeconds(time)).AsObservable().Subscribe((_) => {
+					getCardFrom(local).Show(cards[local], true);
+				}).AddTo(this);			
+			}
+		}
 	}
 
 	void resetAllCards() {
