@@ -22,7 +22,7 @@ public class Controller : MonoBehaviour {
 
 	public GameObject OwnerButton; 
 
-	void Start () {
+	void Awake () {
 		setupSeats();
 		registerRxEvents();
 

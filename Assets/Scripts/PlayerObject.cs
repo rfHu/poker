@@ -60,8 +60,9 @@ public class PlayerObject : MonoBehaviour {
 
 		MyCards.SetActive(true);
 
-		first.GetComponent<Card>().Show(cards[0], true);
-		second.GetComponent<Card>().Show(cards[1], true);
+		var state = GameData.Shared.SeeCardState;
+		first.GetComponent<Card>().Show(cards[0], state);
+		second.GetComponent<Card>().Show(cards[1], state);
 	}
 
 	public void MoveOut() {

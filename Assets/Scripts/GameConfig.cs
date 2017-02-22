@@ -220,6 +220,8 @@ sealed public class GameData {
 		RxSubjects.Raise.Subscribe(act);
 
 		RxSubjects.SeeCard.Subscribe((e) => {
+			SeeCardState = true;
+
 			var cards = e.Data.IL("cards");
 			var index = e.Data.Int("seat");
 			if (Players.ContainsKey(index)) {
@@ -257,6 +259,7 @@ sealed public class GameData {
 	}
 
 	public bool GameStartState = false;
+	public bool SeeCardState = false;
 
 	public int ThinkTime = 15;
 	public bool Owner = false;	
@@ -305,6 +308,9 @@ sealed public class GameData {
 
 	private void byJson(Dictionary<string, object> json) {
 		jsonData = json;
+
+		// 除了gamestart状态外，其他状态都在这里重置
+		SeeCardState = false;
 
 		var options = json.Dict("options");
 		var gamers = json.Dict("gamers");
