@@ -62,17 +62,4 @@ public class Supplement : MonoBehaviour {
 			}
 		});
 	}
-
-	void OnDestroy()
-	{
-		var player = GameData.Shared.FindMyPlayer();
-
-		if (player == null || player.Bankroll.Value > 0)  {
-			return ;
-		}
-		
-		Connect.Shared.Emit(new Dictionary<string, object>() {
-			{"f", "unseat"}
-		});
-	}
 }

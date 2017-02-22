@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Extensions;
 using UniRx;
+using System.Collections.Generic;
 
 public class UIManager : MonoBehaviour {
 	public GameObject recallPage;
@@ -58,7 +59,11 @@ public class UIManager : MonoBehaviour {
 			}
 
             GameObject obj = (GameObject)Instantiate(Resources.Load("Prefab/Supplement"));
-            obj.GetComponent<DOPopup>().Show(G.Cvs);
+            obj.GetComponent<DOPopup>().Show(G.Cvs, () => {
+				Connect.Shared.Emit(new Dictionary<string, object>() {
+					{"f", "unseat"}
+				});
+			});
 		}).AddTo(this);
 
 		RxSubjects.Exclusion.Subscribe((e) => {

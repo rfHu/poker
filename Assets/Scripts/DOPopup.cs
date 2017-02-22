@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UIWidgets;
 using DG.Tweening;
+using System;
 
 public enum AnimType {
 	Up2Down,
@@ -51,7 +52,7 @@ public class DOPopup : MonoBehaviour {
 		return transform.GetSiblingIndex() - 1;
 	}
 
-	public void Show(Canvas canvas) {
+	public void Show(Canvas canvas, Action close = null) {
 		if (show) {
 			return ;
 		}
@@ -59,7 +60,12 @@ public class DOPopup : MonoBehaviour {
 		show = true;
 
 		transform.SetParent(canvas.transform, false);
-		modalKey = ModalHelper.Open(this, null, new Color(0, 0, 0, 0), Close);
+		modalKey = ModalHelper.Open(this, null, new Color(0, 0, 0, 0), () => {
+			Close();
+			if (close != null) {
+				close();
+			}
+		});
 		transform.SetAsLastSibling();
 
 		switch(Animate) {

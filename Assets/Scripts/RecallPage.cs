@@ -42,7 +42,8 @@ public class RecallPage : MonoBehaviour {
 		totalNumber = ret.Int("total_hand");
 		currentNumber = ret.Int("cur_hand");
 
-		Owner.text = string.Format("{0}（{1}）", GameData.Shared.RoomName, GameData.Shared.StartTime.ToString("yyyy-MM-dd")); 
+		Owner.text = "牌局回顾";
+		// Owner.text = string.Format("{0}（{1}）", GameData.Shared.RoomName, GameData.Shared.StartTime.ToString("yyyy-MM-dd")); 
 		Current.text = currentNumber.ToString();
 		Total.text =  string.Format("/ {0}", totalNumber);
 
