@@ -270,7 +270,7 @@ sealed public class GameData {
 	public string Pin = "";
 	public string Name = ""; 
 	public string Avatar = "";
-	public string Room = "587450f87133077573039b92";
+	public string Room = "58ad4242c3732b8c783bd171";
 	public int MySeat = -1;
 	public int Ante = 0;
 	public int Coins = 0;
