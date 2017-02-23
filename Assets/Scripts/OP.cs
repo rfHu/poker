@@ -4,6 +4,7 @@ using Extensions;
 using UnityEngine.UI;
 using UniRx;
 using UniRx.Triggers;
+using System;
 
 public class OP : MonoBehaviour {
 	public GameObject RaiseGo;
@@ -55,7 +56,7 @@ public class OP : MonoBehaviour {
 		UIWidgets.ModalHelper.Close(modalKey);
 	}
 	
-	public void StartWithCmds(Dictionary<string, object> data, int elaspe) {
+	public void StartWithCmds(Dictionary<string, object> data, int elaspe, Action onOnlyAllin) {
         var cmds = data.Dict("cmds");
 		var check = cmds.Bool("check");
 		var callNum = cmds.Int("call");
@@ -89,9 +90,14 @@ public class OP : MonoBehaviour {
 		
 		if (range.Count >= 2) {
 			setRaiseButtons(callNum);
+			RaiseGo.GetComponent<Button>().onClick.AddListener(OnRaiseClick);
+		} else if(check && allin) {
+			RaiseGo.GetComponent<Image>().sprite = AllinSpr;
+			RaiseGo.GetComponent<Button>().onClick.AddListener(OPS.allIn);
 		} else {
 			set3Acts(false);
 			RaiseGo.SetActive(false);
+			onOnlyAllin();
 		}	
 	}
 
