@@ -56,7 +56,7 @@ public class Controller : MonoBehaviour {
 		float hh = top - bottom;
 		float ww = width - 200;
 
-		float h3 = hh / 3;
+		// float h3 = hh / 3;
 		float h4 = hh / 4;
 		float w3 = ww / 2 - ww / 3;
 
@@ -72,23 +72,23 @@ public class Controller : MonoBehaviour {
 		if (total == 6) {
 			return new List<Vector2> {
 				vector, 
-				new Vector2(left, bottom + h3),
-				new Vector2(left, bottom + 2 * h3),
+				new Vector2(left, bottom + h4),
+				new Vector2(left, bottom + 3 * h4),
 				new Vector2(0, top),
-				new Vector2(right, bottom + 2 * h3),
-				new Vector2(right, bottom + h3),
+				new Vector2(right, bottom + 3 * h4),
+				new Vector2(right, bottom + h4),
 			};
 		}
 
 		if (total == 7) {
 			return new List<Vector2> {
 				vector, 
-				new Vector2(left, bottom + h3),
-				new Vector2(left, bottom + 2 * h3),
+				new Vector2(left, bottom + h4),
+				new Vector2(left, bottom + 3 * h4),
 				new Vector2(-w3, top),
 				new Vector2(w3, top),
-				new Vector2(right, bottom + 2 * h3),
-				new Vector2(right, bottom + h3),
+				new Vector2(right, bottom + 3 * h4),
+				new Vector2(right, bottom + h4),
 			};
 		}
 
