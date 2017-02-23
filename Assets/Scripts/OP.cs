@@ -94,6 +94,7 @@ public class OP : MonoBehaviour {
 		} else if(check && allin) {
 			RaiseGo.GetComponent<Image>().sprite = AllinSpr;
 			RaiseGo.GetComponent<Button>().onClick.AddListener(OPS.allIn);
+			set3Acts(false);
 		} else {
 			set3Acts(false);
 			RaiseGo.SetActive(false);
