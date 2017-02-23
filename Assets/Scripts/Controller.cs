@@ -138,13 +138,13 @@ public class Controller : MonoBehaviour {
 		var bb = GameData.Shared.BB; 
 
 		if (GameData.Shared.Straddle) {
-			addGameInfo(string.Format("盲注：{0}/{1}/{2}", sb, bb, bb * 2));			
+			addGameInfo(string.Format("盲注: {0}/{1}/{2}", sb, bb, bb * 2));			
  		} else {
-			addGameInfo(string.Format("盲注：{0}/{1}", sb, bb));
+			addGameInfo(string.Format("盲注: {0}/{1}", sb, bb));
 		}
 
 		if (!string.IsNullOrEmpty(GameData.Shared.GameCode)) {
-			addGameInfo(String.Format("邀请码：{0}", GameData.Shared.GameCode));
+			addGameInfo(String.Format("邀请码: {0}", GameData.Shared.GameCode));
 		}
 
 		var ipLimit = GameData.Shared.IPLimit;
@@ -253,7 +253,7 @@ public class Controller : MonoBehaviour {
 		}
 
 		for(var i = 0; i < cards.Count; i++) {
-			var time = i * 0.2;
+			var time = i * 0.5;
 			var local = i;
 
 			if (time == 0) {

@@ -67,7 +67,7 @@ sealed public class Player {
 
 	public ReactiveProperty<bool> Destroyed = new ReactiveProperty<bool>(false);
 
-	public ReactiveProperty<GameoverJson> Winner = new ReactiveProperty<GameoverJson>();
+	public ReactiveProperty<GameoverJson> OverData = new ReactiveProperty<GameoverJson>();
 
 	public void Destroy() {
 		Destroyed.Value = true;
@@ -238,7 +238,7 @@ sealed public class GameData {
 				var index = Convert.ToInt32(item.Key);
 
 				if (Players.ContainsKey(index))  {
-					Players[index].Winner.Value = json;
+					Players[index].OverData.Value = json;
 				}
 			}
 
@@ -270,7 +270,7 @@ sealed public class GameData {
 	public string Pin = "";
 	public string Name = ""; 
 	public string Avatar = "";
-	public string Room = "58ae814ca4b5f843380e7d89";
+	public string Room = "58ae9ecea50753441179300a";
 	public int MySeat = -1;
 	public int Ante = 0;
 	public int Coins = 0;
@@ -282,7 +282,7 @@ sealed public class GameData {
 	// 游戏是否已经开始，跟暂停状态无关
 	public bool GameStarted = false; 
 	public float Rake = 0;
-	public int Duration = 0;
+	public long Duration = 0;
 	public bool NeedAduit = false;
 	public bool IPLimit = false;
 	public bool GPSLimit = false;
@@ -320,7 +320,7 @@ sealed public class GameData {
 		Ante = options.Int("ant");
 		PlayerCount = options.Int("max_seats");
 		Rake = options.Float("rake_percent");
-		Duration = options.Int("time_limit");
+		Duration = options.Long("time_limit");
 		NeedAduit = options.Int("need_audit") == 1;
 		GPSLimit = options.Int("gps_limit") == 1;
 		IPLimit = options.Int("ip_limit") == 1;

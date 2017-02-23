@@ -9,9 +9,9 @@ public class ScoreCtrl : MonoBehaviour {
 	public Text Hands;
 	public Text Countdown;
 
-	int seconds;
+	long seconds;
 
-	private string secToStr(int seconds) {
+	private string secToStr(long seconds) {
 		var hs = 3600;
 		var ms = 60;
 
@@ -22,7 +22,7 @@ public class ScoreCtrl : MonoBehaviour {
 		return string.Format("{0}:{1}:{2}", fix(h), fix(m), fix(s));	
 	}
 
-	private string fix(int num) {
+	private string fix<T>(T num) {
 		var str = num.ToString();
 		if (str.Length < 2) {
 			return "0" + str;
@@ -42,7 +42,7 @@ public class ScoreCtrl : MonoBehaviour {
         }, (json) =>
         {
 			var ret = json.Dict("ret");
-			var secs = ret.Int("left_time");
+			var secs = ret.Long("left_time");
 
 			Hands.text = string.Format("第{0}手", ret.Int("handid")); 
 			Countdown.text = secToStr(secs);

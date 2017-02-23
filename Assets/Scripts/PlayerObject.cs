@@ -189,6 +189,11 @@ public class PlayerObject : MonoBehaviour {
 		}).AddTo(this);
 
 		player.ActState.AsObservable().Subscribe((e) => {
+			// 对象已被销毁，不应该执行
+			if (this == null) {
+				return ;
+			}
+
 			if (e == ActionState.None) {
 				return ;
 			}
@@ -222,8 +227,8 @@ public class PlayerObject : MonoBehaviour {
 			}
 		}).AddTo(this);
 
-		player.Winner.AsObservable().Where((winner) => winner != null).Subscribe((winner) => {
-			var gain = winner.Gain();
+		player.OverData.AsObservable().Where((data) => data != null).Subscribe((data) => {
+			var gain = data.Gain();
 			if (gain > 0) {
 				Stars.SetActive(true);
 
@@ -232,17 +237,16 @@ public class PlayerObject : MonoBehaviour {
 				}
 			}
 
-			// 收回大于0，要做筹码动画
-			if (winner.prize > 0) {
+			// 收回大于0，要做筹码动画，同时展示盈亏
+			if (data.prize > 0) {
 				Invoke("doChipsAnim", 1f);
+				WinNumber.transform.parent.gameObject.SetActive(true); 
+				WinNumber.text = num2Text(gain);
+				scoreLabel.gameObject.SetActive(false);
 			}
-			
-			WinNumber.transform.parent.gameObject.SetActive(true); 
-			WinNumber.text = num2Text(gain);
-			scoreLabel.gameObject.SetActive(false);
 
 			if (!isSelf() && !AllinAnim.activeSelf) {
-				showTheCards(winner.cards);
+				showTheCards(data.cards);
 			}
 
 			// 4s后隐藏动画

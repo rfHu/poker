@@ -15,6 +15,13 @@ namespace Extensions
             return Convert.ToInt32(value);
         }
 
+         public static long Long<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key)
+        {
+            TValue value;
+            dictionary.TryGetValue(key, out value);
+            return Convert.ToInt64(value);
+        }
+
         public static double Double<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key)
         {
             TValue value;
