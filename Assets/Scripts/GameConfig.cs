@@ -258,6 +258,8 @@ sealed public class GameData {
 		return null;
 	}
 
+	public string Proxy;
+
 	public bool GameStartState = false;
 	public bool SeeCardState = false;
 

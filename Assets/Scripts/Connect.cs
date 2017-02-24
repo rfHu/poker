@@ -16,8 +16,8 @@ public sealed class Connect  {
 
 	private Connect() {
 		// Charles Proxy
-		if (Debug.isDebugBuild) {
-			HTTPManager.Proxy = new HTTPProxy(new Uri("http://localhost:8888"));
+		if (Debug.isDebugBuild && !string.IsNullOrEmpty(GameData.Shared.Proxy)) {
+			HTTPManager.Proxy = new HTTPProxy(new Uri(GameData.Shared.Proxy));
 		}
 
 		SocketOptions options = new SocketOptions();

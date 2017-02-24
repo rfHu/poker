@@ -28,6 +28,10 @@ public class External : MonoBehaviour{
 		checkSetup();
 	}
 
+	public void SetProxy(string proxy) {
+		GameData.Shared.Proxy = proxy;		
+	}
+
 	private void checkSetup() {
 		if (string.IsNullOrEmpty(GameData.Shared.Sid) || string.IsNullOrEmpty(GameData.Shared.Room)) {
 			return ;
