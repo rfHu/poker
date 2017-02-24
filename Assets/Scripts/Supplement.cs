@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections.Generic;
 using Extensions;
-
+using UniRx;
 
 [RequireComponent(typeof(DOPopup))]
 public class Supplement : MonoBehaviour {
@@ -14,7 +14,7 @@ public class Supplement : MonoBehaviour {
 	public Slider slider;
 
 	// Use this for initialization
-	void Start() {
+	void Awake() {
 		int score = GameData.Shared.BB * 100; 
 		int min = GameData.Shared.BankrollMul[0] * score;
 		int max = GameData.Shared.BankrollMul[1] * score;
@@ -26,6 +26,13 @@ public class Supplement : MonoBehaviour {
 		slider.minValue = min;
 		slider.maxValue = max;
 		slider.onValueChanged.AddListener(OnChange);
+
+		RxSubjects.UnSeat.AsObservable().Where((e) => {
+			var uid = e.Data.String("uid");
+			return GameData.Shared.Uid == uid;
+		}).Subscribe((e) => {
+			GetComponent<DOPopup>().Close();
+		}).AddTo(this);
 	}
 
 	public void OnChange(float value) {
