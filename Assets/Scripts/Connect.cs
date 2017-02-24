@@ -17,7 +17,7 @@ public sealed class Connect  {
 	private Connect() {
 		// Charles Proxy
 		if (Debug.isDebugBuild) {
-			// HTTPManager.Proxy = new HTTPProxy(new Uri("http://localhost:8888"));
+			HTTPManager.Proxy = new HTTPProxy(new Uri("http://localhost:8888"));
 		}
 
 		SocketOptions options = new SocketOptions();

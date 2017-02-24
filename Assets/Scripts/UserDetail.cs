@@ -48,7 +48,7 @@ public class UserDetail : MonoBehaviour {
 	}
 
 	private string percent(float number) {
-		if (float.IsNaN(number)) { 
+		if (float.IsNaN(number) || float.IsInfinity(number)) { 
 			number = 0;
 		}
 
