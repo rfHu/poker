@@ -12,9 +12,21 @@ public class External : MonoBehaviour{
 		});
 	}
 
-	public void Enter(string sid, string roomID) {
+	public void SetSid(string sid) {
 		GameData.Shared.Sid = sid;
+		checkSetup();		
+	}
+
+	public void SetRoomID(string roomID) {
 		GameData.Shared.Room = roomID;
+		checkSetup();
+	}
+
+	private void checkSetup() {
+		if (string.IsNullOrEmpty(GameData.Shared.Sid) || string.IsNullOrEmpty(GameData.Shared.Room)) {
+			return ;
+		}
+
 		Connect.Shared.Setup();	
 	}
 }

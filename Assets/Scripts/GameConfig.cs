@@ -265,12 +265,12 @@ sealed public class GameData {
 	public bool Owner = false;	
 	public List<int> BankrollMul;
 	public int PlayerCount;
-	public string Sid = ""; 
+	public string Sid; 
 	public string Uid = "";
 	public string Pin = "";
 	public string Name = ""; 
 	public string Avatar = "";
-	public string Room = "58ae9ecea50753441179300a";
+	public string Room;
 	public int MySeat = -1;
 	public int Ante = 0;
 	public int Coins = 0;
