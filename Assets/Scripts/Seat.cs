@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DG.Tweening;
 using UniRx;
+using Extensions;
 
 public enum SeatPosition {
 	Top,
@@ -25,6 +26,9 @@ public class Seat : MonoBehaviour {
 			new Dictionary<string, object>(){
 				{"f", "takeseat"},
 				{"args", Index}
+			}, (data) => {
+				var msg = data.Dict("ret").Int("msg");
+				// @todo
 			}
 		);		
 	}
