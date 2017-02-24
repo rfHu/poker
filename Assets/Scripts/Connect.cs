@@ -85,7 +85,7 @@ public sealed class Connect  {
 			{"f", "exit"}
 		}, (_) => {
 			manager.Close();
-			Application.Quit();
+			Commander.Shared.Exit();
 		});	
 	}
 
