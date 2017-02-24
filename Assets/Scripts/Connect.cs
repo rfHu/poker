@@ -32,7 +32,9 @@ public sealed class Connect  {
 	private void onConnect(Socket socket, Packet packet, params object[] args) {
 		Emit(new Dictionary<string, object>{
 			{"f", "login"},
-			{"args", GameData.Shared.Sid}
+			{"args", new Dictionary<string, object>{
+				{"sid", GameData.Shared.Sid}
+			}}	
 		}, (json) => {
 			// 登陆成功，写用户数据
 			saveUserInfo(json);
