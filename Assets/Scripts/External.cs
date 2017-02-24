@@ -11,9 +11,7 @@ public class External : MonoBehaviour{
 	}
 
 	public void Exit() {
-		Connect.Shared.Close(() => {
-			Application.Quit();		
-		});
+		Connect.Shared.Close();
 	}
 
 	public void SetSid(string sid) {

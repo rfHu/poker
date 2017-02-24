@@ -80,12 +80,12 @@ public sealed class Connect  {
 		}
 	}
 
-	public void Close(Action callback) {
+	public void Close() {
 		Emit(new Dictionary<string, object>{
 			{"f", "exit"}
 		}, (_) => {
 			manager.Close();
-			callback();
+			Application.Quit();
 		});	
 	}
 

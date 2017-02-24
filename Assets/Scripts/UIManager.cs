@@ -14,10 +14,6 @@ public class UIManager : MonoBehaviour {
 		menuPopup = popup.GetComponent<DOPopup>();
 		menuPopup.Show(G.Cvs);	
 	}
-	
-	public void Exit() {
-		Application.Quit();
-	}
 
 	public void ScorePage() {
 		var score = (GameObject)Instantiate(Resources.Load("Prefab/ScorePage"));
