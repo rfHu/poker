@@ -1,6 +1,11 @@
 ﻿using UnityEngine;
 
-public class External{
+public class External : MonoBehaviour{
+	void Awake() {
+		this.name = "External";
+		Object.DontDestroyOnLoad(gameObject);
+	}
+
 	public void Exit() {
 		Connect.Shared.Close(() => {
 			Application.Quit();		
