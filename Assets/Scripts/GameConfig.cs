@@ -265,7 +265,7 @@ sealed public class GameData {
 	public bool Owner = false;	
 	public List<int> BankrollMul;
 	public int PlayerCount;
-	public string UserToken = ""; 
+	public string Sid = ""; 
 	public string Uid = "";
 	public string Pin = "";
 	public string Name = ""; 

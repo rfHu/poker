@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using BestHTTP.SocketIO.Transports;
-using BestHTTP.Cookies;
 using Extensions;
 using UnityEngine;
 using BestHTTP;
@@ -18,19 +17,13 @@ public sealed class Connect  {
 	private Connect() {
 		// Charles Proxy
 		if (Debug.isDebugBuild) {
-			HTTPManager.Proxy = new HTTPProxy(new Uri("http://localhost:8888"));
+			// HTTPManager.Proxy = new HTTPProxy(new Uri("http://localhost:8888"));
 		}
-
-		GameData.Shared.UserToken = "s%3Ain-kSaNr028dcp1cNxnPSnGHMRODiia6.K7qhkS1IsS%2FXXmU21PSZMBimNUrqjTVfktxC%2FVetV4Y";
 
 		SocketOptions options = new SocketOptions();
 		options.ConnectWith = TransportTypes.WebSocket;
 
 		manager = new SocketManager(new Uri(url), options);
-		// manager.setCookie = (request) => {
-		// 	var cookie = new Cookie("connect.sid", GameData.Shared.UserToken);
-		// 	request.Cookies.Add(cookie);
-		// };
 		manager.Socket.On("connect", onConnect);
 
 		manager.Open();	
@@ -38,7 +31,8 @@ public sealed class Connect  {
 
 	private void onConnect(Socket socket, Packet packet, params object[] args) {
 		Emit(new Dictionary<string, object>{
-			{"f", "login"}
+			{"f", "login"},
+			{"args", GameData.Shared.Sid}
 		}, (json) => {
 			// 登陆成功，写用户数据
 			saveUserInfo(json);
@@ -84,8 +78,13 @@ public sealed class Connect  {
 		}
 	}
 
-	private void close() {
-		manager.Close();
+	public void Close(Action callback) {
+		Emit(new Dictionary<string, object>{
+			{"f", "exit"}
+		}, (_) => {
+			manager.Close();
+			callback();
+		});	
 	}
 
 	public static Connect Shared {
@@ -99,14 +98,14 @@ public sealed class Connect  {
 	}
 
 	private static Connect instance;
-	private bool setuped = false;
+	private bool hasSet = false;
 
 	public void Setup() {
-		if (setuped) {
+		if (hasSet) {
 			return ;
 		}
 
-		setuped = true;
+		hasSet = true;
 
 		manager.Socket.On("rpc_ret", (socket, packet, args) => {
 			if (args.Length == 0) {
