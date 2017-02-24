@@ -40,7 +40,8 @@ public class UserDetail : MonoBehaviour {
 			float showHand = achieve.Float("showdown_hand_count") / achieve.Float("seecard_hand_count"); 
 			ShowHand.text = percent(showHand);
 
-			float win = achieve.Float("win_hand_count");
+			// 入池胜率
+			float win = achieve.Float("entry_win_hand_count");
 			JoinWin.text = percent(win / entry);
 
             StartCoroutine(downloadImage(Avatar, profile.String("avatar")));
