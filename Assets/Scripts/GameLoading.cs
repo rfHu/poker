@@ -15,4 +15,8 @@ public class GameLoading : MonoBehaviour {
 	void Update () {
 		
 	}
+
+	public void ExitGame() {
+		Connect.Shared.Close();
+	}
 }
