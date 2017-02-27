@@ -35,8 +35,8 @@ public class Seat : MonoBehaviour {
 				{"f", "takeseat"},
 				{"args", new Dictionary<string, object>{
 					{"seat", Index}, 
-					{"position_x", x}, 
-					{"position_y", y} 
+					// {"position_x", x}, 
+					// {"position_y", y} 
 				}}
 			}, (data) => {
 				var err = data.Dict("ret").Int("err");
@@ -51,9 +51,11 @@ public class Seat : MonoBehaviour {
 					text = "您与某玩家IP地址相同，不能参与本牌局";
 				} else if(err == 1104) {
 					text = "您与某玩家距离过近，不能参与本牌局";
+				} else {
+					text = data.Dict("ret").String("msg");
 				}
 
-				PokerUI.ShowDialog(text);
+				PokerUI.Alert(text);
 			}
 		);		
 	}

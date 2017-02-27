@@ -67,7 +67,7 @@ public class UIManager : MonoBehaviour {
 		
 			if (type == 2)
             {
-                PokerUI.ShowDialog("您的账号已在其他设备登陆");
+                PokerUI.Alert("您的账号已在其他设备登陆");
             }
 		}).AddTo(this);
 	}
