@@ -40,6 +40,11 @@ public class Seat : MonoBehaviour {
 				}}
 			}, (data) => {
 				var err = data.Dict("ret").Int("err");
+				
+				if (err == 0) {
+					return ;
+				}
+
 				string text = "";
 
 				if (err == 1103) {
