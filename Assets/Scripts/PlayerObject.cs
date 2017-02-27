@@ -307,7 +307,7 @@ public class PlayerObject : MonoBehaviour {
 
 			CardDesc.gameObject.SetActive(true);
 			CardDesc.text = intToCardStr(value);
-		});
+		}).AddTo(this);
 	}
 
 	private string intToCardStr(int value) {

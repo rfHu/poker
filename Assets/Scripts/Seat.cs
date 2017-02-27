@@ -21,14 +21,34 @@ public class Seat : MonoBehaviour {
 			return ;
 		}
 
+		var x = 0;
+		var y = 0;
+
+		if (GameData.Shared.GPSLimit) {
+			x = 90;
+			y = 90;
+		}
+
 		// 坐下
 		Connect.Shared.Emit(
 			new Dictionary<string, object>(){
 				{"f", "takeseat"},
-				{"args", Index}
+				{"args", new Dictionary<string, object>{
+					{"seat", Index}, 
+					{"position_x", x}, 
+					{"position_y", y} 
+				}}
 			}, (data) => {
-				var msg = data.Dict("ret").Int("msg");
-				// @todo
+				var err = data.Dict("ret").Int("err");
+				string text = "";
+
+				if (err == 1103) {
+					text = "您与某玩家IP地址相同，不能参与本牌局";
+				} else if(err == 1104) {
+					text = "您与某玩家距离过近，不能参与本牌局";
+				}
+
+				PokerUI.ShowDialog(text);
 			}
 		);		
 	}

@@ -4,10 +4,10 @@ public class GameLoading : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		// var external = GetComponent<External>();
-		// external.SetSid("11111");
-		// external.SetProxy("http://localhost:8888");
-		// external.SetRoomID("58ae9ecea50753441179300a"); // 无需审核
+		var external = GetComponent<External>();
+		external.SetSid("11111");
+		external.SetProxy("http://localhost:8888");
+		external.SetRoomID("58b3e755a50753441179300c"); // 无需审核
 		// GetComponent<External>().SetRoomID("58afdb65a50753441179300b"); // 需要审核
 	}
 	
