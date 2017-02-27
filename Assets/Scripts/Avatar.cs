@@ -24,7 +24,7 @@ public class Avatar : MonoBehaviour {
 
 	public void SetImage(string url) {
 		var img = GetComponent<RawImage>();
-		StartCoroutine(_.DownloadImage(img, url));
+		_.DownloadImage(img, url);
 	}
 	
 	void Awake() {

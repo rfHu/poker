@@ -44,10 +44,10 @@ public class _ {
         return t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Dictionary<,>);
     }
 
-    static  public IEnumerator<WWW> DownloadImage(RawImage img, string url) {
-		WWW www = new WWW(url);
-		yield return www;
-		img.texture = _.Circular(www.texture);
+    static  public void DownloadImage(RawImage img, string url) {
+        new LLOptions().setOnLoad((Texture2D texture) => {
+            img.texture = texture;
+        }).setUseCache(true).setCacheLife(60 * 60 * 24 * 30);
 	}
 
     static public string Num2Text<T>(T num) {

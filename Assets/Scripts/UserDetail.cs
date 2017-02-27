@@ -44,7 +44,7 @@ public class UserDetail : MonoBehaviour {
 			float win = achieve.Float("entry_win_hand_count");
 			JoinWin.text = percent(win / entry);
 
-            StartCoroutine(downloadImage(Avatar, profile.String("avatar")));
+            _.DownloadImage(Avatar, profile.String("avatar"));
 		});
 	}
 
@@ -55,10 +55,4 @@ public class UserDetail : MonoBehaviour {
 
 		return Math.Round(number * 100, 2).ToString() + "%"; 
 	}
-
-	IEnumerator<WWW> downloadImage(RawImage img, string url) {
-		WWW www = new WWW(url);
-		yield return www;
-		img.texture = _.Circular(www.texture);
-	}	
 }

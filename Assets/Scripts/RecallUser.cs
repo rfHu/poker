@@ -58,13 +58,7 @@ public class RecallUser : MonoBehaviour {
 		Score.color = color;
 	}
 
-	void ShowAvatar(string avatar) {
-		StartCoroutine(downloadImage(avatar));
-	}
-
-	IEnumerator<WWW>  downloadImage(string url) {
-		WWW www = new WWW(url);
-		yield return www;
-		Avatar.texture = _.Circular(www.texture);	
+	void ShowAvatar(string url) {
+		_.DownloadImage(Avatar, url);
 	}
 }
