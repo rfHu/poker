@@ -35,6 +35,8 @@ public class PlayerObject : MonoBehaviour {
 	private float foldOpacity = 0.7f;
 	private float animDuration = 0.4f;
 
+	public Text CardDesc;
+
 	private Seat theSeat {
 		get {
 			return  transform.parent.GetComponent<Seat>();
@@ -257,7 +259,7 @@ public class PlayerObject : MonoBehaviour {
 		player.Countdown.AsObservable().Where((obj) => obj.seconds > 0).Subscribe((obj) => {
 			var elaspe = GameData.Shared.ThinkTime - obj.seconds;
 			turnTo(obj.data, elaspe);	
-		});
+		}).AddTo(this);
 
 		RxSubjects.MoveTurn.Subscribe((e) => {
 			var index = e.Data.Int("seat");
@@ -296,6 +298,37 @@ public class PlayerObject : MonoBehaviour {
 				trans.anchoredPosition = new Vector2(x, v.y);
 			}
 		}).AddTo(this);
+
+		GameData.Shared.MaxFiveRank.Subscribe((value) => {
+			if (value == 0) {
+				CardDesc.gameObject.SetActive(false);
+				return ;
+			}
+
+			CardDesc.gameObject.SetActive(true);
+			CardDesc.text = intToCardStr(value);
+		});
+	}
+
+	private string intToCardStr(int value) {
+		var map = new Dictionary<int, string> {
+			{1, "高牌"},
+			{2, "一对"},
+			{3, "两对"},
+			{4, "三条"},
+			{5, "顺子"},
+			{6, "同花"},
+			{7, "葫芦"},
+			{8, "四条"},
+			{9, "同花顺"},
+			{10, "皇家同花顺"},
+		};
+
+		if (!map.ContainsKey(value)) {
+			return "";
+		}
+
+		return map[value];
 	}
 
 	private void doChipsAnim() {

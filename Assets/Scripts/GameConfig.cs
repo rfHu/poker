@@ -122,17 +122,7 @@ sealed public class GameData {
 			GameStartState = true;
 			byJson(json);
 		});
-
-		RxSubjects.Deal.Subscribe((e) => {
-			Pot.Value = e.Data.Int("pot");
-			PrPot.Value = Pot.Value - e.Data.Int("pr_pot");
-
-			// 发下一张牌的时候，重置所有prchips
-			foreach(Player player in Players.Values) {
-				player.PrChips.Value = 0;
-			}
-		});
-
+	
 		var sceneLoaded = false; 
 		RxSubjects.Look.Subscribe((e) => {
 			GameStartState = false;
@@ -149,8 +139,15 @@ sealed public class GameData {
 		});
 
 		RxSubjects.Deal.Subscribe((e) => {
-			var data = e.Data.Dict("deals");
+			Pot.Value = e.Data.Int("pot");
+			PrPot.Value = Pot.Value - e.Data.Int("pr_pot");
 
+			// 发下一张牌的时候，重置所有prchips
+			foreach(Player player in Players.Values) {
+				player.PrChips.Value = 0;
+			}
+
+			var data = e.Data.Dict("deals");
 			foreach(KeyValuePair<string, object>item in data) {
 				var list = item.Value.GetIL();
 
@@ -171,6 +168,8 @@ sealed public class GameData {
 					Players[k].Cards.Value = list;
 				}
 			}
+
+			MaxFiveRank.Value = e.Data.Int("maxFiveRank");
 		});
 		
 		RxSubjects.Ready.Subscribe((e) => {
@@ -262,7 +261,7 @@ sealed public class GameData {
 
 	public bool GameStartState = false;
 	public bool SeeCardState = false;
-
+	
 	public int ThinkTime = 15;
 	public bool Owner = false;	
 	public List<int> BankrollMul;
@@ -294,6 +293,7 @@ sealed public class GameData {
 
 	public bool Paused = false;
 	public string GameCode = "";
+	public ReactiveProperty<int> MaxFiveRank = new ReactiveProperty<int>();
 
 	public ReactiveProperty<int> DealerSeat = new ReactiveProperty<int>();
 
@@ -335,6 +335,7 @@ sealed public class GameData {
 		PrPot.Value = Pot.Value - json.Int("pr_pot");
 		Paused = json.Int("is_pause") != 0;
 		InGame = json.Bool("is_ingame");
+		MaxFiveRank.Value = json.Int("maxFiveRank");
 
 		// 删除公共牌重新添加
 		var cards = json.IL("shared_cards");
