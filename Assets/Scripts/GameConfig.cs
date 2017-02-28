@@ -123,19 +123,15 @@ sealed public class GameData {
 			byJson(json);
 		});
 	
-		var sceneLoaded = false; 
 		RxSubjects.Look.Subscribe((e) => {
 			GameStartState = false;
 			byJson(e.Data);
 
-			// 只允许进入一次
-			if (sceneLoaded) {
+			if (SceneManager.GetActiveScene().name == "PokerGame") {
 				// Skip
 			} else {
 				SceneManager.LoadScene("PokerGame");
 			}
-
-			sceneLoaded = true;
 		});
 
 		RxSubjects.Deal.Subscribe((e) => {

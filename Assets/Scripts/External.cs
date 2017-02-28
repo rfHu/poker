@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class External : MonoBehaviour{
 	public Text SidText;
@@ -12,6 +13,11 @@ public class External : MonoBehaviour{
 
 	public void Exit() {
 		Connect.Shared.Close();
+		GameData.Shared.Sid = "";
+		GameData.Shared.Room = "";
+
+		// 返回上级界面
+		SceneManager.LoadScene("GameLoading");
 	}
 
 	public void SetSid(string sid) {
@@ -35,6 +41,6 @@ public class External : MonoBehaviour{
 			return ;
 		}
 
-		Connect.Shared.Setup();	
+		Connect.Setup();	
 	}
 }

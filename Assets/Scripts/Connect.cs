@@ -91,25 +91,16 @@ public sealed class Connect  {
 
 	public static Connect Shared {
 		get {
-			if (instance == null) {
-				instance = new Connect();
-			}
-
 			return instance;
 		}
 	}
 
 	private static Connect instance;
-	private bool hasSet = false;
 
-	public void Setup() {
-		if (hasSet) {
-			return ;
-		}
+	static public void Setup() {
+		instance = new Connect();
 
-		hasSet = true;
-
-		manager.Socket.On("rpc_ret", (socket, packet, args) => {
+		instance.manager.Socket.On("rpc_ret", (socket, packet, args) => {
 			if (args.Length == 0) {
 				return ;
 			}
@@ -127,13 +118,13 @@ public sealed class Connect  {
 
 			int seq = json.Int("seq");
 
-			if (actions.ContainsKey(seq)) {
-				actions[seq](json);
-				actions.Remove(seq);
+			if (instance.actions.ContainsKey(seq)) {
+				instance.actions[seq](json);
+				instance.actions.Remove(seq);
 			} 
 		});
 
-		manager.Socket.On("push", (socket, packet, args) => {
+		instance.manager.Socket.On("push", (socket, packet, args) => {
 			if (args.Length == 0) {
 				return ;
 			}
