@@ -44,7 +44,7 @@ public class OwnerPanel : MonoBehaviour {
 			{"args", "0"}
 		}, (data) => {
 			var msg = data.String("msg");
-			if (string.IsNullOrEmpty(msg)) {
+			if (!string.IsNullOrEmpty(msg)) {
 				PokerUI.Alert(msg);	
 			}	
 
