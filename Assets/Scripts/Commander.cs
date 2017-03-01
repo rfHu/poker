@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 
 // Native提供接口给Unity
 public class Commander {
@@ -23,8 +24,18 @@ public class Commander {
 		Time.timeScale = 0;
 	}
 
-	public string Location() {
-		return "";
+	public double[] Location() {
+		char[] delimiter = {'&'};
+		string[] result = ic.Location().Split(delimiter);
+
+		if (result.Length < 2) {
+			return new double[]{0 ,0};
+		}
+
+		return new double[]{
+			Convert.ToDouble(result[0]),
+			Convert.ToDouble(result[1])
+		};
 	}
 }
 
@@ -34,14 +45,18 @@ public interface ICommander {
 }
 
 public class AndroidCommander: ICommander {
-	public void Exit() {
+	private AndroidJavaObject getJo()  {
 		AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
 		AndroidJavaObject jo = jc.GetStatic<AndroidJavaObject>("currentActivity");
-		jo.Call("closeGame");
+		return jo;
+	}
+
+	public void Exit() {
+		getJo().Call("closeGame");
 	}
 
 	public string Location() {
-		return "";
+		return getJo().Call<string>("getLatitudeAndAltitude");
 	} 
 }
 

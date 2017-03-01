@@ -21,12 +21,10 @@ public class Seat : MonoBehaviour {
 			return ;
 		}
 
-		var x = 0;
-		var y = 0;
+		double[] pos = new double[]{0, 0};
 
 		if (GameData.Shared.GPSLimit) {
-			x = 90;
-			y = 90;
+			pos = Commander.Shared.Location();
 		}
 
 		// 坐下
@@ -35,8 +33,8 @@ public class Seat : MonoBehaviour {
 				{"f", "takeseat"},
 				{"args", new Dictionary<string, object>{
 					{"seat", Index}, 
-					// {"position_x", x}, 
-					// {"position_y", y} 
+					{"position_x", pos[0]}, 
+					{"position_y", pos[1]} 
 				}}
 			}, (data) => {
 				var err = data.Dict("ret").Int("err");
