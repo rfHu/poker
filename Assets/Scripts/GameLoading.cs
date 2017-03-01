@@ -6,7 +6,7 @@ public class GameLoading : MonoBehaviour {
 	void Start () {
 		Time.timeScale = 0;
 
-		var external = GetComponent<External>();
+		var external = External.Instance;
 		// external.SetSid("11111");
 		// external.SetProxy("http://localhost:8888");
 		// external.SetRoomID("58b3e755a50753441179300c"); // 无需审核

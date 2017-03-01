@@ -1,14 +1,24 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class External : MonoBehaviour{
-	public Text SidText;
-	public Text RoomIDText;
+	private static External instance;
+
+	public static External Instance {
+		get {
+			if (instance == null) {
+				GameObject go = new GameObject();
+				Object.DontDestroyOnLoad(go);
+				
+				instance = go.AddComponent<External>();
+			}
+
+			return instance;
+		}
+	}
 
 	void Awake() {
 		this.name = "External";
-		Object.DontDestroyOnLoad(gameObject);
 	}
 
 	public void Exit() {
@@ -25,13 +35,11 @@ public class External : MonoBehaviour{
 
 	public void SetSid(string sid) {
 		GameData.Shared.Sid = sid;
-		SidText.text = "Sid: " + sid;
 		checkSetup();		
 	}
 
 	public void SetRoomID(string roomID) {
 		GameData.Shared.Room = roomID;
-		RoomIDText.text = "RoomID: " + roomID;
 		checkSetup();
 	}
 
