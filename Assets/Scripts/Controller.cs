@@ -32,6 +32,12 @@ public class Controller : MonoBehaviour {
 		setupDealer();
 	}
 
+	public void OnStartClick() {
+		Connect.Shared.Emit(new Dictionary<string, object>(){
+			{"f", "start"}
+		});
+	}
+
 	void changePositions(int index) {
 		var count = GameData.Shared.PlayerCount;
 		var left = anchorPositions.Skip(count - index).Take(index);
