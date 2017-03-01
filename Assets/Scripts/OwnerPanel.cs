@@ -45,6 +45,7 @@ public class OwnerPanel : MonoBehaviour {
 		}, (data) => {
 			var msg = data.String("msg");
 			if (!string.IsNullOrEmpty(msg)) {
+				GetComponent<DOPopup>().Close();
 				PokerUI.Alert(msg);	
 			}	
 
