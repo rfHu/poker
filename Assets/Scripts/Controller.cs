@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using System;
 using System.Linq;
 using UniRx;
+using Extensions;
 
 public class Controller : MonoBehaviour {
 	public GameObject seat;
@@ -35,6 +36,11 @@ public class Controller : MonoBehaviour {
 	public void OnStartClick() {
 		Connect.Shared.Emit(new Dictionary<string, object>(){
 			{"f", "start"}
+		}, (data) => {
+			var err = data.Int("err");
+			if (err == 0) {
+				startButton.SetActive(false);
+			}
 		});
 	}
 
