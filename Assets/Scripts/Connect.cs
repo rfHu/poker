@@ -9,7 +9,7 @@ using UniRx;
 
 public sealed class Connect  {
 	private SocketManager manager;
-	private string url = "http://61.143.225.47:7001/socket.io/"; 
+	private string url = "http://socket.poker.top/socket.io/"; 
 
 	private Dictionary<int, Action<Dictionary<string, object>>> successCallbacks = new Dictionary<int, Action<Dictionary<string, object>>>();
 
@@ -77,15 +77,23 @@ public sealed class Connect  {
 		manager.Socket.Emit("rpc", json);
 
 		if (success != null) {
+			IDisposable dispose = null;
+
 			// 设置8秒超时
-			var dispose = Observable.Timer(TimeSpan.FromSeconds(8)).AsObservable().Subscribe((_) => {
-				successCallbacks.Remove(seq);
-				error();
-			});
+			if (error != null) {
+				dispose = Observable.Timer(TimeSpan.FromSeconds(8)).AsObservable().Subscribe((_) => {
+					successCallbacks.Remove(seq);
+					error();
+				});
+			}
 
 			successCallbacks.Add(seq, (data) => {
 				successCallbacks.Remove(seq);
-				dispose.Dispose();
+				
+				if (dispose != null) {
+					dispose.Dispose();
+				}
+
 				success(data);
 			});
 		}
