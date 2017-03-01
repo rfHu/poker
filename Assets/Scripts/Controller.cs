@@ -148,7 +148,7 @@ public class Controller : MonoBehaviour {
 			roomName = "佚名";
 		}
 
-		addGameInfo(string.Format("{0}", roomName));
+		addGameInfo(string.Format("[ {0} ]", roomName));
 
 		var sb = GameData.Shared.SB;
 		var bb = GameData.Shared.BB; 
@@ -167,11 +167,11 @@ public class Controller : MonoBehaviour {
 		var gpsLimit = GameData.Shared.GPSLimit;
 
 		if (ipLimit && gpsLimit) {
-			addGameInfo("IP、GPS限制");
+			addGameInfo("IP 及 GPS 限制");
 		} else if (gpsLimit) {
-			addGameInfo("GPS限制");
+			addGameInfo("GPS 限制");
 		} else if (ipLimit) {
-			addGameInfo("IP限制");
+			addGameInfo("IP 限制");
 		}
 	}
 
