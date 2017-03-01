@@ -135,6 +135,10 @@ public class Controller : MonoBehaviour {
 	}
 
 	void showGameInfo() {
+		if (GameData.Shared.Owner && !GameData.Shared.GameStarted) {
+			startButton.SetActive(true);
+		}
+
 		if (GameData.Shared.Owner) {
 			OwnerButton.SetActive(true);
 		}
