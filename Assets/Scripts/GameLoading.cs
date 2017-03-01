@@ -4,6 +4,8 @@ public class GameLoading : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		Time.timeScale = 0;
+
 		var external = GetComponent<External>();
 		// external.SetSid("11111");
 		// external.SetProxy("http://localhost:8888");

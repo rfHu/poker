@@ -11,5 +11,7 @@ public class Commander{
 			AndroidJavaObject jo = jc.GetStatic<AndroidJavaObject>("currentActivity");
 			jo.Call("closeGame");
 		#endif
+
+		Time.timeScale = 0;
 	}
 }

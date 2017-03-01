@@ -5,12 +5,13 @@ using BestHTTP.SocketIO.Transports;
 using Extensions;
 using UnityEngine;
 using BestHTTP;
+using UniRx;
 
 public sealed class Connect  {
 	private SocketManager manager;
 	private string url = "http://61.143.225.47:7001/socket.io/"; 
 
-	private Dictionary<int, Action<Dictionary<string, object>>> actions = new Dictionary<int, Action<Dictionary<string, object>>>();
+	private Dictionary<int, Action<Dictionary<string, object>>> successCallbacks = new Dictionary<int, Action<Dictionary<string, object>>>();
 
 	private int seq = 0;
 
@@ -68,25 +69,39 @@ public sealed class Connect  {
 		GameData.Shared.Pin = token.String("pin");
 	}
 
-	public void Emit(Dictionary<string, object> json, Action<Dictionary<string, object>> callback = null) {
+	public void Emit(Dictionary<string, object> json, Action<Dictionary<string, object>> success = null, Action error = null) {
 		seq++;
 		json["seq"] = seq;
 		json["pin"] = GameData.Shared.Pin;
 		json["uid"] = GameData.Shared.Uid;
 		manager.Socket.Emit("rpc", json);
 
-		if (callback != null) {
-			actions.Add(seq, callback);
+		if (success != null) {
+			// 设置8秒超时
+			var dispose = Observable.Timer(TimeSpan.FromSeconds(8)).AsObservable().Subscribe((_) => {
+				successCallbacks.Remove(seq);
+				error();
+			});
+
+			successCallbacks.Add(seq, (data) => {
+				successCallbacks.Remove(seq);
+				dispose.Dispose();
+				success(data);
+			});
 		}
 	}
 
 	public void Close() {
+		Action act = () => {
+			manager.Socket.Off();
+			manager.Close();
+		};
+
 		Emit(new Dictionary<string, object>{
 			{"f", "exit"}
 		}, (_) => {
-			manager.Close();
-			Commander.Shared.Exit();
-		});	
+			act();
+		}, act);	
 	}
 
 	public static Connect Shared {
@@ -118,9 +133,8 @@ public sealed class Connect  {
 
 			int seq = json.Int("seq");
 
-			if (instance.actions.ContainsKey(seq)) {
-				instance.actions[seq](json);
-				instance.actions.Remove(seq);
+			if (instance.successCallbacks.ContainsKey(seq)) {
+				instance.successCallbacks[seq](json);
 			} 
 		});
 

@@ -13,11 +13,14 @@ public class External : MonoBehaviour{
 
 	public void Exit() {
 		Connect.Shared.Close();
+
+		// 清空两个关键数据
 		GameData.Shared.Sid = "";
 		GameData.Shared.Room = "";
 
 		// 返回上级界面
 		SceneManager.LoadScene("GameLoading");
+		Commander.Shared.Exit();
 	}
 
 	public void SetSid(string sid) {
@@ -41,6 +44,7 @@ public class External : MonoBehaviour{
 			return ;
 		}
 
+		Time.timeScale = 1;
 		Connect.Setup();	
 	}
 }
