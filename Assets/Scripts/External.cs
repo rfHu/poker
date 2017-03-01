@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
+// Unity提供方法给Native
 public class External : MonoBehaviour{
 	private static External instance;
 
