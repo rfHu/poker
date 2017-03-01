@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Extensions;
+using UIWidgets;
 
 [RequireComponent(typeof(DOPopup))]
 public class OwnerPanel : MonoBehaviour {
@@ -21,11 +22,10 @@ public class OwnerPanel : MonoBehaviour {
 
 	public void Stop() {
 		// 二次确定
-
-		Connect.Shared.Emit(new Dictionary<string, object>() {
-			{"f", "pause"},
-			{"args", "3"}
-		});		
+		PokerUI.ShowDialog("确定提前结束牌局", new DialogActions() {
+			{"取消", Dialog.Close},
+			{"确定", endTheGame}
+		});
 	}
 
 	public void Pause() {
@@ -49,5 +49,14 @@ public class OwnerPanel : MonoBehaviour {
 				PokerUI.Alert(msg);	
 			}	
 		});		
+	}
+
+	bool endTheGame() {
+		Connect.Shared.Emit(new Dictionary<string, object>() {
+			{"f", "pause"},
+			{"args", "3"}
+		});
+
+		return true;		
 	}
 }
