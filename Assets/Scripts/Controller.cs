@@ -136,7 +136,7 @@ public class Controller : MonoBehaviour {
 
 	void showGameInfo() {
 		if (GameData.Shared.Owner) {
-			startButton.SetActive(true);
+			OwnerButton.SetActive(true);
 		}
 
 		var roomName = GameData.Shared.RoomName;

@@ -320,7 +320,7 @@ sealed public class GameData {
 		Rake = options.Float("rake_percent");
 		Duration = options.Long("time_limit");
 		NeedAduit = options.Int("need_audit") == 1;
-		GPSLimit = options.Int("gps_limit") == 1;
+		GPSLimit = options.Int("gps_limit") > 0;
 		IPLimit = options.Int("ip_limit") == 1;
 		GameCode = options.String("code");
 		RoomName = json.String("name");

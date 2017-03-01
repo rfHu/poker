@@ -28,6 +28,8 @@ public class Commander {
 		char[] delimiter = {'&'};
 		string[] result = ic.Location().Split(delimiter);
 
+		// Debug.Log("Unity3D: Position=" + result);
+
 		if (result.Length < 2) {
 			return new double[]{0 ,0};
 		}
