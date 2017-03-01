@@ -62,7 +62,7 @@ public class Supplement : MonoBehaviour {
 			{"args", value}
 		}, (json) => {
 			var err = json.Int("err");
-			if (err != 0) {
+			if (err == 1201) {
 				PokerUI.ShowDialog("金币不足，请购买", new DialogActions(){
 					{"取消", Dialog.Close},
 					{"确定",  PayFor}

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Extensions;
 
 [RequireComponent(typeof(DOPopup))]
 public class OwnerPanel : MonoBehaviour {
@@ -19,7 +20,8 @@ public class OwnerPanel : MonoBehaviour {
 	}
 
 	public void Stop() {
-		// @TODO: 二次确定
+		// 二次确定
+
 		Connect.Shared.Emit(new Dictionary<string, object>() {
 			{"f", "pause"},
 			{"args", "3"}
@@ -40,6 +42,12 @@ public class OwnerPanel : MonoBehaviour {
 		Connect.Shared.Emit(new Dictionary<string, object>() {
 			{"f", f},
 			{"args", "0"}
+		}, (data) => {
+			var msg = data.String("msg");
+
+			if (string.IsNullOrEmpty(msg)) {
+				PokerUI.Alert(msg);	
+			}	
 		});		
 	}
 }

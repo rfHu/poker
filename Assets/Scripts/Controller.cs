@@ -123,7 +123,7 @@ public class Controller : MonoBehaviour {
 	}
 
 	void showGameInfo() {
-		if (GameData.Shared.Owner && !GameData.Shared.GameStarted) {
+		if (GameData.Shared.Owner) {
 			startButton.SetActive(true);
 		}
 
@@ -238,6 +238,10 @@ public class Controller : MonoBehaviour {
 
 		GameData.Shared.PublicCards.ObserveReset().Subscribe((_) => {
 			resetAllCards();
+		}).AddTo(this);
+
+		RxSubjects.GameEnd.Subscribe((e) => {
+			Commander.Shared.GameEnd();
 		}).AddTo(this);
 	}
 	

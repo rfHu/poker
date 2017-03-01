@@ -41,12 +41,17 @@ public class Commander {
 	public void PayFor() {
 		ic.PayFor();
 	}
+
+	public void GameEnd() {
+		ic.GameEnd();
+	}
 }
 
 public interface ICommander {
 	void Exit();
 	string Location();
 	void PayFor();
+	void GameEnd();
 }
 
 public class AndroidCommander: ICommander {
@@ -67,6 +72,10 @@ public class AndroidCommander: ICommander {
 	public void PayFor(){
 		getJo().Call("payFor");
 	}
+
+	public void GameEnd() {
+		getJo().Call("gameEnd", GameData.Shared.Room);
+	}
 }
 
 public class iOSCommander: ICommander {
@@ -77,6 +86,10 @@ public class iOSCommander: ICommander {
 	}
 
 	public void PayFor(){
+
+	}
+
+	public void GameEnd() {
 
 	}
 }
