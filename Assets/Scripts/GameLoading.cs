@@ -7,9 +7,9 @@ public class GameLoading : MonoBehaviour {
 		Time.timeScale = 0;
 
 		var external = External.Instance;
-		external.SetSid("11111");
-		external.SetProxy("http://localhost:8888");
-		external.SetRoomID("58b3e755a50753441179300c"); // 无需审核
+		// external.SetSid("11111");
+		// external.SetProxy("http://localhost:8888");
+		// external.SetRoomID("58b63dcfe0e22a13382f018a"); // 无需审核
 	}
 	
 	// Update is called once per frame
@@ -18,6 +18,6 @@ public class GameLoading : MonoBehaviour {
 	}
 
 	public void ExitGame() {
-		Connect.Shared.Close();
+		External.Instance.Exit();
 	}
 }
