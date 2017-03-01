@@ -37,11 +37,16 @@ public class Commander {
 			Convert.ToDouble(result[1])
 		};
 	}
+
+	public void PayFor() {
+		ic.PayFor();
+	}
 }
 
 public interface ICommander {
 	void Exit();
 	string Location();
+	void PayFor();
 }
 
 public class AndroidCommander: ICommander {
@@ -58,6 +63,10 @@ public class AndroidCommander: ICommander {
 	public string Location() {
 		return getJo().Call<string>("getLatitudeAndAltitude");
 	} 
+
+	public void PayFor(){
+
+	}
 }
 
 public class iOSCommander: ICommander {
@@ -65,5 +74,9 @@ public class iOSCommander: ICommander {
 
 	public string Location(){
 		return "";
+	}
+
+	public void PayFor(){
+
 	}
 }
