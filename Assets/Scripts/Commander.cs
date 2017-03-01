@@ -65,7 +65,7 @@ public class AndroidCommander: ICommander {
 	} 
 
 	public void PayFor(){
-
+		getJo().Call("payFor");
 	}
 }
 
