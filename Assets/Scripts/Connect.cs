@@ -113,6 +113,10 @@ public sealed class Connect  {
 	private static Connect instance;
 
 	static public void Setup() {
+		if (instance != null) {
+			instance.manager.Close();
+		}
+
 		instance = new Connect();
 
 		instance.manager.Socket.On("rpc_ret", (socket, packet, args) => {
