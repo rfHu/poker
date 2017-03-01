@@ -21,6 +21,8 @@ public class OwnerPanel : MonoBehaviour {
 	}
 
 	public void Stop() {
+		GetComponent<DOPopup>().Close();
+
 		// 二次确定
 		PokerUI.ShowDialog("确定提前结束牌局", new DialogActions() {
 			{"取消", Dialog.Close},
@@ -29,6 +31,8 @@ public class OwnerPanel : MonoBehaviour {
 	}
 
 	public void Pause() {
+		GetComponent<DOPopup>().Close();
+
 		string f;
 
 		if (GameData.Shared.Paused) {
