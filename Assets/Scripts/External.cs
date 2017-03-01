@@ -35,11 +35,13 @@ public class External : MonoBehaviour{
 	}
 
 	public void SetSid(string sid) {
+		Debug.Log("Unity: Sid=" + sid);
 		GameData.Shared.Sid = sid;
 		checkSetup();		
 	}
 
 	public void SetRoomID(string roomID) {
+		Debug.Log("Unity: roomID=" + roomID);
 		GameData.Shared.Room = roomID;
 		checkSetup();
 	}
