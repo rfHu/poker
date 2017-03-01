@@ -9,6 +9,14 @@ public class ScoreCtrl : MonoBehaviour {
 	public Text Hands;
 	public Text Countdown;
 
+	public GameObject PlayerScore;
+
+	public GameObject GuestHeader;
+
+	public GameObject GridLayout;
+
+	public GameObject Guest;
+
 	long seconds;
 
 	private string secToStr(long seconds) {
@@ -76,7 +84,8 @@ public class ScoreCtrl : MonoBehaviour {
 			});
 
 			foreach(Dictionary<string, object> player in playerList) {
-				GameObject  entry = (GameObject)Instantiate(Resources.Load("Prefab/Score/PlayerScore"));
+				GameObject  entry = Instantiate(PlayerScore);
+				entry.SetActive(true);
 				var all = player.Int("takecoin");
 
 				entry.transform.Find("Name").GetComponent<Text>().text = player.String("name");
@@ -86,7 +95,8 @@ public class ScoreCtrl : MonoBehaviour {
         	}
 
 			// 游客
-			var header = (GameObject)Instantiate(Resources.Load("Prefab/Score/GuestHeader"));
+			var header = (GameObject)Instantiate(GuestHeader);
+			header.SetActive(true);
 			header.transform.Find("Text").GetComponent<Text>().text = string.Format("游客（{0}）", guestList.Count);
         	header.transform.SetParent(viewport.transform, false);
 
@@ -94,11 +104,13 @@ public class ScoreCtrl : MonoBehaviour {
 				return ;
 			}
 
-			GameObject grid = (GameObject)Instantiate(Resources.Load("Prefab/Score/GridLayout"));
+			GameObject grid = Instantiate(GridLayout);
+			grid.SetActive(true);
 			grid.transform.SetParent(viewport.transform, false);
 
 			foreach(Dictionary<string, object> guest in guestList) {
-				var guestObj = (GameObject)Instantiate(Resources.Load("Prefab/Score/Guest"));
+				var guestObj = Instantiate(Guest);
+				guestObj.SetActive(true);
 				Avatar avatar = guestObj.transform.Find("Avatar").GetComponent<Avatar>();
 				avatar.Uid = guest.String("uid");
 				avatar.SetImage(guest.String("avatar"));
