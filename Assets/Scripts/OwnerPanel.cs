@@ -13,7 +13,7 @@ public class OwnerPanel : MonoBehaviour {
 
 	void Awake()
 	{
-		if (GameData.Shared.Paused) {
+		if (isGamePause()) {
 			PauseText.text = continueStr;
 		} else {
 			PauseText.text = pauseStr;
@@ -31,16 +31,12 @@ public class OwnerPanel : MonoBehaviour {
 	}
 
 	public void Pause() {
-		GetComponent<DOPopup>().Close();
-
 		string f;
 
-		if (GameData.Shared.Paused) {
+		if (isGamePause()) {
 			f = "start";
-			PauseText.text = pauseStr;
 		} else {
 			f = "pause";
-			PauseText.text = continueStr;
 		}
 
 		Connect.Shared.Emit(new Dictionary<string, object>() {
@@ -48,11 +44,23 @@ public class OwnerPanel : MonoBehaviour {
 			{"args", "0"}
 		}, (data) => {
 			var msg = data.String("msg");
-
 			if (string.IsNullOrEmpty(msg)) {
 				PokerUI.Alert(msg);	
 			}	
+
+			var err = data.Int("err");
+			if (err == 0) {
+				if (f == "start") {
+					PauseText.text = pauseStr;
+				} else {
+					PauseText.text = continueStr;
+				}
+			}
 		});		
+	}
+
+	bool isGamePause() {
+		return GameData.Shared.Paused && GameData.Shared.GameStarted;
 	}
 
 	bool endTheGame() {
