@@ -310,7 +310,9 @@ public class PlayerObject : MonoBehaviour {
 		}).AddTo(this);
 	}
 
-	private string intToCardStr(int value) {
+	private string intToCardStr(int val) {
+		var value = val >> 20;
+
 		var map = new Dictionary<int, string> {
 			{1, "高牌"},
 			{2, "一对"},
