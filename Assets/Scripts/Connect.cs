@@ -52,8 +52,8 @@ public sealed class Connect  {
 		}, (json) => {
 			var error = json.Int("err");
 
-			if (error != 0) {				
-				Debug.Log(error);
+			if (error == 400) {				
+				PokerUI.Alert("房间不存在！");
 			}
 		});
 	}
