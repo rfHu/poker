@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UIWidgets;
+using MaterialUI;
 
 public class PokerUI: MonoBehaviour {
 	static private Dialog dialogSample;
@@ -13,10 +14,8 @@ public class PokerUI: MonoBehaviour {
 		dialogSample.GetComponent<Dialog>().Template().Show(message: text, modal: true, buttons: buttons, modalColor: new Color(0, 0, 0, 0.2f), canvas: G.Cvs);
 	}
 
-	static public void Alert(string text) {
-		ShowDialog(text, new DialogActions() {
-			{"确定", Dialog.Close},
-		});
+	public static void Alert(string text) {
+		DialogManager.ShowAlert(text, null, null);		
 	}
 
 	static public void ExitAlert() {

@@ -2,7 +2,6 @@
 using Extensions;
 using UniRx;
 using System.Collections.Generic;
-using UIWidgets;
 
 public class UIManager : MonoBehaviour {
 	public GameObject recallPage;

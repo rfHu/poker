@@ -72,7 +72,7 @@ public class Example14 : MonoBehaviour
 
 	public void OnAlertSimpleButtonClicked()
 	{
-		DialogManager.ShowAlert("Hello world", "Alert!", MaterialIconHelper.GetRandomIcon());
+		DialogManager.ShowAlert("Hello world", null, null);
 	}
 
 	public void OnAlertOneCallbackButtonClicked()
