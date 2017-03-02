@@ -24,18 +24,6 @@ public class StatusBar : MonoBehaviour {
 		rect.GetComponent<RectTransform>().sizeDelta = new Vector2(size.x * battery / 100, size.y);
 	}
 
-	// void OnGUI()
-	// {
-	// 	Color color = new Color(255, 255, 255, 255);
-	// 	Texture2D texture = new Texture2D(1, 1);
-	// 	texture.SetPixels(new Color[]{color});
-	// 	texture.Apply();
-
-	// 	GUIStyle style = new GUIStyle(GUI.skin.box);
-	// 	style.normal.background = texture;
-	// 	GUI.Box(new Rect(0, 0, 50, 30), "", style);
-	// }
-
 	public static int GetBatteryLevel()
     {
         return Commander.Shared.Power();
