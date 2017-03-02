@@ -7,8 +7,13 @@ public class StatusBar : MonoBehaviour {
 	public Text power;
 	public Image rect;
 
+	private float width;
+	private float height;
+
 	void Start () {
-		
+		var size = rect.GetComponent<RectTransform>().sizeDelta;
+		width = size.x;
+		height = size.y;
 	}
 
 	void Update()
@@ -20,8 +25,7 @@ public class StatusBar : MonoBehaviour {
 		int battery = GetBatteryLevel();		
 		power.text = battery.ToString() + "%";
 
-		Vector2 size = rect.GetComponent<RectTransform>().sizeDelta;
-		rect.GetComponent<RectTransform>().sizeDelta = new Vector2(size.x * battery / 100, size.y);
+		rect.GetComponent<RectTransform>().sizeDelta = new Vector2(width * battery / 100, height);
 	}
 
 	public static int GetBatteryLevel()
