@@ -47,6 +47,14 @@ public class Commander {
 	public void GameEnd() {
 		ic.GameEnd();
 	}
+
+	public int Power() {
+		return ic.Power();
+	}
+
+	public void Audit() {
+		Audit();
+	}
 }
 
 public interface ICommander {

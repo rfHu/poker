@@ -8,11 +8,16 @@ public class StatusBar : MonoBehaviour {
 	public Image rect;
 
 	void Start () {
+		
+	}
+
+	void Update()
+	{
 		DateTime time = System.DateTime.Now;	
 		String timeStr = time.ToString("hh:mm");	
 		timeText.text = timeStr;
 
-		int battery = (int) GetBatteryLevel();		
+		int battery = GetBatteryLevel();		
 		power.text = battery.ToString() + "%";
 
 		Vector2 size = rect.GetComponent<RectTransform>().sizeDelta;
@@ -31,8 +36,8 @@ public class StatusBar : MonoBehaviour {
 	// 	GUI.Box(new Rect(0, 0, 50, 30), "", style);
 	// }
 
-	public static float GetBatteryLevel()
+	public static int GetBatteryLevel()
     {
-        return 100;
+        return Commander.Shared.Power();
     }
 }
