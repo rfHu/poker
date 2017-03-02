@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using System.Collections;
 
 // Native提供接口给Unity
 public class Commander {
@@ -24,20 +25,33 @@ public class Commander {
 		Time.timeScale = 0;
 	}
 
-	public double[] Location() {
-		char[] delimiter = {'&'};
-		string[] result = ic.Location().Split(delimiter);
+	public IEnumerator Location(Action<float[]> success, Action fail) {
+		if (!Input.location.isEnabledByUser) {
+			fail();
+			yield break;
+		} 
 
-		// Debug.Log("Unity3D: Position=" + result);
+		Input.location.Start();
 
-		if (result.Length < 2) {
-			return new double[]{0 ,0};
+		float maxWait = 3;
+
+		while(Input.location.status == LocationServiceStatus.Initializing && maxWait > 0) {
+			yield return new WaitForFixedUpdate();
+			maxWait = maxWait - Time.deltaTime;
 		}
 
-		return new double[]{
-			Convert.ToDouble(result[0]),
-			Convert.ToDouble(result[1])
-		};
+		// timeout或者获取位置失败
+		if (maxWait <= 0 || Input.location.status == LocationServiceStatus.Failed) {
+			fail();
+			yield break;
+		}
+
+		success(new float[]{
+			Input.location.lastData.longitude,
+			Input.location.lastData.latitude
+		});
+
+		Input.location.Stop();
 	}
 
 	public void PayFor() {
@@ -59,7 +73,6 @@ public class Commander {
 
 public interface ICommander {
 	void Exit();
-	string Location();
 	void PayFor();
 	void GameEnd();
 	int Power();
@@ -77,11 +90,7 @@ public class AndroidCommander: ICommander {
 	public void Exit() {
 		getJo().Call("closeGame");
 	}
-
-	public string Location() {
-		return getJo().Call<string>("getLatitudeAndAltitude");
-	} 
-
+	
 	public void PayFor(){
 		getJo().Call("payFor");
 	}
@@ -111,11 +120,6 @@ public class iOSCommander: ICommander {
 	private static extern void Exit(){}
 
 	[DllImport("__Internal")]
-	private static extern string Location(){
-		return "";
-	}
-
-	[DllImport("__Internal")]
 	private static extern void PayFor(){
 
 	}
@@ -138,11 +142,7 @@ public class iOSCommander: ICommander {
 	public void Exit() {
 		iOSCommander.Exit();
 	}
-
-	public string Location() {
-		return iOSCommander.Location();
-	}
-
+	
 	public void PayFor() {
 		iOSCommander.PayFor();
 	}
