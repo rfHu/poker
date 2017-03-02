@@ -100,7 +100,7 @@ public class AndroidCommander: ICommander {
 	}
 
 	public void Audit() {
-		
+		getJo().Call("jumpToVerify");
 	}
 }
 #endif
