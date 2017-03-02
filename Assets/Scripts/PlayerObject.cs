@@ -332,7 +332,7 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	private void doChipsAnim() {
-		var grp = Pots.CloneChips();
+		var grp = Pots.CloneChipsHideSource();
         grp.ToPlayer(this);
 	}
 
