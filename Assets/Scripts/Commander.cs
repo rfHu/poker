@@ -91,7 +91,12 @@ public class AndroidCommander: ICommander {
 	}
 
 	public int Power() {
-		return getJo().Call<int>("getCurPower");
+		// 判断Unity_EDITOR方便调试
+		#if UNITY_EDITOR
+			return 50;	
+		#else
+			return getJo().Call<int>("getCurPower");
+		#endif
 	}
 
 	public void Audit() {
