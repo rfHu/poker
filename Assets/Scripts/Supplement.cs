@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using Extensions;
 using UniRx;
-using UIWidgets;
 
 [RequireComponent(typeof(DOPopup))]
 public class Supplement : MonoBehaviour {
@@ -63,18 +62,12 @@ public class Supplement : MonoBehaviour {
 		}, (json) => {
 			var err = json.Int("err");
 			if (err == 1201) {
-				PokerUI.ShowDialog("金币不足，请购买", new DialogActions(){
-					{"取消", Dialog.Close},
-					{"确定",  PayFor}
-				});
+				PokerUI.Alert("金币不足，请购买", () => {
+					Commander.Shared.PayFor();
+				}, null);
 			} 
 
 			gameObject.GetComponent<DOPopup>().Close();
 		});
-	}
-
-	private bool PayFor() {
-		Commander.Shared.PayFor();
-		return true;
 	}
 }

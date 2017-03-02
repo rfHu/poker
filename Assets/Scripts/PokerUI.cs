@@ -1,31 +1,34 @@
 ﻿using UnityEngine;
-using UIWidgets;
 using MaterialUI;
+using System;
 
 public class PokerUI: MonoBehaviour {
-	static private Dialog dialogSample;
+	static public void ShowDialog(string text, Action yesAction, string yesText, Action cancelAction, string cancelText) {
+		DialogAlert dialog = DialogManager.CreateAlert();
+		dialog.Initialize(text, yesAction, yesText, null, null, cancelAction, cancelText);
 
-	static public void ShowDialog(string text, DialogActions buttons) {
-		if (dialogSample == null) {
-			var go = (GameObject)Instantiate(Resources.Load("Prefab/DialogTemplate"));
-			dialogSample = go.GetComponent<Dialog>();
-		}
+		var animator = new DialogAnimatorSlide(0.5f, DialogAnimatorSlide.SlideDirection.Bottom, DialogAnimatorSlide.SlideDirection.Bottom);
+		animator.backgroundAlpha = 0f;
 
-		dialogSample.GetComponent<Dialog>().Template().Show(message: text, modal: true, buttons: buttons, modalColor: new Color(0, 0, 0, 0.2f), canvas: G.Cvs);
+		dialog.dialogAnimator = animator;
+		dialog.Show();
 	}
 
-	public static void Alert(string text) {
-		DialogManager.ShowAlert(text, null, null);		
+	static public void Alert(string text) {
+		ShowDialog(text, null, "确定", null, null);
+	}
+
+	static public void Alert(string text, Action yesAction) {
+		ShowDialog(text, yesAction, "确定", null, null);
+	}
+
+	static public void Alert(string text, Action yesAction, Action cancelAction) {
+		ShowDialog(text, yesAction, "确定", cancelAction, "取消");
 	}
 
 	static public void ExitAlert() {
-		PokerUI.ShowDialog("您的账号已在其他设备登陆", new DialogActions() {
-			{"确定", Exit} 
+		PokerUI.Alert("您的账号已在其他设备登陆", () => {
+			Commander.Shared.Exit();
 		});
 	}
-
-	static private bool Exit() {
-		Commander.Shared.Exit();
-		return false;
-	} 
 }
