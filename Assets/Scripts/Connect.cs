@@ -88,6 +88,13 @@ public sealed class Connect  {
 			}
 
 			successCallbacks.Add(seq, (data) => {
+				var err = data.Int("err");
+
+				if (err == 403) {
+					PokerUI.ExitAlert();	
+					return ;
+				}
+
 				successCallbacks.Remove(seq);
 				
 				if (dispose != null) {

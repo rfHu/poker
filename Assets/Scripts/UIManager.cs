@@ -68,15 +68,8 @@ public class UIManager : MonoBehaviour {
 		
 			if (type == 2)
             {
-                PokerUI.ShowDialog("您的账号已在其他设备登陆", new DialogActions() {
-					{"确定", Exit} 
-				});
+				PokerUI.ExitAlert();
             }
 		}).AddTo(this);
-	}
-
-	private bool Exit() {
-		Commander.Shared.Exit();
-		return false;
 	}
 }
