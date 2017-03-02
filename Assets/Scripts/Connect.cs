@@ -55,6 +55,10 @@ public sealed class Connect  {
 			if (error == 400) {				
 				PokerUI.Alert("房间不存在！");
 			}
+		}, () => {
+			PokerUI.Alert("连接房间超时", () => {
+				Commander.Shared.Exit();
+			});
 		});
 	}
 

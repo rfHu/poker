@@ -10,7 +10,7 @@ public class Card : MonoBehaviour {
 
 	public AnimationCurve scaleCurve;
 
-	private float duration = 0.5f;
+	private float duration = 0.3f;
 
 	void Awake() {
 		var img = GetComponent<Image>();

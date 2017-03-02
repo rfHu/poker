@@ -56,6 +56,12 @@ public class UIManager : MonoBehaviour {
 
             GameObject obj = (GameObject)Instantiate(Resources.Load("Prefab/Supplement"));
             obj.GetComponent<DOPopup>().Show(G.Cvs, () => {
+				var player = GameData.Shared.GetMyPlayer();
+
+				if (player != null && player.Bankroll.Value >= 0) {
+					return ;
+				}
+
 				Connect.Shared.Emit(new Dictionary<string, object>() {
 					{"f", "unseat"}
 				});

@@ -382,6 +382,16 @@ sealed public class GameData {
 		return new Player();
 	}
 
+	public Player GetMyPlayer() {
+		foreach(var player in Players) {
+			if (player.Value.Uid == Uid) {
+				return player.Value;
+			}
+		}
+
+		return null;
+	}
+
 	public ReactiveCollection<int> PublicCards = new ReactiveCollection<int>();
 
 	public class MyCmd {
