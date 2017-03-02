@@ -17,9 +17,13 @@ public class Pots : MonoBehaviour {
 		pots = this;
 	}
 
-	public static ChipsGrp CloneChips() {
-		var go = Instantiate(pots.Grp, pots.PrPotGo.transform, true);
+	public static ChipsGrp CloneChipsHideSource() {
+		var go = Instantiate(pots.Grp, pots.transform, true);
 		go.SetActive(true);
+
+		pots.PrPotGo.SetActive(false);
+		pots.DC.gameObject.SetActive(false);
+
 		return go.GetComponent<ChipsGrp>();
 	}
 
