@@ -299,15 +299,20 @@ public class PlayerObject : MonoBehaviour {
 			}
 		}).AddTo(this);
 
-		GameData.Shared.MaxFiveRank.Subscribe((value) => {
-			if (value == 0) {
-				CardDesc.gameObject.SetActive(false);
-				return ;
-			}
+		if (isSelf()) {
+			GameData.Shared.MaxFiveRank.Subscribe((value) => {
+				var parent = CardDesc.transform.parent.gameObject;
 
-			CardDesc.gameObject.SetActive(true);
-			CardDesc.text = intToCardStr(value);
-		}).AddTo(this);
+				if (value == 0)
+                {
+                    parent.SetActive(false);
+                    return;
+                }
+
+                parent.SetActive(true);
+                CardDesc.text = intToCardStr(value);
+            }).AddTo(this);
+		}
 	}
 
 	private string intToCardStr(int val) {
