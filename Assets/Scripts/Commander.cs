@@ -91,7 +91,7 @@ public class AndroidCommander: ICommander {
 	}
 
 	public int Power() {
-		return 1;
+		return getJo().Call<int>("getCurPower");
 	}
 
 	public void Audit() {
