@@ -2,6 +2,7 @@
 using Extensions;
 using UniRx;
 using System.Collections.Generic;
+using UIWidgets;
 
 public class UIManager : MonoBehaviour {
 	public GameObject recallPage;
@@ -67,8 +68,15 @@ public class UIManager : MonoBehaviour {
 		
 			if (type == 2)
             {
-                PokerUI.Alert("您的账号已在其他设备登陆");
+                PokerUI.ShowDialog("您的账号已在其他设备登陆", new DialogActions() {
+					{"确定", Exit} 
+				});
             }
 		}).AddTo(this);
+	}
+
+	private bool Exit() {
+		Commander.Shared.Exit();
+		return false;
 	}
 }

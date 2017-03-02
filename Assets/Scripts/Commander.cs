@@ -54,8 +54,11 @@ public interface ICommander {
 	string Location();
 	void PayFor();
 	void GameEnd();
+	int Power();
+	void Audit();
 }
 
+#if UNITY_ANDROID
 public class AndroidCommander: ICommander {
 	private AndroidJavaObject getJo()  {
 		AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
@@ -78,20 +81,69 @@ public class AndroidCommander: ICommander {
 	public void GameEnd() {
 		getJo().Call("gameEnd", GameData.Shared.Room);
 	}
+
+	public int Power() {
+		return 1;
+	}
+
+	public void Audit() {
+		
+	}
 }
+#endif
 
+#if UNITY_IOS
 public class iOSCommander: ICommander {
-	public void Exit(){}
+	[DllImport("__Internal")]
+	private static extern void Exit(){}
 
-	public string Location(){
+	[DllImport("__Internal")]
+	private static extern string Location(){
 		return "";
 	}
 
-	public void PayFor(){
+	[DllImport("__Internal")]
+	private static extern void PayFor(){
 
+	}
+
+	[DllImport("__Internal")]
+	private static extern void GameEnd() {
+
+	}
+
+	[DllImport("__Internal")]
+	private static extern int Power() {
+		return 1;
+	}
+
+	[DllImport("__Internal")]
+	private static extern void Audit() {
+
+	}
+
+	public void Exit() {
+		iOSCommander.Exit();
+	}
+
+	public string Location() {
+		return iOSCommander.Location();
+	}
+
+	public void PayFor() {
+		iOSCommander.PayFor();
 	}
 
 	public void GameEnd() {
+		iOSCommander.GameEnd();
+	}
 
+	public int Power() {
+		return iOSCommander.Power();
+	}
+
+	public void Audit() {
+		iOSCommander.Audit();
 	}
 }
+#endif
