@@ -10,7 +10,7 @@ public class Card : MonoBehaviour {
 
 	public AnimationCurve scaleCurve;
 
-	private float duration = 0.3f;
+	public static float TurnCardDuration = 0.5f;
 
 	void Awake() {
 		var img = GetComponent<Image>();
@@ -61,7 +61,7 @@ public class Card : MonoBehaviour {
 		
 		while(time < 1f) {
 			float scale = scaleCurve.Evaluate(time);
-			time = Mathf.Min(time + Time.deltaTime / duration, 1);
+			time = Mathf.Min(time + Time.deltaTime / TurnCardDuration, 1);
 
 			Vector2 vector = rectTrans.localScale;
 			vector.x = scale;

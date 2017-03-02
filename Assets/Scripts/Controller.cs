@@ -273,7 +273,7 @@ public class Controller : MonoBehaviour {
 		}
 
 		for(var i = 0; i < cards.Count; i++) {
-			var time = i * 0.3;
+			var time = i * Card.TurnCardDuration;
 			var local = i;
 
 			if (time == 0) {
