@@ -57,7 +57,7 @@ public sealed class Connect  {
 			}
 		}, () => {
 			PokerUI.Alert("连接房间超时", () => {
-				Commander.Shared.Exit();
+				External.Instance.Exit();
 			});
 		});
 	}
@@ -73,7 +73,7 @@ public sealed class Connect  {
 		GameData.Shared.Pin = token.String("pin");
 	}
 
-	public void Emit(Dictionary<string, object> json, Action<Dictionary<string, object>> success = null, Action error = null) {
+	public void Emit(Dictionary<string, object> json, Action<Dictionary<string, object>> success = null, Action error = null, int timeout = 5) {
 		seq++;
 		json["seq"] = seq;
 		json["pin"] = GameData.Shared.Pin;
@@ -85,7 +85,7 @@ public sealed class Connect  {
 
 			// 设置8秒超时
 			if (error != null) {
-				dispose = Observable.Timer(TimeSpan.FromSeconds(8)).AsObservable().Subscribe((_) => {
+				dispose = Observable.Timer(TimeSpan.FromSeconds(timeout)).AsObservable().Subscribe((_) => {
 					successCallbacks.Remove(seq);
 					error();
 				});
@@ -110,17 +110,21 @@ public sealed class Connect  {
 		}
 	}
 
-	public void Close() {
+	public void Close(Action callback = null) {
 		Action act = () => {
 			manager.Socket.Off();
 			manager.Close();
+
+			if (callback != null) {
+				callback();
+			}
 		};
 
 		Emit(new Dictionary<string, object>{
 			{"f", "exit"}
 		}, (_) => {
 			act();
-		}, act);	
+		}, act, 2);	
 	}
 
 	public static Connect Shared {

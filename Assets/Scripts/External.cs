@@ -22,17 +22,17 @@ public class External : MonoBehaviour{
 		this.name = "External";
 	}
 
-	// 只给外部调用，内部逻辑不要使用
+	// 内部的退出接口都直接调用，外部只有当登陆互斥时才调用
 	public void Exit() {
-		Connect.Shared.Close();
+		Connect.Shared.Close(() => {
+			// 清空两个关键数据
+			GameData.Shared.Sid = "";
+			GameData.Shared.Room = "";
 
-		// 清空两个关键数据
-		GameData.Shared.Sid = "";
-		GameData.Shared.Room = "";
-
-		// 返回上级界面
-		SceneManager.LoadScene("GameLoading");
-		Commander.Shared.Exit();
+			// 返回上级界面
+			SceneManager.LoadScene("GameLoading");
+			Commander.Shared.Exit();
+		});
 	}
 
 	public void SetSid(string sid) {

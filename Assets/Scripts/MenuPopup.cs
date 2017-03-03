@@ -51,7 +51,7 @@ public class MenuPopup : MonoBehaviour {
 	}
 
 	public void Exit() {
-		Commander.Shared.Exit();
+		External.Instance.Exit();
 	}
 
 	public void Tips() {

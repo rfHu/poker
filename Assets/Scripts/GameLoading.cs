@@ -21,6 +21,6 @@ public class GameLoading : MonoBehaviour {
 	}
 
 	public void ExitGame() {
-		Commander.Shared.Exit();
+		External.Instance.Exit();
 	}
 }
