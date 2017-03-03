@@ -15,12 +15,24 @@ public class Supplement : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake() {
+		Connect.Shared.Emit(new Dictionary<string, object>() {
+			{"f", "gamerdetail"},
+			{"args",  new Dictionary<string, object> {
+				{"uid", GameData.Shared.Uid}
+			}}
+		}, (data) => {
+			var coins = data.Dict("ret").Dict("achieve").Int("coins");
+			GameData.Shared.Coins = coins; // 保存coins
+			Coins.text = coins.ToString(); 
+		});
+
+		Coins.text = GameData.Shared.Coins.ToString();
+
 		int score = GameData.Shared.BB * 100; 
 		int min = GameData.Shared.BankrollMul[0] * score;
 		int max = GameData.Shared.BankrollMul[1] * score;
 
 		Blind.text = string.Format("{0}/{1}", GameData.Shared.BB / 2, GameData.Shared.BB);
-		Coins.text = GameData.Shared.Coins.ToString();
 		OnChange(min);
 
 		slider.minValue = min;

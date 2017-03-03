@@ -28,6 +28,7 @@ sealed public class Player {
 	public ReactiveProperty<int> PrChips = new ReactiveProperty<int>();
 	public bool InGame = false;
 	public int AuditCD = 0; 
+	public int Coins = 0;
 
 	public BehaviorSubject<RestoreData> Countdown = new BehaviorSubject<RestoreData>(new RestoreData());
 
@@ -49,6 +50,7 @@ sealed public class Player {
 		Index = index;
 		InGame = json.Bool("is_ingame");	
 		AuditCD = json.Int("unaudit_countdown");
+		Coins = json.Int("coins");
 
 		var cd = json.Int("turn_countdown");
 		if (cd > 0) {
@@ -184,6 +186,9 @@ sealed public class GameData {
 			var index = e.Data.Int("where");
 			var inGame = e.Data.Bool("is_ingame");
 			var bankroll = e.Data.Int("bankroll");
+			var coins = e.Data.Int("coins");
+
+			Coins = coins;
 
 			if (index < 0 || inGame || bankroll <= 0) {
 				return ;
@@ -401,6 +406,7 @@ sealed public class GameData {
 
 		if (MySeat != -1) {
 			AuditCD.Value = Players[MySeat].AuditCD;
+			Coins = Players[MySeat].Coins;
 		}
 	}
 
