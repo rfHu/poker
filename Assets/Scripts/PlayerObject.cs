@@ -32,7 +32,7 @@ public class PlayerObject : MonoBehaviour {
 	private GameObject circle;
 	private ChipsGo cgo; 
 	private Player player;
-	private float foldOpacity = 0.7f;
+	private float foldOpacity = 0.6f;
 	private float animDuration = 0.4f;
 
 	public Text CardDesc;
@@ -128,7 +128,10 @@ public class PlayerObject : MonoBehaviour {
 		if (isSelf()) {
 			var copy = Instantiate(MyCards, canvas.transform, true);
 			
-			MyCards.GetComponent<CanvasGroup>().alpha = foldOpacity;
+			// 图片灰掉
+			MyCards.transform.Find("First").GetComponent<Card>().Darken();
+			MyCards.transform.Find("Second").GetComponent<Card>().Darken();
+
 			MyCards.SetActive(false);
 
 			foldCards(copy, () => {

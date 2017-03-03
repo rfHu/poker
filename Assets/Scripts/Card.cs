@@ -41,6 +41,10 @@ public class Card : MonoBehaviour {
 		rectTrans.sizeDelta = size;
 	}
 
+	public void Darken() {
+		GetComponent<Image>().color = new Color(150 / 255f ,150 / 255f, 150 / 255f, 1);
+	}
+
 	public void Show(int index, bool anim = false) {
 		if (index == 0) {
 			return ;
