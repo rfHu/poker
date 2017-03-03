@@ -124,7 +124,7 @@ public class iOSCommander: ICommander {
 	private static extern void _ex_callOpenCoinMall();
 
 	[DllImport("__Internal")]
-	private static extern void _ex_callGameOver();
+	private static extern void _ex_callGameOver(String roomID);
 
 	[DllImport("__Internal")]
 	private static extern int _ex_callGetBatteryLevel();
@@ -141,7 +141,7 @@ public class iOSCommander: ICommander {
 	}
 
 	public void GameEnd() {
-		_ex_callGameOver();
+		_ex_callGameOver(GameData.Shared.Room);
 	}
 
 	public int Power() {

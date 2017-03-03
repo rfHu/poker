@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 // Unity提供方法给Native
 public class External : MonoBehaviour{
 	private static External instance;
-
+	
 	public static External Instance {
 		get {
 			if (instance == null) {
@@ -22,6 +22,7 @@ public class External : MonoBehaviour{
 		this.name = "External";
 	}
 
+	// 只给外部调用，内部逻辑不要使用
 	public void Exit() {
 		Connect.Shared.Close();
 
