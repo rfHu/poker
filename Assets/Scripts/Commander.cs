@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
+using System.Runtime.InteropServices;
 
 // Native提供接口给Unity
 public class Commander {
