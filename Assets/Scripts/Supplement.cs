@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using Extensions;
 using UniRx;
+using System;
 
 [RequireComponent(typeof(DOPopup))]
 public class Supplement : MonoBehaviour {
@@ -13,31 +14,37 @@ public class Supplement : MonoBehaviour {
 	public Text Pay;
 	public Slider slider;
 
+	private bool ready = false;
+
 	// Use this for initialization
 	void Awake() {
 		Connect.Shared.Emit(new Dictionary<string, object>() {
 			{"f", "gamerdetail"},
 			{"args",  new Dictionary<string, object> {
-				{"uid", GameData.Shared.Uid}
+				{"uid", GameData.Shared.Uid},
+				{"bankroll_multiple", "1"}
 			}}
 		}, (data) => {
-			var coins = data.Dict("ret").Dict("achieve").Int("coins");
+			var ret = data.Dict("ret");
+			var coins = ret.Dict("achieve").Int("coins");
+
 			GameData.Shared.Coins = coins; // 保存coins
-			Coins.text = coins.ToString(); 
+			Coins.text = coins.ToString();
+
+			var mul = ret.IL("bankroll_multiple"); 
+			int score = GameData.Shared.BB * 100; 
+			int min = mul[0] * score;
+			int max = Math.Max(mul[0], mul[1]) * score;
+			
+			OnChange(min);
+
+			slider.minValue = min;
+			slider.maxValue = max;
+			slider.onValueChanged.AddListener(OnChange);			
 		});
 
 		Coins.text = GameData.Shared.Coins.ToString();
-
-		int score = GameData.Shared.BB * 100; 
-		int min = GameData.Shared.BankrollMul[0] * score;
-		int max = GameData.Shared.BankrollMul[1] * score;
-
 		Blind.text = string.Format("{0}/{1}", GameData.Shared.BB / 2, GameData.Shared.BB);
-		OnChange(min);
-
-		slider.minValue = min;
-		slider.maxValue = max;
-		slider.onValueChanged.AddListener(OnChange);
 
 		RxSubjects.UnSeat.AsObservable().Where((e) => {
 			var uid = e.Data.String("uid");
@@ -67,10 +74,14 @@ public class Supplement : MonoBehaviour {
 	}
 
 	public void TakeCoin() {
+		if (!ready) {
+			return ;
+		}
+
 		float value = slider.value;	
 		Connect.Shared.Emit(new Dictionary<string, object>(){
 			{"f", "takecoin"},
-			{"args", value}
+			{"args", value / 100}
 		}, (json) => {
 			var err = json.Int("err");
 			if (err == 1201) {
