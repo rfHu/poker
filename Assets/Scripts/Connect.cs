@@ -118,6 +118,8 @@ public sealed class Connect  {
 			if (callback != null) {
 				callback();
 			}
+
+			instance = null;
 		};
 
 		Emit(new Dictionary<string, object>{
@@ -136,8 +138,9 @@ public sealed class Connect  {
 	private static Connect instance;
 
 	static public void Setup() {
+		// 强制断开连接
 		if (instance != null) {
-			instance.manager.Close();
+			instance.close();
 		}
 
 		instance = new Connect();
@@ -263,6 +266,12 @@ public sealed class Connect  {
 					break;
 			}
 		});
+	}
+
+	// 强制关闭
+	private void close() {
+		manager.Close();
+		manager.Socket.Off();
 	}
 }
 

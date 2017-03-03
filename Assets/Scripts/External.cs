@@ -56,6 +56,7 @@ public class External : MonoBehaviour{
 			return ;
 		}
 
+		// 开始游戏
 		Time.timeScale = 1;
 		Connect.Setup();	
 	}
