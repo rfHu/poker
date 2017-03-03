@@ -56,9 +56,7 @@ public sealed class Connect  {
 				PokerUI.Alert("房间不存在！");
 			}
 		}, () => {
-			PokerUI.Alert("连接房间超时", () => {
-				External.Instance.Exit();
-			});
+			PokerUI.Alert("连接房间超时");
 		});
 	}
 
