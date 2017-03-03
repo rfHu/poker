@@ -185,7 +185,7 @@ sealed public class GameData {
 			var inGame = e.Data.Bool("is_ingame");
 			var bankroll = e.Data.Int("bankroll");
 
-			if (index < 0 || !inGame || bankroll <= 0) {
+			if (index < 0 || inGame || bankroll <= 0) {
 				return ;
 			}
 
