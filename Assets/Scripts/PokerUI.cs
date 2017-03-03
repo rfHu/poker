@@ -3,7 +3,13 @@ using MaterialUI;
 using System;
 
 public class PokerUI: MonoBehaviour {
+	static private DialogAlert dialogAlert;
+
 	static public void ShowDialog(string text, Action yesAction, string yesText, Action cancelAction, string cancelText) {
+		if (dialogAlert != null) {
+			dialogAlert.Hide();
+		}
+
 		DialogAlert dialog = DialogManager.CreateAlert();
 		dialog.Initialize(text, yesAction, yesText, null, null, cancelAction, cancelText);
 
@@ -12,6 +18,9 @@ public class PokerUI: MonoBehaviour {
 
 		dialog.dialogAnimator = animator;
 		dialog.Show();
+
+		// 保证单实例
+		dialogAlert = dialog; 
 	}
 
 	static public void Alert(string text) {
