@@ -117,46 +117,38 @@ public class AndroidCommander: ICommander {
 #if UNITY_IOS
 public class iOSCommander: ICommander {
 	[DllImport("__Internal")]
-	private static extern void Exit(){}
+	private static extern void _ex_callExitGame();
 
 	[DllImport("__Internal")]
-	private static extern void PayFor(){
-
-	}
+	private static extern void _ex_callOpenCoinMall();
 
 	[DllImport("__Internal")]
-	private static extern void GameEnd() {
-
-	}
+	private static extern void _ex_callGameOver();
 
 	[DllImport("__Internal")]
-	private static extern int Power() {
-		return 1;
-	}
+	private static extern int _ex_callGetBatteryLevel();
 
 	[DllImport("__Internal")]
-	private static extern void Audit() {
-
-	}
+	private static extern void _ex_callOpenAuditPage();
 
 	public void Exit() {
-		iOSCommander.Exit();
+		_ex_callExitGame();
 	}
 	
 	public void PayFor() {
-		iOSCommander.PayFor();
+		_ex_callOpenCoinMall();
 	}
 
 	public void GameEnd() {
-		iOSCommander.GameEnd();
+		_ex_callGameOver();
 	}
 
 	public int Power() {
-		return iOSCommander.Power();
+		return _ex_callGetBatteryLevel();
 	}
 
 	public void Audit() {
-		iOSCommander.Audit();
+		_ex_callOpenAuditPage();
 	}
 }
 #endif
