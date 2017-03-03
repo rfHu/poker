@@ -27,6 +27,7 @@ sealed public class Player {
 	public int Index = -1;
 	public ReactiveProperty<int> PrChips = new ReactiveProperty<int>();
 	public bool InGame = false;
+	public int AuditCD = 0; 
 
 	public BehaviorSubject<RestoreData> Countdown = new BehaviorSubject<RestoreData>(new RestoreData());
 
@@ -47,6 +48,7 @@ sealed public class Player {
 
 		Index = index;
 		InGame = json.Bool("is_ingame");	
+		AuditCD = json.Int("unaudit_countdown");
 
 		var cd = json.Int("turn_countdown");
 		if (cd > 0) {
@@ -67,14 +69,14 @@ sealed public class Player {
 
 	public ReactiveProperty<bool> Destroyed = new ReactiveProperty<bool>(false);
 
-	public ReactiveProperty<GameoverJson> OverData = new ReactiveProperty<GameoverJson>();
+	public ReactiveProperty<GameOverJson> OverData = new ReactiveProperty<GameOverJson>();
 
 	public void Destroy() {
 		Destroyed.Value = true;
 	}
 }
 
-public class GameoverJson {
+public class GameOverJson {
 	public List<int> cards { get; set; }
 	public int prize { get; set; }
 	public int chips {get; set;}
@@ -85,7 +87,7 @@ public class GameoverJson {
 		return prize - chips;
 	}
 
-	public GameoverJson(Dictionary<string, object> dict) {
+	public GameOverJson(Dictionary<string, object> dict) {
 		prize = dict.Int("prize");
 		chips = dict.Int("chips");
 		uid = dict.String("uid");
@@ -178,6 +180,20 @@ sealed public class GameData {
 			}
 		});
 
+		RxSubjects.Pass.Subscribe((e) => {
+			var index = e.Data.Int("where");
+			var inGame = e.Data.Bool("is_ingame");
+			var bankroll = e.Data.Int("bankroll");
+
+			if (index < 0 || !inGame || bankroll <= 0) {
+				return ;
+			}
+
+			if (Players.ContainsKey(index)) {
+				Players[index].Bankroll.Value = bankroll;
+			}
+		});
+
 		RxSubjects.Fold.Subscribe((e) => {
 			var index = e.Data.Int("seat");
 
@@ -229,7 +245,7 @@ sealed public class GameData {
 
 			foreach(KeyValuePair<string, object> item in data) {
 				var dict = (Dictionary<string, object>)item.Value;
-				var json = new GameoverJson(dict); 
+				var json = new GameOverJson(dict); 
 				var index = Convert.ToInt32(item.Key);
 
 				if (Players.ContainsKey(index))  {
@@ -241,6 +257,17 @@ sealed public class GameData {
 			Pot.Value = room.Int("pot");
 			PrPot.Value = Pot.Value - room.Int("pr_pot");
 		});
+
+		RxSubjects.UnAuditCD.Subscribe(
+			(e) => {
+				var sec = e.Data.Int("sec");
+				if (sec <= 0) {
+					return ;
+				}
+
+				AuditCD.Value = sec;
+			}
+		);
 	}
 
 	public Player FindMyPlayer() {
@@ -296,6 +323,8 @@ sealed public class GameData {
 	public DateTime StartTime;
 	public bool InGame = false;  
 
+	public ReactiveProperty<int> AuditCD = new ReactiveProperty<int>(); 
+
 	private Dictionary<string, object> jsonData;
 
 	public void Reload() {
@@ -332,6 +361,7 @@ sealed public class GameData {
 		Paused = json.Int("is_pause") != 0;
 		InGame = json.Bool("is_ingame");
 		MaxFiveRank.Value = json.Int("maxFiveRank");
+		MySeat = json.Int("my_seat");
 
 		// 删除公共牌重新添加
 		var cards = json.IL("shared_cards");
@@ -367,6 +397,10 @@ sealed public class GameData {
 			var index = Convert.ToInt32(entry.Key);
 			var player = new Player(dict, index);
 			Players[index] = player;
+		}
+
+		if (MySeat != -1) {
+			AuditCD.Value = Players[MySeat].AuditCD;
 		}
 	}
 

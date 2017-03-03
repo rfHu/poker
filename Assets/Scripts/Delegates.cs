@@ -34,7 +34,11 @@ public class RxSubjects {
 	public static Subject<RxData> Exclusion = new Subject<RxData>(); // 登陆互斥
 	public static Subject<RxData> GameEnd = new Subject<RxData>();
 	public static Subject<RxData> Audit = new Subject<RxData>();
+	public static Subject<RxData> UnAuditCD = new Subject<RxData>();
+	public static Subject<RxData> Pass  = new Subject<RxData>();
+	public static Subject<RxData> UnPass = new Subject<RxData>();
 
+	// 跟网络无关事件
 	public static Subject<int> ChangeVectorsByIndex = new Subject<int>();
 }
 

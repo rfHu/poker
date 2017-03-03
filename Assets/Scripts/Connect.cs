@@ -41,11 +41,11 @@ public sealed class Connect  {
 			saveUserInfo(json);
 
 			// 进入房间
-			enterRoom();
+			enterGame();
 		});
 	}
 
-	private void enterRoom() {
+	private void enterGame() {
 		Emit(new Dictionary<string, object>{
 			{"f", "entergame"},
 			{"args", GameData.Shared.Room}
@@ -245,6 +245,15 @@ public sealed class Connect  {
 					break;
 				case "un_audit":
 					RxSubjects.Audit.OnNext(rxdata);
+					break;
+				case "unaudit_countdown":
+					RxSubjects.UnAuditCD.OnNext(rxdata);
+					break;
+				case "pass":
+					RxSubjects.Pass.OnNext(rxdata);
+					break;
+				case "un_pass":
+					RxSubjects.UnPass.OnNext(rxdata);
 					break;
 				default:
 					break;
