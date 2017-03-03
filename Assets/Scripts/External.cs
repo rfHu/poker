@@ -39,6 +39,10 @@ public class External : MonoBehaviour{
 		});
 	}
 
+	public void ExitWithClose() {
+		
+	}
+
 	public void SetSid(string sid) {
 		Debug.Log("Unity: Sid=" + sid);
 		GameData.Shared.Sid = sid;
