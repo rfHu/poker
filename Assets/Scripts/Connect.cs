@@ -205,6 +205,9 @@ public sealed class Connect  {
 				case "ready":
 					RxSubjects.Ready.OnNext(rxdata);	
 					break;
+				case "takemore":
+					RxSubjects.TakeMore.OnNext(rxdata);
+					break;
 				case "gamestart":
 					RxSubjects.GameStart.OnNext(rxdata);
 					break;

@@ -171,8 +171,8 @@ sealed public class GameData {
 
 			MaxFiveRank.Value = e.Data.Int("maxFiveRank");
 		});
-		
-		RxSubjects.Ready.Subscribe((e) => {
+
+		Action<RxData> updateCoins = (e) => {
 			var index = e.Data.Int("where");
 			var bankroll = e.Data.Int("bankroll");
 
@@ -180,8 +180,11 @@ sealed public class GameData {
 				var player = Players[index];
 				player.Bankroll.Value = bankroll;	
 			}
-		});
-
+		};
+		
+		RxSubjects.Ready.Subscribe(updateCoins);
+		RxSubjects.TakeMore.Subscribe(updateCoins);
+		
 		RxSubjects.Pass.Subscribe((e) => {
 			var index = e.Data.Int("where");
 			var inGame = e.Data.Bool("is_ingame");

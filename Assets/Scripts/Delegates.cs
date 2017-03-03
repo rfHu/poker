@@ -37,6 +37,7 @@ public class RxSubjects {
 	public static Subject<RxData> UnAuditCD = new Subject<RxData>();
 	public static Subject<RxData> Pass  = new Subject<RxData>();
 	public static Subject<RxData> UnPass = new Subject<RxData>();
+	public static Subject<RxData> TakeMore = new Subject<RxData>();
 
 	// 跟网络无关事件
 	public static Subject<int> ChangeVectorsByIndex = new Subject<int>();
