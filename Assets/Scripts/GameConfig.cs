@@ -266,7 +266,9 @@ sealed public class GameData {
 			PrPot.Value = Pot.Value - room.Int("pr_pot");
 		});
 
-		RxSubjects.UnAuditCD.Subscribe(
+		RxSubjects.UnAuditCD.AsObservable().Where((e) => {
+			return e.Data.String("uid") == GameData.Shared.Uid;
+		}).Subscribe(
 			(e) => {
 				var sec = e.Data.Int("sec");
 				if (sec <= 0) {
