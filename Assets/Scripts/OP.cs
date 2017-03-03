@@ -103,7 +103,6 @@ public class OP : MonoBehaviour {
 	}
 
 	private void setRaiseButtons(int call) {
-		// 底池小于二倍	
 		var pot = GameData.Shared.Pot.Value;
 		var bb = GameData.Shared.BB;
 
