@@ -30,8 +30,12 @@ public class External : MonoBehaviour{
 			GameData.Shared.Room = "";
 
 			// 返回上级界面
-			SceneManager.LoadScene("GameLoading");
-			Commander.Shared.Exit();
+			#if UNITY_EDITOR
+				// Nothing to do
+			#else
+				SceneManager.LoadScene("GameLoading");
+				Commander.Shared.Exit();
+			#endif
 		});
 	}
 
