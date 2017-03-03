@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class UIManager : MonoBehaviour {
 	public GameObject recallPage;
-	GameObject auditMsg;
+	private GameObject auditMsg;
 
 	private DOPopup menuPopup;
 

@@ -40,7 +40,9 @@ public class Supplement : MonoBehaviour {
 
 			slider.minValue = min;
 			slider.maxValue = max;
-			slider.onValueChanged.AddListener(OnChange);			
+			slider.onValueChanged.AddListener(OnChange);		
+
+			ready = true;	
 		});
 
 		Coins.text = GameData.Shared.Coins.ToString();
