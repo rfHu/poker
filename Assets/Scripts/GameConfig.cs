@@ -339,6 +339,8 @@ sealed public class GameData {
 	public DateTime StartTime;
 	public bool InGame = false;  
 
+	public ReactiveProperty<bool> Muted = new ReactiveProperty<bool>(false);
+
 	public ReactiveProperty<int> AuditCD = new ReactiveProperty<int>(); 
 
 	private Dictionary<string, object> jsonData;

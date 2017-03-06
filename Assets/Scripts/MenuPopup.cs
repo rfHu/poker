@@ -5,10 +5,12 @@ using System;
 
 public class MenuPopup : MonoBehaviour {
 	public List<Sprite> MuteSprites;
-    public GameObject MuteObj;
+    public Image MuteImage;
 
-	public GameObject StandObj;
-	public GameObject SuppObj;
+	public CanvasGroup StandCG;
+	public CanvasGroup SuppCG;
+	
+	private float originalVolume;
 
 	public void Supplement() {
 		if (!GameData.MyCmd.Takecoin) {
@@ -20,12 +22,12 @@ public class MenuPopup : MonoBehaviour {
 	void Start()
 	{
 		if (GameData.MyCmd.Unseat) {
-			StandObj.GetComponent<CanvasGroup>().alpha = 1;
+			StandCG.alpha = 1;
 		}
 
 		if (GameData.MyCmd.Takecoin) {
-			SuppObj.GetComponent<CanvasGroup>().alpha = 1;
-		}		
+			SuppCG.alpha = 1;
+		}	
 	}
 
 	public void Standup() {
@@ -43,10 +45,10 @@ public class MenuPopup : MonoBehaviour {
 	public void ToggleMute() {
 		if (AudioListener.volume > 0) {
 			AudioListener.volume = 0;
-			MuteObj.GetComponent<Image>().sprite = MuteSprites[1];
+			MuteImage.sprite = MuteSprites[1];
 		} else {
 			AudioListener.volume = 1;
-		    MuteObj.GetComponent<Image>().sprite = MuteSprites[0];
+		    MuteImage.sprite = MuteSprites[0];
 		}
 	}
 
@@ -58,9 +60,5 @@ public class MenuPopup : MonoBehaviour {
 		var tip = (GameObject)Instantiate(Resources.Load("Prefab/CardTip"));
 		tip.GetComponent<DOPopup>().Show(G.Cvs);
 		gameObject.GetComponent<DOPopup>().ImmediateClose();
-	}
-
-	public void Owner() {
-
 	}
 }

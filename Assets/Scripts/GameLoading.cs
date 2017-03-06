@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 
 public class GameLoading : MonoBehaviour {
-
 	// Use this for initialization
 	void Start () {
 		Time.timeScale = 0;
