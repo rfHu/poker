@@ -22,8 +22,8 @@ public class Commander {
 	}	
 
 	public void Exit() {
-		ic.Exit();
 		Time.timeScale = 0;
+		ic.Exit();
 	}
 
 	public IEnumerator Location(Action<float[]> success, Action fail) {

@@ -19,7 +19,7 @@ public class DOPopup : MonoBehaviour {
 	Vector2 beginPosition; 
 	Vector2 endPosition;
 
-	int modalKey;
+	int modalKey = -1;
 
 	bool show = false;
 
@@ -52,7 +52,7 @@ public class DOPopup : MonoBehaviour {
 		return transform.GetSiblingIndex() - 1;
 	}
 
-	public void Show(Canvas canvas, Action close = null) {
+	public void Show(Canvas canvas, Action close = null, bool modal = true) {
 		if (show) {
 			return ;
 		}
@@ -60,13 +60,16 @@ public class DOPopup : MonoBehaviour {
 		show = true;
 
 		transform.SetParent(canvas.transform, false);
-		modalKey = ModalHelper.Open(this, null, new Color(0, 0, 0, 0), () => {
-			Close();
-			if (close != null) {
-				close();
-			}
-		});
-		transform.SetAsLastSibling();
+
+		if (modal) {
+			modalKey = ModalHelper.Open(this, null, new Color(0, 0, 0, 0), () => {
+				Close();
+				if (close != null) {
+					close();
+				}
+			});
+			transform.SetAsLastSibling();
+		}
 
 		switch(Animate) {
 			case AnimType.Up2Down: case AnimType.Left2Right: case AnimType.Right2Left:

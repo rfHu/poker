@@ -36,6 +36,6 @@ public class PokerUI: MonoBehaviour {
 	}
 
 	static public void ExitAlert() {
-		PokerUI.Alert("您的账号已在其他设备登陆");
+		PokerUI.Alert("您的账号已在其他设备登陆", External.Instance.ExitWithoutClose);
 	}
 }

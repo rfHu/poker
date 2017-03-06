@@ -24,23 +24,11 @@ public class External : MonoBehaviour{
 
 	// 内部的退出接口都直接调用，外部只有当登陆互斥时才调用
 	public void Exit() {
-		Connect.Shared.Close(() => {
-			// 清空两个关键数据
-			GameData.Shared.Sid = "";
-			GameData.Shared.Room = "";
-
-			// 返回上级界面
-			#if UNITY_EDITOR
-				// Nothing to do
-			#else
-				SceneManager.LoadScene("GameLoading");
-				Commander.Shared.Exit();
-			#endif
-		});
+		Connect.Shared.Close(close);
 	}
 
-	public void ExitWithClose() {
-		
+	public void ExitWithoutClose() {
+		close();
 	}
 
 	public void SetSid(string sid) {
@@ -67,5 +55,19 @@ public class External : MonoBehaviour{
 		// 开始游戏
 		Time.timeScale = 1;
 		Connect.Setup();	
+	}
+
+	private void close() {
+		// 清空两个关键数据
+		GameData.Shared.Sid = "";
+		GameData.Shared.Room = "";
+
+		// 返回上级界面
+		#if UNITY_EDITOR
+			// Nothing to do
+		#else
+			SceneManager.LoadScene("GameLoading");
+			Commander.Shared.Exit();
+		#endif
 	}
 }
