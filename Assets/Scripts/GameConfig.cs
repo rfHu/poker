@@ -278,6 +278,11 @@ sealed public class GameData {
 				AuditCD.Value = sec;
 			}
 		);
+
+		RxSubjects.Audit.Subscribe((e) => {
+			var array = e.Data.List("ids");
+			AuditList.Value = array;
+		});
 	}
 
 	public Player FindMyPlayer() {
@@ -292,6 +297,7 @@ sealed public class GameData {
 
 	public string Proxy;
 
+	public ReactiveProperty<List<object>> AuditList = new ReactiveProperty<List<object>>();
 	public bool GameStartState = false;
 	public bool SeeCardState = false;
 	

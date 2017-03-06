@@ -27,15 +27,13 @@ public class UIManager : MonoBehaviour {
 
 	void Awake()
 	{
-		RxSubjects.Audit.Subscribe((e) => {
-			var array = e.Data.List("ids");
-
-            if (!auditMsg)
+		GameData.Shared.AuditList.Subscribe((list) => {
+			if (!auditMsg)
             {
                 auditMsg = (GameObject)Instantiate(Resources.Load("Prefab/AuditMsg"));
             }
 
-            if (array.Count == 0)
+            if (list.Count == 0)
             {
                 auditMsg.GetComponent<DOPopup>().Close();
             }
@@ -43,7 +41,7 @@ public class UIManager : MonoBehaviour {
             {
                 auditMsg.GetComponent<DOPopup>().Show(G.Cvs, null, false);
             }
-		}).AddTo(this);
+		});	
 
 		RxSubjects.TakeCoin.Subscribe((e) => {
 			if (e.Data != null) {
