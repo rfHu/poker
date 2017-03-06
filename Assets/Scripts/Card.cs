@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Card : MonoBehaviour {
 	public Sprite[] faces;
@@ -110,5 +111,28 @@ public class Card : MonoBehaviour {
 
 		// 第一个花色、第二个数值
 		return new int[]{a, b};
+	}
+
+	static public string GetCardDesc(int val) {
+		var value = val >> 20;
+
+		var map = new Dictionary<int, string> {
+			{1, "高牌"},
+			{2, "一对"},
+			{3, "两对"},
+			{4, "三条"},
+			{5, "顺子"},
+			{6, "同花"},
+			{7, "葫芦"},
+			{8, "四条"},
+			{9, "同花顺"},
+			{10, "皇家同花顺"},
+		};
+
+		if (!map.ContainsKey(value)) {
+			return "";
+		}
+
+		return map[value];
 	}
 }

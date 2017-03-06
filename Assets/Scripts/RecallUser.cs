@@ -2,21 +2,39 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Extensions;
+using UnityEngine.UI.ProceduralImage;
 
 public class RecallUser : MonoBehaviour {
 	public RawImage Avatar;
 	public Text Name;
 	public Text Score;
 	public GameObject[] Cards;
+	public ProceduralImage ProceImage;
+	public GameObject MaxFive;
 
 	// 三种不同颜色
 	private string[] colors = new string[]{
 		"#ff1744",
-		"#ffffff",
+		"#646464",
 		"#00c853"
 	};
 
 	public void Show(Dictionary<string, object> dict) {
+		var uid = dict.String("uid");
+
+		// Is current user
+		if (uid == GameData.Shared.Uid) {
+			gameObject.GetComponent<Image>().enabled = true;	
+		}
+
+		var cardDesc = Card.GetCardDesc(dict.Int("maxFiveRank"));
+		if (!string.IsNullOrEmpty(cardDesc)) {
+			MaxFive.SetActive(true);
+			MaxFive.transform.Find("Text").GetComponent<Text>().text = cardDesc;
+		} else {
+			MaxFive.SetActive(false);
+		}
+		
 		ShowAvatar(dict.String("avatar"));
 		Name.text = dict.String("name");
 
@@ -55,7 +73,7 @@ public class RecallUser : MonoBehaviour {
 		}
 
 		ColorUtility.TryParseHtmlString(c, out color);
-		Score.color = color;
+		ProceImage.color = color;
 	}
 
 	void ShowAvatar(string url) {

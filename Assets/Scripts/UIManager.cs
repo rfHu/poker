@@ -27,8 +27,6 @@ public class UIManager : MonoBehaviour {
 
 	void Awake()
 	{
-
-
 		GameData.Shared.AuditList.AsObservable().Where((list) => list != null).Subscribe((list) => {
 			if (!auditMsg)
             {

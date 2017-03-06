@@ -11,6 +11,7 @@ public class RecallPage : MonoBehaviour {
 	public GameObject RightIndicator;
 	public Text Current;
 	public Text Total;
+	public GameObject UserGo;
 
 	private int totalNumber;
 	private int currentNumber;
@@ -68,8 +69,7 @@ public class RecallPage : MonoBehaviour {
 				continue ;
 			}
 
-			var userGo = (GameObject)Instantiate(Resources.Load("Prefab/Recall/RecallUser"));
-			var user = userGo.GetComponent<RecallUser>();
+			var user = UserGo.GetComponent<RecallUser>();
 			user.Show(dict);
 			user.transform.SetParent(Rect.transform, false);
 		}
