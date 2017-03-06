@@ -41,7 +41,7 @@ public class UIManager : MonoBehaviour {
             }
             else
             {
-                auditMsg.GetComponent<DOPopup>().Show(G.Cvs);
+                auditMsg.GetComponent<DOPopup>().Show(G.Cvs, null, false);
             }
 		}).AddTo(this);
 
