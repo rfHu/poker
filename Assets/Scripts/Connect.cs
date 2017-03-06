@@ -127,6 +127,10 @@ public sealed class Connect  {
 		}, act, 2);	
 	}
 
+	public void CloseImmediate() {
+		close();
+	}
+
 	public static Connect Shared {
 		get {
 			return instance;

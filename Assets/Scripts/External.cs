@@ -70,4 +70,12 @@ public class External : MonoBehaviour{
 			Commander.Shared.Exit();
 		#endif
 	}
+	void OnApplicationQuit()
+	{
+		#if UNITY_EDITOR
+			Connect.Shared.CloseImmediate();
+		#else
+			Connect.Shared.Close();
+		#endif
+	}
 }
