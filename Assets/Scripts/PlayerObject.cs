@@ -276,14 +276,18 @@ public class PlayerObject : MonoBehaviour {
 		RxSubjects.MoveTurn.Subscribe((e) => {
 			SoundGroupVariation.SoundFinishedEventHandler cb = () => {
 				var index = e.Data.Int("seat");
+				var dc = e.Data.Int("deal_card");
+
+				if (dc == 1) {
+					ActImage.gameObject.SetActive(false);
+				}
 			
 				if (index == Index) {
 					turnTo(e.Data, 0);
+					ActImage.gameObject.SetActive(false);
 				} else {
 					MoveOut();
 				}
-
-				ActImage.gameObject.SetActive(false);
 			};
 			
 			var sounds = MasterAudio.GetAllPlayingVariationsInBus("Wait");
