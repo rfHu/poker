@@ -142,6 +142,8 @@ sealed public class GameData {
 			Pot.Value = e.Data.Int("pot");
 			PrPot.Value = Pot.Value - e.Data.Int("pr_pot");
 
+			GameStartState = true;
+
 			// 发下一张牌的时候，重置所有prchips
 			foreach(Player player in Players.Values) {
 				player.PrChips.Value = 0;
