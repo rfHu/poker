@@ -262,6 +262,15 @@ public class Controller : MonoBehaviour {
 		RxSubjects.GameEnd.Subscribe((e) => {
 			Commander.Shared.GameEnd();
 		}).AddTo(this);
+
+		RxSubjects.GameOver.Subscribe((e) => {
+			var result = MasterAudio.PlaySound("hechip");
+			if (result != null && result.SoundPlayed) {
+				result.ActingVariation.SoundFinished += () => {
+					MasterAudio.PlaySound("chipfly");
+				};
+			}			
+		}).AddTo(this);
 	}
 	
 	private Card getCardFrom(int index) {

@@ -47,7 +47,7 @@ public class CircleMask : MonoBehaviour {
 
 		float time = GameData.Shared.ThinkTime - elaspe;
 		while (time > 0 && activated) {
-			if (enableTick) {
+			if (EnableTick) {
 				MasterAudio.PlaySound("time");
 			}
 

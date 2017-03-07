@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using UniRx;
 using System;
+using DarkTonic.MasterAudio;
 
 public class ChipsGo : MonoBehaviour {
 	public Text TextNumber;
@@ -24,6 +25,7 @@ public class ChipsGo : MonoBehaviour {
 	public void Create(int value, Seat seat) {
 		theSeat = seat;
 
+		MasterAudio.PlaySound("chip");
 		doTween().OnComplete(() => {
 			SetChips(value);
 			TextNumber.gameObject.SetActive(true);
@@ -37,6 +39,7 @@ public class ChipsGo : MonoBehaviour {
 	public void AddMore(Action callback, Seat seat) {
 		theSeat = seat;
 
+		MasterAudio.PlaySound("chip");
 		doTween().OnComplete(() => {
 			Destroy(gameObject);	
 			callback();
