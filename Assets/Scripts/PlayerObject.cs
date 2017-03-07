@@ -432,7 +432,7 @@ public class PlayerObject : MonoBehaviour {
 			countdown.GetComponent<ProceduralImage>().fillAmount = percent;
 			mask.SetFillAmount(time);
 
-			yield return new WaitForSeconds(1);
+			yield return new WaitForFixedUpdate();
 		}
 
 		activated = false;

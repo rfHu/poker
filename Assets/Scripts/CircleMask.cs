@@ -4,6 +4,7 @@ using System.Collections;
 using UnityEngine.UI;
 using System;
 using DarkTonic.MasterAudio;
+using UniRx;
 
 public class CircleMask : MonoBehaviour {
 	bool activated = false;
@@ -46,18 +47,28 @@ public class CircleMask : MonoBehaviour {
 		activated = true;
 
 		float time = GameData.Shared.ThinkTime - elaspe;
-		while (time > 0 && activated) {
-			if (EnableTick) {
-				MasterAudio.PlaySound("time");
-			}
 
+		if (EnableTick) {
+			InvokeRepeating("tickSound", 1f, 1f);
+		}
+
+		while (time > 0 && activated) {
 			time = time - Time.deltaTime;
 			SetFillAmount(time);
 			
-			yield return new WaitForSeconds(1); 
+			yield return new WaitForFixedUpdate(); 
 		}
 
 		activated = false;
+	}
+
+	private void tickSound() {
+		if (!activated) {
+			CancelInvoke("tickSound");
+			return ;
+		}
+
+		MasterAudio.PlaySound("time");
 	}
 
 	public void SetTextColor(Color color) {

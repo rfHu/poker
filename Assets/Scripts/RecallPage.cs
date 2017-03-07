@@ -69,7 +69,8 @@ public class RecallPage : MonoBehaviour {
 				continue ;
 			}
 
-			var user = UserGo.GetComponent<RecallUser>();
+			var user = Instantiate(UserGo).GetComponent<RecallUser>();
+			user.gameObject.SetActive(true);
 			user.Show(dict);
 			user.transform.SetParent(Rect.transform, false);
 		}
