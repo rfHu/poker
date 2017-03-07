@@ -325,7 +325,7 @@ sealed public class GameData {
 	public bool GameStarted = false; 
 	public float Rake = 0;
 	public long Duration = 0;
-	public bool NeedAduit = false;
+	public bool NeedAudit = false;
 	public bool IPLimit = false;
 	public bool GPSLimit = false;
 
@@ -368,7 +368,7 @@ sealed public class GameData {
 		PlayerCount = options.Int("max_seats");
 		Rake = options.Float("rake_percent");
 		Duration = options.Long("time_limit");
-		NeedAduit = options.Int("need_audit") == 1;
+		NeedAudit = options.Int("need_audit") == 1;
 		GPSLimit = options.Int("gps_limit") > 0;
 		IPLimit = options.Int("ip_limit") == 1;
 		GameCode = options.String("code");

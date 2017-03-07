@@ -76,7 +76,7 @@ public class StatusBar : MonoBehaviour {
 			disposable.Dispose();
 		}
 
-		Observable.Interval(TimeSpan.FromSeconds(1)).AsObservable().Subscribe((_) => {
+		disposable = Observable.Interval(TimeSpan.FromSeconds(1)).AsObservable().Subscribe((_) => {
 			time = time - 1;
 			if (time < 0) {
 				time = 0;
