@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Extensions;
 using UniRx;
 using System;
+using MaterialUI;
 
 [RequireComponent(typeof(DOPopup))]
 public class Supplement : MonoBehaviour {
@@ -15,6 +16,7 @@ public class Supplement : MonoBehaviour {
 	public Slider slider;
 
 	private bool ready = false;
+	private DialogAlert payDialog;
 
 	// Use this for initialization
 	void Awake() {
@@ -87,8 +89,14 @@ public class Supplement : MonoBehaviour {
 		}, (json) => {
 			var err = json.Int("err");
 			if (err == 1201) {
-				PokerUI.Alert("金币不足，请购买", () => {
+				payDialog = PokerUI.Alert("金币不足，请购买", () => {
 					Commander.Shared.PayFor();
+
+					// 隐藏购买按钮
+					payDialog.Hide();
+
+					// 购买记分牌弹框
+					RxSubjects.TakeCoin.OnNext(new RxData());
 				}, null);
 			} 
 

@@ -277,8 +277,7 @@ public class PlayerObject : MonoBehaviour {
 		}).AddTo(this);
 
 		RxSubjects.MoveTurn.Subscribe((e) => {
-			// 声音的缘故，这里要延迟
-			Observable.Timer(TimeSpan.FromSeconds(0.5)).Subscribe((_) => {
+			SoundGroupVariation.SoundFinishedEventHandler cb = () => {
 				var index = e.Data.Int("seat");
 			
 				if (index == Index) {
@@ -287,7 +286,15 @@ public class PlayerObject : MonoBehaviour {
 				} else {
 					MoveOut();
 				}
-			}).AddTo(this);
+			};
+			
+			var sounds = MasterAudio.GetAllPlayingVariationsInBus("Wait");
+
+			if (sounds.Count > 0) {
+				sounds[0].SoundFinished += cb;	
+			} else {
+				cb();
+			}	
 		}).AddTo(this);
 
 		// Gameover 应该清掉所有状态

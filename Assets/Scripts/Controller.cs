@@ -243,12 +243,22 @@ public class Controller : MonoBehaviour {
 					return ;
 				}
 
-				MasterAudio.PlaySound("fapai");
+				SoundGroupVariation.SoundFinishedEventHandler cb = () => {
+					MasterAudio.PlaySound("fapai");
 
-				if (data.Count == 3) {
-					showCards();
+					if (data.Count == 3) {
+						showCards();
+					} else {
+						getCardFrom(e.Index).Show(e.Value, true);
+					}
+				};
+
+				var sounds = MasterAudio.GetAllPlayingVariationsInBus("Wait");
+
+				if (sounds.Count > 0) {
+					sounds[0].SoundFinished += cb;
 				} else {
-					getCardFrom(e.Index).Show(e.Value, true);
+					cb();
 				}
 			} else {
 				getCardFrom(e.Index).Show(e.Value, false);

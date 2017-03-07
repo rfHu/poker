@@ -5,7 +5,7 @@ using System;
 public class PokerUI: MonoBehaviour {
 	static private DialogAlert dialogAlert;
 
-	static public void ShowDialog(string text, Action yesAction, string yesText, Action cancelAction, string cancelText) {
+	static public DialogAlert ShowDialog(string text, Action yesAction, string yesText, Action cancelAction, string cancelText) {
 		if (dialogAlert != null) {
 			dialogAlert.Hide();
 		}
@@ -21,21 +21,23 @@ public class PokerUI: MonoBehaviour {
 
 		// 保证单实例
 		dialogAlert = dialog; 
+
+		return dialogAlert;
 	}
 
-	static public void Alert(string text) {
-		ShowDialog(text, null, "确定", null, null);
+	static public DialogAlert Alert(string text) {
+		return ShowDialog(text, null, "确定", null, null);
 	}
 
-	static public void Alert(string text, Action yesAction) {
-		ShowDialog(text, yesAction, "确定", null, null);
+	static public DialogAlert Alert(string text, Action yesAction) {
+		return ShowDialog(text, yesAction, "确定", null, null);
 	}
 
-	static public void Alert(string text, Action yesAction, Action cancelAction) {
-		ShowDialog(text, yesAction, "确定", cancelAction, "取消");
+	static public DialogAlert Alert(string text, Action yesAction, Action cancelAction) {
+		return ShowDialog(text, yesAction, "确定", cancelAction, "取消");
 	}
 
-	static public void ExitAlert() {
-		PokerUI.Alert("您的账号已在其他设备登陆", External.Instance.ExitWithoutClose);
+	static public DialogAlert ExitAlert() {
+		return PokerUI.Alert("您的账号已在其他设备登陆", External.Instance.ExitWithoutClose);
 	}
 }
