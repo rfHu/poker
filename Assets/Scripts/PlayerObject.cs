@@ -8,6 +8,7 @@ using DG.Tweening;
 using UniRx;
 using Extensions;
 using DarkTonic.MasterAudio;
+using System.Linq;
 
 public class PlayerObject : MonoBehaviour {
 	public int Index;
@@ -291,7 +292,7 @@ public class PlayerObject : MonoBehaviour {
 			var sounds = MasterAudio.GetAllPlayingVariationsInBus("Wait");
 
 			if (sounds.Count > 0) {
-				sounds[0].SoundFinished += cb;	
+				sounds.Last().SoundFinished += cb;	
 			} else {
 				cb();
 			}	

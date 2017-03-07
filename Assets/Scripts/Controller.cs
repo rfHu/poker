@@ -256,7 +256,7 @@ public class Controller : MonoBehaviour {
 				var sounds = MasterAudio.GetAllPlayingVariationsInBus("Wait");
 
 				if (sounds.Count > 0) {
-					sounds[0].SoundFinished += cb;
+					sounds.Last().SoundFinished += cb;
 				} else {
 					cb();
 				}
@@ -274,12 +274,14 @@ public class Controller : MonoBehaviour {
 		}).AddTo(this);
 
 		RxSubjects.GameOver.Subscribe((e) => {
-			var result = MasterAudio.PlaySound("hechip");
-			if (result != null && result.SoundPlayed) {
-				result.ActingVariation.SoundFinished += () => {
-					MasterAudio.PlaySound("chipfly");
-				};
-			}			
+			MasterAudio.PlaySound("chipfly");
+
+			// var result = MasterAudio.PlaySound("hechip");
+			// if (result != null && result.SoundPlayed) {
+			// 	result.ActingVariation.SoundFinished += () => {
+					
+			// 	};
+			// }			
 		}).AddTo(this);
 	}
 	
