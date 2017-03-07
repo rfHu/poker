@@ -49,7 +49,7 @@ public class CircleMask : MonoBehaviour {
 		float time = GameData.Shared.ThinkTime - elaspe;
 
 		if (EnableTick) {
-			InvokeRepeating("tickSound", 1f, 1f);
+			tickSound();
 		}
 
 		while (time > 0 && activated) {
@@ -64,11 +64,12 @@ public class CircleMask : MonoBehaviour {
 
 	private void tickSound() {
 		if (!activated) {
-			CancelInvoke("tickSound");
 			return ;
 		}
 
 		MasterAudio.PlaySound("time");
+
+		Invoke("tickSound", 1f);
 	}
 
 	public void SetTextColor(Color color) {
