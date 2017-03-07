@@ -45,9 +45,10 @@ public class _ {
     }
 
     static  public void DownloadImage(RawImage img, string url) {
-        new LLOptions().setOnLoad((Texture2D texture) => {
-            img.texture = texture;
+        var options =  new LLOptions().setOnLoad((Texture2D texture) => {
+            img.texture = Circular(texture);
         }).setUseCache(true).setCacheLife(60 * 60 * 24 * 30);
+        LeanLoader.load(url, options);
 	}
 
     static public string Num2Text<T>(T num) {
