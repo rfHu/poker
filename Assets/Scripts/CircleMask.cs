@@ -47,14 +47,17 @@ public class CircleMask : MonoBehaviour {
 		activated = true;
 
 		float time = GameData.Shared.ThinkTime - elaspe;
-
-		if (EnableTick) {
-			tickSound();
-		}
+		var flag = false;
 
 		while (time > 0 && activated) {
 			time = time - Time.deltaTime;
 			SetFillAmount(time);
+
+			// 最后8秒出倒计时的声音
+			if (!flag && time <= 8) {
+				flag = true;
+				tickSound();
+			}
 			
 			yield return new WaitForFixedUpdate(); 
 		}

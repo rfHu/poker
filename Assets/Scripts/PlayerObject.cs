@@ -277,14 +277,17 @@ public class PlayerObject : MonoBehaviour {
 		}).AddTo(this);
 
 		RxSubjects.MoveTurn.Subscribe((e) => {
-			var index = e.Data.Int("seat");
+			// 声音的缘故，这里要延迟
+			Observable.Timer(TimeSpan.FromSeconds(0.5)).Subscribe((_) => {
+				var index = e.Data.Int("seat");
 			
-			if (index == Index) {
-				turnTo(e.Data, 0);
-				ActImage.gameObject.SetActive(false);
-			} else {
-				MoveOut();
-			}
+				if (index == Index) {
+					turnTo(e.Data, 0);
+					ActImage.gameObject.SetActive(false);
+				} else {
+					MoveOut();
+				}
+			}).AddTo(this);
 		}).AddTo(this);
 
 		// Gameover 应该清掉所有状态
