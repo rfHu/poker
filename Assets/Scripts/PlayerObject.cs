@@ -7,6 +7,7 @@ using System;
 using DG.Tweening;
 using UniRx;
 using Extensions;
+using DarkTonic.MasterAudio;
 
 public class PlayerObject : MonoBehaviour {
 	public int Index;
@@ -203,6 +204,17 @@ public class PlayerObject : MonoBehaviour {
 				return ;
 			}
 
+			switch(e) {
+				case ActionState.Check:
+					MasterAudio.PlaySound("check");
+					break;
+				case ActionState.Fold:
+					MasterAudio.PlaySound("foldpai");
+					break;
+				default:
+					break;
+			}
+
 			if (e == ActionState.Fold) {
 				Fold();
 			} else {
@@ -397,6 +409,7 @@ public class PlayerObject : MonoBehaviour {
 
 	private void turnTo(Dictionary<string, object> dict, int elaspe) {
 		if (isSelf()) {
+			MasterAudio.PlaySound("on_turn");
 			showOP(dict, elaspe);
 		} else {
 			StartCoroutine(yourTurn(elaspe));				
@@ -419,7 +432,7 @@ public class PlayerObject : MonoBehaviour {
 			countdown.GetComponent<ProceduralImage>().fillAmount = percent;
 			mask.SetFillAmount(time);
 
-			yield return new WaitForFixedUpdate();
+			yield return new WaitForSeconds(1);
 		}
 
 		activated = false;

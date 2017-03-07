@@ -3,11 +3,14 @@ using UnityEngine.UI.ProceduralImage;
 using System.Collections;
 using UnityEngine.UI;
 using System;
+using DarkTonic.MasterAudio;
 
 public class CircleMask : MonoBehaviour {
 	bool activated = false;
 	ProceduralImage proImage;
 	Text numberText;
+
+	public bool EnableTick = false;
 
 	void Awake()
 	{
@@ -21,7 +24,9 @@ public class CircleMask : MonoBehaviour {
 		numberText.enabled = false;	
 	}
 
-	public void Enable(float elaspe) {
+	public void Enable(float elaspe, bool enableTick) {
+		this.EnableTick = enableTick;
+
 		if (elaspe > GameData.Shared.ThinkTime || elaspe < 0) {
 			return ;
 		}
@@ -42,9 +47,14 @@ public class CircleMask : MonoBehaviour {
 
 		float time = GameData.Shared.ThinkTime - elaspe;
 		while (time > 0 && activated) {
+			if (enableTick) {
+				MasterAudio.PlaySound("time");
+			}
+
 			time = time - Time.deltaTime;
 			SetFillAmount(time);
-			yield return new WaitForFixedUpdate();
+			
+			yield return new WaitForSeconds(1); 
 		}
 
 		activated = false;

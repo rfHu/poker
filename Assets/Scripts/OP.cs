@@ -86,8 +86,9 @@ public class OP : MonoBehaviour {
 			CallGo.SetActive(false);
 		}
 
-		FoldGo.GetComponent<CircleMask>().Enable(elaspe);
-		
+		var mask = FoldGo.GetComponent<CircleMask>();
+		mask.Enable(elaspe, true);
+
 		if (range.Count >= 2) {
 			setRaiseButtons(callNum);
 			RaiseGo.GetComponent<Button>().onClick.AddListener(OnRaiseClick);

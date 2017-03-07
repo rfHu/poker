@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using UniRx;
 using Extensions;
+using DarkTonic.MasterAudio;
 
 public class Controller : MonoBehaviour {
 	public GameObject seat;
@@ -241,6 +242,8 @@ public class Controller : MonoBehaviour {
 				if (data.Count < 3) {
 					return ;
 				}
+
+				MasterAudio.PlaySound("fapai");
 
 				if (data.Count == 3) {
 					showCards();
