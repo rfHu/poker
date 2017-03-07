@@ -51,6 +51,8 @@ public class ChipsGo : MonoBehaviour {
 			return ;
 		}
 
+		MasterAudio.PlaySound("hechip");
+
 		hided = true;
 
 		TextNumber.gameObject.SetActive(false);

@@ -273,16 +273,14 @@ public class Controller : MonoBehaviour {
 			Commander.Shared.GameEnd();
 		}).AddTo(this);
 
-		RxSubjects.GameOver.Subscribe((e) => {
-			MasterAudio.PlaySound("chipfly");
-
-			// var result = MasterAudio.PlaySound("hechip");
-			// if (result != null && result.SoundPlayed) {
-			// 	result.ActingVariation.SoundFinished += () => {
+		// RxSubjects.GameOver.Subscribe((e) => {
+		// 	// var result = MasterAudio.PlaySound("hechip");
+		// 	// if (result != null && result.SoundPlayed) {
+		// 	// 	result.ActingVariation.SoundFinished += () => {
 					
-			// 	};
-			// }			
-		}).AddTo(this);
+		// 	// 	};
+		// 	// }			
+		// }).AddTo(this);
 	}
 	
 	private Card getCardFrom(int index) {

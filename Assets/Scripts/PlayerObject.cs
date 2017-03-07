@@ -149,10 +149,6 @@ public class PlayerObject : MonoBehaviour {
 		transform.Find("Info").GetComponent<CanvasGroup>().alpha = foldOpacity;
 	}
 
-	public void HideAct() {
-		ActImage.gameObject.SetActive(false);
-	}
-
 	private void dealAct(ActionState state) {
 		var map = new Dictionary<ActionState, int>{
 			{ActionState.Check, 0},
@@ -283,10 +279,11 @@ public class PlayerObject : MonoBehaviour {
 			
 				if (index == Index) {
 					turnTo(e.Data, 0);
-					ActImage.gameObject.SetActive(false);
 				} else {
 					MoveOut();
 				}
+
+				ActImage.gameObject.SetActive(false);
 			};
 			
 			var sounds = MasterAudio.GetAllPlayingVariationsInBus("Wait");
@@ -308,11 +305,7 @@ public class PlayerObject : MonoBehaviour {
 			 	cgo.Hide();
 			}
 		}).AddTo(this);
-
-		RxSubjects.Deal.Subscribe((e) => {
-			ActImage.gameObject.SetActive(false);
-		}).AddTo(this);
-
+		
 		theSeat.SeatPos.Subscribe((pos) => {
 			var trans = ActImage.GetComponent<RectTransform>();
 			var v = trans.anchoredPosition;

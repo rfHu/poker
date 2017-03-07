@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using DarkTonic.MasterAudio;
 
 public class MenuPopup : MonoBehaviour {
 	public List<Sprite> MuteSprites;
@@ -28,6 +29,10 @@ public class MenuPopup : MonoBehaviour {
 		if (GameData.MyCmd.Takecoin) {
 			SuppCG.alpha = 1;
 		}	
+
+		if (isMuted) {
+			MuteImage.sprite = MuteSprites[1];
+		}
 	}
 
 	public void Standup() {
@@ -42,14 +47,18 @@ public class MenuPopup : MonoBehaviour {
 		gameObject.GetComponent<DOPopup>().Close();
 	}
 
+	private static bool isMuted = false;
+
 	public void ToggleMute() {
-		if (AudioListener.volume > 0) {
-			AudioListener.volume = 0;
-			MuteImage.sprite = MuteSprites[1];
+		if (isMuted) {
+			MasterAudio.UnmuteEverything();
+			MuteImage.sprite = MuteSprites[0];	
 		} else {
-			AudioListener.volume = 1;
-		    MuteImage.sprite = MuteSprites[0];
+			MasterAudio.MuteEverything();
+			MuteImage.sprite = MuteSprites[1];
 		}
+
+		isMuted = !isMuted;
 	}
 
 	public void Exit() {

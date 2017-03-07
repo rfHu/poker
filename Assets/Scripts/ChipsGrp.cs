@@ -1,7 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using DarkTonic.MasterAudio;
 
 public class ChipsGrp : MonoBehaviour {
 	public List<GameObject> Chips;
@@ -14,6 +14,8 @@ public class ChipsGrp : MonoBehaviour {
 		doAnim(Chips[0], 0);	
 		doAnim(Chips[1], 0.05f);	
 		doAnim(Chips[2], 0.1f);	
+
+		MasterAudio.PlaySound("chipfly");
 
 		Destroy(gameObject);
 	} 
