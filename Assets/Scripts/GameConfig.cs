@@ -421,7 +421,7 @@ sealed public class GameData {
 			Players[index] = player;
 		}
 
-		if (MySeat != -1) {
+		if (MySeat != -1 && Players.ContainsKey(MySeat)) {
 			AuditCD.Value = Players[MySeat].AuditCD;
 			Coins = Players[MySeat].Coins;
 		}
