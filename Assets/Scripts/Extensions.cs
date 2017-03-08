@@ -47,7 +47,7 @@ namespace Extensions
         {
             TValue value;
             dictionary.TryGetValue(key, out value);
-            return Convert.ToString(value);
+            return Convert.ToString(value); 
         }
 
         public static Dictionary<string, object> Dict<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key)

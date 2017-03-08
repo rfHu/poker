@@ -44,19 +44,18 @@ public class OwnerPanel : MonoBehaviour {
 			{"f", f},
 			{"args", "0"}
 		}, (data) => {
-			var msg = data.String("ret");
-			if (!string.IsNullOrEmpty(msg)) {
-				GetComponent<DOPopup>().Close();
-				PokerUI.Alert(msg);	
-			}	
-
 			var err = data.Int("err");
+			
 			if (err == 0) {
 				if (f == "start") {
 					PauseText.text = pauseStr;
 				} else {
 					PauseText.text = continueStr;
 				}
+			} else {
+				var msg = data.String("ret");
+				GetComponent<DOPopup>().Close();
+				PokerUI.Alert(msg);	
 			}
 		});		
 	}
