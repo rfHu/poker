@@ -250,7 +250,7 @@ public sealed class Connect  {
 					RxSubjects.Paused.OnNext(rxdata);
 					break;
 				case "start":
-					RxSubjects.Paused.OnNext(rxdata);
+					RxSubjects.Started.OnNext(rxdata);
 					break;
 				case "game_end":
 					RxSubjects.GameEnd.OnNext(rxdata);
@@ -266,6 +266,9 @@ public sealed class Connect  {
 					break;
 				case "un_pass":
 					RxSubjects.UnPass.OnNext(rxdata);
+					break;
+				case "ending":
+					RxSubjects.Ending.OnNext(rxdata);
 					break;
 				default:
 					break;

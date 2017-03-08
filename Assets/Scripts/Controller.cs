@@ -6,6 +6,7 @@ using System.Linq;
 using UniRx;
 using Extensions;
 using DarkTonic.MasterAudio;
+using MaterialUI;
 
 public class Controller : MonoBehaviour {
 	public GameObject seat;
@@ -273,14 +274,9 @@ public class Controller : MonoBehaviour {
 			Commander.Shared.GameEnd();
 		}).AddTo(this);
 
-		// RxSubjects.GameOver.Subscribe((e) => {
-		// 	// var result = MasterAudio.PlaySound("hechip");
-		// 	// if (result != null && result.SoundPlayed) {
-		// 	// 	result.ActingVariation.SoundFinished += () => {
-					
-		// 	// 	};
-		// 	// }			
-		// }).AddTo(this);
+		RxSubjects.Ending.Subscribe((e) => {
+			ToastManager.Show("房主提前结束牌局", 2f, _.HexColor("#212932"), new Color(1, 1, 1, 1), 22, null);	
+		}).AddTo(this);
 	}
 	
 	private Card getCardFrom(int index) {

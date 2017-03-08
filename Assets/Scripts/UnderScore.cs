@@ -80,4 +80,10 @@ public class _ {
 
         return value.ToString();
     }
+
+    static public Color HexColor(string hex) {
+        var color = new Color();
+        ColorUtility.TryParseHtmlString(hex, out color);
+        return color;
+    }
 }
