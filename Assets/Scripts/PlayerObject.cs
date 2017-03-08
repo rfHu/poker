@@ -373,8 +373,14 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	private void showCardType(int maxFive) {
+		var desc = Card.GetCardDesc(maxFive);
+
+		if (string.IsNullOrEmpty(desc)) {
+			return ;
+		}
+
 		OthersCardDesc.transform.parent.gameObject.SetActive(true);
-		OthersCardDesc.text = Card.GetCardDesc(maxFive);
+		OthersCardDesc.text = desc;
 		hideName();
 	}
 
