@@ -12,17 +12,17 @@ public class UIManager : MonoBehaviour {
 	public void ShowMenu() {
 		var popup = (GameObject)Instantiate(Resources.Load("Prefab/MenuPopup"));
 		menuPopup = popup.GetComponent<DOPopup>();
-		menuPopup.Show(G.Cvs);	
+		menuPopup.Show();	
 	}
 
 	public void ScorePage() {
 		var score = (GameObject)Instantiate(Resources.Load("Prefab/ScorePage"));
-		score.GetComponent<DOPopup>().Show(G.Cvs);	
+		score.GetComponent<DOPopup>().Show();	
 	}
 	
 	public void OnShowRecalls() {
 		var recall = (GameObject)Instantiate(Resources.Load("Prefab/RecallPage"));		
-		recall.GetComponent<DOPopup>().Show(G.Cvs);
+		recall.GetComponent<DOPopup>().Show();
 	}
 
 	void Awake()
@@ -39,7 +39,7 @@ public class UIManager : MonoBehaviour {
             }
             else
             {
-                auditMsg.GetComponent<DOPopup>().Show(G.Cvs, null, false);
+                auditMsg.GetComponent<DOPopup>().Show(null, false);
             }
 		});	
 
@@ -53,7 +53,7 @@ public class UIManager : MonoBehaviour {
 			}
 
             GameObject obj = (GameObject)Instantiate(Resources.Load("Prefab/Supplement"));
-            obj.GetComponent<DOPopup>().Show(G.Cvs, () => {
+            obj.GetComponent<DOPopup>().Show(() => {
 				var player = GameData.Shared.GetMyPlayer();
 
 				if (player == null || player.Bankroll.Value > 0) {

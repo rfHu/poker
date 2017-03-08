@@ -56,7 +56,7 @@ public class ChipsGo : MonoBehaviour {
 		hided = true;
 
 		TextNumber.gameObject.SetActive(false);
-		transform.SetParent(G.Cvs.transform, true);
+		transform.SetParent(G.UICvs.transform, true);
 		
 		var rect = GetComponent<RectTransform>();
 		rect.DOAnchorPos(new Vector2(-70, 250), 0.4f)

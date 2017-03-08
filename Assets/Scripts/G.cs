@@ -1,15 +1,26 @@
 ﻿using UnityEngine;
 
 public class G {
-	public static Canvas Cvs {
+	public static Canvas UICvs {
 		get {
-			if (G.canvas == null) {
-				G.canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
+			if (uiCanvas == null) {
+				uiCanvas = GameObject.FindGameObjectWithTag("UICanvas").GetComponent<Canvas>();
 			}
 
-			return G.canvas;
+			return uiCanvas;
 		}
 	} 
 
-	private static Canvas canvas;
+	public static Canvas DialogCvs {
+		get {
+			if (dialogCanvas == null) {
+				dialogCanvas = GameObject.FindGameObjectWithTag("DialogCanvas").GetComponent<Canvas>();
+			}
+
+			return dialogCanvas;
+		}
+	} 
+
+	private static Canvas uiCanvas;
+	private static Canvas dialogCanvas;
 }

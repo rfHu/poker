@@ -52,14 +52,14 @@ public class DOPopup : MonoBehaviour {
 		return transform.GetSiblingIndex() - 1;
 	}
 
-	public void Show(Canvas canvas, Action close = null, bool modal = true) {
+	public void Show(Action close = null, bool modal = true) {
 		if (show) {
 			return ;
 		}
 
 		show = true;
 
-		transform.SetParent(canvas.transform, false);
+		transform.SetParent(G.DialogCvs.transform, false);
 
 		if (modal) {
 			modalKey = ModalHelper.Open(this, null, new Color(0, 0, 0, 0), () => {

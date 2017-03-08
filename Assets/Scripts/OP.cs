@@ -42,7 +42,7 @@ public class OP : MonoBehaviour {
 		instance = this;
 
 		// 设置位置等信息
-		transform.SetParent(G.Cvs.transform, false);
+		transform.SetParent(G.UICvs.transform, false);
 		var popup = FindObjectOfType<DOPopup>();
 
 		if (popup != null) {

@@ -58,8 +58,8 @@ public class Controller : MonoBehaviour {
 
 	// 顺时针生成位置信息
 	List<Vector2> getVectors(int total) {
-		float width = G.Cvs.GetComponent<RectTransform>().rect.width;
-		float height = G.Cvs.GetComponent<RectTransform>().rect.height;
+		float width = G.UICvs.GetComponent<RectTransform>().rect.width;
+		float height = G.UICvs.GetComponent<RectTransform>().rect.height;
 
 		float top = height - 200;
 		float bottom = 200; 

@@ -31,7 +31,7 @@ public class Seat : MonoBehaviour {
 	}
 
 	public SeatPosition GetPos() {
-		var h = G.Cvs.GetComponent<RectTransform>().rect.height;
+		var h = G.UICvs.GetComponent<RectTransform>().rect.height;
 		var x = realVector.x;
 		var y = realVector.y;
 
@@ -57,7 +57,7 @@ public class Seat : MonoBehaviour {
 	public void Init(int index, Vector2 vector) {
 		realVector = vector;
 		Index = index;
-		transform.SetParent (G.Cvs.transform, false);
+		transform.SetParent (G.UICvs.transform, false);
 		GetComponent<RectTransform>().anchoredPosition = vector;
 
 		SeatPos.Value = GetPos();

@@ -125,7 +125,7 @@ public class PlayerObject : MonoBehaviour {
 	public void Fold() {
 		MoveOut();
 
-		var canvas = G.Cvs;
+		var canvas = G.UICvs;
 
 		if (isSelf()) {
 			var copy = Instantiate(MyCards, canvas.transform, true);

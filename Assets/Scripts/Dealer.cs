@@ -15,7 +15,7 @@ public class Dealer : MonoBehaviour {
 
 	public void Init(List<GameObject> seats) {
 		this.seats = seats;
-		transform.SetParent(G.Cvs.transform, false);
+		transform.SetParent(G.UICvs.transform, false);
 		GameData.Shared.DealerSeat.AsObservable().Subscribe(subs).AddTo(this);
 	} 
 
