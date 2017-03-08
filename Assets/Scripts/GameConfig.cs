@@ -84,6 +84,7 @@ public class GameOverJson {
 	public int chips {get; set;}
 	public string uid { get; set; }
 	public int seat { get; set; }
+	public int maxFiveRank = 0;
 
 	public int Gain() {
 		return prize - chips;
@@ -95,6 +96,7 @@ public class GameOverJson {
 		uid = dict.String("uid");
 		seat = dict.Int("seat");
 		cards = dict.IL("cards");
+		maxFiveRank = dict.Int("maxFiveRank");	
 	}
 }
 

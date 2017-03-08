@@ -38,6 +38,7 @@ public class PlayerObject : MonoBehaviour {
 	private float animDuration = 0.4f;
 
 	public Text CardDesc;
+	public Text OthersCardDesc;
 
 	private Seat theSeat {
 		get {
@@ -259,8 +260,11 @@ public class PlayerObject : MonoBehaviour {
 				scoreLabel.gameObject.SetActive(false);
 			}
 
-			if (!isSelf() && !AllinAnim.activeSelf) {
-				showTheCards(data.cards);
+			if (!isSelf()) {
+				if (!AllinAnim.activeSelf) {
+					showTheCards(data.cards);
+				}
+				showCardType(data.maxFiveRank);
 			}
 
 			// 4s后隐藏动画
@@ -366,6 +370,12 @@ public class PlayerObject : MonoBehaviour {
 
 			Cardfaces.SetActive(false);
 		}
+	}
+
+	private void showCardType(int maxFive) {
+		OthersCardDesc.transform.parent.gameObject.SetActive(true);
+		OthersCardDesc.text = Card.GetCardDesc(maxFive);
+		hideName();
 	}
 
 	private GameObject getShowCard() {
