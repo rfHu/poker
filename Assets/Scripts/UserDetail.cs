@@ -51,7 +51,7 @@ public class UserDetail : MonoBehaviour {
 			JoinWin.text = percent(achieve.Float("entry_win_hand_percent"));
 
 			// 激进度
-			Aggressive.text = achieve.Int("aggressiveness").ToString();
+			Aggressive.text = achieve.Float("aggressiveness").ToString();
 
 			// 翻前加注
 			PreRaise.text = percent(achieve.Float("pfr_hand_percent"));
