@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
 
 // Unity提供方法给Native
 public class External : MonoBehaviour{
@@ -72,6 +71,10 @@ public class External : MonoBehaviour{
 	}
 	void OnApplicationQuit()
 	{
+		if (Connect.Shared == null) {
+			return ;
+		}
+
 		#if UNITY_EDITOR
 			Connect.Shared.CloseImmediate();
 		#else

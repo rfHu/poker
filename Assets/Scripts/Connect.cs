@@ -38,6 +38,12 @@ public sealed class Connect  {
 				{"sid", GameData.Shared.Sid}
 			}}	
 		}, (json) => {
+			var err = json.Int("err");
+			if (err != 0) {
+				PokerUI.ConflictAlert();
+				return ;
+			}
+
 			// 登陆成功，写用户数据
 			saveUserInfo(json);
 

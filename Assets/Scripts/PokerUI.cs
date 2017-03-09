@@ -38,7 +38,10 @@ public class PokerUI: MonoBehaviour {
 	}
 
 	static public DialogAlert DisAlert(string msg) {
-		Connect.Shared.Close();
+		if (Connect.Shared == null) {
+			return null;
+		}
+		Connect.Shared.CloseImmediate();
 		return PokerUI.Alert(msg, External.Instance.ExitCb);
 	}
 
