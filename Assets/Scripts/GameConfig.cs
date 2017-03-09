@@ -335,7 +335,7 @@ sealed public class GameData {
 	public ReactiveProperty<int> PrPot = new ReactiveProperty<int>();
 
 	public bool Paused = false;
-	public string GameCode = "";
+	public int GameCode = 0;
 	public ReactiveProperty<int> MaxFiveRank = new ReactiveProperty<int>();
 
 	public ReactiveProperty<int> DealerSeat = new ReactiveProperty<int>();
@@ -373,7 +373,7 @@ sealed public class GameData {
 		NeedAudit = options.Int("need_audit") == 1;
 		GPSLimit = options.Int("gps_limit") > 0;
 		IPLimit = options.Int("ip_limit") == 1;
-		GameCode = options.String("code");
+		GameCode = options.Int("code");
 		RoomName = json.String("name");
 		DealerSeat.Value = json.Int("dealer_seat");
 		Straddle = json.Int("straddle") != 0;

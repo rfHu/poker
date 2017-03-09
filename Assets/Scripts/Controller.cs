@@ -161,7 +161,7 @@ public class Controller : MonoBehaviour {
 			addGameInfo(string.Format("盲注: {0}/{1}", sb, bb));
 		}
 
-		if (!string.IsNullOrEmpty(GameData.Shared.GameCode)) {
+		if (GameData.Shared.GameCode != 0) {
 			addGameInfo(String.Format("邀请码: {0}", GameData.Shared.GameCode));
 		}
 
