@@ -57,7 +57,10 @@ public class ScoreCtrl : MonoBehaviour {
 			
 			// 保存当前时间
 			seconds = secs;
-			installTimer();
+
+			if (!GameData.Shared.Paused) {
+				installTimer();
+			}
 
 			var list = ret.List("list");
 			var guestList = new List<Dictionary<string, object>>();
@@ -124,7 +127,7 @@ public class ScoreCtrl : MonoBehaviour {
         });
     }
 
-	void installTimer() {
+	private void installTimer() {
 		if (!GameData.Shared.GameStarted) {
 			return ;
 		}
