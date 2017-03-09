@@ -15,7 +15,7 @@ public class Dealer : MonoBehaviour {
 
 	public void Init(List<GameObject> seats) {
 		this.seats = seats;
-		transform.SetParent(G.UICvs.transform, false);
+		// transform.SetParent(G.UICvs.transform, false);
 		GameData.Shared.DealerSeat.AsObservable().Subscribe(subs).AddTo(this);
 	} 
 
@@ -32,20 +32,21 @@ public class Dealer : MonoBehaviour {
 		}
 
 		var seat = seats[value].GetComponent<Seat>();
+		transform.SetParent(seat.transform, true);
+
 		cancel = seat.GetComponent<Seat>().SeatPos.Subscribe(
 			(pos) => {
-				var anchor = seat.GetComponent<RectTransform>().anchoredPosition;
-				setPosition(pos, anchor);
+				setPosition(pos);
 			}
 		).AddTo(this);
 	}
 
-	private void setPosition(SeatPosition pos, Vector2 position) {
-		var y = position.y - 45;
-		var x = position.x + 70;
+	private void setPosition(SeatPosition pos) {
+		var y = -55;
+		var x = 65;
 
 		if (pos == SeatPosition.Right) {
-			x =  position.x - 70;
+			x =  -65;
 		}
 
 		GetComponent<RectTransform>().DOAnchorPos(new Vector2(x, y), 0.15f);
