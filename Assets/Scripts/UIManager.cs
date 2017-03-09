@@ -71,7 +71,7 @@ public class UIManager : MonoBehaviour {
 		
 			if (type == 2)
             {
-				PokerUI.ExitAlert();
+				PokerUI.ConflictAlert();
             }
 		}).AddTo(this);
 	}

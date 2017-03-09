@@ -27,10 +27,10 @@ public class External : MonoBehaviour{
 		Connect.Shared.Close(close);
 	}
 
-	public void ExitWithoutClose() {
+	public void ExitCb() {
 		close();
 	}
-
+	
 	public void SetSid(string sid) {
 		Debug.Log("Unity: Sid=" + sid);
 		GameData.Shared.Sid = sid;

@@ -17,7 +17,7 @@ public class PokerUI: MonoBehaviour {
 		animator.backgroundAlpha = 0f;
 
 		dialog.dialogAnimator = animator;
-		dialog.Show();
+		dialog.ShowModal();
 
 		// 保证单实例
 		dialogAlert = dialog; 
@@ -37,7 +37,12 @@ public class PokerUI: MonoBehaviour {
 		return ShowDialog(text, yesAction, "确定", cancelAction, "取消");
 	}
 
-	static public DialogAlert ExitAlert() {
-		return PokerUI.Alert("您的账号已在其他设备登陆", External.Instance.ExitWithoutClose);
+	static public DialogAlert DisAlert(string msg) {
+		Connect.Shared.Close();
+		return PokerUI.Alert(msg, External.Instance.ExitCb);
+	}
+
+	static public DialogAlert ConflictAlert() {
+		return DisAlert("您的账号已在其他设备登陆");
 	}
 }

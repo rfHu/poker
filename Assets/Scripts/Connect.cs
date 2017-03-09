@@ -6,6 +6,7 @@ using Extensions;
 using UnityEngine;
 using BestHTTP;
 using UniRx;
+using MaterialUI;
 
 public sealed class Connect  {
 	private SocketManager manager;
@@ -53,10 +54,10 @@ public sealed class Connect  {
 			var error = json.Int("err");
 
 			if (error == 400) {				
-				PokerUI.Alert("房间不存在！");
+				PokerUI.DisAlert("房间不存在！");
 			}
 		}, () => {
-			PokerUI.Alert("连接房间超时", External.Instance.ExitWithoutClose);
+			PokerUI.DisAlert("连接房间超时");
 		});
 	}
 
@@ -93,7 +94,7 @@ public sealed class Connect  {
 				var err = data.Int("err");
 
 				if (err == 403) {
-					PokerUI.ExitAlert();	
+					PokerUI.ConflictAlert();	
 					return ;
 				}
 
