@@ -145,7 +145,11 @@ public class iOSCommander: ICommander {
 	}
 
 	public int Power() {
-		return _ex_callGetBatteryLevel();
+		#if UNITY_EDITOR
+			return 50;
+		#else
+			return _ex_callGetBatteryLevel();
+		#endif
 	}
 
 	public void Audit() {

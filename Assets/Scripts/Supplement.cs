@@ -85,7 +85,9 @@ public class Supplement : MonoBehaviour {
 		float value = slider.value;	
 		Connect.Shared.Emit(new Dictionary<string, object>(){
 			{"f", "takecoin"},
-			{"args", value / 100}
+			{"args", new Dictionary<string, object>{
+				{"multiple", value / (100 * GameData.Shared.BB)}
+			}}
 		}, (json) => {
 			var err = json.Int("err");
 			if (err == 1201) {
