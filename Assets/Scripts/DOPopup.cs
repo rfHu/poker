@@ -46,12 +46,7 @@ public class DOPopup : MonoBehaviour {
 		endPosition = new Vector2(0, 0);
 		rectTrans.anchoredPosition = beginPosition;
 	}
-
-	public int GetSiblingIndex() {
-		// -1因为要算上遮罩
-		return transform.GetSiblingIndex() - 1;
-	}
-
+	
 	public void Show(Action close = null, bool modal = true) {
 		if (show) {
 			return ;

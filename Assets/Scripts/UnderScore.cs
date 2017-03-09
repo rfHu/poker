@@ -46,6 +46,9 @@ public class _ {
 
     static  public void DownloadImage(RawImage img, string url) {
         var options =  new LLOptions().setOnLoad((Texture2D texture) => {
+            if (img == null) {
+                return ;
+            }
             img.texture = Circular(texture);
         }).setUseCache(true).setCacheLife(60 * 60 * 24 * 30);
         LeanLoader.load(url, options);
