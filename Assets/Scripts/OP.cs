@@ -86,8 +86,9 @@ public class OP : MonoBehaviour {
 		if (range.Count >= 2) {
 			setRaiseButtons(callNum);
 			RaiseGo.GetComponent<Button>().onClick.AddListener(OnRaiseClick);
-		} else if(check && allin) {
+		} else if(callNum > 0 && allin) {
 			RaiseGo.GetComponent<Image>().sprite = AllinSpr;
+			RaiseGo.transform.Find("Text").gameObject.SetActive(false);
 			RaiseGo.GetComponent<Button>().onClick.AddListener(OPS.allIn);
 			set3Acts(false);
 		} else {
