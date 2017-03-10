@@ -36,7 +36,7 @@ public class OP : MonoBehaviour {
 	void Awake()
 	{
 		if (instance != null) {
-			Destroy(instance);
+			Destroy(instance.gameObject);
 		}
 
 		instance = this;
