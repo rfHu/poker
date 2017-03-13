@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using System;
 
 // Unity提供方法给Native
 public class External : MonoBehaviour{
@@ -9,7 +10,7 @@ public class External : MonoBehaviour{
 		get {
 			if (instance == null) {
 				GameObject go = new GameObject();
-				Object.DontDestroyOnLoad(go);
+				UnityEngine.Object.DontDestroyOnLoad(go);
 				
 				instance = go.AddComponent<External>();
 			}
@@ -24,11 +25,17 @@ public class External : MonoBehaviour{
 
 	// 内部的退出接口都直接调用，外部只有当登陆互斥时才调用
 	public void Exit() {
-		Connect.Shared.Close(close);
+		Connect.Shared.Close(ExitCb);
+	}
+
+	public void ExitCb(Action callback) {
+		close(callback);	
 	}
 
 	public void ExitCb() {
-		close();
+		close(() => {
+			Commander.Shared.Exit();
+		});
 	}
 	
 	public void SetSid(string sid) {
@@ -57,7 +64,7 @@ public class External : MonoBehaviour{
 		Connect.Setup();	
 	}
 
-	private void close() {
+	private void close(Action callback) {
 		// 清空两个关键数据
 		GameData.Shared.Sid = "";
 		GameData.Shared.Room = "";
@@ -67,7 +74,7 @@ public class External : MonoBehaviour{
 			// Nothing to do
 		#else
 			SceneManager.LoadScene("GameLoading");
-			Commander.Shared.Exit();
+			callback();
 		#endif
 	}
 

@@ -59,8 +59,8 @@ public class Commander {
 		ic.PayFor();
 	}
 
-	public void GameEnd() {
-		ic.GameEnd();
+	public void GameEnd(string roomID) {
+		ic.GameEnd(roomID);
 	}
 
 	public int Power() {
@@ -75,7 +75,7 @@ public class Commander {
 public interface ICommander {
 	void Exit();
 	void PayFor();
-	void GameEnd();
+	void GameEnd(string roomID);
 	int Power();
 	void Audit();
 }
@@ -96,8 +96,8 @@ public class AndroidCommander: ICommander {
 		getJo().Call("payFor");
 	}
 
-	public void GameEnd() {
-		getJo().Call("gameEnd", GameData.Shared.Room);
+	public void GameEnd(string roomID) {
+		getJo().Call("gameEnd", roomID);
 	}
 
 	public int Power() {
@@ -140,8 +140,8 @@ public class iOSCommander: ICommander {
 		_ex_callOpenCoinMall();
 	}
 
-	public void GameEnd() {
-		_ex_callGameOver(GameData.Shared.Room);
+	public void GameEnd(string roomID) {
+		_ex_callGameOver(roomID);
 	}
 
 	public int Power() {

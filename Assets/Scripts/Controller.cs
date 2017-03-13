@@ -154,12 +154,18 @@ public class Controller : MonoBehaviour {
 
 		var sb = GameData.Shared.SB;
 		var bb = GameData.Shared.BB; 
+		var straStr = "";
+		var anteStr = "";
 
 		if (GameData.Shared.Straddle) {
-			addGameInfo(string.Format("盲注: {0}/{1}/{2}", sb, bb, bb * 2));			
- 		} else {
-			addGameInfo(string.Format("盲注: {0}/{1}", sb, bb));
+			straStr = string.Format("/{0}", bb * 2);
 		}
+
+		if (GameData.Shared.Ante > 0) {
+			anteStr = string.Format("({0})", GameData.Shared.Ante);
+		}
+			
+		addGameInfo(string.Format("盲注: {0}/{1}{2}{3}", sb, bb, straStr, anteStr));			
 
 		if (GameData.Shared.GameCode != 0) {
 			addGameInfo(String.Format("邀请码: {0}", GameData.Shared.GameCode));
@@ -271,8 +277,15 @@ public class Controller : MonoBehaviour {
 		}).AddTo(this);
 
 		RxSubjects.GameEnd.Subscribe((e) => {
-			Connect.Shared.Close(() => {
-				Commander.Shared.GameEnd();
+			// 关闭连接
+			Connect.Shared.CloseImmediate();
+
+			// 获取roomID，调用ExitCb后无法获取
+			var roomID = GameData.Shared.Room;
+
+			// 清理
+			External.Instance.ExitCb(() => {
+				Commander.Shared.GameEnd(roomID);
 			});	
 		}).AddTo(this);
 
