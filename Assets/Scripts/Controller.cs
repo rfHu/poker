@@ -271,7 +271,9 @@ public class Controller : MonoBehaviour {
 		}).AddTo(this);
 
 		RxSubjects.GameEnd.Subscribe((e) => {
-			Commander.Shared.GameEnd();
+			Connect.Shared.Close(() => {
+				Commander.Shared.GameEnd();
+			});	
 		}).AddTo(this);
 
 		RxSubjects.Ending.Subscribe((e) => {
