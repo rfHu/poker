@@ -70,6 +70,7 @@ public class External : MonoBehaviour{
 			Commander.Shared.Exit();
 		#endif
 	}
+
 	void OnApplicationQuit()
 	{
 		if (Connect.Shared == null) {
@@ -81,5 +82,28 @@ public class External : MonoBehaviour{
 		#else
 			Connect.Shared.Close();
 		#endif
+	}
+
+	void OnApplicationPause(bool pauseStatus)
+	{
+		if (pauseStatus) {
+			if (Connect.Shared == null) {
+				return ;
+			}
+
+			// 暂停的时候，断开连接 
+			Connect.Shared.CloseImmediate();
+		} else {
+			Connect.Setup();
+		}
+	}
+
+	void OnApplicationFocus(bool focusStatus)
+	{	
+		if (focusStatus) {
+			Debug.Log("focus");
+		} else {
+			Debug.Log("unfocus");
+		}
 	}
 }
