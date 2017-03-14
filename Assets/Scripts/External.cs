@@ -25,7 +25,11 @@ public class External : MonoBehaviour{
 
 	// 内部的退出接口都直接调用，外部只有当登陆互斥时才调用
 	public void Exit() {
-		Connect.Shared.Close(ExitCb);
+		if (Connect.Shared == null || Connect.Shared.IsClosed()) {
+			ExitCb();
+		} else {
+			Connect.Shared.Close(ExitCb);			
+		}
 	}
 
 	public void ExitCb(Action callback) {
@@ -34,6 +38,7 @@ public class External : MonoBehaviour{
 
 	public void ExitCb() {
 		close(() => {
+			Debug.Log("UnityDebug: exit");
 			Commander.Shared.Exit();
 		});
 	}

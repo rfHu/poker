@@ -88,7 +88,7 @@ public sealed class Connect  {
 		if (success != null) {
 			IDisposable dispose = null;
 
-			// 设置8秒超时
+			// 设置超时
 			if (error != null) {
 				dispose = Observable.Timer(TimeSpan.FromSeconds(timeout)).AsObservable().Subscribe((_) => {
 					successCallbacks.Remove(seq);
@@ -142,6 +142,10 @@ public sealed class Connect  {
 		get {
 			return instance;
 		}
+	}
+
+	public bool IsClosed() {
+		return manager.State == SocketManager.States.Closed;		
 	}
 
 	private static Connect instance;
