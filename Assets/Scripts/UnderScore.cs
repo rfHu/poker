@@ -89,4 +89,12 @@ public class _ {
         ColorUtility.TryParseHtmlString(hex, out color);
         return color;
     }
+
+    static public string PercentStr(float number) {
+        if (float.IsNaN(number) || float.IsInfinity(number)) { 
+			number = 0;
+		}
+
+		return Math.Round(number * 100, 2).ToString() + "%"; 
+    }
 }
