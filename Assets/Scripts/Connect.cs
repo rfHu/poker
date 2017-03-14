@@ -291,6 +291,7 @@ public sealed class Connect  {
 	private void close() {
 		manager.Close();
 		manager.Socket.Off();
+		instance = null;
 	}
 }
 
