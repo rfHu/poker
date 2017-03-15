@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UIWidgets;
 using DG.Tweening;
 using System;
 
@@ -19,7 +18,7 @@ public class DOPopup : MonoBehaviour {
 	Vector2 beginPosition; 
 	Vector2 endPosition;
 
-	int modalKey = -1;
+	private Modal modal = new Modal();  
 
 	bool show = false;
 
@@ -57,12 +56,13 @@ public class DOPopup : MonoBehaviour {
 		transform.SetParent(G.DialogCvs.transform, false);
 
 		if (modal) {
-			modalKey = ModalHelper.Open(this, null, new Color(0, 0, 0, 0), () => {
-				Close();
+			this.modal.Show(G.DialogCvs, () => {
 				if (close != null) {
 					close();
 				}
-			});
+
+				Close();
+			});				
 			transform.SetAsLastSibling();
 		}
 
@@ -79,12 +79,12 @@ public class DOPopup : MonoBehaviour {
 	}
 
 	public void ImmediateClose() {
-		ModalHelper.Close(modalKey);
+		modal.Hide();
 		Destroy(gameObject);
 	}
 
 	public void Close() {
-		ModalHelper.Close(modalKey);
+		modal.Hide();	
 		Tween tween = null;
 
 		switch(Animate) {
