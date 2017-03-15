@@ -62,10 +62,6 @@ namespace BestHTTP.SocketIO.Transports
             Implementation.OnError = OnError;
             Implementation.OnClosed = OnClosed;
 
-            if (Manager.setCookie != null) {
-                Manager.setCookie(Implementation.InternalRequest);
-            } 
-
             Implementation.Open();
 
             State = TransportStates.Connecting;

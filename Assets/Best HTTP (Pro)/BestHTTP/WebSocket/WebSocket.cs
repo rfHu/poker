@@ -62,6 +62,18 @@ namespace BestHTTP.WebSocket
             }
         }
 
+        public int BufferedAmount
+        {
+            get
+            {
+#if (!UNITY_WEBGL || UNITY_EDITOR)
+                return webSocket.BufferedAmount;
+#else
+                return WS_GetBufferedAmount(ImplementationId);
+#endif
+            }
+        }
+
 #if (!UNITY_WEBGL || UNITY_EDITOR)
         /// <summary>
         /// Set to true to start a new thread to send Pings to the WebSocket server
@@ -198,7 +210,10 @@ namespace BestHTTP.WebSocket
             //http://tools.ietf.org/html/rfc6455#section-4
 
             //The request MUST contain a |Host| header field whose value contains /host/ plus optionally ":" followed by /port/ (when not using the default port).
-            InternalRequest.SetHeader("Host", uri.Host + ":" + uri.Port);
+            if (uri.Port != 80)
+                InternalRequest.SetHeader("Host", uri.Host + ":" + uri.Port);
+            else
+                InternalRequest.SetHeader("Host", uri.Host);
 
             // The request MUST contain an |Upgrade| header field whose value MUST include the "websocket" keyword.
             InternalRequest.SetHeader("Upgrade", "websocket");
@@ -305,6 +320,9 @@ namespace BestHTTP.WebSocket
 
             if (OnError == null && OnErrorDesc == null)
                 HTTPManager.Logger.Error("WebSocket", reason);
+
+            if (!req.IsKeepAlive && resp != null && resp is WebSocketResponse)
+                (resp as WebSocketResponse).CloseStream();
         }
 
         private void OnInternalRequestUpgraded(HTTPRequest req, HTTPResponse resp)
@@ -731,6 +749,9 @@ namespace BestHTTP.WebSocket
 
         [DllImport("__Internal")]
         static extern WebSocketStates WS_GetState(uint id);
+        
+        [DllImport("__Internal")]
+        static extern int WS_GetBufferedAmount(uint id);
 
         [DllImport("__Internal")]
         static extern int WS_Send_String(uint id, string strData);

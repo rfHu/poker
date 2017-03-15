@@ -1,10 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
-using UnityEngine.UI;
 using System.Collections.Generic;
-using System;
 
-namespace Gamestrap.UI
+namespace Gamestrap
 {
     [AddComponentMenu("UI/Gamestrap UI/Gradient")]
     public class GradientEffect : GamestrapEffect

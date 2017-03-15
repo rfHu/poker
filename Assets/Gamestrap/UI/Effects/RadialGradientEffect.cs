@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 
-namespace Gamestrap.UI
+namespace Gamestrap
 {
     [AddComponentMenu("UI/Gamestrap UI/Directional Gradient")]
     public class RadialGradientEffect : GamestrapEffect

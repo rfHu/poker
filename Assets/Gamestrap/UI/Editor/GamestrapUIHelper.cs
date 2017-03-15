@@ -4,7 +4,7 @@ using UnityEditor;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Gamestrap.UI
+namespace Gamestrap
 {
     public enum SchemeType { Analogous, Triadic, Complement, SplitComplement, Monochromatic }
 

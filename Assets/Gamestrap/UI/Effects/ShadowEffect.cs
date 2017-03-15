@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace Gamestrap.UI
+namespace Gamestrap
 {
     [AddComponentMenu("UI/Gamestrap UI/Shadow")]
     public class ShadowEffect : Shadow

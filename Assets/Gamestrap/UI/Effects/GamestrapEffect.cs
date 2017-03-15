@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-namespace Gamestrap.UI
+namespace Gamestrap
 {
 #if UNITY_4_6 || UNITY_5_0 || UNITY_5_1
     public abstract class GamestrapEffect : BaseVertexEffect

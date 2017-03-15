@@ -12,9 +12,6 @@ namespace BestHTTP.SocketIO
 {
     public sealed class SocketManager : IHeartbeat, IManager
     {
-        // WebSocket无法设置Cookie，在这里Hack一下
-        public Action<HTTPRequest> setCookie;
-
         /// <summary>
         /// Possible states of a SocketManager instance.
         /// </summary>
@@ -484,7 +481,7 @@ namespace BestHTTP.SocketIO
         void IManager.SendPacket(Packet packet)
         {
             ITransport trans = SelectTransport();
-            
+
             if (trans != null)
             {
                 try

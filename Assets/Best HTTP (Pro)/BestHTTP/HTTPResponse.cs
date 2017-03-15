@@ -562,6 +562,13 @@ namespace BestHTTP
 #endif
                     ;
 
+                string encoding =
+#if !BESTHTTP_DISABLE_CACHING && (!UNITY_WEBGL || UNITY_EDITOR)
+                IsFromCache ? null :
+#endif
+                GetFirstHeaderValue("content-encoding");
+                bool gzipped = !string.IsNullOrEmpty(encoding) && encoding == "gzip";
+
                 while (chunkLength != 0)
                 {
                     // To avoid more GC garbage we use only one buffer, and resize only if the next chunk doesn't fit.
@@ -595,7 +602,13 @@ namespace BestHTTP
                         // If reading from cache, we don't want to read too much data to memory. So we will wait until the loaded fragment processed.
                         WaitWhileHasFragments();
 
-                        FeedStreamFragment(buffer, 0, readBytes);
+                        if (gzipped)
+                        {
+                            var decompressed = Decompress(buffer, 0, readBytes);
+                            FeedStreamFragment(decompressed, 0, decompressed.Length);
+                        }
+                        else
+                            FeedStreamFragment(buffer, 0, readBytes);
                     }
                     else
                         output.Write(buffer, 0, readBytes);
@@ -657,6 +670,13 @@ namespace BestHTTP
             if (HTTPManager.Logger.Level == Logger.Loglevels.All)
                 VerboseLogging(string.Format("ReadRaw - contentLength: {0:N0}", contentLength));
 
+            string encoding =
+#if !BESTHTTP_DISABLE_CACHING && (!UNITY_WEBGL || UNITY_EDITOR)
+                IsFromCache ? null :
+#endif
+                GetFirstHeaderValue("content-encoding");
+            bool gzipped = !string.IsNullOrEmpty(encoding) && encoding == "gzip";
+
             using (var output = new MemoryStream(baseRequest.UseStreaming ? 0 : contentLength))
             {
                 byte[] buffer = new byte[Math.Max(baseRequest.StreamFragmentSize, MinBufferSize)];
@@ -691,7 +711,13 @@ namespace BestHTTP
                         // If reading from cache, we don't want to read too much data to memory. So we will wait until the loaded fragment processed.
                         WaitWhileHasFragments();
 
-                        FeedStreamFragment(buffer, 0, readBytes);
+                        if (gzipped)
+                        {
+                            var decompressed = Decompress(buffer, 0, readBytes);
+                            FeedStreamFragment(decompressed, 0, decompressed.Length);
+                        }
+                        else
+                            FeedStreamFragment(buffer, 0, readBytes);
                     }
                     else
                         output.Write(buffer, 0, readBytes);
@@ -711,6 +737,13 @@ namespace BestHTTP
 
         protected void ReadUnknownSize(Stream stream)
         {
+            string encoding =
+#if !BESTHTTP_DISABLE_CACHING && (!UNITY_WEBGL || UNITY_EDITOR)
+                IsFromCache ? null :
+#endif
+                GetFirstHeaderValue("content-encoding");
+            bool gzipped = !string.IsNullOrEmpty(encoding) && encoding == "gzip";
+
             using (var output = new MemoryStream())
             {
                 byte[] buffer = new byte[Math.Max(baseRequest.StreamFragmentSize, MinBufferSize)];
@@ -769,7 +802,13 @@ namespace BestHTTP
                         // If reading from cache, we don't want to read too much data to memory. So we will wait until the loaded fragment processed.
                         WaitWhileHasFragments();
 
-                        FeedStreamFragment(buffer, 0, readBytes);
+                        if (gzipped)
+                        {
+                            var decompressed = Decompress(buffer, 0, readBytes);
+                            FeedStreamFragment(decompressed, 0, decompressed.Length);
+                        }
+                        else
+                            FeedStreamFragment(buffer, 0, readBytes);
                     }
                     else
                         output.Write(buffer, 0, readBytes);
@@ -838,6 +877,57 @@ namespace BestHTTP
         #endregion
 
         #region Streaming Fragments Support
+
+        private System.IO.MemoryStream decompressorInputStream;
+        private System.IO.MemoryStream decompressorOutputStream;
+        private Decompression.Zlib.GZipStream decompressorGZipStream;
+        private byte[] copyBuffer;
+
+        private byte[] Decompress(byte[] data, int offset, int count)
+        {
+            if (decompressorInputStream == null)
+                decompressorInputStream = new MemoryStream(count);
+
+            decompressorInputStream.Write(data, offset, count);
+
+            // http://tools.ietf.org/html/rfc7692#section-7.2.2
+            // Append 4 octets of 0x00 0x00 0xff 0xff to the tail end of the payload of the message.
+            //decompressorInputStream.Write(PerMessageCompression.Trailer, 0, PerMessageCompression.Trailer.Length);
+
+            decompressorInputStream.Position = 0;
+
+            if (decompressorGZipStream == null)
+            {
+                decompressorGZipStream = new Decompression.Zlib.GZipStream(decompressorInputStream,
+                                                                              Decompression.Zlib.CompressionMode.Decompress,
+                                                                              Decompression.Zlib.CompressionLevel.Default,
+                                                                              true);
+                decompressorGZipStream.FlushMode = Decompression.Zlib.FlushType.Sync;
+            }
+
+            if (decompressorOutputStream == null)
+                decompressorOutputStream = new System.IO.MemoryStream();
+            decompressorOutputStream.SetLength(0);
+
+            if (copyBuffer == null)
+                copyBuffer = new byte[1024];
+
+            int readCount;
+            while ((readCount = decompressorGZipStream.Read(copyBuffer, 0, copyBuffer.Length)) != 0)
+                decompressorOutputStream.Write(copyBuffer, 0, readCount);
+
+            decompressorGZipStream.SetLength(0);
+
+            byte[] result = decompressorOutputStream.ToArray();
+
+            /*if (this.ServerNoContextTakeover)
+            {
+                decompressorDeflateStream.Dispose();
+                decompressorDeflateStream = null;
+            }*/
+
+            return result;
+        }
 
         protected void BeginReceiveStreamFragments()
         {
@@ -943,11 +1033,6 @@ namespace BestHTTP
 #endif
             void WaitWhileHasFragments()
         {
-            // TODO: use this when only the data loaded from cache too
-            // TODO: Test it out before releasing
-            /*if (baseRequest.UseStreaming && this.IsFromCache)
-                while (HasStreamedFragments())
-                    System.Threading.Thread.Sleep(10);*/
 #if !UNITY_WEBGL || UNITY_EDITOR
             while (baseRequest.UseStreaming &&
                 #if !BESTHTTP_DISABLE_CACHING

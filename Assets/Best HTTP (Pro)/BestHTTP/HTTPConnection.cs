@@ -344,9 +344,9 @@ namespace BestHTTP
 
                             // If we have a response and the server telling us that it closed the connection after the message sent to us, then
                             //  we will close the connection too.
-                            if (!CurrentRequest.IsKeepAlive ||
-                                CurrentRequest.Response == null ||
-                                (!CurrentRequest.Response.IsClosedManually && CurrentRequest.Response.HasHeaderWithValue("connection", "close")))
+                            bool closeByServer = CurrentRequest.Response == null || CurrentRequest.Response.HasHeaderWithValue("connection", "close");
+                            bool closeByClient = !CurrentRequest.Response.IsClosedManually && !CurrentRequest.IsKeepAlive;
+                            if (closeByServer || closeByClient)
                                 Close();
                             else if (CurrentRequest.Response != null)
                             {

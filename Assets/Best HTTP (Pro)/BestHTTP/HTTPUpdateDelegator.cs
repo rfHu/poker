@@ -111,7 +111,7 @@ namespace BestHTTP
             Cookies.CookieJar.Load();
 #endif
 
-#if UNITY_WEBGL
+#if UNITY_WEBGL && !UNITY_EDITOR
             // Threads are not implemented in WEBGL builds, disable it for now.
             IsThreaded = false;
 #endif

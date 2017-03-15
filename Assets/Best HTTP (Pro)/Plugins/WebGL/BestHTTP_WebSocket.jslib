@@ -44,7 +44,7 @@ var Lib_BEST_HTTP_WebGL_WS_Bridge =
 
 	WS_Create: function(url, protocol, onOpen, onText, onBinary, onError, onClose)
 	{
-		var urlStr = encodeURI(Pointer_stringify(url))
+		var urlStr = /*encodeURI*/(Pointer_stringify(url))
 					.replace(/\+/g, '%2B')
 					.replace(/%252[fF]/ig, '%2F');
 		var proto = Pointer_stringify(protocol);
@@ -149,6 +149,12 @@ var Lib_BEST_HTTP_WebGL_WS_Bridge =
 			return 3; // closed
 
 		return socket.socketImpl.readyState;
+	},
+
+  WS_GetBufferedAmount: function (id)
+	{
+		var socket = ws.Get(id);
+		return socket.socketImpl.bufferedAmount;
 	},
 
 	WS_Send_String: function (id, str)

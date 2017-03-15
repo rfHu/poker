@@ -302,7 +302,7 @@ public static class UnityBuildSettingsUtility
 #endif
 
 		settings.AOTOptions = PlayerSettings.aotOptions;
-		settings.LocationUsageDescription = PlayerSettings.locationUsageDescription;
+		settings.LocationUsageDescription = PlayerSettings.iOS.locationUsageDescription;
 
 
 

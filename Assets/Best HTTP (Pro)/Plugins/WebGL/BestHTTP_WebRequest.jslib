@@ -17,7 +17,7 @@ var Lib_BEST_HTTP_WebGL_HTTP_Bridge =
 
 	XHR_Create: function(method, url, user, passwd)
 	{
-		var _url = encodeURI(Pointer_stringify(url))
+		var _url = /*encodeURI*/(Pointer_stringify(url))
 					.replace(/\+/g, '%2B')
 					.replace(/%252[fF]/ig, '%2F');
 		var _method = Pointer_stringify(method);

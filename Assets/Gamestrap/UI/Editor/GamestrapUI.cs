@@ -7,7 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Gamestrap.UI
+namespace Gamestrap
 {
     [Serializable]
     public class GamestrapUI : EditorWindow

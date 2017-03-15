@@ -85,7 +85,8 @@ namespace BestHTTP
                                                           HTTPMethods.Post.ToString().ToUpper(),
                                                           HTTPMethods.Put.ToString().ToUpper(),
                                                           HTTPMethods.Delete.ToString().ToUpper(),
-                                                          HTTPMethods.Patch.ToString().ToUpper()
+                                                          HTTPMethods.Patch.ToString().ToUpper(),
+                                                          HTTPMethods.Merge.ToString().ToUpper()
                                                       };
 
         /// <summary>
@@ -884,7 +885,7 @@ namespace BestHTTP
             if (UploadStream == null)
             {
                 byte[] entityBody = GetEntityBody();
-                contentLength = entityBody != null ? entityBody.Length : -1;
+                contentLength = entityBody != null ? entityBody.Length : 0;
 
                 if (RawData == null && (FormImpl != null || (FieldCollector != null && !FieldCollector.IsEmpty)))
                 {
@@ -906,7 +907,13 @@ namespace BestHTTP
 
             // Always set the Content-Length header if possible
             // http://tools.ietf.org/html/rfc2616#section-4.4 : For compatibility with HTTP/1.0 applications, HTTP/1.1 requests containing a message-body MUST include a valid Content-Length header field unless the server is known to be HTTP/1.1 compliant.
-            if (contentLength != -1 && !HasHeader("Content-Length"))
+            if (
+#if !UNITY_WEBGL || UNITY_EDITOR
+                contentLength > 0
+#else
+                contentLength != -1
+#endif
+                && !HasHeader("Content-Length"))
                 SetHeader("Content-Length", contentLength.ToString());
 
 #if !UNITY_WEBGL || UNITY_EDITOR
@@ -1034,7 +1041,7 @@ namespace BestHTTP
             }
 
             // Write out the headers to the stream
-            if (callback != null)
+            if (callback != null && Headers != null)
                 foreach (var kvp in Headers)
                     callback(kvp.Key, kvp.Value);
         }
@@ -1229,9 +1236,8 @@ namespace BestHTTP
         {
             try
             {
-                if (this.Callback != null) {
+                if (this.Callback != null)
                     this.Callback(this, Response);
-                }
             }
             catch (Exception ex)
             {
@@ -1338,6 +1344,9 @@ namespace BestHTTP
         {
             ClearForm();
             RemoveHeaders();
+
+            this.IsRedirected = false;
+            this.RedirectCount = this.Downloaded = this.DownloadLength = 0;
         }
 
 #region System.Collections.IEnumerator implementation
