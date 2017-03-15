@@ -42,6 +42,7 @@ public class StatusBar : MonoBehaviour {
 	private void addEvents() {
 		GameData.Shared.AuditCD.Subscribe((secs) => {
 			if (secs <= 0) {
+				AuditGo.SetActive(false);
 				return ;
 			}
 
