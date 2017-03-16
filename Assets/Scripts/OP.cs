@@ -29,7 +29,7 @@ public class OP : MonoBehaviour {
 	public Text TipsText;
 
 	private List<int> range;
-	private Modal modal = new Modal();
+	private ModalHelper modal;
 
 	private static OP instance; 
 
@@ -47,7 +47,7 @@ public class OP : MonoBehaviour {
 
 	void OnDestroy()
 	{
-		modal.Hide();
+		hideModal();
 	}
 	
 	public void StartWithCmds(Dictionary<string, object> data, int elaspe, Action onOnlyAllin) {
@@ -187,6 +187,7 @@ public class OP : MonoBehaviour {
 		}).AddTo(this);
 
 		// 展示遮罩
+		modal = ModalHelper.Create();
 		modal.Show(G.UICvs, close);
 		transform.SetAsLastSibling();
 
@@ -208,9 +209,15 @@ public class OP : MonoBehaviour {
 	}
 
 	private void close() {
-		modal.Hide();
+		hideModal();
 		Slid.gameObject.SetActive(false);
 		setToggle(true);
+	}
+
+	private void hideModal() {
+		if (modal != null) {
+			modal.Hide();
+		}
 	}
 
 	private void setToggle(bool active = true) {

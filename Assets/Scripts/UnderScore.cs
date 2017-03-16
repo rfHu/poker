@@ -97,4 +97,18 @@ public class _ {
 
 		return Math.Round(number * 100, 2).ToString() + "%"; 
     }
+
+    static public void FillParent(GameObject go) {
+        var rect = go.GetComponent<RectTransform>();
+
+        if (rect == null) {
+            return ;
+        }
+
+		rect.localScale = new Vector3(1, 1, 1);
+		rect.sizeDelta = new Vector2(0, 0);
+		rect.anchorMin = new Vector2(0, 0);
+		rect.anchorMax = new Vector2(1, 1);
+		rect.anchoredPosition = new Vector2(0, 0);
+    }
 }

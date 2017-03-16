@@ -18,7 +18,7 @@ public class DOPopup : MonoBehaviour {
 	Vector2 beginPosition; 
 	Vector2 endPosition;
 
-	private Modal modal = new Modal();  
+	private ModalHelper modal;   
 
 	bool show = false;
 
@@ -56,6 +56,8 @@ public class DOPopup : MonoBehaviour {
 		transform.SetParent(G.DialogCvs.transform, false);
 
 		if (modal) {
+			this.modal = ModalHelper.Create();
+
 			this.modal.Show(G.DialogCvs, () => {
 				if (close != null) {
 					close();
@@ -79,12 +81,13 @@ public class DOPopup : MonoBehaviour {
 	}
 
 	public void ImmediateClose() {
-		modal.Hide();
+		hideModal();
 		Destroy(gameObject);
 	}
 
 	public void Close() {
-		modal.Hide();	
+		hideModal();
+
 		Tween tween = null;
 
 		switch(Animate) {
@@ -104,6 +107,12 @@ public class DOPopup : MonoBehaviour {
 			tween.OnComplete(() => {
 				Destroy(gameObject);
 			});
+		}
+	}
+
+	private void hideModal() {
+		if (modal != null) {
+			modal.Hide();
 		}
 	}
 }
