@@ -162,7 +162,7 @@ public class Controller : MonoBehaviour {
 		}
 
 		if (GameData.Shared.Ante > 0) {
-			anteStr = string.Format("({0})", GameData.Shared.Ante);
+			anteStr = string.Format(" ({0})", GameData.Shared.Ante);
 		}
 			
 		addGameInfo(string.Format("盲注: {0}/{1}{2}{3}", sb, bb, straStr, anteStr));			

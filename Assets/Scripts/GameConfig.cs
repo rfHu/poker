@@ -366,7 +366,7 @@ sealed public class GameData {
 
 		Owner = options.String("ownerid") == GameData.Shared.Uid;
 		BankrollMul = options.IL("bankroll_multiple"); 
-		Ante = options.Int("ant");
+		Ante = options.Int("ante");
 		PlayerCount = options.Int("max_seats");
 		Rake = options.Float("rake_percent");
 		Duration = options.Long("time_limit");
