@@ -309,6 +309,10 @@ public class Controller : MonoBehaviour {
 			var time = i * Card.TurnCardDuration;
 			var local = i;
 
+			if (local >= PublicCards.Count) {
+				return ;
+			}
+
 			if (time == 0) {
 				getCardFrom(local).Show(cards[local], true);
 			} else {

@@ -90,9 +90,9 @@ public class OP : MonoBehaviour {
 			RaiseGo.GetComponent<Image>().sprite = AllinSpr;
 			RaiseGo.transform.Find("Text").gameObject.SetActive(false);
 			RaiseGo.GetComponent<Button>().onClick.AddListener(OPS.allIn);
-			set3Acts(false);
+			setAction(false);
 		} else {
-			set3Acts(false);
+			setAction(false);
 			RaiseGo.SetActive(false);
 			onOnlyAllin();
 		}	
@@ -131,7 +131,7 @@ public class OP : MonoBehaviour {
 
 		var max = range[1];
 		if (values[0] > max) {
-			set3Acts(false);
+			setAction(false);
 		} else if (values[1] > max) {
 			R2.SetActive(false);
 			R3.SetActive(false);
@@ -221,14 +221,12 @@ public class OP : MonoBehaviour {
 	}
 
 	private void setToggle(bool active = true) {
-		set3Acts(active);
+		setAction(active);
 		RaiseGo.SetActive(active);
 	}
 
-	private void set3Acts(bool active = true) {
-		R1.SetActive(active);	
-		R2.SetActive(active);	
-		R3.SetActive(active);
+	private void setAction(bool active = true) {
+		R1.transform.parent.gameObject.SetActive(active);	
 	}
 
 	class OPS {
