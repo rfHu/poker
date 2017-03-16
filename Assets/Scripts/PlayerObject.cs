@@ -36,6 +36,7 @@ public class PlayerObject : MonoBehaviour {
 	private Player player;
 	private float foldOpacity = 0.6f;
 	private float animDuration = 0.4f;
+	private float hideDuration = 0.3f;
 
 	public Text CardDesc;
 	public Text OthersCardDesc;
@@ -372,6 +373,10 @@ public class PlayerObject : MonoBehaviour {
 		}
 	}
 
+	private GameObject getOtherCardGo() {
+		return OthersCardDesc.transform.parent.gameObject;
+	}
+
 	private void showCardType(int maxFive) {
 		var desc = Card.GetCardDesc(maxFive);
 
@@ -379,7 +384,7 @@ public class PlayerObject : MonoBehaviour {
 			return ;
 		}
 
-		OthersCardDesc.transform.parent.gameObject.SetActive(true);
+		getOtherCardGo().SetActive(true);
 		OthersCardDesc.text = desc;
 		hideName();
 	}
@@ -389,28 +394,27 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	private void hideAnim() {
-		var duration = 0.3f;
+		hideGo(Stars, () => {
+			scoreLabel.gameObject.SetActive(true);
+			WinNumber.transform.parent.gameObject.SetActive(false);
+		});
 
-		if (Stars.activeSelf) {
-			Stars.GetComponent<CanvasGroup>().DOFade(0,duration).OnComplete(() => {
-				scoreLabel.gameObject.SetActive(true);
-				WinNumber.transform.parent.gameObject.SetActive(false);
-				Stars.SetActive(false);
-			});
-		}
+		hideGo(WinImageGo);	
+		hideGo(getShowCard());	
+		hideGo(getOtherCardGo());
+	}
 
-		if (WinImageGo.activeSelf) {
-			WinImageGo.GetComponent<RawImage>().DOFade(0,duration).OnComplete(() => {
-				WinImageGo.SetActive(false);
-			});
+	private void hideGo(GameObject go, Action callback = null) {
+		if (!go.activeSelf) {
+			return ;
 		}
+		go.GetComponent<CanvasGroup>().DOFade(0, hideDuration).OnComplete(() => {
+			go.SetActive(false);
 
-		var showCard = getShowCard();
-		if (showCard.activeSelf) {
-			showCard.GetComponent<CanvasGroup>().DOFade(0, duration).OnComplete(() => {
-				showCard.SetActive(false);
-			});
-		}
+			if (callback != null) {
+				callback();
+			}
+		});
 	}
 
 	private void setPrChips(int value) {
