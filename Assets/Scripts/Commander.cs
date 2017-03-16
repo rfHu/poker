@@ -36,23 +36,22 @@ public class Commander {
 
 		Input.location.Start();
 
-		float maxWait = 3;
+		float waitTime = 3;
 
-		while(Input.location.status == LocationServiceStatus.Initializing && maxWait > 0) {
+		while(Input.location.status == LocationServiceStatus.Initializing && waitTime > 0) {
 			yield return new WaitForFixedUpdate();
-			maxWait = maxWait - Time.deltaTime;
+			waitTime = waitTime - Time.deltaTime;
 		}
 
 		// timeout或者获取位置失败
-		if (maxWait <= 0 || Input.location.status == LocationServiceStatus.Failed) {
+		if (waitTime <= 0 || Input.location.status == LocationServiceStatus.Failed) {
 			fail();
-			yield break;
+		} else {
+			success(new float[]{
+				Input.location.lastData.longitude,
+				Input.location.lastData.latitude
+			});
 		}
-
-		success(new float[]{
-			Input.location.lastData.longitude,
-			Input.location.lastData.latitude
-		});
 
 		Input.location.Stop();
 	}
