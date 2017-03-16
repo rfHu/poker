@@ -146,6 +146,8 @@ sealed public class GameData {
 
 			GameStartState = true;
 
+			var state = e.Data.Int("state");
+
 			// 发下一张牌的时候，重置所有prchips
 			foreach(Player player in Players.Values) {
 				player.PrChips.Value = 0;
@@ -160,9 +162,7 @@ sealed public class GameData {
 				}
 
 				if (item.Key == "-1") {
-					foreach(int pb in list) {
-						PublicCards.Add(pb);
-					}
+					setPbCards(list, state);
 				} else {
 					var k = Convert.ToInt16(item.Key);
 					if (!Players.ContainsKey(k)) {
@@ -297,6 +297,26 @@ sealed public class GameData {
 		}
 
 		return null;
+	}
+
+	private void setPbCards(List<int> list, int state) {
+		if (list.Count <= 0) {
+			return ;
+		}
+		
+		if (state == 5 && PublicCards.Count >= 4) { // 转牌
+			return ;	
+		} else if (state == 6 && PublicCards.Count >= 5) { // 河牌
+			return ;
+		}
+
+		if (state == 4) {
+			PublicCards.Clear();
+		}  
+
+		foreach(int pb in list) {
+			PublicCards.Add(pb);
+		}
 	}
 
 	public string Proxy;
