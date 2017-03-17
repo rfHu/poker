@@ -72,6 +72,10 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	public void MoveOut() {
+		if (AvatarMask == null) {
+			return ;
+		}
+
 		activated = false;
 		AvatarMask.SetActive(false);
 
@@ -274,7 +278,7 @@ public class PlayerObject : MonoBehaviour {
 
 		// 中途复原行动
 		player.Countdown.AsObservable().Where((obj) => obj.seconds > 0).Subscribe((obj) => {
-			var elaspe = GameData.Shared.ThinkTime - obj.seconds;
+			var elaspe = Math.Max(GameData.Shared.ThinkTime - obj.seconds, 0);
 			turnTo(obj.data, elaspe);	
 		}).AddTo(this);
 

@@ -102,7 +102,6 @@ public class External : MonoBehaviour{
 			if (Connect.Shared == null) {
 				return ;
 			}
-
 			// 暂停的时候，断开连接 
 			Connect.Shared.CloseImmediate();
 		} else {

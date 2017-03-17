@@ -41,7 +41,7 @@ public class UIManager : MonoBehaviour {
             {
                 auditMsg.GetComponent<DOPopup>().Show(null, false);
             }
-		});	
+		}).AddTo(this);	
 
 		RxSubjects.TakeCoin.Subscribe((e) => {
 			if (e.Data != null) {
