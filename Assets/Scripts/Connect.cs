@@ -69,7 +69,7 @@ public sealed class Connect  {
 	}
 
 	private void onError() {
-
+		PokerUI.DisAlert("服务器错误");
 	}
 
 	private void enterGame() {
