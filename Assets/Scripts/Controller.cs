@@ -290,7 +290,7 @@ public class Controller : MonoBehaviour {
 		}).AddTo(this);
 
 		RxSubjects.Ending.Subscribe((e) => {
-			ToastManager.Show("房主提前结束牌局", 2f, _.HexColor("#212932"), new Color(1, 1, 1, 1), 26, null);	
+			PokerUI.Toast("房主提前结束牌局");	
 		}).AddTo(this);
 	}
 	

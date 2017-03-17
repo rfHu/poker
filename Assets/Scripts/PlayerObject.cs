@@ -112,7 +112,7 @@ public class PlayerObject : MonoBehaviour {
 		}
 
 		if (GameData.Shared.InGame && !player.InGame) {
-			setAlpha();
+			setFolded();
 		}
 
 		nameLabel.text = player.Name;
@@ -137,8 +137,7 @@ public class PlayerObject : MonoBehaviour {
 			var copy = Instantiate(MyCards, canvas.transform, true);
 			
 			// 图片灰掉
-			MyCards.transform.Find("First").GetComponent<Card>().Darken();
-			MyCards.transform.Find("Second").GetComponent<Card>().Darken();
+			darkenCards();
 
 			MyCards.SetActive(false);
 
@@ -153,6 +152,11 @@ public class PlayerObject : MonoBehaviour {
 		}
 
 		transform.Find("Info").GetComponent<CanvasGroup>().alpha = foldOpacity;
+	}
+
+	private void darkenCards() {
+		MyCards.transform.Find("First").GetComponent<Card>().Darken();
+		MyCards.transform.Find("Second").GetComponent<Card>().Darken();
 	}
 
 	private void dealAct(ActionState state) {
@@ -172,9 +176,9 @@ public class PlayerObject : MonoBehaviour {
 		}
 	}
 
-	private void setAlpha() {
+	private void setFolded() {
 		if (isSelf()) {
-			MyCards.GetComponent<CanvasGroup>().alpha = foldOpacity;
+			darkenCards();	
 		}
 
 		transform.Find("Info").GetComponent<CanvasGroup>().alpha = foldOpacity;

@@ -61,15 +61,16 @@ public sealed class Connect  {
 
 			// 进入房间
 			enterGame();
-		});
+		}, needLogin: false);
 	}
 
-	private void onNotConnect() {
+	private void onNotConnect(Socket socket, Packet packet, params object[] args) {
 		login = false;
 	}
 
-	private void onError() {
-		PokerUI.DisAlert("服务器错误");
+	private void onError(Socket socket, Packet packet, params object[] args) {
+		login = false;
+		// PokerUI.DisAlert("服务器错误");
 	}
 
 	private void enterGame() {
@@ -98,8 +99,8 @@ public sealed class Connect  {
 		GameData.Shared.Pin = token.String("pin");
 	}
 
-	public void Emit(Dictionary<string, object> json, Action<Dictionary<string, object>> success = null, Action error = null, int timeout = 5) {
-		if (!login) {
+	public void Emit(Dictionary<string, object> json, Action<Dictionary<string, object>> success = null, Action error = null, int timeout = 5, bool needLogin = true) {
+		if (!login && needLogin) {
 			return ;
 		}
 

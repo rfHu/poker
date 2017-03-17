@@ -51,7 +51,13 @@ public class StatusBar : MonoBehaviour {
 		}).AddTo(this);
 
 		RxSubjects.Pass.Subscribe((e) => {
-			hideWithMsg("带入成功");	
+			hideWithMsg("带入成功");
+
+			if (GameData.Shared.InGame) {
+				PokerUI.Toast("记分牌带入成功，将在下局游戏生效");
+			} else {
+				PokerUI.Toast("记分牌带入成功");
+			}
 		}).AddTo(this);
 
 		RxSubjects.UnPass.Subscribe((e) => {

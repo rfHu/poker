@@ -48,4 +48,8 @@ public class PokerUI: MonoBehaviour {
 	static public DialogAlert ConflictAlert() {
 		return DisAlert("您的账号已在其他设备登陆");
 	}
+
+	static public void Toast(string msg) {
+		ToastManager.Show(msg, 2f, _.HexColor("#212932"), new Color(1, 1, 1, 1), 26, null);	
+	}
 }
