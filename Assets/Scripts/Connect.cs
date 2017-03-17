@@ -16,6 +16,8 @@ public sealed class Connect  {
 
 	private int seq = 0;
 
+	private bool login = false;
+
 	private Connect() {
 		// Charles Proxy
 		if (Debug.isDebugBuild && !string.IsNullOrEmpty(GameData.Shared.Proxy)) {
@@ -27,6 +29,14 @@ public sealed class Connect  {
 
 		manager = new SocketManager(new Uri(url), options);
 		manager.Socket.On("connect", onConnect);
+		manager.Socket.On("connecting", onNotConnect);
+		manager.Socket.On("disconnect", onNotConnect);
+		manager.Socket.On("reconnect", onNotConnect);
+		manager.Socket.On("reconnecting", onNotConnect);
+		manager.Socket.On("reconnect_attempt", onNotConnect);
+
+		manager.Socket.On("reconnect_failed", onError);
+		manager.Socket.On("error", onError);
 
 		manager.Open();	
 	}
@@ -44,12 +54,22 @@ public sealed class Connect  {
 				return ;
 			}
 
+			login = true;
+
 			// 登陆成功，写用户数据
 			saveUserInfo(json);
 
 			// 进入房间
 			enterGame();
 		});
+	}
+
+	private void onNotConnect() {
+		login = false;
+	}
+
+	private void onError() {
+
 	}
 
 	private void enterGame() {
@@ -63,7 +83,7 @@ public sealed class Connect  {
 				PokerUI.DisAlert("房间不存在！");
 			}
 		}, () => {
-			PokerUI.DisAlert("连接房间超时");
+			PokerUI.DisAlert("连接服务器超时");
 		});
 	}
 
@@ -79,6 +99,10 @@ public sealed class Connect  {
 	}
 
 	public void Emit(Dictionary<string, object> json, Action<Dictionary<string, object>> success = null, Action error = null, int timeout = 5) {
+		if (!login) {
+			return ;
+		}
+
 		seq++;
 		json["seq"] = seq;
 		json["pin"] = GameData.Shared.Pin;
@@ -97,6 +121,10 @@ public sealed class Connect  {
 			}
 
 			successCallbacks.Add(seq, (data) => {
+				if (dispose != null) {
+					dispose.Dispose();
+				}
+				
 				var err = data.Int("err");
 
 				if (err == 403) {
@@ -105,11 +133,6 @@ public sealed class Connect  {
 				}
 
 				successCallbacks.Remove(seq);
-				
-				if (dispose != null) {
-					dispose.Dispose();
-				}
-
 				success(data);
 			});
 		}
