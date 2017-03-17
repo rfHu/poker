@@ -72,7 +72,8 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	public void MoveOut() {
-		if (AvatarMask == null) {
+		// @TODO: 未定位出什么错误，暂时这么处理
+		if (this == null || AvatarMask == null) {
 			return ;
 		}
 
@@ -476,6 +477,10 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	private void showOP(Dictionary<string, object> data, int elaspe) {
+		if (this == null) {
+			return ;
+		}
+		
 		// 隐藏头像
 		circle.SetActive(false);
 

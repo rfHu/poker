@@ -19,6 +19,8 @@ public class Controller : MonoBehaviour {
 
 	public List<GameObject> Seats;	
 
+	public GameObject PauseGame;
+
 	// public GameObject Cutoff;
 
 	List<Vector2> anchorPositions = new List<Vector2>();
@@ -211,6 +213,14 @@ public class Controller : MonoBehaviour {
 	}
 
 	void registerRxEvents() {
+		GameData.Shared.GamePaused.Subscribe((pause) => {
+			if (pause) {
+				PauseGame.SetActive(true);
+			} else {
+				PauseGame.SetActive(false);
+			}
+		}).AddTo(this);
+
 		Action<Player> showPlayer = (obj) => {
 			var parent = Seats[obj.Index].transform;
 			var go = (GameObject)GameObject.Instantiate(Resources.Load("Prefab/Player"));

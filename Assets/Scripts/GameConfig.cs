@@ -321,6 +321,9 @@ sealed public class GameData {
 
 	public string Proxy;
 
+	// @TODO：可以Paused统一
+	public Subject<bool> GamePaused = new Subject<bool>(); 
+
 	public ReactiveProperty<List<object>> AuditList = new ReactiveProperty<List<object>>();
 	public bool GameStartState = false;
 	public bool SeeCardState = false;
@@ -404,6 +407,12 @@ sealed public class GameData {
 		InGame = json.Bool("is_ingame");
 		MaxFiveRank.Value = json.Int("maxFiveRank");
 		MySeat = json.Int("my_seat");
+
+		if (Paused && !InGame) {
+			GamePaused.OnNext(true);	
+		} else {
+			GamePaused.OnNext(false);
+		}
 
 		// 删除公共牌重新添加
 		var cards = json.IL("shared_cards");
