@@ -14,7 +14,7 @@ public class OwnerPanel : MonoBehaviour {
 	void Awake()
 	{
 		GameData.Shared.Paused.Subscribe((pause) => {
-			if (pause) {
+			if (pause && GameData.Shared.GameStarted) {
 				PauseText.text = continueStr;
 			} else {
 				PauseText.text = pauseStr;
@@ -37,7 +37,7 @@ public class OwnerPanel : MonoBehaviour {
 	public void Pause() {
 		string f;
 
-		if (GameData.Shared.Paused.Value) {
+		if (GameData.Shared.Paused.Value && GameData.Shared.GameStarted) {
 			f = "start";
 		} else {
 			f = "pause";
