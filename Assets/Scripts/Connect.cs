@@ -50,7 +50,6 @@ public sealed class Connect  {
 		}, (json) => {
 			var err = json.Int("err");
 			if (err != 0) {
-				PokerUI.ConflictAlert();
 				return ;
 			}
 
@@ -101,6 +100,10 @@ public sealed class Connect  {
 
 	public void Emit(Dictionary<string, object> json, Action<Dictionary<string, object>> success = null, Action error = null, int timeout = 5, bool needLogin = true) {
 		if (!login && needLogin) {
+			return ;
+		}
+
+		if (string.IsNullOrEmpty(GameData.Shared.Sid)) {
 			return ;
 		}
 
