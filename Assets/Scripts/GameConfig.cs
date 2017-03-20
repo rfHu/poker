@@ -133,11 +133,12 @@ sealed public class GameData {
 			GameStartState = false;
 			byJson(e.Data);
 
-			if (SceneManager.GetActiveScene().name == "PokerGame") {
-				// Skip
-			} else {
+			// 重连的用户，reload scene
+			var loginStatus = e.Data.Int("is_enter_look");
+
+			if (loginStatus == 1) {
 				SceneManager.LoadScene("PokerGame");
-			}
+			} 	
 		});
 
 		RxSubjects.Deal.Subscribe((e) => {
