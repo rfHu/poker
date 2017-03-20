@@ -64,6 +64,8 @@ public class External : MonoBehaviour{
 			return ;
 		}
 
+		Debug.Log("Unity: SID、RoomID设置成功，准备建立连接");
+
 		// 开始游戏
 		Time.timeScale = 1;
 		Connect.Setup();	

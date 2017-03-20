@@ -42,6 +42,8 @@ public sealed class Connect  {
 	}
 
 	private void onConnect(Socket socket, Packet packet, params object[] args) {
+		Debug.Log("Unity: 连接建立成功，执行login逻辑……");
+		
 		Emit(new Dictionary<string, object>{
 			{"f", "login"},
 			{"args", new Dictionary<string, object>{
@@ -50,8 +52,11 @@ public sealed class Connect  {
 		}, (json) => {
 			var err = json.Int("err");
 			if (err != 0) {
+				Debug.Log("Unity: 登陆失败");
 				return ;
 			}
+
+			Debug.Log("Unity: 登陆成功，准备进入房间……");
 
 			login = true;
 
@@ -82,6 +87,8 @@ public sealed class Connect  {
 			if (error == 400) {				
 				PokerUI.DisAlert("房间不存在！");
 			}
+
+			Debug.Log("Unity: 进入房间逻辑执行完毕");
 		}, () => {
 			PokerUI.DisAlert("连接服务器超时");
 		});
