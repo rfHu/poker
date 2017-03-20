@@ -261,6 +261,10 @@ public class Controller : MonoBehaviour {
 				}
 
 				SoundGroupVariation.SoundFinishedEventHandler cb = () => {
+					if (this == null) {
+						return ;
+					}
+
 					MasterAudio.PlaySound("fapai");
 
 					if (data.Count == 3) {

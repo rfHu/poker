@@ -289,6 +289,10 @@ public class PlayerObject : MonoBehaviour {
 
 		RxSubjects.MoveTurn.Subscribe((e) => {
 			SoundGroupVariation.SoundFinishedEventHandler cb = () => {
+				if (this == null) {
+					return ;
+				}
+				
 				var index = e.Data.Int("seat");
 				var dc = e.Data.Int("deal_card");
 

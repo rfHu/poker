@@ -408,7 +408,7 @@ sealed public class GameData {
 		MaxFiveRank.Value = json.Int("maxFiveRank");
 		MySeat = json.Int("my_seat");
 
-		if (Paused && !InGame) {
+		if (Paused && !InGame && GameStarted) {
 			GamePaused.OnNext(true);	
 		} else {
 			GamePaused.OnNext(false);
