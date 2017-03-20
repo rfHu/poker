@@ -58,7 +58,7 @@ public class ScoreCtrl : MonoBehaviour {
 			// 保存当前时间
 			seconds = secs;
 
-			if (!GameData.Shared.Paused) {
+			if (!GameData.Shared.Paused.Value) {
 				installTimer();
 			}
 

@@ -246,17 +246,44 @@ public class OP : MonoBehaviour {
 			OPS.invoke("all_in");
 		}
 
+		private static void onerr() {
+			setActive(true);		
+		}
+
+		private static void hide() {
+			setActive(false);
+		}
+
+		private static void setActive(bool flag) {
+			if (instance == null) {
+				return ;
+			}
+
+			instance.gameObject.SetActive(flag);
+		}
+
+		private static void onres(Dictionary<string, object> json) {
+			var err = json.Int("err");
+			if (err != 0) {
+				setActive(true);
+			}
+		}
+
 		internal static void raise(int number) {
+			hide();
+
 			Connect.Shared.Emit(new Dictionary<string, object>() {
 				{"f" , "raise"},
 				{"args", number.ToString()}
-			});
+			}, onres, onerr);
 		}
 
 		internal static void invoke(string f) {
+			hide();
+
 			Connect.Shared.Emit(new Dictionary<string, object>() {
 				{"f" , f}
-			});
+			}, onres, onerr);
 		}
 	}
 	

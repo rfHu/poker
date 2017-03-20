@@ -111,11 +111,11 @@ sealed public class GameData {
 		});
 
 		RxSubjects.Paused.AsObservable().Subscribe((e) => {
-			Paused = new ReadOnlyReactiveProperty<bool>( new ReactiveProperty<bool>(true) , false );
+			Paused.Value = true; 	
 		});
 
 		RxSubjects.Started.AsObservable().Subscribe((e) => {
-			Paused = new ReadOnlyReactiveProperty<bool>( new ReactiveProperty<bool>(false) , false );
+			Paused.Value = false; 
 		});
 
 		RxSubjects.UnSeat.AsObservable().Subscribe((e) => {
@@ -354,7 +354,7 @@ sealed public class GameData {
 	public ReactiveProperty<int> Pot = new ReactiveProperty<int>();
 	public ReactiveProperty<int> PrPot = new ReactiveProperty<int>();
 
-	public ReadOnlyReactiveProperty<bool> Paused = new ReadOnlyReactiveProperty<bool>(new ReactiveProperty<bool>(false), false);
+	public ReactiveProperty<bool> Paused = new ReactiveProperty<bool>();
 	public string GameCode = "";
 	public ReactiveProperty<int> MaxFiveRank = new ReactiveProperty<int>();
 
@@ -400,10 +400,16 @@ sealed public class GameData {
 
 		Pot.Value = json.Int("pot");
 		PrPot.Value = Pot.Value - json.Int("pr_pot");
-		Paused = new ReadOnlyReactiveProperty<bool>( new ReactiveProperty<bool>(json.Int("is_pause") == 1) , false );
 		InGame = json.Bool("is_ingame");
 		MaxFiveRank.Value = json.Int("maxFiveRank");
 		MySeat = json.Int("my_seat");
+
+		// ReactiveProperty 对同样的值不会触发onNext，所以这里强制执行一次
+		var pause = json.Int("is_pause") != 0;
+		if (pause == Paused.Value) {
+			Paused.Value = !pause;
+		}
+		Paused.Value = pause;
 		
 		// 删除公共牌重新添加
 		var cards = json.IL("shared_cards");

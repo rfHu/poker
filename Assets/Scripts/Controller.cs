@@ -214,7 +214,7 @@ public class Controller : MonoBehaviour {
 
 	void registerRxEvents() {
 		GameData.Shared.Paused.Subscribe((pause) => {
-			if (pause && GameData.Shared.InGame) {
+			if (pause && !GameData.Shared.InGame) {
 				PauseGame.SetActive(true);
 			} else {
 				PauseGame.SetActive(false);
