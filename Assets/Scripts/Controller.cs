@@ -260,7 +260,7 @@ public class Controller : MonoBehaviour {
 					return ;
 				}
 
-				SoundGroupVariation.SoundFinishedEventHandler cb = () => {
+				G.waitSound(() => {
 					if (this == null) {
 						return ;
 					}
@@ -272,15 +272,8 @@ public class Controller : MonoBehaviour {
 					} else {
 						getCardFrom(e.Index).Show(e.Value, true);
 					}
-				};
+				});
 
-				var sounds = MasterAudio.GetAllPlayingVariationsInBus("Wait");
-
-				if (sounds.Count > 0) {
-					sounds.Last().SoundFinished += cb;
-				} else {
-					cb();
-				}
 			} else {
 				getCardFrom(e.Index).Show(e.Value, false);
 			}

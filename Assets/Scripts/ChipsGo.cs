@@ -4,6 +4,7 @@ using DG.Tweening;
 using UniRx;
 using System;
 using DarkTonic.MasterAudio;
+using System.Linq;
 
 public class ChipsGo : MonoBehaviour {
 	public Text TextNumber;
@@ -14,7 +15,13 @@ public class ChipsGo : MonoBehaviour {
 
 	void Awake() {
 		RxSubjects.Deal.Subscribe((e) => {
-			Hide();
+			G.waitSound(() => {
+				if (this == null) {
+					return ;
+				}
+
+				Hide();
+			});			
 		}).AddTo(this);
 	}
 

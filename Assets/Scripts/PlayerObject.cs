@@ -288,7 +288,7 @@ public class PlayerObject : MonoBehaviour {
 		}).AddTo(this);
 
 		RxSubjects.MoveTurn.Subscribe((e) => {
-			SoundGroupVariation.SoundFinishedEventHandler cb = () => {
+			G.waitSound(() => {
 				if (this == null) {
 					return ;
 				}
@@ -306,15 +306,7 @@ public class PlayerObject : MonoBehaviour {
 				} else {
 					MoveOut();
 				}
-			};
-			
-			var sounds = MasterAudio.GetAllPlayingVariationsInBus("Wait");
-
-			if (sounds.Count > 0) {
-				sounds.Last().SoundFinished += cb;	
-			} else {
-				cb();
-			}	
+			});
 		}).AddTo(this);
 
 		// Gameover 应该清掉所有状态

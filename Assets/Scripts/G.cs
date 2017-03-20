@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Linq;
+using DarkTonic.MasterAudio;
 
 public class G {
 	public static Canvas UICvs {
@@ -23,4 +25,14 @@ public class G {
 
 	private static Canvas uiCanvas;
 	private static Canvas dialogCanvas;
+
+	public static void waitSound(SoundGroupVariation.SoundFinishedEventHandler  cb) {
+		var sounds = MasterAudio.GetAllPlayingVariationsInBus("Wait");
+
+		if (sounds.Count > 0) {
+			sounds.Last().SoundFinished += cb;	
+		} else {
+			cb();
+		}		
+	}
 }
