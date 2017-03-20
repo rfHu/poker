@@ -111,11 +111,11 @@ sealed public class GameData {
 		});
 
 		RxSubjects.Paused.AsObservable().Subscribe((e) => {
-			Paused = true;
+			Paused = new ReadOnlyReactiveProperty<bool>( new ReactiveProperty<bool>(true) , false );
 		});
 
 		RxSubjects.Started.AsObservable().Subscribe((e) => {
-			Paused = false;
+			Paused = new ReadOnlyReactiveProperty<bool>( new ReactiveProperty<bool>(false) , false );
 		});
 
 		RxSubjects.UnSeat.AsObservable().Subscribe((e) => {
@@ -321,9 +321,6 @@ sealed public class GameData {
 
 	public string Proxy;
 
-	// @TODO：可以Paused统一
-	public Subject<bool> GamePaused = new Subject<bool>(); 
-
 	public ReactiveProperty<List<object>> AuditList = new ReactiveProperty<List<object>>();
 	public bool GameStartState = false;
 	public bool SeeCardState = false;
@@ -357,7 +354,7 @@ sealed public class GameData {
 	public ReactiveProperty<int> Pot = new ReactiveProperty<int>();
 	public ReactiveProperty<int> PrPot = new ReactiveProperty<int>();
 
-	public bool Paused = false;
+	public ReadOnlyReactiveProperty<bool> Paused = new ReadOnlyReactiveProperty<bool>(new ReactiveProperty<bool>(false), false);
 	public string GameCode = "";
 	public ReactiveProperty<int> MaxFiveRank = new ReactiveProperty<int>();
 
@@ -403,17 +400,11 @@ sealed public class GameData {
 
 		Pot.Value = json.Int("pot");
 		PrPot.Value = Pot.Value - json.Int("pr_pot");
-		Paused = json.Int("is_pause") != 0;
+		Paused = new ReadOnlyReactiveProperty<bool>( new ReactiveProperty<bool>(json.Int("is_pause") == 1) , false );
 		InGame = json.Bool("is_ingame");
 		MaxFiveRank.Value = json.Int("maxFiveRank");
 		MySeat = json.Int("my_seat");
-
-		if (Paused && !InGame && GameStarted) {
-			GamePaused.OnNext(true);	
-		} else {
-			GamePaused.OnNext(false);
-		}
-
+		
 		// 删除公共牌重新添加
 		var cards = json.IL("shared_cards");
 		PublicCards.Clear();

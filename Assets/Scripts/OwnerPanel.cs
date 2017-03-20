@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Extensions;
+using UniRx;
 
 [RequireComponent(typeof(DOPopup))]
 public class OwnerPanel : MonoBehaviour {
@@ -12,11 +13,13 @@ public class OwnerPanel : MonoBehaviour {
 
 	void Awake()
 	{
-		if (isGamePause()) {
-			PauseText.text = continueStr;
-		} else {
-			PauseText.text = pauseStr;
-		}
+		GameData.Shared.Paused.Subscribe((pause) => {
+			if (pause) {
+				PauseText.text = continueStr;
+			} else {
+				PauseText.text = pauseStr;
+			}
+		}).AddTo(this);
 	}
 
 	public void Stop() {
@@ -34,7 +37,7 @@ public class OwnerPanel : MonoBehaviour {
 	public void Pause() {
 		string f;
 
-		if (isGamePause()) {
+		if (GameData.Shared.Paused.Value) {
 			f = "start";
 		} else {
 			f = "pause";
@@ -58,9 +61,5 @@ public class OwnerPanel : MonoBehaviour {
 				PokerUI.Alert(msg);	
 			}
 		});		
-	}
-
-	bool isGamePause() {
-		return GameData.Shared.Paused && GameData.Shared.GameStarted;
 	}
 }
