@@ -187,6 +187,7 @@ public sealed class Connect  {
 	static public void Setup() {
 		// 强制断开连接
 		if (instance != null) {
+			Debug.Log("Unity: 尝试建立新连接，强制断开");
 			instance.close();
 		}
 

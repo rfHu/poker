@@ -101,12 +101,14 @@ public class External : MonoBehaviour{
 	void OnApplicationPause(bool pauseStatus)
 	{
 		if (pauseStatus) {
+			Debug.Log("Unity: 游戏暂停");
 			if (Connect.Shared == null) {
 				return ;
 			}
 			// 暂停的时候，断开连接 
 			Connect.Shared.CloseImmediate();
 		} else {
+			Debug.Log("Unity: 游戏恢复");
 			Connect.Setup();
 		}
 	}
