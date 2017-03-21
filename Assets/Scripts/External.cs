@@ -38,19 +38,19 @@ public class External : MonoBehaviour{
 
 	public void ExitCb() {
 		close(() => {
-			Debug.Log("UnityDebug: exit");
+			_.Log("UnityDebug: exit");
 			Commander.Shared.Exit();
 		});
 	}
 	
 	public void SetSid(string sid) {
-		Debug.Log("Unity: Sid=" + sid);
+		_.Log("Unity: Sid=" + sid);
 		GameData.Shared.Sid = sid;
 		Connect.Setup();		
 	}
 
 	public void SetRoomID(string roomID) {
-		Debug.Log("Unity: roomID=" + roomID);
+		_.Log("Unity: roomID=" + roomID);
 		GameData.Shared.Room = roomID;
 		Connect.Setup();
 	}
@@ -89,14 +89,14 @@ public class External : MonoBehaviour{
 	void OnApplicationPause(bool pauseStatus)
 	{
 		if (pauseStatus) {
-			Debug.Log("Unity: 游戏暂停");
+			_.Log("Unity: 游戏暂停");
 			if (Connect.Shared == null) {
 				return ;
 			}
 			// 暂停的时候，断开连接 
 			Connect.Shared.CloseImmediate();
 		} else {
-			Debug.Log("Unity: 游戏恢复");
+			_.Log("Unity: 游戏恢复");
 			Connect.Setup();
 		}
 	}
@@ -104,9 +104,9 @@ public class External : MonoBehaviour{
 	void OnApplicationFocus(bool focusStatus)
 	{	
 		// if (focusStatus) {
-		// 	Debug.Log("focus");
+		// 	_.Log("focus");
 		// } else {
-		// 	Debug.Log("unfocus");
+		// 	_.Log("unfocus");
 		// }
 	}
 }

@@ -111,4 +111,10 @@ public class _ {
 		rect.anchorMax = new Vector2(1, 1);
 		rect.anchoredPosition = new Vector2(0, 0);
     }
+
+    static public void Log(string text) {
+        if (Debug.isDebugBuild) {
+            Debug.Log(text);
+        }
+    }
 }
