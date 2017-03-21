@@ -296,6 +296,7 @@ public class Controller : MonoBehaviour {
 
 			// 清理
 			External.Instance.ExitCb(() => {
+				Debug.Log("Unity: Game End");
 				Commander.Shared.GameEnd(roomID);
 			});	
 		}).AddTo(this);
