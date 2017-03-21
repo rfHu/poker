@@ -46,31 +46,19 @@ public class External : MonoBehaviour{
 	public void SetSid(string sid) {
 		Debug.Log("Unity: Sid=" + sid);
 		GameData.Shared.Sid = sid;
-		checkSetup();		
+		Connect.Setup();		
 	}
 
 	public void SetRoomID(string roomID) {
 		Debug.Log("Unity: roomID=" + roomID);
 		GameData.Shared.Room = roomID;
-		checkSetup();
+		Connect.Setup();
 	}
 
 	public void SetProxy(string proxy) {
 		GameData.Shared.Proxy = proxy;		
 	}
-
-	private void checkSetup() {
-		if (string.IsNullOrEmpty(GameData.Shared.Sid) || string.IsNullOrEmpty(GameData.Shared.Room)) {
-			return ;
-		}
-
-		Debug.Log("Unity: SID、RoomID设置成功，准备建立连接");
-
-		// 开始游戏
-		Time.timeScale = 1;
-		Connect.Setup();	
-	}
-
+	
 	private void close(Action callback) {
 		// 清空两个关键数据
 		GameData.Shared.Sid = "";

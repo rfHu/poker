@@ -151,14 +151,11 @@ public sealed class Connect  {
 
 	public void Close(Action callback = null) {
 		Action act = () => {
-			manager.Socket.Off();
-			manager.Close();
-
 			if (callback != null) {
 				callback();
 			}
 
-			instance = null;
+			close();
 		};
 
 		Emit(new Dictionary<string, object>{
@@ -185,11 +182,20 @@ public sealed class Connect  {
 	private static Connect instance;
 
 	static public void Setup() {
+		if (string.IsNullOrEmpty(GameData.Shared.Sid) || string.IsNullOrEmpty(GameData.Shared.Room)) {
+			return ;
+		}
+
+		Debug.Log("Unity: SID、RoomID设置成功，准备建立连接");
+
 		// 强制断开连接
 		if (instance != null) {
 			Debug.Log("Unity: 尝试建立新连接，强制断开");
 			instance.close();
 		}
+
+		// 开始游戏（退出时会被暂停）
+		Time.timeScale = 1;
 
 		instance = new Connect();
 
