@@ -422,10 +422,8 @@ sealed public class GameData {
 		var startTs = json.Int("begin_time");
 		StartTime = _.DateTimeFromTimeStamp(startTs);
 
-		if (startTs != 0)
-        {
-			GameStarted = true;
-        }
+		// 游戏是否已开始
+		GameStarted = startTs != 0;
 
 		var bb = options.Int("limit");
 		BB = bb ;
