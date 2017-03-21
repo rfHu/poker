@@ -5,6 +5,7 @@ using UniRx;
 using System;
 using DarkTonic.MasterAudio;
 using System.Linq;
+using Extensions;
 
 public class ChipsGo : MonoBehaviour {
 	public Text TextNumber;
@@ -14,14 +15,10 @@ public class ChipsGo : MonoBehaviour {
 
 
 	void Awake() {
-		RxSubjects.Deal.Subscribe((e) => {
-			G.waitSound(() => {
-				if (this == null) {
-					return ;
-				}
-
-				Hide();
-			});			
+		RxSubjects.Deal.AsObservable().Where((e) => {
+			return e.Data.Dict("deals").ContainsKey("-1");
+		}).Subscribe((e) => {
+			Hide();
 		}).AddTo(this);
 	}
 

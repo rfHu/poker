@@ -264,20 +264,24 @@ public class Controller : MonoBehaviour {
 					return ;
 				}
 
-				G.waitSound(() => {
-					if (this == null) {
-						return ;
-					}
+				// 延时一下，等收集筹码逻辑
+				Observable.Timer(TimeSpan.FromMilliseconds(100)).AsObservable().Subscribe(
+					(_) => {
+						G.waitSound(() => {
+							if (this == null) {
+								return ;
+							}
 
-					MasterAudio.PlaySound("fapai");
+							MasterAudio.PlaySound("fapai");
 
-					if (data.Count == 3) {
-						showCards();
-					} else {
-						getCardFrom(e.Index).Show(e.Value, true);
-					}
-				});
-
+							if (data.Count == 3) {
+								showCards();
+							} else {
+								getCardFrom(e.Index).Show(e.Value, true);
+							}
+						});
+					} 
+				).AddTo(this);	
 			} else {
 				getCardFrom(e.Index).Show(e.Value, false);
 			}
