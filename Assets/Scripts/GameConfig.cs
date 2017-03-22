@@ -379,6 +379,9 @@ sealed public class GameData {
 	private void byJson(Dictionary<string, object> json) {
 		jsonData = json;
 
+		// 重置状态
+		AuditList = new ReactiveProperty<List<object>>();
+
 		// 除了gamestart状态外，其他状态都在这里重置
 		SeeCardState = false;
 
