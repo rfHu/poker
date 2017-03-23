@@ -285,6 +285,8 @@ sealed public class GameData {
 					return ;
 				}
 
+				// 每次修改时，先重置，防止不触发
+				AuditCD.Value = 0;
 				AuditCD.Value = sec;
 			}
 		);

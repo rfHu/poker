@@ -57,7 +57,7 @@ public class PlayerObject : MonoBehaviour {
 		circle = info.Find("Circle").gameObject;
 		countdown = circle.transform.Find("Countdown").gameObject;
 
-        countdownColorAni = countdown.GetComponent<DOTweenAnimation>();
+        // countdownColorAni = countdown.GetComponent<DOTweenAnimation>();
 
 		// 倒计时隐藏
 		countdown.SetActive(false);
@@ -459,9 +459,9 @@ public class PlayerObject : MonoBehaviour {
 
 		float time = GameData.Shared.ThinkTime - elaspe;
 		var mask = Avt.GetComponent<CircleMask>();
-		mask.SetTextColor(new Color(0, (float)255 / 255, (float)106 / 255));
+		// mask.SetTextColor(new Color(0, (float)255 / 255, (float)106 / 255));
 
-        PlayCountdownAni(time);
+        // PlayCountdownAni(time);
 
 		while (time > 0 && activated) {
 			time = time - Time.deltaTime;
@@ -469,14 +469,13 @@ public class PlayerObject : MonoBehaviour {
 			var percent = Mathf.Min(1, time / GameData.Shared.ThinkTime);
 			countdown.GetComponent<ProceduralImage>().fillAmount = percent;
             mask.SetFillAmount(time); 
-            mask.SetTextColor(countdown.GetComponent<ProceduralImage>().color);
 
 			yield return new WaitForFixedUpdate();
 		}
 
 		activated = false;
         countdown.SetActive(false); 
-        countdownColorAni.DORewind();
+        // countdownColorAni.DORewind();
 	}
 
 	private void showOP(Dictionary<string, object> data, int elaspe) {
