@@ -36,7 +36,8 @@ public class PlayerObject : MonoBehaviour {
 	private Player player;
 	private float foldOpacity = 0.6f;
 	private float animDuration = 0.4f;
-	private float hideDuration = 0.3f;
+    private float hideDuration = 0.3f; 
+    private DOTweenAnimation countdownColorAni;
 
 	public Text CardDesc;
 	public Text OthersCardDesc;
@@ -55,6 +56,8 @@ public class PlayerObject : MonoBehaviour {
 
 		circle = info.Find("Circle").gameObject;
 		countdown = circle.transform.Find("Countdown").gameObject;
+
+        countdownColorAni = countdown.GetComponent<DOTweenAnimation>();
 
 		// 倒计时隐藏
 		countdown.SetActive(false);
@@ -458,18 +461,22 @@ public class PlayerObject : MonoBehaviour {
 		var mask = Avt.GetComponent<CircleMask>();
 		mask.SetTextColor(new Color(0, (float)255 / 255, (float)106 / 255));
 
+        PlayCountdownAni(time);
+
 		while (time > 0 && activated) {
 			time = time - Time.deltaTime;
 			
 			var percent = Mathf.Min(1, time / GameData.Shared.ThinkTime);
 			countdown.GetComponent<ProceduralImage>().fillAmount = percent;
-			mask.SetFillAmount(time);
+            mask.SetFillAmount(time); 
+            mask.SetTextColor(countdown.GetComponent<ProceduralImage>().color);
 
 			yield return new WaitForFixedUpdate();
 		}
 
 		activated = false;
-		countdown.SetActive(false);
+        countdown.SetActive(false); 
+        countdownColorAni.DORewind();
 	}
 
 	private void showOP(Dictionary<string, object> data, int elaspe) {
@@ -509,4 +516,10 @@ public class PlayerObject : MonoBehaviour {
 			}
 		});
 	}
+
+    private void PlayCountdownAni(float time)
+    {
+        countdownColorAni.duration = time;
+        countdownColorAni.DOPlay();
+    }
 }

@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using System;
 using DarkTonic.MasterAudio;
 
+//菜单弹出
 public class MenuPopup : MonoBehaviour {
 	public List<Sprite> MuteSprites;
     public Image MuteImage;
