@@ -126,11 +126,16 @@ sealed public class GameData {
 		RxSubjects.GameStart.AsObservable().Subscribe((e) => {
 			var json = e.Data.Dict("room");
 			GameStartState = true;
+			// 重置状态
+			AuditList = new ReactiveProperty<List<object>>();
 			byJson(json);
 		});
 	
 		RxSubjects.Look.Subscribe((e) => {
 			GameStartState = false;
+			// 重置状态
+			AuditList = new ReactiveProperty<List<object>>();
+
 			byJson(e.Data);
 
 			// 重连的用户，reload scene
@@ -378,9 +383,6 @@ sealed public class GameData {
 
 	private void byJson(Dictionary<string, object> json) {
 		jsonData = json;
-
-		// 重置状态
-		AuditList = new ReactiveProperty<List<object>>();
 
 		// 除了gamestart状态外，其他状态都在这里重置
 		SeeCardState = false;

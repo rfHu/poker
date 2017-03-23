@@ -90,6 +90,6 @@ public class StatusBar : MonoBehaviour {
 			}
 
 			CountDown.text = time.ToString();
-		});
+		}).AddTo(this);
 	}
 }
