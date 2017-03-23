@@ -459,7 +459,7 @@ public class PlayerObject : MonoBehaviour {
 
 		float time = GameData.Shared.ThinkTime - elaspe;
 		var mask = Avt.GetComponent<CircleMask>();
-		// mask.SetTextColor(new Color(0, (float)255 / 255, (float)106 / 255));
+		mask.SetTextColor(new Color(0, (float)255 / 255, (float)106 / 255));
 
         // PlayCountdownAni(time);
 
