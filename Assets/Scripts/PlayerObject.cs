@@ -461,7 +461,7 @@ public class PlayerObject : MonoBehaviour {
 		var mask = Avt.GetComponent<CircleMask>();
 		mask.SetTextColor(new Color(0, (float)255 / 255, (float)106 / 255));
 
-        PlayCountdownAni(time);
+        PlayCountdownAni(elaspe);
 
 		while (time > 0 && activated) {
 			time = time - Time.deltaTime;
@@ -517,9 +517,13 @@ public class PlayerObject : MonoBehaviour {
 		});
 	}
 
-    private void PlayCountdownAni(float time)
+    private void PlayCountdownAni(float elaspe)
     {
-        countdownColorAni.duration = time;
-        countdownColorAni.DOPlay();
+        List<Tween> tweens = countdownColorAni.GetTweens();
+        for (int i = 0; i < tweens.Count; i++)
+        {
+            tweens[i].Goto(elaspe);
+            tweens[i].Play();
+        }
     }
 }
