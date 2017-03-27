@@ -139,10 +139,6 @@ public class Controller : MonoBehaviour {
 	}
 
 	void showGameInfo() {
-		if (GameData.Shared.Owner && !GameData.Shared.GameStarted) {
-			startButton.SetActive(true);
-		}
-
 		if (GameData.Shared.Owner) {
 			OwnerButton.SetActive(true);
 		}
@@ -212,11 +208,23 @@ public class Controller : MonoBehaviour {
 		}
 	}
 
+	private void setNotStarted() {
+		if (GameData.Shared.Owner) {
+			startButton.SetActive(true);
+		} else {
+			PauseGame.SetActive(true);
+			PauseGame.transform.Find("Text").GetComponent<Text>().text = "等待房主开始游戏";
+		}
+	}
+
 	void registerRxEvents() {
 		GameData.Shared.Paused.Subscribe((pause) => {
 			if (!GameData.Shared.GameStarted) {
+				setNotStarted();
 				return ;
 			}
+
+			PauseGame.transform.Find("Text").GetComponent<Text>().text = "房主已暂停游戏";
 
 			if (pause && !GameData.Shared.InGame) {
 				PauseGame.SetActive(true);
