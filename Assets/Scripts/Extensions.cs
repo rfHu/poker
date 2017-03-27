@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using BestHTTP.JSON;
+using SimpleJSON;
 
 namespace Extensions
 {
@@ -95,6 +96,15 @@ namespace Extensions
         {
             var json = Json.Encode(source);
             return JsonUtility.FromJson<T>(json);
+        }
+
+        public static String Serialize(this Dictionary<string, object> source)
+        {
+            return Json.Encode(source);
+        }
+
+        public static JSONNode ToJSON(this Dictionary<string, object> source) {
+            return JSON.Parse(source.Serialize());
         }
 
         public static Dictionary<string, object> AsDictionary(this object source, BindingFlags bindingAttr = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance)

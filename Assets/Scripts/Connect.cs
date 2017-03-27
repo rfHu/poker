@@ -96,12 +96,12 @@ public sealed class Connect  {
 
 	private void saveUserInfo(Dictionary<string, object> json) {
 		var ret = json.Dict("ret");
-		var profile = ret.Dict("profile");
+		var profile = ret.Dict("profile").ToObject<ProfileModel>();
 		var token = ret.Dict("token");
 
-		GameData.Shared.Uid = profile.String("uid");
-		GameData.Shared.Name = profile.String("name");
-		GameData.Shared.Avatar = profile.String("avatar");
+		GameData.Shared.Uid = profile.uid;
+		GameData.Shared.Name = profile.name;
+		GameData.Shared.Avatar = profile.avatar;
 		GameData.Shared.Pin = token.String("pin");
 	}
 

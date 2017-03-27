@@ -95,7 +95,7 @@ public class _ {
 			number = 0;
 		}
 
-		return Math.Round(number * 100, 2).ToString() + "%"; 
+		return Math.Round(number * 100, 1).ToString() + "%"; 
     }
 
     static public void FillParent(GameObject go) {
