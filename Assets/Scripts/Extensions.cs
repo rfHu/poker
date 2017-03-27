@@ -3,6 +3,7 @@ using UnityEngine;
 using System;
 using System.Linq;
 using System.Reflection;
+using BestHTTP.JSON;
 
 namespace Extensions
 {
@@ -92,23 +93,8 @@ namespace Extensions
         public static T ToObject<T>(this Dictionary<string, object> source)
           where T : class, new()
         {
-            T result = new T();
-            Type type = result.GetType();
-
-            foreach (var item in source)
-            {
-                PropertyInfo property = type.GetProperty(item.Key);
-
-                if (property == null)
-                {
-                    continue;
-                }
-
-                Type propType = property.PropertyType;
-                property.SetValue(result, Convert.ChangeType(item.Value, propType), null);
-            }
-
-            return result;
+            var json = Json.Encode(source);
+            return JsonUtility.FromJson<T>(json);
         }
 
         public static Dictionary<string, object> AsDictionary(this object source, BindingFlags bindingAttr = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance)

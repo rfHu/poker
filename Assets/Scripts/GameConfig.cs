@@ -221,7 +221,7 @@ sealed public class GameData {
 		});
 
 		Action<RxData> act = (e) => {
-			var mop = e.Data.ToObject<Mop>();
+			var userAction = e.Data.ToObject<UserActionModel>();
 			var map = new Dictionary<string, ActionState>() {
 				{"call", ActionState.Call},
 				{"check", ActionState.Check},
@@ -229,16 +229,16 @@ sealed public class GameData {
 				{"raise", ActionState.Raise}
 			};
 
-			Pot.Value = mop.pot;
+			Pot.Value = userAction.pot;
 
-			var index = mop.seat;
+			var index = userAction.seat;
 			if (!Players.ContainsKey(index)) {
 				return ;
 			}
 			
 			var player = Players[index];
-			player.PrChips.Value = mop.pr_chips;
-			player.Bankroll.Value = mop.bankroll;
+			player.PrChips.Value = userAction.pr_chips;
+			player.Bankroll.Value = userAction.bankroll;
 
 			player.ActState.OnNext(map[e.E]);
 		};
