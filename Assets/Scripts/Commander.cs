@@ -71,6 +71,10 @@ public class Commander {
 	public void Audit() {
 		ic.Audit();
 	}
+
+	public void Chat() {
+		ic.Chat();
+	}
 }
 
 public interface ICommander {
@@ -79,6 +83,7 @@ public interface ICommander {
 	void GameEnd(string roomID);
 	int Power();
 	void Audit();
+	void Chat();
 }
 
 #if UNITY_ANDROID
@@ -113,6 +118,10 @@ public class AndroidCommander: ICommander {
 	public void Audit() {
 		getJo().Call("jumpToVerify");
 	}
+
+	public void Chat() {
+		getJo().Call("openChat");
+	}
 }
 #endif
 
@@ -132,6 +141,9 @@ public class iOSCommander: ICommander {
 
 	[DllImport("__Internal")]
 	private static extern void _ex_callOpenAuditPage();
+
+	[DllImport("__Internal")]
+	private static extern void _ex_callGameChatting();
 
 	public void Exit() {
 		_ex_callExitGame();
@@ -155,6 +167,10 @@ public class iOSCommander: ICommander {
 
 	public void Audit() {
 		_ex_callOpenAuditPage();
+	}
+
+	public void Chat() {
+		_ex_callGameChatting();
 	}
 }
 #endif

@@ -10,7 +10,7 @@ using MaterialUI;
 
 public sealed class Connect  {
 	private SocketManager manager;
-	private string url = "https://socket.poker.top/socket.io/"; 
+	private string url = "http://socket.poker.top/socket.io/"; 
 
 	private Dictionary<int, Action<Dictionary<string, object>>> successCallbacks = new Dictionary<int, Action<Dictionary<string, object>>>();
 
@@ -87,6 +87,9 @@ public sealed class Connect  {
 			if (error == 400) {				
 				PokerUI.DisAlert("房间不存在！");
 			}
+
+			// @TODO: 测试逻辑
+			Commander.Shared.Chat();
 
 			_.Log("Unity: 进入房间逻辑执行完毕");
 		}, () => {
