@@ -20,12 +20,14 @@ public sealed class Connect  {
 
 	private Connect() {
 		// Charles Proxy
-		if (Debug.isDebugBuild && !string.IsNullOrEmpty(GameData.Shared.Proxy)) {
+		if (!string.IsNullOrEmpty(GameData.Shared.Proxy)) {
 			HTTPManager.Proxy = new HTTPProxy(new Uri(GameData.Shared.Proxy));
 		}
 
 		SocketOptions options = new SocketOptions();
 		options.ConnectWith = TransportTypes.WebSocket;
+
+		_.Log("Unity: Socket URL=" + url);
 
 		manager = new SocketManager(new Uri(url), options);
 		manager.Socket.On("connect", onConnect);
