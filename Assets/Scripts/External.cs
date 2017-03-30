@@ -32,12 +32,16 @@ public class External : MonoBehaviour{
 		}
 	}
 
-	public void SendChatText(String text) {
-		_.Log(text);
+	public void SendChat(String jsonStr) {
+		RxSubjects.SendChat.OnNext(jsonStr);
 	}
 
-	public void SendChatAudio(String path) {
-		_.Log(path);
+	public void ShowAudio(String uid) {
+		RxSubjects.ShowAudio.OnNext(uid);
+	}
+
+	public void HideAudio(String uid) {
+		RxSubjects.HideAudio.OnNext(uid);
 	}
 
 	public void ExitCb(Action callback) {

@@ -42,6 +42,9 @@ public class RxSubjects {
 
 	// 跟网络无关事件
 	public static Subject<int> ChangeVectorsByIndex = new Subject<int>();
+	public static Subject<string> SendChat = new Subject<string>();
+	public static Subject<string> ShowAudio = new Subject<string>();
+	public static Subject<string> HideAudio = new Subject<string>();
 }
 
 
