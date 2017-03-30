@@ -149,6 +149,8 @@ public class Controller : MonoBehaviour {
 	void showGameInfo() {
 		if (GameData.Shared.Owner) {
 			OwnerButton.SetActive(true);
+		} else {
+			OwnerButton.SetActive(false);
 		}
 
 		var sb = GameData.Shared.SB;
@@ -164,11 +166,11 @@ public class Controller : MonoBehaviour {
 			anteStr = string.Format(" ({0})", GameData.Shared.Ante);
 		}
 			
-		setText(BBGo, string.Format("盲注: {0}/{1}{2}{3}", sb, bb, straStr, anteStr));			
+		setText(BBGo, string.Format("{0}/{1}{2}{3}", sb, bb, straStr, anteStr));			
 
 		if (!String.IsNullOrEmpty(GameData.Shared.GameCode)) {
 			InviteCodeGo.SetActive(true);
-			setText(InviteCodeGo, String.Format("邀请码: {0}", GameData.Shared.GameCode));
+			setText(InviteCodeGo, String.Format("{0}", GameData.Shared.GameCode));
 		} else {
 			InviteCodeGo.SetActive(false);
 		}
@@ -252,6 +254,10 @@ public class Controller : MonoBehaviour {
 			if (!GameData.Shared.GameStarted) {
 				setText(TimeLeftGo, "暂未开始");
 			} 
+
+			if (GameData.Shared.Paused.Value) {
+				return ;
+			}
 
 			setText(TimeLeftGo, secToStr(value));
 		});

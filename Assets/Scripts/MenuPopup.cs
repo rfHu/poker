@@ -53,7 +53,7 @@ public class MenuPopup : MonoBehaviour {
 	public void ToggleMute() {
 		if (isMuted) {
 			MasterAudio.UnmuteEverything();
-			setVolumeImage("volume_on");	
+			setVolumeImage("volume_up");	
 		} else {
 			MasterAudio.MuteEverything();
 			setVolumeImage("volume_off");
@@ -73,6 +73,6 @@ public class MenuPopup : MonoBehaviour {
 	}
 
 	private void setVolumeImage(string icon) {
-		MuteIcon.vectorImageData = MaterialUIIconHelper.GetIcon(icon).vectorImageData;
+		MuteIcon.vectorImageData = MaterialIconHelper.GetIcon(icon).vectorImageData;
 	}
 }
