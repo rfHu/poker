@@ -10,7 +10,6 @@ using MaterialUI;
 
 public sealed class Connect  {
 	private SocketManager manager;
-	private string url = "http://socket.poker.top/socket.io/"; 
 
 	private Dictionary<int, Action<Dictionary<string, object>>> successCallbacks = new Dictionary<int, Action<Dictionary<string, object>>>();
 
@@ -27,9 +26,9 @@ public sealed class Connect  {
 		SocketOptions options = new SocketOptions();
 		options.ConnectWith = TransportTypes.WebSocket;
 
-		_.Log("Unity: Socket URL=" + url);
+		_.Log("Unity: Socket URL=" + GameData.Shared.Domain);
 
-		manager = new SocketManager(new Uri(url), options);
+		manager = new SocketManager(new Uri(GameData.Shared.Domain + "/socket.io/"), options);
 		manager.Socket.On("connect", onConnect);
 		manager.Socket.On("connecting", onNotConnect);
 		manager.Socket.On("disconnect", onNotConnect);
@@ -89,9 +88,6 @@ public sealed class Connect  {
 			if (error == 400) {				
 				PokerUI.DisAlert("房间不存在！");
 			}
-
-			// @TODO: 测试逻辑
-			Commander.Shared.Chat();
 
 			_.Log("Unity: 进入房间逻辑执行完毕");
 		}, () => {
@@ -163,11 +159,15 @@ public sealed class Connect  {
 			close();
 		};
 
-		Emit(new Dictionary<string, object>{
-			{"f", "exit"}
-		}, (_) => {
+		if (manager.State == SocketManager.States.Open) {
+			Emit(new Dictionary<string, object>{
+				{"f", "exit"}
+			}, (_) => {
+				act();
+			}, act, 2);
+		} else {
 			act();
-		}, act, 2);	
+		}
 	}
 
 	public void CloseImmediate() {

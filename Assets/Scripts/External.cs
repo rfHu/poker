@@ -32,6 +32,14 @@ public class External : MonoBehaviour{
 		}
 	}
 
+	public void SendChatText(String text) {
+		_.Log(text);
+	}
+
+	public void SendChatAudio(String path) {
+		_.Log(path);
+	}
+
 	public void ExitCb(Action callback) {
 		close(callback);	
 	}
@@ -57,6 +65,10 @@ public class External : MonoBehaviour{
 
 	public void SetProxy(string proxy) {
 		GameData.Shared.Proxy = proxy;		
+	}
+
+	public void SetSocket(string domain) {
+		GameData.Shared.Domain = domain;	
 	}
 	
 	private void close(Action callback) {

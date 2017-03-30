@@ -4,7 +4,6 @@ using UniRx;
 using System.Collections.Generic;
 
 public class UIManager : MonoBehaviour {
-	public GameObject recallPage;
 	private GameObject auditMsg;
 
 	private DOPopup menuPopup;
@@ -23,6 +22,10 @@ public class UIManager : MonoBehaviour {
 	public void OnShowRecalls() {
 		var recall = (GameObject)Instantiate(Resources.Load("Prefab/RecallPage"));		
 		recall.GetComponent<DOPopup>().Show();
+	}
+
+	public void OnClickChat() {
+		Commander.Shared.Chat();
 	}
 
 	void Awake()
