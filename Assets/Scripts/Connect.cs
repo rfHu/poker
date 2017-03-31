@@ -10,7 +10,7 @@ using MaterialUI;
 
 public sealed class Connect  {
 	private SocketManager manager;
-	private string url = "https://socket.poker.top/socket.io/"; 
+	private string url = "http://socket.poker.top/socket.io/"; 
 
 	private Dictionary<int, Action<Dictionary<string, object>>> successCallbacks = new Dictionary<int, Action<Dictionary<string, object>>>();
 
@@ -322,6 +322,9 @@ public sealed class Connect  {
 				case "ending":
 					RxSubjects.Ending.OnNext(rxdata);
 					break;
+                case "modify":
+                    RxSubjects.Modify.OnNext(rxdata);
+                    break;
 				default:
 					break;
 			}

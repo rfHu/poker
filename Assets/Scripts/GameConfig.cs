@@ -126,11 +126,16 @@ sealed public class GameData {
 		RxSubjects.GameStart.AsObservable().Subscribe((e) => {
 			var json = e.Data.Dict("room");
 			GameStartState = true;
+			// 重置状态
+			AuditList = new ReactiveProperty<List<object>>();
 			byJson(json);
 		});
 	
 		RxSubjects.Look.Subscribe((e) => {
 			GameStartState = false;
+			// 重置状态
+			AuditList = new ReactiveProperty<List<object>>();
+
 			byJson(e.Data);
 
 			// 重连的用户，reload scene
@@ -280,6 +285,8 @@ sealed public class GameData {
 					return ;
 				}
 
+				// 每次修改时，先重置，防止不触发
+				AuditCD.Value = 0;
 				AuditCD.Value = sec;
 			}
 		);
@@ -288,6 +295,47 @@ sealed public class GameData {
 			var array = e.Data.List("ids");
 			AuditList.Value = array;
 		});
+
+        RxSubjects.Modify.Subscribe((e) =>{
+
+            var data = e.Data;
+
+            string str = "房主进行了如下修改：\n";
+
+            foreach (var item in e.Data)
+	        {
+                switch (item.Key) 
+                {
+                    case "bankroll_multiple":
+                        BankrollMul = data.IL("bankroll_multiple");
+                        str += "带入倍数：" + GameData.Shared.BankrollMul[0] + "倍至" + GameData.Shared.BankrollMul[1] + "倍\n"; 
+                        break;
+
+                    case "time_limit": 
+                        Duration = data.Long("time_limit");
+                        str += "牌局延时：" + GameData.Shared.Duration / 3600f + "小时\n";
+                        break;
+
+                    case "ante":
+                        Ante = data.Int("ante");
+                        str += "底注：" + GameData.Shared.Ante +"\n"; 
+                        break;
+
+                    case "need_audit":
+                        NeedAudit = data.Int("need_audit") == 1;
+                        str += GameData.Shared.NeedAudit? "带入需要授权" :"带入无需授权" +"\n";
+                        break;
+
+                    case "straddle":
+                        Straddle = data.Int("straddle") != 0;
+                        str += GameData.Shared.Straddle ? "Straddle开启" : "Strddle关闭"; break;
+                    default:
+                        break;
+                }
+	        }
+
+            PokerUI.Toast(str);
+        });
 	}
 
 	public Player FindMyPlayer() {
@@ -379,9 +427,6 @@ sealed public class GameData {
 	private void byJson(Dictionary<string, object> json) {
 		jsonData = json;
 
-		// 重置状态
-		AuditList = new ReactiveProperty<List<object>>();
-
 		// 除了gamestart状态外，其他状态都在这里重置
 		SeeCardState = false;
 
@@ -400,7 +445,7 @@ sealed public class GameData {
 		GameCode = options.String("code");
 		RoomName = json.String("name");
 		DealerSeat.Value = json.Int("dealer_seat");
-		Straddle = json.Int("straddle") != 0;
+		Straddle = options.Int("straddle") != 0;
 
 		Pot.Value = json.Int("pot");
 		PrPot.Value = Pot.Value - json.Int("pr_pot");

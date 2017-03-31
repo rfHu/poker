@@ -41,6 +41,8 @@ public class StatusBar : MonoBehaviour {
 
 	private void addEvents() {
 		GameData.Shared.AuditCD.Subscribe((secs) => {
+			Debug.Log("审核倒计时: " + secs.ToString());
+
 			if (secs <= 0) {
 				AuditGo.SetActive(false);
 				return ;
@@ -90,6 +92,6 @@ public class StatusBar : MonoBehaviour {
 			}
 
 			CountDown.text = time.ToString();
-		});
+		}).AddTo(this);
 	}
 }

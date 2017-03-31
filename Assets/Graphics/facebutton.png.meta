@@ -1,18 +1,14 @@
 fileFormatVersion: 2
-guid: c0e5186cff20611469880d4b19c80ce4
-timeCreated: 1490238916
+guid: 35c6fda6b65c1c644ad7e041e24e17e0
+timeCreated: 1490618307
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
-    21300000: bomb_0
-    21300002: bomb_3
-    21300004: bomb_4
-    21300006: bomb_5
-    21300008: bomb_6
-    21300010: bomb_1
-    21300012: bomb_7
-    21300014: bomb_2
-    21300016: bomb_8
+    21300000: facebutton_0
+    21300002: facebutton_1
+    21300004: facebutton_2
+    21300006: facebutton_3
+    21300008: facebutton_4
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -111,119 +107,67 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: bomb_0
+      name: facebutton_0
       rect:
         serializedVersion: 2
-        x: 1
-        y: 197
-        width: 88
-        height: 56
+        x: 0
+        y: 171
+        width: 81
+        height: 85
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: bomb_3
+      name: facebutton_1
       rect:
         serializedVersion: 2
-        x: 93
-        y: 200
-        width: 52
-        height: 54
+        x: 81
+        y: 171
+        width: 81
+        height: 85
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: bomb_4
+      name: facebutton_2
       rect:
         serializedVersion: 2
-        x: 152
-        y: 179
-        width: 75
-        height: 77
+        x: 0
+        y: 86
+        width: 81
+        height: 85
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: bomb_5
+      name: facebutton_3
       rect:
         serializedVersion: 2
-        x: 232
-        y: 146
-        width: 111
-        height: 110
+        x: 81
+        y: 86
+        width: 81
+        height: 85
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: bomb_6
+      name: facebutton_4
       rect:
         serializedVersion: 2
-        x: 343
-        y: 137
-        width: 125
-        height: 119
+        x: 0
+        y: 1
+        width: 81
+        height: 85
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: bomb_1
-      rect:
-        serializedVersion: 2
-        x: 488
-        y: 214
-        width: 7
-        height: 6
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: bomb_7
-      rect:
-        serializedVersion: 2
-        x: 10
-        y: 36
-        width: 143
-        height: 141
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: bomb_2
-      rect:
-        serializedVersion: 2
-        x: 479
-        y: 177
-        width: 24
-        height: 24
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: bomb_8
-      rect:
-        serializedVersion: 2
-        x: 169
-        y: 6
-        width: 105
-        height: 119
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
