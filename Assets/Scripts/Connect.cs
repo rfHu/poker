@@ -52,7 +52,8 @@ public sealed class Connect  {
 		}, (json) => {
 			var err = json.Int("err");
 			if (err != 0) {
-				_.Log("Unity: 登陆失败");
+				PokerUI.ConflictAlert();
+
 				return ;
 			}
 
