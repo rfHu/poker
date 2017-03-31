@@ -323,7 +323,8 @@ sealed public class GameData {
 
                     case "need_audit":
                         NeedAudit = data.Int("need_audit") == 1;
-                        str += GameData.Shared.NeedAudit? "带入需要授权" :"带入无需授权" +"\n";
+                        str += GameData.Shared.NeedAudit? "带入授权开启" :"带入授权关闭";
+                        str += "\n";
                         break;
 
                     case "straddle":
@@ -336,6 +337,21 @@ sealed public class GameData {
 
             PokerUI.Toast(str);
         });
+
+        RxSubjects.KickOut.Subscribe((e) =>{
+            string Uid = e.Data.String("uid");
+            string name = FindAimPlayer(Uid).Name;
+            string str = "玩家 " + name + " 被房主请出房间";
+            PokerUI.Toast(str);
+        });
+
+        RxSubjects.StandUp.Subscribe((e) =>
+        {
+            string Uid = e.Data.String("uid");
+            int type = e.Data.Int("type");
+            string name = FindAimPlayer(Uid).Name;
+            string str = "玩家 " + name + " 被房主强制站起";
+        });
 	}
 
 	public Player FindMyPlayer() {
@@ -347,6 +363,18 @@ sealed public class GameData {
 
 		return null;
 	}
+
+    public Player FindAimPlayer(string Uid) {
+        foreach (var player in Players) 
+        {
+            if (player.Value.Uid == Uid)
+            {
+                return player.Value;
+            }
+        }
+
+        return null;
+    }
 
 	private void setPbCards(List<int> list, int state) {
 		if (list.Count <= 0) {

@@ -58,7 +58,7 @@ public class External : MonoBehaviour{
 	public void SetProxy(string proxy) {
 		GameData.Shared.Proxy = proxy;		
 	}
-	
+
 	private void close(Action callback) {
 		// 清空两个关键数据
 		GameData.Shared.Sid = "";

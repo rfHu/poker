@@ -12,6 +12,7 @@ public enum SeatPosition {
 
 public class Seat : MonoBehaviour {
 	public int Index;
+
 	public ReactiveProperty<SeatPosition> SeatPos  = new ReactiveProperty<SeatPosition>();
 
 	private Vector2 realVector;

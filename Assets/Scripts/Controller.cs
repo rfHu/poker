@@ -308,8 +308,35 @@ public class Controller : MonoBehaviour {
 		RxSubjects.Ending.Subscribe((e) => {
 			PokerUI.Toast("房主提前结束牌局");	
 		}).AddTo(this);
+
+        RxSubjects.Emoticon.Subscribe((e) =>
+        {
+            int fromSeatIndex = e.Data.Int("seat");
+            int toSeatIndex = e.Data.Int("toseat");
+            int pid = e.Data.Int("pid");
+
+            var fromSeat = Seats[0]; 
+            var toSeat = Seats[0];
+
+            foreach (var seat in Seats)
+            {
+                if (seat.GetComponent<Seat>().Index == fromSeatIndex)
+                {
+                    fromSeat = seat;
+                }
+
+                if (seat.GetComponent<Seat>().Index == toSeatIndex)
+                {
+                    toSeat = seat;
+                }
+            }
+            var em = (GameObject)GameObject.Instantiate(Resources.Load("Prefab/Emoticon"));
+            em.GetComponent<Emoticon>().Init(fromSeat, toSeat, pid);
+        }).AddTo(this);
 	}
 	
+    
+
 	private Card getCardFrom(int index) {
 		return PublicCards[index].GetComponent<Card>();
 	}
