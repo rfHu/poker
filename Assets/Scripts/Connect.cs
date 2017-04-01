@@ -328,6 +328,19 @@ public sealed class Connect  {
 				case "ending":
 					RxSubjects.Ending.OnNext(rxdata);
 					break;
+                case "modify":
+                    RxSubjects.Modify.OnNext(rxdata);
+                    break;
+                case "emoticon":
+                    RxSubjects.Emoticon.OnNext(rxdata);
+                    break;
+                case "standup":
+                    RxSubjects.StandUp.OnNext(rxdata);
+                    break;
+                case "kickout":
+                    RxSubjects.KickOut.OnNext(rxdata);
+                    break;
+
 				default:
 					break;
 			}

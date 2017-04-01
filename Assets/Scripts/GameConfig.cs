@@ -296,6 +296,63 @@ sealed public class GameData {
 			AuditList.Value = array;
 		});
 
+        RxSubjects.Modify.Subscribe((e) =>{
+
+            var data = e.Data;
+
+            string str = "房主进行了如下修改：\n";
+
+            foreach (var item in e.Data)
+	        {
+                switch (item.Key) 
+                {
+                    case "bankroll_multiple":
+                        BankrollMul = data.IL("bankroll_multiple");
+                        str += "带入倍数：" + GameData.Shared.BankrollMul[0] + "倍至" + GameData.Shared.BankrollMul[1] + "倍\n"; 
+                        break;
+
+                    case "time_limit": 
+                        Duration = data.Long("time_limit");
+                        str += "牌局延时：" + GameData.Shared.Duration / 3600f + "小时\n";
+                        break;
+
+                    case "ante":
+                        Ante = data.Int("ante");
+                        str += "底注：" + GameData.Shared.Ante +"\n"; 
+                        break;
+
+                    case "need_audit":
+                        NeedAudit = data.Int("need_audit") == 1;
+                        str += GameData.Shared.NeedAudit? "带入授权开启" :"带入授权关闭";
+                        str += "\n";
+                        break;
+
+                    case "straddle":
+                        Straddle = data.Int("straddle") != 0;
+                        str += GameData.Shared.Straddle ? "Straddle开启" : "Strddle关闭"; break;
+                    default:
+                        break;
+                }
+	        }
+
+            PokerUI.Toast(str);
+        });
+
+        RxSubjects.KickOut.Subscribe((e) =>{
+            string Uid = e.Data.String("uid");
+            string name = FindAimPlayer(Uid).Name;
+            string str = "玩家 " + name + " 被房主请出房间";
+            PokerUI.Toast(str);
+        });
+
+        RxSubjects.StandUp.Subscribe((e) =>
+        {
+            string Uid = e.Data.String("uid");
+            int type = e.Data.Int("type");
+            string name = FindAimPlayer(Uid).Name;
+            string str = "玩家 " + name + " 被房主强制站起";
+        });
+
 		// 倒计时
 		Observable.Interval(TimeSpan.FromSeconds(1)).AsObservable().Subscribe((_) => {
 			// 游戏已暂停，不需要修改
@@ -317,6 +374,18 @@ sealed public class GameData {
 
 		return null;
 	}
+
+    public Player FindAimPlayer(string Uid) {
+        foreach (var player in Players) 
+        {
+            if (player.Value.Uid == Uid)
+            {
+                return player.Value;
+            }
+        }
+
+        return null;
+    }
 
 	private void setPbCards(List<int> list, int state) {
 		if (list.Count <= 0) {
@@ -419,7 +488,6 @@ sealed public class GameData {
 		var bb = options.Int("limit");
 		BB = bb ;
 		SB = bb / 2;
-
 		DealerSeat.Value = json.Int("dealer_seat");
 		RoomName = json.String("name");
 		Pot.Value = json.Int("pot");

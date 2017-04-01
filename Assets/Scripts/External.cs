@@ -74,7 +74,7 @@ public class External : MonoBehaviour{
 	public void SetSocket(string domain) {
 		GameData.Shared.Domain = domain;	
 	}
-	
+
 	private void close(Action callback) {
 		// 清空两个关键数据
 		GameData.Shared.Sid = "";

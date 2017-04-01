@@ -1,0 +1,8 @@
+diff a/Assets/Scripts/StatusBar.cs b/Assets/Scripts/StatusBar.cs	(rejected hunks)
+@@ -90,5 +90,6 @@
+ 			}
+ 
+ 			CountDown.text = time.ToString();
++		}).AddTo(this);
+ 	}
+ }
