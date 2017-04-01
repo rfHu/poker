@@ -17,6 +17,21 @@ namespace Extensions
             return Convert.ToInt32(value);
         }
 
+         public static int StepValue(this float value, int step)
+        {
+            int temp1 = Mathf.FloorToInt(value / step) * step;
+            int temp2 = Mathf.CeilToInt(value / step) * step;
+            int newValue;
+
+            if (value - temp1 >= temp2 - value) {
+                newValue = temp2;
+            } else {
+                newValue = temp1;
+            }
+
+            return newValue;            
+        }
+
          public static long Long<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key)
         {
             TValue value;

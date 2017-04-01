@@ -59,18 +59,9 @@ public class Supplement : MonoBehaviour {
 	}
 
 	public void OnChange(float value) {
-		int score = GameData.Shared.BB * 100; 
-
-		int temp1 = Mathf.FloorToInt(value / score) * score;
-		int temp2 = Mathf.CeilToInt(value / score) * score;
-		int newValue;
-
-		if (value - temp1 >= temp2 - value) {
-			newValue = temp2;
- 		} else {
-			newValue = temp1;
-		}
-
+		int step = GameData.Shared.BB * 100; 
+		int newValue = value.StepValue(step);
+		
 		slider.value = newValue;
 
 		Score.text = newValue.ToString();

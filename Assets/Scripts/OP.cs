@@ -90,9 +90,9 @@ public class OP : MonoBehaviour {
 			RaiseGo.GetComponent<Image>().sprite = AllinSpr;
 			RaiseGo.transform.Find("Text").gameObject.SetActive(false);
 			RaiseGo.GetComponent<Button>().onClick.AddListener(OPS.allIn);
-			setAction(false);
+			disableAllBtns();
 		} else {
-			setAction(false);
+			disableAllBtns();
 			RaiseGo.SetActive(false);
 			onOnlyAllin();
 		}	
@@ -131,12 +131,12 @@ public class OP : MonoBehaviour {
 
 		var max = range[1];
 		if (values[0] > max) {
-			setAction(false);
+			disableAllBtns();
 		} else if (values[1] > max) {
-			R2.SetActive(false);
-			R3.SetActive(false);
+			disableBtn(R2) ;
+			disableBtn(R3);
 		} else if (values[2] > max) {
-			R3.SetActive(false);
+			disableBtn(R3);
 		}
 	}
 
@@ -161,7 +161,10 @@ public class OP : MonoBehaviour {
 		var pointerDown = false;
 
 		Slid.OnValueChangedAsObservable().Subscribe((value) => {
-			if (value < range[1]) {
+			var newValue = value.StepValue(GameData.Shared.BB);
+			Slid.value = newValue;			
+
+			if (newValue < range[1]) {
 				Allin.SetActive(false);
 
 				if (pointerDown) {
@@ -172,8 +175,8 @@ public class OP : MonoBehaviour {
 				RoundTipsGo.SetActive(false);
 			}
 			
-			RaiseNumber.text = value.ToString();
-			TipsText.text = value.ToString();
+			RaiseNumber.text = newValue.ToString();
+			TipsText.text = newValue.ToString();
 		}).AddTo(this);
 
 		Slid.OnPointerDownAsObservable().Subscribe((_) => {
@@ -224,12 +227,22 @@ public class OP : MonoBehaviour {
 		setAction(active);
 		RaiseGo.SetActive(active);
 	}
-
+	
 	private void setAction(bool active = true) {
-		R1.transform.parent.gameObject.SetActive(active);	
+		R1.transform.parent.gameObject.SetActive(false);
 	}
 
-	
+	private void disableBtn(GameObject go) {
+		var button = go.GetComponent<Button>();
+		Destroy(button.gameObject);
+		go.GetComponent<CanvasGroup>().alpha = 0.4f;	
+	}
+
+	private void disableAllBtns() {
+		disableBtn(R1);
+		disableBtn(R2);
+		disableBtn(R3);
+	}
 
 	class OPS {
 		internal static void fold() {
