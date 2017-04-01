@@ -5,25 +5,24 @@ using UnityEngine.UI;
 using UniRx;
 using UniRx.Triggers;
 using System;
+using MaterialUI;
 
 public class OP : MonoBehaviour {
 	public GameObject RaiseGo;
 	public GameObject FoldGo;
 	public GameObject CallGo;
+	public GameObject CheckGo;
+	public GameObject AllinGo;
 	public GameObject R1;
 	public GameObject R2;
 	public GameObject R3;
 
-	public Sprite CheckSpr;
-	public Sprite CallSpr;
-	public Sprite AllinSpr;
 	public Text CallNumber;
 	public Text CallText;
 	public Slider Slid;
 	public GameObject Allin;
 	public Text RaiseNumber;
 	public Text MaxText;
-	public Button SlidOK;
 
 	public GameObject RoundTipsGo;
 	public Text TipsText;
@@ -59,42 +58,34 @@ public class OP : MonoBehaviour {
 		range = cmds.IL("raise");
 
 		if (check) { // 看牌
-			CallGo.GetComponent<Button>().onClick.AddListener(OPS.check);
-			CallGo.GetComponent<Image>().sprite = CheckSpr;
-			CallNumber.gameObject.SetActive(false);
-			CallText.text = "看牌";
+			CheckGo.SetActive(true);
+			CheckGo.GetComponent<Button>().onClick.AddListener(OPS.check);
 		} else if (callNum > 0) { // 跟注
+			CallGo.SetActive(true);
 			CallGo.GetComponent<Button>().onClick.AddListener(() => {
 				OPS.call();
 			});
-			CallGo.GetComponent<Image>().sprite = CallSpr;
-			CallNumber.gameObject.SetActive(true);
 			CallNumber.text = callNum.ToString();
-			CallText.text = "跟注";
-		} else if (allin) {
-			CallGo.GetComponent<Button>().onClick.AddListener(OPS.allIn);
-			CallGo.GetComponent<Image>().sprite = AllinSpr;
-			CallNumber.gameObject.SetActive(false);
-			CallText.enabled = false;
-		} else {
-			CallGo.SetActive(false);
+		} else { // 不能跟注、不能看牌，展示灰掉的看牌按钮
+			CheckGo.SetActive(true);
+			CheckGo.GetComponent<CanvasGroup>().alpha = 0.4f;
 		}
 
 		var mask = FoldGo.GetComponent<CircleMask>();
 		mask.Enable(elaspe, true);
 
-		if (range.Count >= 2) {
+		if (range.Count >= 2) { // 可加注
+			RaiseGo.SetActive(true);
 			setRaiseButtons(callNum);
 			RaiseGo.GetComponent<Button>().onClick.AddListener(OnRaiseClick);
-		} else if(callNum > 0 && allin) {
-			RaiseGo.GetComponent<Image>().sprite = AllinSpr;
-			RaiseGo.transform.Find("Text").gameObject.SetActive(false);
-			RaiseGo.GetComponent<Button>().onClick.AddListener(OPS.allIn);
+		} else if(allin) { // 不可加注、可Allin
+			AllinGo.SetActive(true);
+			AllinGo.GetComponent<Button>().onClick.AddListener(OPS.allIn);
 			disableAllBtns();
-		} else {
+		} else { // 不可加注、不可Allin
 			disableAllBtns();
-			RaiseGo.SetActive(false);
-			onOnlyAllin();
+			RaiseGo.SetActive(true);
+			RaiseGo.GetComponent<CanvasGroup>().alpha = 0.4f;
 		}	
 	}
 
