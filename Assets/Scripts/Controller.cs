@@ -260,7 +260,7 @@ public class Controller : MonoBehaviour {
 			}
 
 			setText(TimeLeftGo, secToStr(value));
-		});
+		}).AddTo(this);
 
 		GameData.Shared.Paused.Subscribe((pause) => {
 			if (!GameData.Shared.GameStarted) {
