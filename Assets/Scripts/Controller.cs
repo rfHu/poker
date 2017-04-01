@@ -21,6 +21,10 @@ public class Controller : MonoBehaviour {
 
 	public GameObject PauseGame;
 
+	public GameObject BBGo;
+	public GameObject InviteCodeGo;
+	public GameObject TimeLeftGo;
+
 	// public GameObject Cutoff;
 
 	List<Vector2> anchorPositions = new List<Vector2>();
@@ -138,21 +142,16 @@ public class Controller : MonoBehaviour {
 		throw new Exception("不支持游戏人数");
 	}
 
-	void showGameInfo() {
-		if (GameData.Shared.Owner && !GameData.Shared.GameStarted) {
-			startButton.SetActive(true);
-		}
+	private void setText(GameObject go, String text) {
+		go.transform.Find("Value").GetComponent<Text>().text = text;
+	}
 
+	void showGameInfo() {
 		if (GameData.Shared.Owner) {
 			OwnerButton.SetActive(true);
+		} else {
+			OwnerButton.SetActive(false);
 		}
-
-		var roomName = GameData.Shared.RoomName;
-		if (String.IsNullOrEmpty(roomName)) {
-			roomName = "佚名";
-		}
-
-		addGameInfo(string.Format("[ {0} ]", roomName));
 
 		var sb = GameData.Shared.SB;
 		var bb = GameData.Shared.BB; 
@@ -167,11 +166,21 @@ public class Controller : MonoBehaviour {
 			anteStr = string.Format(" ({0})", GameData.Shared.Ante);
 		}
 			
-		addGameInfo(string.Format("盲注: {0}/{1}{2}{3}", sb, bb, straStr, anteStr));			
+		setText(BBGo, string.Format("{0}/{1}{2}{3}", sb, bb, straStr, anteStr));			
 
 		if (!String.IsNullOrEmpty(GameData.Shared.GameCode)) {
-			addGameInfo(String.Format("邀请码: {0}", GameData.Shared.GameCode));
+			InviteCodeGo.SetActive(true);
+			setText(InviteCodeGo, String.Format("{0}", GameData.Shared.GameCode));
+		} else {
+			InviteCodeGo.SetActive(false);
 		}
+
+		var roomName = GameData.Shared.RoomName;
+		if (String.IsNullOrEmpty(roomName)) {
+			roomName = "佚名";
+		}
+
+		addGameInfo(string.Format("[ {0} ]", roomName));
 
 		var ipLimit = GameData.Shared.IPLimit;
 		var gpsLimit = GameData.Shared.GPSLimit;
@@ -212,11 +221,54 @@ public class Controller : MonoBehaviour {
 		}
 	}
 
+	private void setNotStarted() {
+		if (GameData.Shared.Owner) {
+			startButton.SetActive(true);
+		} else {
+			PauseGame.SetActive(true);
+			PauseGame.transform.Find("Text").GetComponent<Text>().text = "等待房主开始游戏";
+		}
+	}
+
+	private string secToStr(long seconds) {
+		var hs = 3600;
+		var ms = 60;
+
+		var h = Mathf.FloorToInt(seconds / hs);		
+		var m = Mathf.FloorToInt(seconds % hs / ms);
+		var s = (seconds % ms);
+
+		return string.Format("{0}:{1}:{2}", fix(h), fix(m), fix(s));	
+	}
+
+	private string fix<T>(T num) {
+		var str = num.ToString();
+		if (str.Length < 2) {
+			return "0" + str;
+		}
+		return str;
+	}
+
 	void registerRxEvents() {
-		GameData.Shared.Paused.Subscribe((pause) => {
+		GameData.Shared.LeftTime.Subscribe((value) => {
 			if (!GameData.Shared.GameStarted) {
+				setText(TimeLeftGo, "暂未开始");
+			} 
+
+			if (GameData.Shared.Paused.Value) {
 				return ;
 			}
+
+			setText(TimeLeftGo, secToStr(value));
+		});
+
+		GameData.Shared.Paused.Subscribe((pause) => {
+			if (!GameData.Shared.GameStarted) {
+				setNotStarted();
+				return ;
+			}
+
+			PauseGame.transform.Find("Text").GetComponent<Text>().text = "房主已暂停游戏";
 
 			if (pause && !GameData.Shared.InGame) {
 				PauseGame.SetActive(true);

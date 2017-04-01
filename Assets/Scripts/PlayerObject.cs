@@ -42,6 +42,8 @@ public class PlayerObject : MonoBehaviour {
 	public Text CardDesc;
 	public Text OthersCardDesc;
 
+	public SpkTextGo SpkText;
+
 	private Seat theSeat {
 		get {
 			return  transform.parent.GetComponent<Seat>();
@@ -61,6 +63,8 @@ public class PlayerObject : MonoBehaviour {
 
 		// 倒计时隐藏
 		countdown.SetActive(false);
+
+		SpkText.Uid = Uid;
 	}
 
 	public void SeeCard(List<int> cards) {
@@ -468,7 +472,6 @@ public class PlayerObject : MonoBehaviour {
 			var percent = Mathf.Min(1, time / GameData.Shared.ThinkTime);
 			countdown.GetComponent<ProceduralImage>().fillAmount = percent;
             mask.SetFillAmount(time); 
-            mask.SetTextColor(countdown.GetComponent<ProceduralImage>().color);
 
 			yield return new WaitForFixedUpdate();
 		}

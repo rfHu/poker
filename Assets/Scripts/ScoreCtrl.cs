@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Extensions;
-using System;
 
 public class ScoreCtrl : MonoBehaviour {
 	public GameObject viewport;
 	public Text Hands;
-	public Text Countdown;
 
 	public GameObject PlayerScore;
 
@@ -16,33 +14,7 @@ public class ScoreCtrl : MonoBehaviour {
 	public GameObject GridLayout;
 
 	public GameObject Guest;
-
-	long seconds;
-
-	private string secToStr(long seconds) {
-		var hs = 3600;
-		var ms = 60;
-
-		var h = Mathf.FloorToInt(seconds / hs);		
-		var m = Mathf.FloorToInt(seconds % hs / ms);
-		var s = (seconds % ms);
-
-		return string.Format("{0}:{1}:{2}", fix(h), fix(m), fix(s));	
-	}
-
-	private string fix<T>(T num) {
-		var str = num.ToString();
-		if (str.Length < 2) {
-			return "0" + str;
-		}
-		return str;
-	}
-
-	private void updateSecs() {
-		seconds -= 1;
-		Countdown.text = secToStr(seconds);
-	}
-
+	
 	void Awake()
 	{
 		Connect.Shared.Emit(new Dictionary<string, object>(){
@@ -50,18 +22,8 @@ public class ScoreCtrl : MonoBehaviour {
         }, (json) =>
         {
 			var ret = json.Dict("ret");
-			var secs = ret.Long("left_time");
-
 			Hands.text = string.Format("第{0}手", ret.Int("handid")); 
-			Countdown.text = secToStr(secs);
 			
-			// 保存当前时间
-			seconds = secs;
-
-			if (!GameData.Shared.Paused.Value) {
-				installTimer();
-			}
-
 			var list = ret.List("list");
 			var guestList = new List<Dictionary<string, object>>();
 			var playerList = new List<Dictionary<string, object>>();
@@ -126,16 +88,4 @@ public class ScoreCtrl : MonoBehaviour {
 			} 
         });
     }
-
-	private void installTimer() {
-		if (!GameData.Shared.GameStarted) {
-			return ;
-		}
-		InvokeRepeating("updateSecs", 1.0f, 1.0f);
-	}
-
-	void OnDestroy()
-	{
-		CancelInvoke();
-	}
 }

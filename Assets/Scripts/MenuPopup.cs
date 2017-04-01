@@ -3,11 +3,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using DarkTonic.MasterAudio;
+using MaterialUI;
 
 //菜单弹出
 public class MenuPopup : MonoBehaviour {
-	public List<Sprite> MuteSprites;
-    public Image MuteImage;
+    public VectorImage  MuteIcon;
 
 	public CanvasGroup StandCG;
 	public CanvasGroup SuppCG;
@@ -32,7 +32,7 @@ public class MenuPopup : MonoBehaviour {
 		}	
 
 		if (isMuted) {
-			MuteImage.sprite = MuteSprites[1];
+			setVolumeImage("volume_off");
 		}
 	}
 
@@ -53,10 +53,10 @@ public class MenuPopup : MonoBehaviour {
 	public void ToggleMute() {
 		if (isMuted) {
 			MasterAudio.UnmuteEverything();
-			MuteImage.sprite = MuteSprites[0];	
+			setVolumeImage("volume_up");	
 		} else {
 			MasterAudio.MuteEverything();
-			MuteImage.sprite = MuteSprites[1];
+			setVolumeImage("volume_off");
 		}
 
 		isMuted = !isMuted;
@@ -70,5 +70,9 @@ public class MenuPopup : MonoBehaviour {
 		var tip = (GameObject)Instantiate(Resources.Load("Prefab/CardTip"));
 		tip.GetComponent<DOPopup>().Show();
 		gameObject.GetComponent<DOPopup>().ImmediateClose();
+	}
+
+	private void setVolumeImage(string icon) {
+		MuteIcon.vectorImageData = MaterialIconHelper.GetIcon(icon).vectorImageData;
 	}
 }

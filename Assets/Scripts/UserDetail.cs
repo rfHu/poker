@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Extensions;
-using System;
 
 [RequireComponent(typeof(DOPopup))]
 public class UserDetail : MonoBehaviour {
@@ -103,14 +102,12 @@ public class UserDetail : MonoBehaviour {
             foreach (var item in emotion)
             {
                 var dict = item as Dictionary<string, object>;
-                dict.Int("coin")
+                 dict.Int("coin");
             }
 
             _.DownloadImage(Avatar, profile.String("avatar"));
 
         });
-
-        //public void OnClickEmoticon
 	}
 
     public void OnKickOut() 

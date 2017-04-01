@@ -6,26 +6,32 @@ using UnityEngine.UI;
 
 public class Emoticon : MonoBehaviour {
 
+    public GameObject emoticonEntity;
     private Animator _animator;
     private Image _image;
+
     int pid;
     GameObject toSeat;
     public Sprite[] images;
 
     void Awake() {
-        _animator = gameObject.GetComponent<Animator>();
-        _image = gameObject.GetComponent<Image>();
+        _animator = emoticonEntity.GetComponent<Animator>();
+        _image = emoticonEntity.GetComponent<Image>();
     }
 
     public void Init(GameObject fromSeat, GameObject toSeat, int pid) 
     {
-        _.Log("1");
         this.pid = pid;
         this.toSeat = toSeat;
 
         transform.SetParent(G.UICvs.transform, false);
         transform.position = fromSeat.GetComponent<RectTransform>().position;
         _image.sprite = images[pid - 1];
+
+        if (toSeat.GetComponent<Seat>().GetPos() == SeatPosition.Right)
+        {
+            transform.localScale = new Vector3(-1, 1, 0);
+        }
 
         Tween tween = transform.DOMove(toSeat.transform.position, 0.6f).SetEase(Ease.Linear);
         tween.Play();
@@ -36,6 +42,7 @@ public class Emoticon : MonoBehaviour {
     {
         _animator.enabled = true;
         transform.SetParent(toSeat.transform, false);
+        transform.localPosition = new Vector2(0, 43);
         _animator.SetTrigger(pid.ToString());
         StartCoroutine(DestoryObj());
     }

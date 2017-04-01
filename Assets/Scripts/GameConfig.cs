@@ -221,7 +221,7 @@ sealed public class GameData {
 		});
 
 		Action<RxData> act = (e) => {
-			var mop = e.Data.ToObject<Mop>();
+			var userAction = e.Data.ToObject<UserActionModel>();
 			var map = new Dictionary<string, ActionState>() {
 				{"call", ActionState.Call},
 				{"check", ActionState.Check},
@@ -229,16 +229,16 @@ sealed public class GameData {
 				{"raise", ActionState.Raise}
 			};
 
-			Pot.Value = mop.pot;
+			Pot.Value = userAction.pot;
 
-			var index = mop.seat;
+			var index = userAction.seat;
 			if (!Players.ContainsKey(index)) {
 				return ;
 			}
 			
 			var player = Players[index];
-			player.PrChips.Value = mop.pr_chips;
-			player.Bankroll.Value = mop.bankroll;
+			player.PrChips.Value = userAction.pr_chips;
+			player.Bankroll.Value = userAction.bankroll;
 
 			player.ActState.OnNext(map[e.E]);
 		};
@@ -352,6 +352,17 @@ sealed public class GameData {
             string name = FindAimPlayer(Uid).Name;
             string str = "玩家 " + name + " 被房主强制站起";
         });
+
+		// 倒计时
+		Observable.Interval(TimeSpan.FromSeconds(1)).AsObservable().Subscribe((_) => {
+			// 游戏已暂停，不需要修改
+			if (GameStarted && Paused.Value) {
+				return ;
+			}
+
+			var value = Math.Max(0, LeftTime.Value - 1);
+			LeftTime.Value = value;
+		});
 	}
 
 	public Player FindMyPlayer() {
@@ -397,6 +408,7 @@ sealed public class GameData {
 	}
 
 	public string Proxy;
+	public string Domain = "https://socket.dev.poker.top";
 
 	public ReactiveProperty<List<object>> AuditList = new ReactiveProperty<List<object>>();
 	public bool GameStartState = false;
@@ -427,6 +439,7 @@ sealed public class GameData {
 	public bool NeedAudit = false;
 	public bool IPLimit = false;
 	public bool GPSLimit = false;
+	public ReactiveProperty<long> LeftTime = new ReactiveProperty<long>(0); 
 
 	public ReactiveProperty<int> Pot = new ReactiveProperty<int>();
 	public ReactiveProperty<int> PrPot = new ReactiveProperty<int>();
@@ -471,15 +484,18 @@ sealed public class GameData {
 		GPSLimit = options.Int("gps_limit") > 0;
 		IPLimit = options.Int("ip_limit") == 1;
 		GameCode = options.String("code");
-		RoomName = json.String("name");
-		DealerSeat.Value = json.Int("dealer_seat");
 		Straddle = options.Int("straddle") != 0;
-
+		var bb = options.Int("limit");
+		BB = bb ;
+		SB = bb / 2;
+		DealerSeat.Value = json.Int("dealer_seat");
+		RoomName = json.String("name");
 		Pot.Value = json.Int("pot");
 		PrPot.Value = Pot.Value - json.Int("pr_pot");
 		InGame = json.Bool("is_ingame");
 		MaxFiveRank.Value = json.Int("maxFiveRank");
 		MySeat = json.Int("my_seat");
+		LeftTime.Value = json.Long("left_time");
 
 		// ReactiveProperty 对同样的值不会触发onNext，所以这里强制执行一次
 		var pause = json.Int("is_pause") != 0;
@@ -500,10 +516,6 @@ sealed public class GameData {
 
 		// 游戏是否已开始
 		GameStarted = startTs != 0;
-
-		var bb = options.Int("limit");
-		BB = bb ;
-		SB = bb / 2;
 
 		// 逐个删除，才能触发Remove事件
 		foreach(var key in Players.Keys.ToList()) {

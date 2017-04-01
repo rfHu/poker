@@ -32,6 +32,18 @@ public class External : MonoBehaviour{
 		}
 	}
 
+	public void SendChat(String jsonStr) {
+		RxSubjects.SendChat.OnNext(jsonStr);
+	}
+
+	public void ShowAudio(String uid) {
+		RxSubjects.ShowAudio.OnNext(uid);
+	}
+
+	public void HideAudio(String uid) {
+		RxSubjects.HideAudio.OnNext(uid);
+	}
+
 	public void ExitCb(Action callback) {
 		close(callback);	
 	}
@@ -57,6 +69,10 @@ public class External : MonoBehaviour{
 
 	public void SetProxy(string proxy) {
 		GameData.Shared.Proxy = proxy;		
+	}
+
+	public void SetSocket(string domain) {
+		GameData.Shared.Domain = domain;	
 	}
 
 	private void close(Action callback) {

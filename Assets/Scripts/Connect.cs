@@ -10,7 +10,6 @@ using MaterialUI;
 
 public sealed class Connect  {
 	private SocketManager manager;
-	private string url = "https://socket.dev.poker.top/socket.io/"; 
 
 	private Dictionary<int, Action<Dictionary<string, object>>> successCallbacks = new Dictionary<int, Action<Dictionary<string, object>>>();
 
@@ -20,14 +19,16 @@ public sealed class Connect  {
 
 	private Connect() {
 		// Charles Proxy
-		if (Debug.isDebugBuild && !string.IsNullOrEmpty(GameData.Shared.Proxy)) {
+		if (!string.IsNullOrEmpty(GameData.Shared.Proxy)) {
 			HTTPManager.Proxy = new HTTPProxy(new Uri(GameData.Shared.Proxy));
 		}
 
 		SocketOptions options = new SocketOptions();
 		options.ConnectWith = TransportTypes.WebSocket;
 
-		manager = new SocketManager(new Uri(url), options);
+		_.Log("Unity: Socket URL=" + GameData.Shared.Domain);
+
+		manager = new SocketManager(new Uri(GameData.Shared.Domain + "/socket.io/"), options);
 		manager.Socket.On("connect", onConnect);
 		manager.Socket.On("connecting", onNotConnect);
 		manager.Socket.On("disconnect", onNotConnect);
@@ -52,7 +53,8 @@ public sealed class Connect  {
 		}, (json) => {
 			var err = json.Int("err");
 			if (err != 0) {
-				_.Log("Unity: 登陆失败");
+				PokerUI.ConflictAlert();
+
 				return ;
 			}
 
@@ -96,12 +98,12 @@ public sealed class Connect  {
 
 	private void saveUserInfo(Dictionary<string, object> json) {
 		var ret = json.Dict("ret");
-		var profile = ret.Dict("profile");
+		var profile = ret.Dict("profile").ToObject<ProfileModel>();
 		var token = ret.Dict("token");
 
-		GameData.Shared.Uid = profile.String("uid");
-		GameData.Shared.Name = profile.String("name");
-		GameData.Shared.Avatar = profile.String("avatar");
+		GameData.Shared.Uid = profile.uid;
+		GameData.Shared.Name = profile.name;
+		GameData.Shared.Avatar = profile.avatar;
 		GameData.Shared.Pin = token.String("pin");
 	}
 
@@ -158,11 +160,15 @@ public sealed class Connect  {
 			close();
 		};
 
-		Emit(new Dictionary<string, object>{
-			{"f", "exit"}
-		}, (_) => {
+		if (manager.State == SocketManager.States.Open) {
+			Emit(new Dictionary<string, object>{
+				{"f", "exit"}
+			}, (_) => {
+				act();
+			}, act, 2);
+		} else {
 			act();
-		}, act, 2);	
+		}
 	}
 
 	public void CloseImmediate() {
