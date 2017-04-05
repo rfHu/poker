@@ -181,12 +181,11 @@ sealed public class GameData {
 			}
 
 			var pbList = data.IL("-1");
-			float delay = 0f;
-			if (pbList.Count >= 3) { // 翻牌，延时3s
-				delay = 3f;	
-			} else { // 其他牌，延时1s
-				delay = 1f;
-			}	
+			float delay = 1f;
+			
+			if (pbList.Count >= 3) { // 翻牌 
+				delay += 3 * Card.TurnCardDuration;	
+			} 
 
 			Observable.Timer(TimeSpan.FromSeconds(delay)).AsObservable().Subscribe((_) => {
 				MaxFiveRank.Value = e.Data.Int("maxFiveRank");	

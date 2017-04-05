@@ -22,10 +22,9 @@ public class PlayerObject : MonoBehaviour {
 	public Text WinNumber;
 	public List<Card> ShowCards;
 	public GameObject AvatarMask;
-	public Image ActImage;
-	// 0:看牌   1:加注    2:跟注    3:弃牌    4:All In
+	public PlayerActGo PlayerAct;
 	public Sprite[] ActSprites;
-	public GameObject AllinAnim;
+	public GameObject AllinGo;
 
 	private Text nameLabel;
 	private Text scoreLabel;
@@ -38,6 +37,7 @@ public class PlayerObject : MonoBehaviour {
 	private float animDuration = 0.4f;
     private float hideDuration = 0.3f; 
     private DOTweenAnimation countdownColorAni;
+	private ActionState lastState;
 
 	public Text CardDesc;
 	public Text OthersCardDesc;
@@ -113,7 +113,7 @@ public class PlayerObject : MonoBehaviour {
 		Avt.GetComponent<Avatar>().Uid = Uid;
 
 		if (isSelf()) {
-			hideName();
+			nameLabel.gameObject.SetActive(false);
 			RxSubjects.ChangeVectorsByIndex.OnNext(Index);
 		} else if(player.InGame) { 
 			Cardfaces.SetActive(true);
@@ -168,19 +168,23 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	private void dealAct(ActionState state) {
-		var map = new Dictionary<ActionState, int>{
-			{ActionState.Check, 0},
-			{ActionState.Raise, 1},
-			{ActionState.Call, 2},
-			{ActionState.Fold, 3},
-			{ActionState.Allin, 4}
-		};	
-
-		ActImage.gameObject.SetActive(true);
-		ActImage.sprite = ActSprites[map[state]];
+		setPlayerAct(true);
+		PlayerAct.SetAct(state);
 
 		if (state == ActionState.Allin) {
-			AllinAnim.SetActive(true);
+			AllinGo.SetActive(true);
+		}
+	}
+
+	private void setPlayerAct(bool active) {
+		if (!active && isPersisState()) {
+			return ;
+		}
+
+		PlayerAct.gameObject.SetActive(active);
+
+		if (!isSelf()) {
+			nameLabel.gameObject.SetActive(!active);
 		}
 	}
 
@@ -236,6 +240,7 @@ public class PlayerObject : MonoBehaviour {
 				MoveOut();
 			}
 
+			lastState = e;
 			dealAct(e);
 		}).AddTo(this);
 
@@ -278,7 +283,7 @@ public class PlayerObject : MonoBehaviour {
 			}
 
 			if (!isSelf()) {
-				if (!AllinAnim.activeSelf) {
+				if (!AllinGo.activeSelf) {
 					showTheCards(data.cards);
 				}
 				showCardType(data.maxFiveRank);
@@ -303,13 +308,14 @@ public class PlayerObject : MonoBehaviour {
 				var index = e.Data.Int("seat");
 				var dc = e.Data.Int("deal_card");
 
+				// 刚发了牌
 				if (dc == 1) {
-					ActImage.gameObject.SetActive(false);
+					setPlayerAct(false);
 				}
 			
 				if (index == Index) {
 					turnTo(e.Data, 0);
-					ActImage.gameObject.SetActive(false);
+					setPlayerAct(false);
 				} else {
 					MoveOut();
 				}
@@ -319,25 +325,25 @@ public class PlayerObject : MonoBehaviour {
 		// Gameover 应该清掉所有状态
 		RxSubjects.GameOver.Subscribe((e) => {
 			MoveOut();
-			ActImage.gameObject.SetActive(false);
-			AllinAnim.SetActive(false);
+			PlayerAct.gameObject.SetActive(false);
+			AllinGo.SetActive(false);
 
 			if (cgo != null) {
 			 	cgo.Hide();
 			}
 		}).AddTo(this);
 		
-		theSeat.SeatPos.Subscribe((pos) => {
-			var trans = ActImage.GetComponent<RectTransform>();
-			var v = trans.anchoredPosition;
-			var x = Math.Abs(v.x);
+		// theSeat.SeatPos.Subscribe((pos) => {
+		// 	var trans = PlayerAct.GetComponent<RectTransform>();
+		// 	var v = trans.anchoredPosition;
+		// 	var x = Math.Abs(v.x);
 
-			if (pos == SeatPosition.Right) {
-				trans.anchoredPosition = new Vector2(-x, v.y);	
-			} else {
-				trans.anchoredPosition = new Vector2(x, v.y);
-			}
-		}).AddTo(this);
+		// 	if (pos == SeatPosition.Right) {
+		// 		trans.anchoredPosition = new Vector2(-x, v.y);	
+		// 	} else {
+		// 		trans.anchoredPosition = new Vector2(x, v.y);
+		// 	}
+		// }).AddTo(this);
 
 		if (isSelf()) {
 			GameData.Shared.MaxFiveRank.Subscribe((value) => {
@@ -353,6 +359,10 @@ public class PlayerObject : MonoBehaviour {
                 CardDesc.text = Card.GetCardDesc(value);
             }).AddTo(this);
 		}
+	}
+
+	private bool isPersisState() {
+		return lastState == ActionState.Allin || lastState == ActionState.Fold;
 	}
 
 	private void doChipsAnim() {
@@ -398,7 +408,7 @@ public class PlayerObject : MonoBehaviour {
 
 		getOtherCardGo().SetActive(true);
 		OthersCardDesc.text = desc;
-		hideName();
+		nameLabel.gameObject.SetActive(false);
 	}
 
 	private GameObject getShowCard() {
@@ -441,10 +451,6 @@ public class PlayerObject : MonoBehaviour {
 				cgo.SetChips(value);
 			}, theSeat);	
 		}	
-	}
-
-	private void hideName() {
-		nameLabel.gameObject.SetActive(false);
 	}
 
 	private void turnTo(Dictionary<string, object> dict, int elaspe) {
