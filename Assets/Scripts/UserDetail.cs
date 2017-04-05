@@ -16,7 +16,10 @@ public class UserDetail : MonoBehaviour {
 	public Text PreRaise;
 	public Text ThreeBet;
 	public Text CBet;
-    public GameObject ButtonTeam; 
+    public GameObject ButtonTeam;
+    public GameObject EmoticonsTeam;
+    public GameObject R1;
+    public GameObject R2;
     public Button[] EmoticonButtons;
 
     RectTransform rectTransform;
@@ -32,6 +35,16 @@ public class UserDetail : MonoBehaviour {
         {
             ButtonTeam.SetActive(true);
             rectTransform.sizeDelta = new Vector2(550, 595);
+        }
+
+        _.Log("1");
+
+        if (Uid == GameData.Shared.Uid)
+        {
+            EmoticonsTeam.SetActive(false);
+            rectTransform.sizeDelta = rectTransform.sizeDelta - new Vector2(0, 144);
+            R1.GetComponent<RectTransform>().localPosition -=  new Vector3(0, 144, 0);
+            R2.GetComponent<RectTransform>().localPosition -= new Vector3(0, 144, 0);
         }
 
         foreach (var button in EmoticonButtons)
