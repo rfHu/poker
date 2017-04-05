@@ -9,6 +9,7 @@ using UniRx;
 using Extensions;
 using DarkTonic.MasterAudio;
 using System.Linq;
+using SimpleJSON;
 
 public class PlayerObject : MonoBehaviour {
 	public int Index;
@@ -367,6 +368,20 @@ public class PlayerObject : MonoBehaviour {
 		RxSubjects.HideAudio.Subscribe((uid) => {
 
 		}).AddTo(this);
+
+		RxSubjects.SendChat.Subscribe((jsonStr) => {
+            _.Log(jsonStr + "\n" + "当前Uid: " + Uid);
+
+            var N = JSON.Parse(jsonStr);
+            var text = N["text"].ToString();
+            var uid = N["uid"].ToString();
+
+            if (uid != Uid) {
+                return ;
+            }
+
+            SpkText.ShowMessage(text);
+        }).AddTo(this); 
 	}
 
 	private bool isPersisState() {

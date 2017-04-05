@@ -7,6 +7,7 @@ using UniRx;
 using Extensions;
 using DarkTonic.MasterAudio;
 using MaterialUI;
+using SimpleJSON;
 
 public class Controller : MonoBehaviour {
 	public GameObject seat;
@@ -386,8 +387,6 @@ public class Controller : MonoBehaviour {
             em.GetComponent<Emoticon>().Init(fromSeat, toSeat, pid);
         }).AddTo(this);
 	}
-	
-    
 
 	private Card getCardFrom(int index) {
 		return PublicCards[index].GetComponent<Card>();
