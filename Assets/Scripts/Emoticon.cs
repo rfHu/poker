@@ -12,7 +12,6 @@ public class Emoticon : MonoBehaviour {
 
     int pid;
     GameObject toSeat;
-    public Sprite[] images;
 
     void Awake() {
         _animator = emoticonEntity.GetComponent<Animator>();
@@ -26,24 +25,21 @@ public class Emoticon : MonoBehaviour {
 
         transform.SetParent(G.UICvs.transform, false);
         transform.position = fromSeat.GetComponent<RectTransform>().position;
-        _image.sprite = images[pid - 1];
 
         if (toSeat.GetComponent<Seat>().GetPos() == SeatPosition.Right)
         {
             transform.localScale = new Vector3(-1, 1, 0);
         }
 
-        Tween tween = transform.DOMove(toSeat.transform.position, 0.6f).SetEase(Ease.Linear);
+        Tween tween = transform.DOMove(toSeat.transform.position, 0.6f).SetEase(Ease.OutQuad);
         tween.Play();
+        _animator.SetTrigger(pid.ToString());
+
         tween.OnComplete(PlayEmoticon);
     }
 
     void PlayEmoticon() 
     {
-        _animator.enabled = true;
-        transform.SetParent(toSeat.transform, false);
-        transform.localPosition = new Vector2(0, 43);
-        _animator.SetTrigger(pid.ToString());
         StartCoroutine(DestoryObj());
     }
 

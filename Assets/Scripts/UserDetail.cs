@@ -37,9 +37,7 @@ public class UserDetail : MonoBehaviour {
             rectTransform.sizeDelta = new Vector2(550, 595);
         }
 
-        _.Log("1");
-
-        if (Uid == GameData.Shared.Uid)
+        if (Uid == GameData.Shared.Uid || GameData.Shared.MySeat == -1)
         {
             EmoticonsTeam.SetActive(false);
             rectTransform.sizeDelta = rectTransform.sizeDelta - new Vector2(0, 144);
