@@ -370,11 +370,12 @@ public class PlayerObject : MonoBehaviour {
 		}).AddTo(this);
 
 		RxSubjects.SendChat.Subscribe((jsonStr) => {
-            _.Log(jsonStr + "\n" + "当前Uid: " + Uid);
-
             var N = JSON.Parse(jsonStr);
-            var text = N["text"].ToString();
-            var uid = N["uid"].ToString();
+            var text = N["text"].Value;
+            var uid = N["uid"].Value;
+            
+			_.Log(jsonStr + "\n" + "当前Uid: " + Uid);
+			_.Log("收到的Uid: " + uid);
 
             if (uid != Uid) {
                 return ;

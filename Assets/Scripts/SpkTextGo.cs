@@ -12,6 +12,8 @@ public class SpkTextGo: MonoBehaviour {
     private IDisposable disposable;
 
     public void ShowMessage(string text) {
+        _.Log("调用ShowMessage");
+
         gameObject.SetActive(true);
         MessageText.text = text;
 
