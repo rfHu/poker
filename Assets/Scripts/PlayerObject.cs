@@ -359,6 +359,14 @@ public class PlayerObject : MonoBehaviour {
                 CardDesc.text = Card.GetCardDesc(value);
             }).AddTo(this);
 		}
+
+		RxSubjects.ShowAudio.Subscribe((uid) => {
+
+		}).AddTo(this);
+
+		RxSubjects.HideAudio.Subscribe((uid) => {
+
+		}).AddTo(this);
 	}
 
 	private bool isPersisState() {
