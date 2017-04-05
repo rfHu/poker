@@ -20,6 +20,7 @@ public class SpkTextGo: MonoBehaviour {
             disposable.Dispose();
         }
 
+        // 3s后自动消失
         disposable = Observable.Timer(TimeSpan.FromSeconds(3)).AsObservable().Subscribe(
             (_) => {
                 gameObject.SetActive(false);
