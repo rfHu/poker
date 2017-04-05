@@ -274,7 +274,7 @@ public class PlayerObject : MonoBehaviour {
 				Invoke("doChipsAnim", 1f);
 				WinNumber.transform.parent.gameObject.SetActive(true); 
 				WinNumber.text = num2Text(gain);
-				scoreLabel.gameObject.SetActive(false);
+				scoreLabel.transform.parent.gameObject.SetActive(false);
 			}
 
 			if (!isSelf()) {
@@ -407,13 +407,13 @@ public class PlayerObject : MonoBehaviour {
 
 	private void hideAnim() {
 		hideGo(Stars, () => {
-			scoreLabel.gameObject.SetActive(true);
-			WinNumber.transform.parent.gameObject.SetActive(false);
+			scoreLabel.transform.parent.gameObject.SetActive(true);
 		});
 
 		hideGo(WinImageGo);	
 		hideGo(getShowCard());	
 		hideGo(getOtherCardGo());
+		hideGo(WinNumber.transform.parent.gameObject);
 	}
 
 	private void hideGo(GameObject go, Action callback = null) {
@@ -470,7 +470,9 @@ public class PlayerObject : MonoBehaviour {
 			time = time - Time.deltaTime;
 			
 			var percent = Mathf.Min(1, time / GameData.Shared.ThinkTime);
-			countdown.GetComponent<ProceduralImage>().fillAmount = percent;
+			var image = countdown.GetComponent<ProceduralImage>();
+			image.fillAmount = percent;
+			mask.SetTextColor(image.color);
             mask.SetFillAmount(time); 
 
 			yield return new WaitForFixedUpdate();
@@ -498,7 +500,7 @@ public class PlayerObject : MonoBehaviour {
 	private void foldCards(GameObject go, Action callback = null) {
 		var rectTrans = go.GetComponent<RectTransform>();
 		rectTrans.DOAnchorPos(new Vector2(0, 0), animDuration);
-		rectTrans.DOScale(new Vector2(0.5f, 0.5f), animDuration);
+		rectTrans.DOScale(new Vector2(0.9f, 0.9f), animDuration);
 
 		var image = go.GetComponent<Image>();
 		Tween tween; 
