@@ -58,27 +58,32 @@ public class OP : MonoBehaviour {
 		range = cmds.IL("raise");
 
 		if (check) { // 看牌
+			CallGo.SetActive(false);
 			CheckGo.SetActive(true);
 			CheckGo.GetComponent<Button>().onClick.AddListener(OPS.check);
 		} else if (callNum > 0) { // 跟注
+			CheckGo.SetActive(false);
 			CallGo.SetActive(true);
 			CallGo.GetComponent<Button>().onClick.AddListener(() => {
 				OPS.call();
 			});
 			CallNumber.text = callNum.ToString();
 		} else { // 不能跟注、不能看牌，展示灰掉的看牌按钮
+			CallGo.SetActive(false);
 			CheckGo.SetActive(true);
 			CheckGo.GetComponent<CanvasGroup>().alpha = 0.4f;
 		}
 
-		var mask = FoldGo.GetComponent<CircleMask>();
+		var mask = FoldGo.transform.Find("CD").GetComponent<CircleMask>();
 		mask.Enable(elaspe, true);
 
 		if (range.Count >= 2) { // 可加注
+			AllinGo.SetActive(false);
 			RaiseGo.SetActive(true);
 			setRaiseButtons(callNum);
 			RaiseGo.GetComponent<Button>().onClick.AddListener(OnRaiseClick);
 		} else if(allin) { // 不可加注、可Allin
+			RaiseGo.SetActive(false);
 			AllinGo.SetActive(true);
 			AllinGo.GetComponent<Button>().onClick.AddListener(OPS.allIn);
 			disableAllBtns();
@@ -220,12 +225,12 @@ public class OP : MonoBehaviour {
 	}
 	
 	private void setAction(bool active = true) {
-		R1.transform.parent.gameObject.SetActive(false);
+		R1.transform.parent.gameObject.SetActive(active);
 	}
 
 	private void disableBtn(GameObject go) {
 		var button = go.GetComponent<Button>();
-		Destroy(button.gameObject);
+		button.onClick.RemoveAllListeners();
 		go.GetComponent<CanvasGroup>().alpha = 0.4f;	
 	}
 

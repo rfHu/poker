@@ -118,6 +118,7 @@ sealed public class GameData {
 		});
 
 		RxSubjects.Started.AsObservable().Subscribe((e) => {
+			LeftTime.Value = e.Data.Int("left_time");
 			Paused.Value = false; 
 		});
 
@@ -183,7 +184,16 @@ sealed public class GameData {
 				}
 			}
 
-			MaxFiveRank.Value = e.Data.Int("maxFiveRank");
+			var pbList = data.IL("-1");
+			float delay = 1f;
+			
+			if (pbList.Count >= 3) { // 翻牌 
+				delay += 3 * Card.TurnCardDuration;	
+			} 
+
+			Observable.Timer(TimeSpan.FromSeconds(delay)).AsObservable().Subscribe((_) => {
+				MaxFiveRank.Value = e.Data.Int("maxFiveRank");	
+			});
 		});
 
 		Action<RxData> updateCoins = (e) => {
@@ -402,7 +412,7 @@ sealed public class GameData {
 			return ;
 		}
 
-		if (state == 4) {
+		if (state == 4) { // 翻牌
 			PublicCards.Clear();
 		}  
 

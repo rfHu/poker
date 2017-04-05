@@ -85,6 +85,10 @@ public class CircleMask : MonoBehaviour {
 			numberText.enabled = true;
 		}
 
+		if (left <= 0) {
+			numberText.gameObject.SetActive(false);
+		} 
+
 		proImage.fillAmount = left / GameData.Shared.ThinkTime;
 		numberText.text =  (Math.Ceiling(left)).ToString();
 	}
