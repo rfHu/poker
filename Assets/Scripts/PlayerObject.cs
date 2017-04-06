@@ -44,6 +44,7 @@ public class PlayerObject : MonoBehaviour {
 	public Text OthersCardDesc;
 
 	public SpkTextGo SpkText;
+	public GameObject Volume;
 
 	private Seat theSeat {
 		get {
@@ -334,17 +335,19 @@ public class PlayerObject : MonoBehaviour {
 			}
 		}).AddTo(this);
 		
-		// theSeat.SeatPos.Subscribe((pos) => {
-		// 	var trans = PlayerAct.GetComponent<RectTransform>();
-		// 	var v = trans.anchoredPosition;
-		// 	var x = Math.Abs(v.x);
+		theSeat.SeatPos.Subscribe((pos) => {
+			var trans = Volume.GetComponent<RectTransform>();
+			var v = trans.anchoredPosition;
+			var x = Math.Abs(v.x);
 
-		// 	if (pos == SeatPosition.Right) {
-		// 		trans.anchoredPosition = new Vector2(-x, v.y);	
-		// 	} else {
-		// 		trans.anchoredPosition = new Vector2(x, v.y);
-		// 	}
-		// }).AddTo(this);
+			if (pos == SeatPosition.Right) {
+				trans.anchoredPosition = new Vector2(-x, v.y);	
+				trans.localScale = new Vector2(-1, 1);
+			} else {
+				trans.anchoredPosition = new Vector2(x, v.y);
+				trans.localScale = new Vector2(1, 1);
+			}
+		}).AddTo(this);
 
 		if (isSelf()) {
 			GameData.Shared.MaxFiveRank.Subscribe((value) => {
@@ -362,11 +365,11 @@ public class PlayerObject : MonoBehaviour {
 		}
 
 		RxSubjects.ShowAudio.Subscribe((uid) => {
-
+			Volume.SetActive(true);
 		}).AddTo(this);
 
 		RxSubjects.HideAudio.Subscribe((uid) => {
-
+			Volume.SetActive(false);
 		}).AddTo(this);
 
 		RxSubjects.SendChat.Subscribe((jsonStr) => {

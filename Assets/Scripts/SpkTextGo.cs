@@ -30,6 +30,7 @@ public class SpkTextGo: MonoBehaviour {
     }
 
     public void Hide() {
+        disposable.Dispose();
         gameObject.SetActive(false);
     }
 
