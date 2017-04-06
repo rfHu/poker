@@ -28,6 +28,11 @@ public class UIManager : MonoBehaviour {
 		Commander.Shared.Chat();
 	}
 
+    public void OnClickShareGame() {
+        string shareText = ShareGame();
+        Commander.Shared.ShareGameRoom(shareText);
+    }
+
 	void Awake()
 	{
 		GameData.Shared.AuditList.AsObservable().Where((list) => list != null).Subscribe((list) => {
@@ -78,4 +83,23 @@ public class UIManager : MonoBehaviour {
             }
 		}).AddTo(this);
 	}
+
+    public string ShareGame() 
+    {
+        string str = "";
+        str += "\"" + GameData.Shared.Name + "\"邀请您加入\"" + GameData.Shared.RoomName + "\"";
+        str += "，邀请码【" + GameData.Shared.GameCode + "】";
+        str += "，盲注【";
+
+        if (GameData.Shared.Straddle)
+            str += GameData.Shared.SB/2 + "/";
+
+        str += GameData.Shared.SB + "/" + GameData.Shared.BB + "】";
+
+        if (GameData.Shared.Ante >0)
+            str += "，底注【" + GameData.Shared.Ante + "】";
+        
+        str += "。一键约局，与好友畅享德州扑克的乐趣。";
+        return str;
+    }
 }

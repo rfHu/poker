@@ -79,6 +79,10 @@ public class Commander {
     public void ShareRecord(int handID) {
         ic.ShareRecord(handID);
     }
+
+    public void ShareGameRoom(string shareText) {
+        ic.ShareGameRoom(shareText);
+    }
 }
 
 public interface ICommander {
@@ -89,6 +93,7 @@ public interface ICommander {
 	void Audit();
 	void Chat();
     void ShareRecord(int handID);
+    void ShareGameRoom(string shareText);
 }
 
 #if UNITY_ANDROID
@@ -132,6 +137,9 @@ public class AndroidCommander: ICommander {
         getJo().Call("shareGameRecord", handID);
     }
 
+    public void ShareGameRoom(string shareText) {
+        getJo().Call("shareGame", shareText);
+    }
 }
 #endif
 
@@ -158,6 +166,8 @@ public class iOSCommander: ICommander {
 	[DllImport("__Internal")]
 	private static extern void _ex_callShareRoomRecord(int handID);
 
+	[DllImport("__Internal")]
+	private static extern void _ex_callShareRoom(char *text);
 
 	public void Exit() {
 		_ex_callExitGame();
@@ -189,6 +199,10 @@ public class iOSCommander: ICommander {
 
     public void ShareRecord(int handID) {
         _ex_callShareRoomRecord(handID);
+    }
+
+    public void ShareGameRoom(string shareText) {
+        _ex_callShareRoom(shareText);
     }
 }
 #endif
