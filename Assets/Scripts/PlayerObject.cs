@@ -336,17 +336,8 @@ public class PlayerObject : MonoBehaviour {
 		}).AddTo(this);
 		
 		theSeat.SeatPos.Subscribe((pos) => {
-			var trans = Volume.GetComponent<RectTransform>();
-			var v = trans.anchoredPosition;
-			var x = Math.Abs(v.x);
-
-			if (pos == SeatPosition.Right) {
-				trans.anchoredPosition = new Vector2(-x, v.y);	
-				trans.localScale = new Vector2(-1, 1);
-			} else {
-				trans.anchoredPosition = new Vector2(x, v.y);
-				trans.localScale = new Vector2(1, 1);
-			}
+			fixVoicePos(pos);	
+			fixChatPos(pos);
 		}).AddTo(this);
 
 		if (isSelf()) {
@@ -377,6 +368,32 @@ public class PlayerObject : MonoBehaviour {
             var text = N["text"].Value;
             SpkText.ShowMessage(text);
         }).AddTo(this); 
+	}
+
+	private void fixVoicePos(SeatPosition pos) {
+		if (!Volume.activeSelf) {
+			return ;
+		}
+
+		var trans = Volume.GetComponent<RectTransform>();
+		var v = trans.anchoredPosition;
+		var x = Math.Abs(v.x);
+
+		if (pos == SeatPosition.Right) {
+			trans.anchoredPosition = new Vector2(-x, v.y);	
+			trans.localScale = new Vector2(-1, 1);
+		} else {
+			trans.anchoredPosition = new Vector2(x, v.y);
+			trans.localScale = new Vector2(1, 1);
+		}
+	}
+
+	private void fixChatPos(SeatPosition pos) {
+		if (!SpkText.gameObject.activeSelf) {
+			return ;
+		}
+
+		SpkText.ChangePos(pos);
 	}
 
 	private bool isSelf(String jsonStr) {
