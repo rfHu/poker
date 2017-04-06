@@ -7,7 +7,8 @@ using Extensions;
 public enum SeatPosition {
 	Top,
 	Left,
-	Right
+	Right,
+	Bottom
 }
 
 public class Seat : MonoBehaviour {
@@ -43,6 +44,10 @@ public class Seat : MonoBehaviour {
 		
 		if (x <= 0) {
 			return SeatPosition.Left;
+		}
+
+		if (y <= 210) {
+			return SeatPosition.Bottom;
 		}	
 
 		return SeatPosition.Right;
