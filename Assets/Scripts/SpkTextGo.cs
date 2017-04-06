@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
 using System;
-using SimpleJSON;
 
 public class SpkTextGo: MonoBehaviour {
     public Text MessageText;
@@ -30,21 +29,6 @@ public class SpkTextGo: MonoBehaviour {
 
     public void Hide() {
         gameObject.SetActive(false);
-    }
-
-    void Start()
-    {
-        RxSubjects.SendChat.Subscribe((jsonStr) => {
-            var N = JSON.Parse(jsonStr);
-            var text = N["text"].ToString();
-            var uid = N["uid"].ToString();
-
-            if (uid != Uid) {
-                return ;
-            }
-
-            ShowMessage(text);
-        }).AddTo(this); 
     }
 
     void OnDestroy()

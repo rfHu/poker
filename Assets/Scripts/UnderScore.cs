@@ -114,7 +114,7 @@ public class _ {
 
     static public void Log(string text) {
         if (Debug.isDebugBuild) {
-            Debug.Log(text);
+            Debug.Log("Unity3D: " + text);
         }
     }
 }

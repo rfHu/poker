@@ -33,6 +33,7 @@ public class External : MonoBehaviour{
 	}
 
 	public void SendChat(String jsonStr) {
+		_.Log(jsonStr);
 		RxSubjects.SendChat.OnNext(jsonStr);
 	}
 

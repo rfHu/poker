@@ -135,7 +135,6 @@ public class OwnerPanel : MonoBehaviour {
 
     void OnDestroy() 
     {
-        _.Log("1");
         if (isChanged)
         {
             SendRequest();
