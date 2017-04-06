@@ -367,6 +367,7 @@ sealed public class GameData {
             int type = e.Data.Int("type");
             string name = FindAimPlayer(Uid).Name;
             string str = "玩家 " + name + " 被房主强制站起";
+            PokerUI.Toast(str);
         });
 
 		// 倒计时

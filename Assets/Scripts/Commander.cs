@@ -75,6 +75,10 @@ public class Commander {
 	public void Chat() {
 		ic.Chat();
 	}
+
+    public void ShareRecord(int handID) {
+        ic.ShareRecord(handID);
+    }
 }
 
 public interface ICommander {
@@ -84,6 +88,7 @@ public interface ICommander {
 	int Power();
 	void Audit();
 	void Chat();
+    void ShareRecord(int handID);
 }
 
 #if UNITY_ANDROID
@@ -122,6 +127,11 @@ public class AndroidCommander: ICommander {
 	public void Chat() {
 		getJo().Call("openChat");
 	}
+
+    public void ShareRecord(int handID) {
+        getJo().Call("shareGameRecord", handID);
+    }
+
 }
 #endif
 
@@ -145,6 +155,10 @@ public class iOSCommander: ICommander {
 	[DllImport("__Internal")]
 	private static extern void _ex_callGameChatting();
 
+	[DllImport("__Internal")]
+	private static extern void _ex_callShareRoomRecord(int handID);
+
+
 	public void Exit() {
 		_ex_callExitGame();
 	}
@@ -158,11 +172,11 @@ public class iOSCommander: ICommander {
 	}
 
 	public int Power() {
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 			return 50;
-		#else
+#else
 			return _ex_callGetBatteryLevel();
-		#endif
+#endif
 	}
 
 	public void Audit() {
@@ -172,5 +186,9 @@ public class iOSCommander: ICommander {
 	public void Chat() {
 		_ex_callGameChatting();
 	}
+
+    public void ShareRecord(int handID) {
+        _ex_callShareRoomRecord(handID);
+    }
 }
 #endif

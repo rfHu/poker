@@ -1,22 +1,15 @@
 fileFormatVersion: 2
-guid: badc8f5ee9b1b804298a9a3090e4154b
-timeCreated: 1491040257
+guid: 60615eca33a5b754ca21fcf223d155d8
+timeCreated: 1491460855
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Tomato_0
-    21300002: Tomato_1
-    21300004: Tomato_2
-    21300006: Tomato_3
-    21300008: Tomato_4
-    21300010: Tomato_5
-    21300012: Tomato_6
-    21300014: Tomato_7
-    21300016: Tomato_8
-    21300018: Tomato_9
-    21300020: Tomato_10
-    21300022: Tomato_11
-    21300024: Tomato_12
+    21300000: Tomato1_0
+    21300002: Tomato1_1
+    21300004: Tomato1_2
+    21300006: Tomato1_3
+    21300008: Tomato1_4
+    21300010: Tomato1_5
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -115,169 +108,78 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Tomato_0
+      name: Tomato1_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 200
-        height: 200
+        x: 46
+        y: 50
+        width: 106
+        height: 114
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Tomato1_1
+      rect:
+        serializedVersion: 2
+        x: 233
+        y: 50
+        width: 133
+        height: 107
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Tomato1_2
+      rect:
+        serializedVersion: 2
+        x: 465
+        y: 66
+        width: 87
+        height: 76
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Tomato1_3
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 37
+        width: 63
+        height: 98
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Tomato1_4
+      rect:
+        serializedVersion: 2
+        x: 834
+        y: 50
+        width: 133
+        height: 107
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Tomato_1
+      name: Tomato1_5
       rect:
         serializedVersion: 2
-        x: 200
-        y: 0
-        width: 200
-        height: 200
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Tomato_2
-      rect:
-        serializedVersion: 2
-        x: 399
-        y: 0
-        width: 200
-        height: 200
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Tomato_3
-      rect:
-        serializedVersion: 2
-        x: 601
-        y: 0
-        width: 200
-        height: 200
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Tomato_4
-      rect:
-        serializedVersion: 2
-        x: 801
-        y: 0
-        width: 200
-        height: 200
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Tomato_5
-      rect:
-        serializedVersion: 2
-        x: 1001
-        y: 0
-        width: 200
-        height: 200
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Tomato_6
-      rect:
-        serializedVersion: 2
-        x: 1200
-        y: 0
-        width: 200
-        height: 200
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Tomato_7
-      rect:
-        serializedVersion: 2
-        x: 1401
-        y: 0
-        width: 200
-        height: 200
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Tomato_8
-      rect:
-        serializedVersion: 2
-        x: 1601
-        y: 0
-        width: 200
-        height: 200
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Tomato_9
-      rect:
-        serializedVersion: 2
-        x: 1800
-        y: 0
-        width: 200
-        height: 200
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Tomato_10
-      rect:
-        serializedVersion: 2
-        x: 2001
-        y: 0
-        width: 200
-        height: 200
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Tomato_11
-      rect:
-        serializedVersion: 2
-        x: 2200
-        y: 0
-        width: 200
-        height: 200
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Tomato_12
-      rect:
-        serializedVersion: 2
-        x: 2400
-        y: 0
-        width: 200
-        height: 200
+        x: 1033
+        y: 50
+        width: 133
+        height: 107
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}

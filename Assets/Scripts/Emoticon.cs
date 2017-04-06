@@ -35,19 +35,5 @@ public class Emoticon : MonoBehaviour {
         tween.Play();
         _animator.SetTrigger(pid.ToString());
 
-        tween.OnComplete(PlayEmoticon);
     }
-
-    void PlayEmoticon() 
-    {
-        StartCoroutine(DestoryObj());
-    }
-
-        IEnumerator DestoryObj()  
-    {  
-        for(float timer = 2.8f; timer >= 0; timer -= Time.deltaTime)  
-            yield return 0;
-
-        GameObject.Destroy(gameObject);
-    } 
 }

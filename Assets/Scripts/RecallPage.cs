@@ -12,13 +12,20 @@ public class RecallPage : MonoBehaviour {
 	public Text Current;
 	public Text Total;
 	public GameObject UserGo;
+    public Toggle Collect;
 
 	private int totalNumber;
 	private int currentNumber;
+    private string favhand_id;
+    private bool isCollected;
 
 	void Awake()
 	{
-		request();	
+		request();
+
+        Collect.onValueChanged.AddListener(delegate(bool isOn) { 
+            CollectOrCancel(); 
+        });
 	}
 
 	void request(int num = 0) {
@@ -74,6 +81,18 @@ public class RecallPage : MonoBehaviour {
 			user.Show(dict);
 			user.transform.SetParent(Rect.transform, false);
 		}
+
+        if (!string.IsNullOrEmpty(ret.String("favhand_id")))
+        {
+            isCollected = true;
+            Collect.isOn = true;
+            this.favhand_id = ret.String("favhand_id");
+        }
+        else 
+        {
+            isCollected = false;
+            Collect.isOn = false;
+        }
 	}
 
 	public void Up() {
@@ -93,4 +112,57 @@ public class RecallPage : MonoBehaviour {
 		currentNumber--;
 		request(currentNumber);
 	}
+
+    public void CollectOrCancel() 
+    {
+        if (isCollected == Collect.isOn)
+            return;
+        else
+            isCollected = Collect.isOn;
+       
+
+        var dict = new Dictionary<string, object>() { };
+        string f = "";
+
+        if (Collect.isOn)
+        {
+            dict = new Dictionary<string, object>() {
+                {"roomid", GameData.Shared.Room},
+			    {"handid", currentNumber},
+		    };
+
+            f = "fav";
+        }
+        else {
+            dict = new Dictionary<string, object>() {
+                {"favhand_id", favhand_id},
+		    };
+
+            f = "notfav";
+        }
+
+        Connect.Shared.Emit(new Dictionary<string, object>() {
+				{"f", f},
+				{"args", dict}
+			},
+            (json) =>
+            {
+                if (json.Int("err") == 0) {
+                    if (f == "fav")
+                    {
+                        PokerUI.Toast("成功收藏牌局");
+                        var ret = json.Dict("ret");
+                        favhand_id = ret.String("favhand_id");
+                    }
+                    else
+                        PokerUI.Toast("取消收藏牌局");
+                } 
+            }
+        );
+    }
+
+    public void ShareRecord() {
+        Commander.Shared.ShareRecord(currentNumber);
+    }
 }
+
