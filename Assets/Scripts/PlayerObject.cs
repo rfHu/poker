@@ -529,7 +529,7 @@ public class PlayerObject : MonoBehaviour {
 
 	private void foldCards(GameObject go, Action callback = null) {
 		var rectTrans = go.GetComponent<RectTransform>();
-		rectTrans.DOAnchorPos(new Vector2(0, 0), animDuration);
+		rectTrans.DOAnchorPos(new Vector2(0, 200), animDuration);
 		rectTrans.DOScale(new Vector2(0.9f, 0.9f), animDuration);
 
 		var image = go.GetComponent<Image>();
