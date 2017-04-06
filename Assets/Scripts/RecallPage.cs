@@ -12,9 +12,11 @@ public class RecallPage : MonoBehaviour {
 	public Text Current;
 	public Text Total;
 	public GameObject UserGo;
+    public Toggle Collect;
 
 	private int totalNumber;
 	private int currentNumber;
+    private string favhand_id;
 
 	void Awake()
 	{
@@ -74,6 +76,14 @@ public class RecallPage : MonoBehaviour {
 			user.Show(dict);
 			user.transform.SetParent(Rect.transform, false);
 		}
+
+        if (data.String("favhand_id") != null)
+        {
+            Collect.isOn = true;
+            this.favhand_id = data.String("favhand_id");
+        }
+        else
+            Collect.isOn = false;
 	}
 
 	public void Up() {
@@ -93,4 +103,43 @@ public class RecallPage : MonoBehaviour {
 		currentNumber--;
 		request(currentNumber);
 	}
+
+    public void CollectOrCancel() 
+    {
+        var dict = new Dictionary<string, object>() { };
+        string f = "";
+
+        if (Collect.isOn)
+        {
+            dict = new Dictionary<string, object>() {
+                {"roomid", GameData.Shared.Room},
+			    {"handid", currentNumber},
+		    };
+
+            f = "fav";
+        }
+        else {
+            dict = new Dictionary<string, object>() {
+                {"favhand_id", favhand_id},
+		    };
+
+            f = "notfav";
+        }
+
+        Connect.Shared.Emit(new Dictionary<string, object>() {
+				{"f", f},
+				{"args", dict}
+			},
+            (json) =>
+            {
+                if (json.Int("err") == 0) {
+                    if (f == "fav")
+                        PokerUI.Toast("成功收藏牌局");
+                    else
+                        PokerUI.Toast("取消收藏牌局");
+                } 
+            }
+        );
+    }
 }
+
