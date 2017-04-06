@@ -17,10 +17,15 @@ public class RecallPage : MonoBehaviour {
 	private int totalNumber;
 	private int currentNumber;
     private string favhand_id;
+    private bool isCollected;
 
 	void Awake()
 	{
-		request();	
+		request();
+
+        Collect.onValueChanged.AddListener(delegate(bool isOn) { 
+            CollectOrCancel(); 
+        });
 	}
 
 	void request(int num = 0) {
@@ -77,13 +82,17 @@ public class RecallPage : MonoBehaviour {
 			user.transform.SetParent(Rect.transform, false);
 		}
 
-        if (data.String("favhand_id") != null)
+        if (!string.IsNullOrEmpty(ret.String("favhand_id")))
         {
+            isCollected = true;
             Collect.isOn = true;
-            this.favhand_id = data.String("favhand_id");
+            this.favhand_id = ret.String("favhand_id");
         }
-        else
+        else 
+        {
+            isCollected = false;
             Collect.isOn = false;
+        }
 	}
 
 	public void Up() {
@@ -106,6 +115,12 @@ public class RecallPage : MonoBehaviour {
 
     public void CollectOrCancel() 
     {
+        if (isCollected == Collect.isOn)
+            return;
+        else
+            isCollected = Collect.isOn;
+       
+
         var dict = new Dictionary<string, object>() { };
         string f = "";
 
@@ -134,12 +149,20 @@ public class RecallPage : MonoBehaviour {
             {
                 if (json.Int("err") == 0) {
                     if (f == "fav")
+                    {
                         PokerUI.Toast("成功收藏牌局");
+                        var ret = json.Dict("ret");
+                        favhand_id = ret.String("favhand_id");
+                    }
                     else
                         PokerUI.Toast("取消收藏牌局");
                 } 
             }
         );
+    }
+
+    public void ShareRecord() {
+        Commander.Shared.ShareRecord(currentNumber);
     }
 }
 

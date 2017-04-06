@@ -1,23 +1,23 @@
 fileFormatVersion: 2
-guid: 197b5d441deceab4d83b89f022cb90cf
-timeCreated: 1490842720
+guid: 0feae70b3c7d6ee4aa82a0d295d0959c
+timeCreated: 1491446966
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Flower_0
-    21300002: Flower_1
-    21300004: Flower_2
-    21300006: Flower_3
-    21300008: Flower_4
-    21300010: Flower_5
-    21300012: Flower_6
-    21300014: Flower_7
-    21300016: Flower_8
-    21300018: Flower_9
-    21300020: Flower_10
-    21300022: Flower_11
-    21300024: Flower_12
-    21300026: Flower_13
+    21300000: flower_0
+    21300002: flower_1
+    21300004: flower_2
+    21300006: flower_3
+    21300008: flower_4
+    21300010: flower_5
+    21300012: flower_6
+    21300014: Flower1_0
+    21300016: Flower1_1
+    21300018: Flower1_2
+    21300020: Flower1_3
+    21300022: Flower1_4
+    21300024: Flower1_5
+    21300026: Flower1_6
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -116,7 +116,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Flower_0
+      name: Flower1_0
       rect:
         serializedVersion: 2
         x: 0
@@ -124,12 +124,12 @@ TextureImporter:
         width: 200
         height: 200
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Flower_1
+      name: Flower1_1
       rect:
         serializedVersion: 2
         x: 200
@@ -137,12 +137,12 @@ TextureImporter:
         width: 200
         height: 200
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Flower_2
+      name: Flower1_2
       rect:
         serializedVersion: 2
         x: 400
@@ -155,7 +155,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Flower_3
+      name: Flower1_3
       rect:
         serializedVersion: 2
         x: 600
@@ -168,7 +168,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Flower_4
+      name: Flower1_4
       rect:
         serializedVersion: 2
         x: 800
@@ -181,7 +181,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Flower_5
+      name: Flower1_5
       rect:
         serializedVersion: 2
         x: 1000
@@ -194,101 +194,10 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Flower_6
+      name: Flower1_6
       rect:
         serializedVersion: 2
         x: 1200
-        y: 0
-        width: 200
-        height: 200
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Flower_7
-      rect:
-        serializedVersion: 2
-        x: 1400
-        y: 0
-        width: 200
-        height: 200
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Flower_8
-      rect:
-        serializedVersion: 2
-        x: 1600
-        y: 0
-        width: 200
-        height: 200
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Flower_9
-      rect:
-        serializedVersion: 2
-        x: 1800
-        y: 0
-        width: 200
-        height: 200
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Flower_10
-      rect:
-        serializedVersion: 2
-        x: 2000
-        y: 0
-        width: 200
-        height: 200
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Flower_11
-      rect:
-        serializedVersion: 2
-        x: 2200
-        y: 0
-        width: 200
-        height: 200
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Flower_12
-      rect:
-        serializedVersion: 2
-        x: 2400
-        y: 0
-        width: 200
-        height: 200
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Flower_13
-      rect:
-        serializedVersion: 2
-        x: 2600
         y: 0
         width: 200
         height: 200
