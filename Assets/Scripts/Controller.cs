@@ -6,7 +6,6 @@ using System.Linq;
 using UniRx;
 using Extensions;
 using DarkTonic.MasterAudio;
-using MaterialUI;
 using SimpleJSON;
 
 public class Controller : MonoBehaviour {
@@ -386,6 +385,27 @@ public class Controller : MonoBehaviour {
             var em = (GameObject)GameObject.Instantiate(Resources.Load("Prefab/Emoticon"));
             em.GetComponent<Emoticon>().Init(fromSeat, toSeat, pid);
         }).AddTo(this);
+
+		RxSubjects.ShowAudio.Where(isGuest).Subscribe((json) => {
+			var N = JSON.Parse(json);
+			var name = N["name"].Value;
+			PokerUI.Toast(String.Format("{0}发送了一段语音", name));
+		}).AddTo(this);
+
+		RxSubjects.SendChat.Where(isGuest).Subscribe((json) => {
+			var N = JSON.Parse(json);
+			var name = N["name"].Value;
+			var text = N["text"].Value;
+
+			PokerUI.Toast(String.Format("{0}: {1}", name, text));
+		}).AddTo(this);
+	}
+
+	private bool isGuest(string json) {
+		var N = JSON.Parse(json);
+		var uid = N["uid"].Value;
+
+		return GameData.Shared.FindPlayerIndex(uid) == -1;
 	}
 
 	private Card getCardFrom(int index) {

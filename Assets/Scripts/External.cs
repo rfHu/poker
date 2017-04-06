@@ -36,12 +36,12 @@ public class External : MonoBehaviour{
 		RxSubjects.SendChat.OnNext(jsonStr);
 	}
 
-	public void ShowAudio(String uid) {
-		RxSubjects.ShowAudio.OnNext(uid);
+	public void ShowAudio(String jsonStr) {
+		RxSubjects.ShowAudio.OnNext(jsonStr);
 	}
 
-	public void HideAudio(String uid) {
-		RxSubjects.HideAudio.OnNext(uid);
+	public void HideAudio(String jsonStr) {
+		RxSubjects.HideAudio.OnNext(jsonStr);
 	}
 
 	public void ExitCb(Action callback) {

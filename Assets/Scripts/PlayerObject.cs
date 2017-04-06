@@ -364,28 +364,25 @@ public class PlayerObject : MonoBehaviour {
             }).AddTo(this);
 		}
 
-		RxSubjects.ShowAudio.Subscribe((uid) => {
+		RxSubjects.ShowAudio.Where(isSelf).Subscribe((jsonStr) => {
 			Volume.SetActive(true);
 		}).AddTo(this);
 
-		RxSubjects.HideAudio.Subscribe((uid) => {
+		RxSubjects.HideAudio.Where(isSelf).Subscribe((uid) => {
 			Volume.SetActive(false);
 		}).AddTo(this);
 
-		RxSubjects.SendChat.Subscribe((jsonStr) => {
+		RxSubjects.SendChat.Where(isSelf).Subscribe((jsonStr) => {
             var N = JSON.Parse(jsonStr);
             var text = N["text"].Value;
-            var uid = N["uid"].Value;
-            
-			_.Log(jsonStr + "\n" + "当前Uid: " + Uid);
-			_.Log("收到的Uid: " + uid);
-
-            if (uid != Uid) {
-                return ;
-            }
-
             SpkText.ShowMessage(text);
         }).AddTo(this); 
+	}
+
+	private bool isSelf(String jsonStr) {
+		var N = JSON.Parse(jsonStr);
+		var uid = N["uid"].Value;
+		return uid == Uid;
 	}
 
 	private bool isPersisState() {

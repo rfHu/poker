@@ -570,6 +570,16 @@ sealed public class GameData {
 		return new Player();
 	}
 
+	public int FindPlayerIndex(string uid) {
+		for (var i = 0; i < Players.Count; i++) {
+			if (Players[i].Uid == uid) {
+				return i;
+			}
+		}
+
+		return -1;	
+	}
+
 	public Player GetMyPlayer() {
 		foreach(var player in Players) {
 			if (player.Value.Uid == Uid) {

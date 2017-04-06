@@ -49,7 +49,7 @@ public class PokerUI: MonoBehaviour {
 		return DisAlert("登录已过期，请重新登录");
 	}
 
-	static public void Toast(string msg) {
-		ToastManager.Show(msg, 2f, _.HexColor("#212932"), new Color(1, 1, 1, 1), 26, null);	
+	static public void Toast(string msg, float seconds = 2) {
+		ToastManager.Show(msg, seconds, _.HexColor("#212932"), new Color(1, 1, 1, 1), 26, null);	
 	}
 }
