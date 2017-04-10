@@ -49,7 +49,7 @@ public class OP : MonoBehaviour {
 		hideModal();
 	}
 	
-	public void StartWithCmds(Dictionary<string, object> data, int elaspe, Action onOnlyAllin) {
+	public void StartWithCmds(Dictionary<string, object> data, int elaspe) {
         var cmds = data.Dict("cmds");
 		var check = cmds.Bool("check");
 		var callNum = cmds.Int("call");
