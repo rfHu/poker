@@ -378,16 +378,6 @@ sealed public class GameData {
 			LeftTime.Value = value;
 		});
 	}
-
-	public Player FindPlayer(string uid) {
-		foreach (var player in Players) {
-			if (player.Value.Uid == uid) {
-				return player.Value;
-			}
-		}
-
-		return null;
-	}
    
 	private void setPbCards(List<int> list, int state) {
 		if (list.Count <= 0) {
@@ -429,6 +419,10 @@ sealed public class GameData {
 
 	public int MySeat {
 		get {
+			if (string.IsNullOrEmpty(Uid)) {
+				return -1;
+			}
+
 			return FindPlayerIndex(Uid);
 		}
 	}
@@ -563,26 +557,30 @@ sealed public class GameData {
 		return new Player();
 	}
 
-	public int FindPlayerIndex(string uid) {
-		for (var i = 0; i < Players.Count; i++) {
-			if (Players[i].Uid == uid) {
-				return i;
-			}
-		}
-
-		return -1;	
+	public Player GetMyPlayer() {
+		return FindPlayer(GameData.Shared.Uid);	
 	}
 
-	public Player GetMyPlayer() {
-		foreach(var player in Players) {
-			if (player.Value.Uid == Uid) {
+	public Player FindPlayer(string uid) {
+		foreach (var player in Players) {
+			if (player.Value.Uid == uid) {
 				return player.Value;
 			}
 		}
 
-		return null;
+		return new Player();
 	}
 
+	public int FindPlayerIndex(string uid) {
+		foreach(var player in Players) {
+			if (player.Value.Uid == Uid) {
+				return player.Value.Index;
+			}
+		}
+
+		return -1;
+	}
+	
 	public ReactiveCollection<int> PublicCards = new ReactiveCollection<int>();
 
 	public class MyCmd {
