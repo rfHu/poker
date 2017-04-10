@@ -361,7 +361,6 @@ sealed public class GameData {
         RxSubjects.StandUp.Subscribe((e) =>
         {
             string Uid = e.Data.String("uid");
-            int type = e.Data.Int("type");
             string name = FindPlayer(Uid).Name;
             string str = "玩家 " + name + " 被房主强制站起";
             PokerUI.Toast(str);

@@ -77,6 +77,8 @@ public class RecallUser : MonoBehaviour {
 	}
 
 	void ShowAvatar(string url) {
-		_.DownloadImage(Avatar, url);
+		StartCoroutine(_.LoadImage(url, (texture) => {
+			Avatar.texture = _.Circular(texture);
+		}));
 	}
 }

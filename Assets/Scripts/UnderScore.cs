@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System;
 using UnityEngine.UI;
+using System.Collections;
+using System.IO;
 
 public class _ {
     static public Texture2D Circular(Texture2D sourceTex)
@@ -44,15 +46,19 @@ public class _ {
         return t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Dictionary<,>);
     }
 
-    static  public void DownloadImage(RawImage img, string url) {
-        var options =  new LLOptions().setOnLoad((Texture2D texture) => {
-            if (img == null) {
-                return ;
-            }
-            img.texture = Circular(texture);
-        }).setUseCache(true).setCacheLife(60 * 60 * 24 * 30);
-        LeanLoader.load(url, options);
-	}
+    static public IEnumerator<WWW> LoadImage(string url, Action<Texture2D> cb) {
+        var uri = new Uri(url);
+        var filename = "images/" + Path.GetFileName(uri.LocalPath);
+
+        if (ES2.Exists(filename)) {
+            cb(ES2.Load<Texture2D>(filename));
+        } else {
+            var www  = new WWW(url);
+            yield return www;
+            cb(www.texture);
+            ES2.Save(www.texture, filename);
+        }
+    }
 
     static public string Num2Text<T>(T num) {
         var value = Convert.ToDouble(num);

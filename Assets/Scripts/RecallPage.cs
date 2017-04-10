@@ -59,16 +59,21 @@ public class RecallPage : MonoBehaviour {
 		Rect.transform.Clear();
 
 		var comCards = ret.Dict("community").IL("cards");
-
+		
 		// 公共牌
-		foreach(int num in comCards) {
+		for (int i = 0; i < 5; i++) {
 			var go = (GameObject)Instantiate(Resources.Load("Prefab/Card"));
 			var card = go.GetComponent<Card>();
-			card.SetSize(new Vector2(68, 98));
-			card.Show(num);
-			go.transform.SetParent(Cards.transform, false);
-		}
+			card.SetSize(new Vector2(58, 83));
 
+			if (i < comCards.Count) {
+				card.Show(comCards[i]);
+			}
+ 			
+			go.transform.SetParent(Cards.transform, false);
+
+		}
+		
 		var list = ret.List("list");
 		foreach(object entry in list) {
 			var dict = entry as Dictionary<string, object>;
