@@ -118,6 +118,7 @@ sealed public class GameData {
 		});
 
 		RxSubjects.Started.AsObservable().Subscribe((e) => {
+			GameStarted = true;
 			LeftTime.Value = e.Data.Int("left_time");
 			Paused.Value = false; 
 		});
