@@ -299,7 +299,7 @@ public sealed class Connect  {
 					RxSubjects.Raise.OnNext(rxdata);
 					break;
 				case "bye":
-					RxSubjects.Exclusion.OnNext(rxdata);
+					RxSubjects.Bye.OnNext(rxdata);
 					break;
 				case "gameover":
 					RxSubjects.GameOver.OnNext(rxdata);
