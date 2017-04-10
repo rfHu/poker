@@ -23,9 +23,9 @@ public class OwnerPanel : MonoBehaviour {
 	private string pauseStr = "暂停牌局";
 	private string continueStr = "继续牌局";
 
-    private List<int> bankroll_multiple; //修改后的倍数区间，后面一个必须大于等于前面一个
-    private int time_limit;              //延迟时间【增加】的秒数，必须是60的整数倍
-    private int ante;                    //底注 必须是整数 必须小于等于大盲 大于等于0
+    private List<int> bankroll_multiple;
+    private int time_limit;
+    private int ante;
     private bool isChanged;
 
     public void SetIsChanged()

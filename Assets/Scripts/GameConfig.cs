@@ -125,7 +125,8 @@ sealed public class GameData {
 		RxSubjects.UnSeat.AsObservable().Subscribe((e) => {
 			var index = e.Data.Int("where");
 			GameData.Shared.Players.Remove(index);
-            GameData.Shared.MySeat = -1;
+            if (e.Data.String("uid") == GameData.Shared.Uid)
+                GameData.Shared.MySeat = -1;
 		});
 
 		RxSubjects.GameStart.AsObservable().Subscribe((e) => {
