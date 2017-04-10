@@ -311,44 +311,43 @@ sealed public class GameData {
 
             var data = e.Data;
 
+            var str = "";
+
             foreach (var item in e.Data)
 	        {
                 switch (item.Key) 
                 {
                     case "bankroll_multiple":
                         BankrollMul = data.IL("bankroll_multiple");
-                        var str = "房主将记分牌带入倍数改为：" + GameData.Shared.BankrollMul[0] + "-" + GameData.Shared.BankrollMul[1]; 
-						PokerUI.Toast(str);
+                        str += "房主将记分牌带入倍数改为：" + GameData.Shared.BankrollMul[0] + "-" + GameData.Shared.BankrollMul[1]; 
                         break;
 
                     case "time_limit": 
-                        Duration = data.Long("time_limit");
-                        str = "房主将牌局延长了" + (int)GameData.Shared.Duration / 3600f + "小时";
-						PokerUI.Toast(str);
+                        Duration += data.Long("time_limit");
+                        LeftTime.Value += data.Long("time_limit");
+                        str += "房主将牌局延长了" + data.Long("time_limit") / 3600f + "小时";
                         break;
 
                     case "ante":
                         Ante = data.Int("ante");
-                        str = "房主将底注改为：" + GameData.Shared.Ante; 
-						PokerUI.Toast(str);
+                        str += "房主将底注改为：" + GameData.Shared.Ante; 
                         break;
 
                     case "need_audit":
                         NeedAudit = data.Int("need_audit") == 1;
-                        str = GameData.Shared.NeedAudit? "房主开启了授权带入" : "房主关闭了授权带入";
-						PokerUI.Toast(str);
+                        str += GameData.Shared.NeedAudit? "房主开启了授权带入" : "房主关闭了授权带入";
                         break;
 
                     case "straddle":
                         Straddle = data.Int("straddle") != 0;
-                        str = GameData.Shared.Straddle ? "房主开启了Straddle" : "房主关闭了Straddle"; 
-            			PokerUI.Toast(str);
+                        str += GameData.Shared.Straddle ? "房主开启了Straddle" : "房主关闭了Straddle"; 
 						break;
 
                     default:
                         break;
                 }
-	        }
+            }
+            PokerUI.Toast(str);
         });
 
         RxSubjects.KickOut.Subscribe((e) =>{

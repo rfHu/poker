@@ -88,16 +88,19 @@ public class UIManager : MonoBehaviour {
     {
         string str = "";
         str += "\"" + GameData.Shared.Name + "\"邀请您加入\"" + GameData.Shared.RoomName + "\"";
-        str += "，邀请码【" + GameData.Shared.GameCode + "】";
-        str += "，盲注【";
+
+        if (!string.IsNullOrEmpty(GameData.Shared.GameCode))
+            str += "，邀请码[" + GameData.Shared.GameCode + "]";
+        
+        str += "，盲注[";
 
         if (GameData.Shared.Straddle)
             str += GameData.Shared.SB/2 + "/";
 
-        str += GameData.Shared.SB + "/" + GameData.Shared.BB + "】";
+        str += GameData.Shared.SB + "/" + GameData.Shared.BB + "]";
 
         if (GameData.Shared.Ante >0)
-            str += "，底注【" + GameData.Shared.Ante + "】";
+            str += "，底注[" + GameData.Shared.Ante + "]";
         
         str += "。一键约局，与好友畅享德州扑克的乐趣。";
         return str;
