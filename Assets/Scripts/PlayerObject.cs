@@ -371,9 +371,9 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	private void fixVoicePos(SeatPosition pos) {
-		if (!Volume.activeSelf) {
-			return ;
-		}
+		// if (!Volume.activeSelf) {
+		// 	return ;
+		// }
 
 		var trans = Volume.GetComponent<RectTransform>();
 		var v = trans.anchoredPosition;
@@ -389,9 +389,9 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	private void fixChatPos(SeatPosition pos) {
-		if (!SpkText.gameObject.activeSelf) {
-			return ;
-		}
+		// if (!SpkText.gameObject.activeSelf) {
+		// 	return ;
+		// }
 
 		SpkText.ChangePos(pos);
 	}
