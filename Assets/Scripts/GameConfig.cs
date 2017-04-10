@@ -108,9 +108,6 @@ sealed public class GameData {
 			var player = new Player(playerInfo, index);
 
 			GameData.Shared.Players[index] = player;
-
-            if (e.Data.String("uid") == GameData.Shared.Uid)
-                GameData.Shared.MySeat = index;
 		});
 
 		RxSubjects.Paused.AsObservable().Subscribe((e) => {
@@ -126,8 +123,6 @@ sealed public class GameData {
 		RxSubjects.UnSeat.AsObservable().Subscribe((e) => {
 			var index = e.Data.Int("where");
 			GameData.Shared.Players.Remove(index);
-            if (e.Data.String("uid") == GameData.Shared.Uid)
-                GameData.Shared.MySeat = -1;
 		});
 
 		RxSubjects.GameStart.AsObservable().Subscribe((e) => {
@@ -358,7 +353,7 @@ sealed public class GameData {
 
         RxSubjects.KickOut.Subscribe((e) =>{
             string Uid = e.Data.String("uid");
-            string name = FindAimPlayer(Uid).Name;
+            string name = FindPlayer(Uid).Name;
             string str = "玩家 " + name + " 被房主请出房间";
             PokerUI.Toast(str);
         });
@@ -367,7 +362,7 @@ sealed public class GameData {
         {
             string Uid = e.Data.String("uid");
             int type = e.Data.Int("type");
-            string name = FindAimPlayer(Uid).Name;
+            string name = FindPlayer(Uid).Name;
             string str = "玩家 " + name + " 被房主强制站起";
             PokerUI.Toast(str);
         });
@@ -384,28 +379,16 @@ sealed public class GameData {
 		});
 	}
 
-	public Player FindMyPlayer() {
+	public Player FindPlayer(string uid) {
 		foreach (var player in Players) {
-			if (player.Value.Uid == Uid) {
+			if (player.Value.Uid == uid) {
 				return player.Value;
 			}
 		}
 
 		return null;
 	}
-
-    public Player FindAimPlayer(string Uid) {
-        foreach (var player in Players) 
-        {
-            if (player.Value.Uid == Uid)
-            {
-                return player.Value;
-            }
-        }
-
-        return null;
-    }
-
+   
 	private void setPbCards(List<int> list, int state) {
 		if (list.Count <= 0) {
 			return ;
@@ -443,7 +426,13 @@ sealed public class GameData {
 	public string Name = ""; 
 	public string Avatar = "";
 	public string Room;
-	public int MySeat = -1;
+
+	public int MySeat {
+		get {
+			return FindPlayerIndex(Uid);
+		}
+	}
+
 	public int Ante = 0;
 	public int Coins = 0;
 	public int SB = 0;
@@ -513,7 +502,6 @@ sealed public class GameData {
 		PrPot.Value = Pot.Value - json.Int("pr_pot");
 		InGame = json.Bool("is_ingame");
 		MaxFiveRank.Value = json.Int("maxFiveRank");
-		MySeat = json.Int("my_seat");
 		LeftTime.Value = json.Long("left_time");
 
 		// ReactiveProperty 对同样的值不会触发onNext，所以这里强制执行一次
@@ -553,9 +541,11 @@ sealed public class GameData {
 			Players[index] = player;
 		}
 
-		if (MySeat != -1 && Players.ContainsKey(MySeat)) {
-			AuditCD.Value = Players[MySeat].AuditCD;
-			Coins = Players[MySeat].Coins;
+		var mySeat = MySeat;
+
+		if (mySeat != -1 && Players.ContainsKey(mySeat)) {
+			AuditCD.Value = Players[mySeat].AuditCD;
+			Coins = Players[mySeat].Coins;
 		} else {
 			AuditCD.Value = 0;
 		}
