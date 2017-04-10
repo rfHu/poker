@@ -31,7 +31,7 @@ public class RxSubjects {
 	public static Subject<RxData> GameOver = new Subject<RxData>();
 	public static Subject<RxData> Paused = new Subject<RxData>();
 	public static Subject<RxData> Started = new Subject<RxData>();
-	public static Subject<RxData> Exclusion = new Subject<RxData>(); // 登陆互斥
+	public static Subject<RxData> Bye = new Subject<RxData>(); // 登陆互斥
 	public static Subject<RxData> GameEnd = new Subject<RxData>();
 	public static Subject<RxData> Audit = new Subject<RxData>();
 	public static Subject<RxData> UnAuditCD = new Subject<RxData>();

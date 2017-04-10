@@ -74,13 +74,17 @@ public class UIManager : MonoBehaviour {
 			});
 		}).AddTo(this);
 
-		RxSubjects.Exclusion.Subscribe((e) => {
+		RxSubjects.Bye.Subscribe((e) => {
 			var type = e.Data.Int("type");
 		
 			if (type == 2)
             {
 				PokerUI.ConflictAlert();
             }
+
+			if (type == 3) {
+				PokerUI.DisAlert("您已被房主踢出牌局");
+			}
 		}).AddTo(this);
 	}
 

@@ -571,7 +571,7 @@ sealed public class GameData {
 
 	public int FindPlayerIndex(string uid) {
 		foreach(var player in Players) {
-			if (player.Value.Uid == Uid) {
+			if (player.Value.Uid == uid) {
 				return player.Value.Index;
 			}
 		}
