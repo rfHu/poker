@@ -64,7 +64,7 @@ public class UIManager : MonoBehaviour {
             obj.GetComponent<DOPopup>().Show(() => {
 				var player = GameData.Shared.GetMyPlayer();
 
-				if (player == null || player.Bankroll.Value > 0) {
+				if (player.Index == -1 || player.Bankroll.Value > 0) {
 					return ;
 				}
 
