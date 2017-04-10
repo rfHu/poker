@@ -366,6 +366,7 @@ public class Controller : MonoBehaviour {
             int fromSeatIndex = e.Data.Int("seat");
             int toSeatIndex = e.Data.Int("toseat");
             int pid = e.Data.Int("pid");
+            bool isToMe = false;
 
             var fromSeat = Seats[0]; 
             var toSeat = Seats[0];
@@ -373,17 +374,19 @@ public class Controller : MonoBehaviour {
             foreach (var seat in Seats)
             {
                 if (seat.GetComponent<Seat>().Index == fromSeatIndex)
-                {
                     fromSeat = seat;
-                }
-
+                
                 if (seat.GetComponent<Seat>().Index == toSeatIndex)
                 {
                     toSeat = seat;
+
+                    if (toSeatIndex == 0)
+                        isToMe = true;
                 }
             }
+
             var em = (GameObject)GameObject.Instantiate(Resources.Load("Prefab/Emoticon"));
-            em.GetComponent<Emoticon>().Init(fromSeat, toSeat, pid);
+            em.GetComponent<Emoticon>().Init(fromSeat, toSeat, pid, isToMe);
         }).AddTo(this);
 
 		RxSubjects.ShowAudio.Where(isGuest).Subscribe((json) => {
