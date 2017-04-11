@@ -2,6 +2,7 @@
 using Extensions;
 using UniRx;
 using System.Collections.Generic;
+using HedgehogTeam.EasyTouch;
 
 public class UIManager : MonoBehaviour {
 	private GameObject auditMsg;
