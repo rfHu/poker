@@ -56,7 +56,6 @@ public class OwnerPanel : MonoBehaviour {
         ExtendTimeSlider.value = 0;
         time_limit = 0;
 
-        _.Log("1");
         AnteSliderInit();
 
         ETSliderNum.text = "0h";
@@ -186,13 +185,13 @@ public class OwnerPanel : MonoBehaviour {
             ETSliderNum.text = (ExtendTimeSlider.value - 1).ToString() + "h";
     }
 
-    void OnDestroy() 
-    {
-        if (isChanged)
-        {
-            SendRequest();
-        }
-    }
+    // void OnDestroy() 
+    // {
+    //     if (isChanged)
+    //     {
+    //         SendRequest();
+    //     }
+    // }
 
     private void SendRequest()
     {

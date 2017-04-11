@@ -15,6 +15,25 @@ public class UIManager : MonoBehaviour {
 		menuPopup.Show();	
 	}
 
+	public void OnSwipe(Gesture gesture) {
+		var go = gesture.pickedUIElement;
+		var cvs = go.GetComponentInParent<Canvas>();
+
+		if (cvs == null) {
+			return ;
+		}
+
+		if (cvs.gameObject.tag != "UICanvas") {
+			return ;
+		}
+		
+		if (gesture.swipe == EasyTouch.SwipeDirection.Left) {
+			OnShowRecalls();
+		} else if (gesture.swipe == EasyTouch.SwipeDirection.Right) {
+			ScorePage();
+		}
+	}
+
 	public void ScorePage() {
 		var score = (GameObject)Instantiate(Resources.Load("Prefab/ScorePage"));
 		score.GetComponent<DOPopup>().Show();	
