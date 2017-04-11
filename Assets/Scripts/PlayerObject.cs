@@ -336,6 +336,7 @@ public class PlayerObject : MonoBehaviour {
 		}).AddTo(this);
 		
 		theSeat.SeatPos.Subscribe((pos) => {
+			// _.Log(pos.ToString());
 			fixVoicePos(pos);	
 			fixChatPos(pos);
 		}).AddTo(this);

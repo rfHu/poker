@@ -6,6 +6,8 @@ using Extensions;
 
 public enum SeatPosition {
 	Top,
+	TopLeft,
+	TopRight,
 	Left,
 	Right,
 	Bottom
@@ -39,18 +41,26 @@ public class Seat : MonoBehaviour {
 
 		// y轴距顶部不超过210，则认为是顶部
 		if (h - y < 210) {
+			if (x < 0) {
+				return SeatPosition.TopLeft;
+			}
+
+			if (x > 0) {
+				return SeatPosition.TopRight;
+			}
+
 			return SeatPosition.Top;
 		}
 		
-		if (x <= 0) {
+		if (x < 0) {
 			return SeatPosition.Left;
 		}
 
-		if (y <= 210) {
-			return SeatPosition.Bottom;
-		}	
+		if (x > 0) {
+			return SeatPosition.Right;
+		}
 
-		return SeatPosition.Right;
+		return SeatPosition.Bottom;
 	}
 
 	public void ChgPos(Vector2 vector) {

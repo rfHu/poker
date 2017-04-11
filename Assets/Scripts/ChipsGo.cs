@@ -81,7 +81,7 @@ public class ChipsGo : MonoBehaviour {
 
 		if (pos == SeatPosition.Right) {
 			vector = new Vector2(-80, 0);
-		} else if (pos == SeatPosition.Top) {
+		} else if (pos == SeatPosition.Top || pos == SeatPosition.TopLeft || pos == SeatPosition.TopRight) {
 			vector = new Vector2(0, -120);
 		}
 
