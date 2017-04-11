@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Extensions;
+using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
-using Extensions;
-using UniRx;
 
 [RequireComponent(typeof(DOPopup))]
 public class OwnerPanel : MonoBehaviour {
@@ -15,6 +15,8 @@ public class OwnerPanel : MonoBehaviour {
     public Toggle Need_auditToggle;
     public Toggle StraddleToggle;
 
+    public GameObject AnteScriptNum;
+    public Transform AnteSuperscript;
     public Text LMSliderNum;
     public Text SMSliderNum;
     public Text ETSliderNum;
@@ -23,9 +25,12 @@ public class OwnerPanel : MonoBehaviour {
 	private string pauseStr = "暂停牌局";
 	private string continueStr = "继续牌局";
 
+    
+    private List<int> AnteSuperScriptNums;
     private List<int> bankroll_multiple;
     private int time_limit;
     private int ante;
+
     private bool isChanged;
 
     public void SetIsChanged()
@@ -51,7 +56,8 @@ public class OwnerPanel : MonoBehaviour {
         ExtendTimeSlider.value = 0;
         time_limit = 0;
 
-        AnteSlider.value = GameData.Shared.Ante/2;
+        _.Log("1");
+        AnteSliderInit();
 
         ETSliderNum.text = "0h";
 
@@ -60,6 +66,58 @@ public class OwnerPanel : MonoBehaviour {
 
         isChanged = false;
 	}
+
+    private void AnteSliderInit()
+    {
+        
+        int[] anteNums = {1,2,5,10,25,50,100};
+        int[] BBNums = { 2, 4, 10, 20, 50, 100, 200 };
+
+        int BBsub = 0;
+        for (; BBsub < BBNums.Length; BBsub++)
+        {
+            if (BBNums[BBsub] == GameData.Shared.BB) 
+            {
+                if (BBsub == 0)
+                {
+                    AnteSlider.maxValue = 2;
+                    AnteSuperscript.GetComponent<RectTransform>().sizeDelta = new Vector2(653, 28);
+                }
+                else if (BBsub == 1)
+                {
+                    AnteSuperscript.GetComponent<RectTransform>().sizeDelta = new Vector2(588, 28);
+                    AnteSlider.maxValue = 3;
+                }
+                else
+                    AnteSlider.maxValue = 4;
+                break;
+            }
+        }
+        AnteSuperScriptNums = new List<int>();
+        AnteSuperScriptNums.Add(0);
+        int i = BBsub - 3;
+        if (i < 0)
+            i = 0;
+
+        for (; i <= BBsub; i++)
+            AnteSuperScriptNums.Add(anteNums[i]);
+
+        AnteSuperScriptNums.Add(GameData.Shared.BB);
+
+        for (int j = 0; j < AnteSuperScriptNums.Count; j++)
+        {
+            GameObject text = Instantiate(AnteScriptNum);
+            text.GetComponent<Text>().text = "" + AnteSuperScriptNums[j];
+            text.transform.SetParent(AnteSuperscript,false);
+            text.SetActive(true);
+
+            if (AnteSuperScriptNums[j] == GameData.Shared.Ante)
+            {
+                ASliderNum.text = AnteSuperScriptNums[j].ToString();
+                AnteSlider.value = j;
+            }
+        }
+    }
 
 	public void Stop() {
 		GetComponent<DOPopup>().Close();
@@ -115,12 +173,7 @@ public class OwnerPanel : MonoBehaviour {
 
     public void AnteSliderChanged() 
     {
-        if (AnteSlider.value * 2 >= GameData.Shared.BB)
-        {
-            AnteSlider.value = GameData.Shared.BB / 2;
-        }
-
-        ASliderNum.text = (AnteSlider.value*2).ToString();
+        ASliderNum.text = "" + AnteSuperScriptNums[(int)AnteSlider.value];
     }
 
     public void ETSliderChanged() 
@@ -166,9 +219,9 @@ public class OwnerPanel : MonoBehaviour {
             isChange = true;
         }
 
-        if ((int)AnteSlider.value*2 != GameData.Shared.Ante)
+        if (AnteSuperScriptNums[(int)AnteSlider.value] != GameData.Shared.Ante)
         {
-            ante = (int)AnteSlider.value * 2;
+            ante = AnteSuperScriptNums[(int)AnteSlider.value];
             dict.Add("ante", ante);
             isChange = true;
         }
