@@ -1,0 +1,9 @@
+diff a/Assets/Scripts/GameConfig.cs b/Assets/Scripts/GameConfig.cs	(rejected hunks)
+@@ -319,7 +319,6 @@
+                 {
+                     case "bankroll_multiple":
+                         BankrollMul = data.IL("bankroll_multiple");
+-                        str += "房主将记分牌带入倍数改为：" + GameData.Shared.BankrollMul[0] + "-" + GameData.Shared.BankrollMul[1]; 
+                         str += "房主将记分牌带入倍数改为：" + GameData.Shared.BankrollMul[0] + "-" + GameData.Shared.BankrollMul[1] + "\n"; 
+                         break;
+ 
