@@ -31,15 +31,24 @@ public class SpkTextGo: MonoBehaviour {
     }
 
     public void ChangePos(SeatPosition pos) {
-        Vector2 vector = new Vector2(0, 0);
-        
-        if (pos == SeatPosition.Right) {
-            vector = new Vector2(-80, 0);
-        } else if (pos == SeatPosition.Left) {
-            vector = new Vector2(80, 0);
-        } 
+        // Vector2 vector = new Vector2(0, 0);
+        var rt = GetComponent<RectTransform>();
+        var trt = TextCont.GetComponent<RectTransform>(); 
 
-        GetComponent<RectTransform>().anchoredPosition = vector;
+        if (pos == SeatPosition.Bottom) {
+            rt.anchoredPosition = new Vector2(0, -80);
+            trt.anchoredPosition = new Vector2(0, 0);
+        }  else if (pos == SeatPosition.Right) {
+            rt.anchoredPosition = new Vector2(0, 110);
+            trt.anchoredPosition = new Vector2(-80, 0);
+        } else if (pos == SeatPosition.Left) {
+            rt.anchoredPosition = new Vector2(0, 110); 
+            trt.anchoredPosition = new Vector2(80, 0);
+        } else if (pos == SeatPosition.Top) {
+            rt.anchoredPosition = new Vector2(0, 110);
+            trt.anchoredPosition = new Vector2(0, 0);
+        }
+
     }
 
     public void Hide() {

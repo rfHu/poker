@@ -539,9 +539,7 @@ public class PlayerObject : MonoBehaviour {
 
 		OPGo = (GameObject)Instantiate(Resources.Load("Prefab/OP"));	
 		var op = OPGo.GetComponent<OP>();
-		op.StartWithCmds(data, elaspe, () => {
-			circle.SetActive(true);
-		});
+		op.StartWithCmds(data, elaspe);
 	}
 
 	private void foldCards(GameObject go, Action callback = null) {
