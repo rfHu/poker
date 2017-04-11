@@ -40,7 +40,7 @@ public class UserDetail : MonoBehaviour {
         if (Uid == GameData.Shared.Uid || GameData.Shared.MySeat == -1 || GameData.Shared.FindPlayerIndex(Uid) == -1)
         {
             EmoticonsTeam.SetActive(false);
-            rectTransform.sizeDelta = rectTransform.sizeDelta - new Vector2(0, 144);
+            rectTransform.sizeDelta -= new Vector2(0, 144);
             R1.GetComponent<RectTransform>().localPosition -=  new Vector3(0, 144, 0);
             R2.GetComponent<RectTransform>().localPosition -= new Vector3(0, 144, 0);
         }
@@ -131,6 +131,11 @@ public class UserDetail : MonoBehaviour {
 
     public void OnStandUp() 
     {
+        if (GameData.Shared.FindPlayerIndex(Uid) == -1) {
+            PokerUI.Toast("该玩家没有坐下");
+            return;
+        }
+
         var data = new Dictionary<string, object>(){
 			{"uid", Uid}
 		};

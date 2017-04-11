@@ -18,7 +18,7 @@ public class Emoticon : MonoBehaviour {
         _image = emoticonEntity.GetComponent<Image>();
     }
 
-    public void Init(GameObject fromSeat, GameObject toSeat, int pid) 
+    public void Init(GameObject fromSeat, GameObject toSeat, int pid, bool isToMe) 
     {
         this.pid = pid;
         this.toSeat = toSeat;
@@ -27,11 +27,17 @@ public class Emoticon : MonoBehaviour {
         transform.position = fromSeat.GetComponent<RectTransform>().position;
 
         if (toSeat.GetComponent<Seat>().GetPos() == SeatPosition.Right)
-        {
             transform.localScale = new Vector3(-1, 1, 0);
+        
+
+        Vector3 aimSeat = toSeat.transform.position;
+
+        if (isToMe) 
+        {
+            aimSeat -= new Vector3(0,80,0);
         }
 
-        Tween tween = transform.DOMove(toSeat.transform.position, 0.6f).SetEase(Ease.OutQuad);
+        Tween tween = transform.DOMove(aimSeat, 0.6f).SetEase(Ease.OutQuad);
         tween.Play();
         _animator.SetTrigger(pid.ToString());
 
