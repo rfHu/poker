@@ -38,10 +38,10 @@ public class SpkTextGo: MonoBehaviour {
         if (pos == SeatPosition.Bottom) {
             rt.anchoredPosition = new Vector2(0, -80);
             trt.anchoredPosition = new Vector2(0, 0);
-        }  else if (pos == SeatPosition.Right || pos == SeatPosition.TopRight) {
+        }  else if (pos == SeatPosition.Right || pos == SeatPosition.TopLeft) {
             rt.anchoredPosition = new Vector2(0, 110);
             trt.anchoredPosition = new Vector2(-80, 0);
-        } else if (pos == SeatPosition.Left || pos == SeatPosition.TopLeft) { 
+        } else if (pos == SeatPosition.Left || pos == SeatPosition.TopRight) { 
             rt.anchoredPosition = new Vector2(0, 110); 
             trt.anchoredPosition = new Vector2(80, 0);
         } else if (pos == SeatPosition.Top) {
