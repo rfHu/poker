@@ -21,6 +21,7 @@ public class UserDetail : MonoBehaviour {
     public GameObject R1;
     public GameObject R2;
     public Button[] EmoticonButtons;
+    public Text[] EmoticonPrice;
 
     RectTransform rectTransform;
     string Uid;
@@ -107,10 +108,10 @@ public class UserDetail : MonoBehaviour {
             // 动态表情
             var emotion = data.List("emoticon");
 
-            foreach (var item in emotion)
+            for (int i = 0; i < emotion.Count; i++)
             {
-                var dict = item as Dictionary<string, object>;
-                 dict.Int("coin");
+                var dict = emotion[i] as Dictionary<string, object>;
+                EmoticonPrice[i].text = "" + dict.Int("coin");
             }
         });
 	}
