@@ -87,6 +87,9 @@ public class External : MonoBehaviour{
 			SceneManager.LoadScene("GameLoading");
 			callback();
 		#endif
+
+		// 暂停游戏
+		Time.timeScale = 0;
 	}
 
 	void OnApplicationQuit()

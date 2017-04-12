@@ -22,9 +22,6 @@ public class Commander {
 	}	
 
 	public void Exit() {
-		_.Log("UnityDebug: Call Exit");
-
-		Time.timeScale = 0;
 		ic.Exit();
 	}
 
