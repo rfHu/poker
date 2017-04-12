@@ -20,7 +20,7 @@ public class DOPopup : MonoBehaviour {
 
 	private ModalHelper modal;   
 
-	bool show = false;
+	bool hasShow = false;
 
 	void Awake()
 	{
@@ -45,13 +45,19 @@ public class DOPopup : MonoBehaviour {
 		endPosition = new Vector2(0, 0);
 		rectTrans.anchoredPosition = beginPosition;
 	}
+
+	private static DOPopup instance;
 	
-	public void Show(Action close = null, bool modal = true) {
-		if (show) {
+	public void Show(Action close = null, bool modal = true, bool singleton = true) {
+		if (hasShow) {
 			return ;
 		}
 
-		show = true;
+		if (instance != null && singleton) {
+			instance.Close();
+		}
+
+		hasShow = true;
 
 		transform.SetParent(G.DialogCvs.transform, false);
 
@@ -78,6 +84,11 @@ public class DOPopup : MonoBehaviour {
 		}
 
 		gameObject.SetActive(true);
+
+		// 保存起来，singleton只允许出现一个
+		if (singleton) {
+			instance = this;
+		}
 	}
 
 	public void ImmediateClose() {

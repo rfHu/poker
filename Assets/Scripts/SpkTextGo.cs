@@ -35,17 +35,16 @@ public class SpkTextGo: MonoBehaviour {
         var rt = GetComponent<RectTransform>();
         var trt = TextCont.GetComponent<RectTransform>(); 
 
+        rt.anchoredPosition = new Vector2(0, 120);
+
         if (pos == SeatPosition.Bottom) {
             rt.anchoredPosition = new Vector2(0, -80);
             trt.anchoredPosition = new Vector2(0, 0);
         }  else if (pos == SeatPosition.Right || pos == SeatPosition.TopLeft) {
-            rt.anchoredPosition = new Vector2(0, 110);
             trt.anchoredPosition = new Vector2(-80, 0);
         } else if (pos == SeatPosition.Left || pos == SeatPosition.TopRight) { 
-            rt.anchoredPosition = new Vector2(0, 110); 
             trt.anchoredPosition = new Vector2(80, 0);
         } else if (pos == SeatPosition.Top) {
-            rt.anchoredPosition = new Vector2(0, 110);
             trt.anchoredPosition = new Vector2(0, 0);
         }
     }

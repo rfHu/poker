@@ -7,12 +7,9 @@ using HedgehogTeam.EasyTouch;
 public class UIManager : MonoBehaviour {
 	private GameObject auditMsg;
 
-	private DOPopup menuPopup;
-
 	public void ShowMenu() {
 		var popup = (GameObject)Instantiate(Resources.Load("Prefab/MenuPopup"));
-		menuPopup = popup.GetComponent<DOPopup>();
-		menuPopup.Show();	
+		popup.GetComponent<DOPopup>().Show();
 	}
 
 	public void OnSwipe(Gesture gesture) {
@@ -67,7 +64,7 @@ public class UIManager : MonoBehaviour {
             }
             else
             {
-                auditMsg.GetComponent<DOPopup>().Show(null, false);
+                auditMsg.GetComponent<DOPopup>().Show(null, false, false);
             }
 		}).AddTo(this);	
 
@@ -75,11 +72,7 @@ public class UIManager : MonoBehaviour {
 			if (e.Data != null) {
 				GameData.Shared.Coins = e.Data.Int("coins");
             }
-
-			if (menuPopup != null) {
-				menuPopup.Close();
-			}
-
+			
             GameObject obj = (GameObject)Instantiate(Resources.Load("Prefab/Supplement"));
             obj.GetComponent<DOPopup>().Show(() => {
 				var player = GameData.Shared.GetMyPlayer();
