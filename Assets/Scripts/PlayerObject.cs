@@ -336,8 +336,6 @@ public class PlayerObject : MonoBehaviour {
 		}).AddTo(this);
 		
 		theSeat.SeatPos.Subscribe((pos) => {
-			// _.Log(pos.ToString());
-			fixVoicePos(pos);	
 			fixChatPos(pos);
 		}).AddTo(this);
 
@@ -371,29 +369,7 @@ public class PlayerObject : MonoBehaviour {
         }).AddTo(this); 
 	}
 
-	private void fixVoicePos(SeatPosition pos) {
-		// if (!Volume.activeSelf) {
-		// 	return ;
-		// }
-
-		var trans = Volume.GetComponent<RectTransform>();
-		var v = trans.anchoredPosition;
-		var x = Math.Abs(v.x);
-
-		if (pos == SeatPosition.Right) {
-			trans.anchoredPosition = new Vector2(-x, v.y);	
-			trans.localScale = new Vector2(-1, 1);
-		} else {
-			trans.anchoredPosition = new Vector2(x, v.y);
-			trans.localScale = new Vector2(1, 1);
-		}
-	}
-
 	private void fixChatPos(SeatPosition pos) {
-		// if (!SpkText.gameObject.activeSelf) {
-		// 	return ;
-		// }
-
 		SpkText.ChangePos(pos);
 	}
 
