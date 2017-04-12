@@ -20,7 +20,7 @@ public class PlayerActGo: MonoBehaviour {
     public Color GetColor(ActionState act) {
         var map = new Dictionary<ActionState, Color>() {
             {ActionState.Fold, _.HexColor("#BDBDBD")},
-            {ActionState.Check, _.HexColor("#18FFFF")},
+            {ActionState.Check, MaterialUI.MaterialColor.cyanA200},
             {ActionState.Raise, _.HexColor("#FFAB40")},
             {ActionState.Call, _.HexColor("#40C4FF")},
             {ActionState.Allin, _.HexColor("#FFFF00")}

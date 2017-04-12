@@ -152,7 +152,7 @@ public class iOSCommander: ICommander {
 	private static extern void _ex_callOpenCoinMall();
 
 	[DllImport("__Internal")]
-	private static extern void _ex_callGameOver(String roomID);
+	private static extern void _ex_callGameOver(string roomID);
 
 	[DllImport("__Internal")]
 	private static extern int _ex_callGetBatteryLevel();
@@ -167,7 +167,7 @@ public class iOSCommander: ICommander {
 	private static extern void _ex_callShareRoomRecord(int handID);
 
 	[DllImport("__Internal")]
-	private static extern void _ex_callShareRoom(char *text);
+	private static extern void _ex_callShareRoom(string text);
 
 	public void Exit() {
 		_ex_callExitGame();

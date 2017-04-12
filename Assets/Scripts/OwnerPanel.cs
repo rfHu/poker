@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UI.ProceduralImage;
 
 [RequireComponent(typeof(DOPopup))]
 public class OwnerPanel : MonoBehaviour {
@@ -269,12 +270,29 @@ public class OwnerPanel : MonoBehaviour {
         {
             if (item)
             {
-                SaveButton.interactable = true;
+                setSaveButton(true);
                 return;
             }
         }
 
-        SaveButton.interactable = false;
+        setSaveButton(false);
+    }
+
+    private void setSaveButton(bool interactable) {
+        SaveButton.interactable = interactable;
+
+        var image = SaveButton.GetComponent<ProceduralImage>();
+        var text = SaveButton.transform.Find("Text").GetComponent<Text>();
+        Color color;
+
+        if (interactable) {
+            color = MaterialUI.MaterialColor.cyanA200;
+        } else {
+            color = MaterialUI.MaterialColor.grey400;
+        }
+
+         image.color = color;
+         text.color = color;
     }
 
     public void SendRequest()
