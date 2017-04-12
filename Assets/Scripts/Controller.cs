@@ -392,7 +392,7 @@ public class Controller : MonoBehaviour {
 		RxSubjects.ShowAudio.Where(isGuest).Subscribe((json) => {
 			var N = JSON.Parse(json);
 			var name = N["name"].Value;
-			PokerUI.Toast(String.Format("{0}发送了一段语音", name));
+			PokerUI.Toast(String.Format("{0}发送了一段语音", name), 3f);
 		}).AddTo(this);
 
 		RxSubjects.SendChat.Where(isGuest).Subscribe((json) => {
@@ -400,7 +400,7 @@ public class Controller : MonoBehaviour {
 			var name = N["name"].Value;
 			var text = N["text"].Value;
 
-			PokerUI.Toast(String.Format("{0}: {1}", name, text));
+			PokerUI.Toast(String.Format("{0}: {1}", name, text), 3f);
 		}).AddTo(this);
 	}
 
