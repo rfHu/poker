@@ -22,21 +22,16 @@ public class OwnerPanel : MonoBehaviour {
     public Text ETSliderNum;
     public Text ASliderNum;
 
+    public Button SaveButton;
 	private string pauseStr = "暂停牌局";
 	private string continueStr = "继续牌局";
 
     
     private List<int> AnteSuperScriptNums;
     private List<int> bankroll_multiple;
-    private int time_limit;
-    private int ante;
 
-    private bool isChanged;
-
-    public void SetIsChanged()
-    {
-        isChanged = true;
-    }
+    private Dictionary<string, object> dict = new Dictionary<string, object>();
+    private bool[] isChanged = new bool[5]{ false, false, false, false, false };
 
 	void Awake()
 	{
@@ -48,22 +43,17 @@ public class OwnerPanel : MonoBehaviour {
 			}
 		}).AddTo(this);
 
-
-        bankroll_multiple = GameData.Shared.BankrollMul;
-        SmallMultipeSlider.value = bankroll_multiple[0];
-        LargeMultipeSlider.value = bankroll_multiple[1];
+        SmallMultipeSlider.value = GameData.Shared.BankrollMul[0];
+        LargeMultipeSlider.value = GameData.Shared.BankrollMul[1];
 
         ExtendTimeSlider.value = 0;
-        time_limit = 0;
 
         AnteSliderInit();
 
         ETSliderNum.text = "0h";
 
         Need_auditToggle.isOn = GameData.Shared.NeedAudit;
-        StraddleToggle.isOn = GameData.Shared.Straddle;
-
-        isChanged = false;
+        StraddleToggle.isOn = GameData.Shared.Straddle;      
 	}
 
     private void AnteSliderInit()
@@ -166,13 +156,24 @@ public class OwnerPanel : MonoBehaviour {
             LargeMultipeSlider.value = SmallMultipeSlider.value;
         }
 
+        dict.Remove("bankroll_multiple");
+
         LMSliderNum.text = LargeMultipeSlider.value.ToString();
         SMSliderNum.text = SmallMultipeSlider.value.ToString();
-    }
 
-    public void AnteSliderChanged() 
-    {
-        ASliderNum.text = "" + AnteSuperScriptNums[(int)AnteSlider.value];
+        if (SmallMultipeSlider.value != GameData.Shared.BankrollMul[0] || LargeMultipeSlider.value != GameData.Shared.BankrollMul[1])
+        {
+            List<int> bankroll_multiple = new List<int>();
+            bankroll_multiple.Add((int)SmallMultipeSlider.value);
+            bankroll_multiple.Add((int)LargeMultipeSlider.value);
+            dict.Add("bankroll_multiple", bankroll_multiple);
+            isChanged[0] = true;
+        }
+        else 
+        {
+            isChanged[0] = false;
+        }
+        SaveButtonInteractable();
     }
 
     public void ETSliderChanged() 
@@ -183,6 +184,75 @@ public class OwnerPanel : MonoBehaviour {
             ETSliderNum.text = "0.5h";
         else
             ETSliderNum.text = (ExtendTimeSlider.value - 1).ToString() + "h";
+
+        dict.Remove("time_limit");
+
+        if (ExtendTimeSlider.value != 0)
+        {
+            int time_limit;
+            if (ExtendTimeSlider.value == 1)
+                time_limit = 1800;
+            else
+                time_limit = (int)(ExtendTimeSlider.value - 1) * 3600;
+            dict.Add("time_limit", time_limit);
+            isChanged[1] = true;
+        }
+        else 
+        {
+            isChanged[1] = false;
+        }
+        SaveButtonInteractable();
+    }
+
+    public void AnteSliderChanged() 
+    {
+        ASliderNum.text = "" + AnteSuperScriptNums[(int)AnteSlider.value];
+
+        dict.Remove("ante");
+
+        if (AnteSuperScriptNums[(int)AnteSlider.value] != GameData.Shared.Ante)
+        {
+            int ante = AnteSuperScriptNums[(int)AnteSlider.value];
+            dict.Add("ante", ante);
+            isChanged[2] = true;
+        }
+        else 
+        {
+            isChanged[2] = false;
+        }
+        SaveButtonInteractable();
+    }
+
+    public void Need_auditToggleChanged()
+    {
+        dict.Remove("need_audit");
+
+        if (Need_auditToggle.isOn != GameData.Shared.NeedAudit)
+        {
+            dict.Add("need_audit", Need_auditToggle.isOn ? 1 : 0);
+            isChanged[3] = true;
+        }
+        else 
+        {
+            isChanged[3] = false;
+        }
+        SaveButtonInteractable();
+    }
+
+    public void StraddleToggleChanged()
+    {
+        dict.Remove("straddle");
+
+        if (StraddleToggle.isOn != GameData.Shared.Straddle)
+        {
+            dict.Add("straddle", StraddleToggle.isOn ? 1 : 0);
+            isChanged[4] = true;
+        }
+        else 
+        {
+            isChanged[4] = false;
+        }
+        SaveButtonInteractable();
     }
 
     // void OnDestroy() 
@@ -193,55 +263,22 @@ public class OwnerPanel : MonoBehaviour {
     //     }
     // }
 
-    private void SendRequest()
+    void SaveButtonInteractable() 
     {
-        var dict = new Dictionary<string, object>();
-
-        bool isChange = false;
-
-        //只添加改变的字段
-        if (SmallMultipeSlider.value != bankroll_multiple[0]||LargeMultipeSlider.value != bankroll_multiple[1])
+        foreach (var item in isChanged)
         {
-            bankroll_multiple[0] = (int)SmallMultipeSlider.value;
-            bankroll_multiple[1] = (int)LargeMultipeSlider.value;
-            dict.Add("bankroll_multiple", bankroll_multiple);
-            isChange = true;
+            if (item)
+            {
+                SaveButton.interactable = true;
+                return;
+            }
         }
 
-        if (ExtendTimeSlider.value !=0)
-        {
-            if (ExtendTimeSlider.value == 1)
-                time_limit = 1800;
-            else
-                time_limit = (int)(ExtendTimeSlider.value - 1) * 3600;
-            dict.Add("time_limit", time_limit);
-            isChange = true;
-        }
+        SaveButton.interactable = false;
+    }
 
-        if (AnteSuperScriptNums[(int)AnteSlider.value] != GameData.Shared.Ante)
-        {
-            ante = AnteSuperScriptNums[(int)AnteSlider.value];
-            dict.Add("ante", ante);
-            isChange = true;
-        }
-
-        if (Need_auditToggle.isOn != GameData.Shared.NeedAudit)
-        {
-            dict.Add("need_audit", Need_auditToggle.isOn ? 1 : 0);
-            isChange = true;
-        }
-
-        if (StraddleToggle.isOn != GameData.Shared.Straddle)
-        {
-            dict.Add("straddle", StraddleToggle.isOn ? 1 : 0);
-            isChange = true;
-        }
-
-        if (!isChange)
-        {
-            return;
-        }
-
+    public void SendRequest()
+    {
         Connect.Shared.Emit(new Dictionary<string, object>() {
 				{"f", "modify"},
 				{"args", dict}
