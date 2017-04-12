@@ -380,7 +380,7 @@ public class Controller : MonoBehaviour {
                 {
                     toSeat = seat;
 
-                    if (toSeatIndex == 0)
+                    if (toSeatIndex == GameData.Shared.FindPlayerIndex(GameData.Shared.Uid))
                         isToMe = true;
                 }
             }
