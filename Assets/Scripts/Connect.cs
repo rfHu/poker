@@ -239,13 +239,19 @@ public sealed class Connect  {
 				return ;
 			}
 
+			var argsDict = json.Dict("args");
 			var e  = json.String("e");
+
+			if (argsDict.ContainsKey("cmds")) {
+				var cmds = argsDict.Dict("cmds");
+				GameData.MyCmd.SetCmd(cmds);
+			}
 
 			if (String.IsNullOrEmpty(e)) {
 				return ;
 			}
 
-			var rxdata = new RxData(json.Dict("args"), json.String("e"));
+			var rxdata = new RxData(argsDict, e);
 
 			if (e == "prompt") {
 				GameData.MyCmd.SetCmd(rxdata.Data);
