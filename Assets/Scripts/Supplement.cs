@@ -93,7 +93,7 @@ public class Supplement : MonoBehaviour {
 				}, null);
 			} 
 
-			gameObject.GetComponent<DOPopup>().Close();
+			GetComponent<DOPopup>().Close();
 		});
 	}
 }
