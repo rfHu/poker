@@ -27,11 +27,12 @@ public class PlayerObject : MonoBehaviour {
 	public Sprite[] ActSprites;
 	public GameObject AllinGo;
 
-	private Text nameLabel;
-	private Text scoreLabel;
-	private GameObject countdown;
+	public Text NameLabel;
+	public Text ScoreLabel;
+	public GameObject Countdown;
+	public GameObject Circle;
+
 	private GameObject OPGo;
-	private GameObject circle;
 	private ChipsGo cgo; 
 	private Player player;
 	private float foldOpacity = 0.6f;
@@ -53,18 +54,10 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	void Awake() {
-		var info = transform.Find("Info");
-
-		nameLabel = info.Find("Name").GetComponent<Text>();
-		scoreLabel = info.Find("Coins").Find("Text").GetComponent<Text>();
-
-		circle = info.Find("Circle").gameObject;
-		countdown = circle.transform.Find("Countdown").gameObject;
-
-        countdownColorAni = countdown.GetComponent<DOTweenAnimation>();
+        countdownColorAni = Countdown.GetComponent<DOTweenAnimation>();
 
 		// 倒计时隐藏
-		countdown.SetActive(false);
+		Countdown.SetActive(false);
 
 		SpkText.Uid = Uid;
 	}
@@ -92,7 +85,7 @@ public class PlayerObject : MonoBehaviour {
 		if (OPGo != null) {
 			Destroy(OPGo);
 			OPGo = null;
-			circle.SetActive(true); // 显示头像
+			Circle.SetActive(true); // 显示头像
 		}
 
 		Avt.GetComponent<CircleMask>().Disable();
@@ -115,7 +108,7 @@ public class PlayerObject : MonoBehaviour {
 		Avt.GetComponent<Avatar>().Uid = Uid;
 
 		if (isSelf()) {
-			nameLabel.gameObject.SetActive(false);
+			NameLabel.gameObject.SetActive(false);
 			RxSubjects.ChangeVectorsByIndex.OnNext(Index);
 		} else if(player.InGame) { 
 			Cardfaces.SetActive(true);
@@ -125,8 +118,8 @@ public class PlayerObject : MonoBehaviour {
 			setFolded();
 		}
 
-		nameLabel.text = player.Name;
-		scoreLabel.text = player.Bankroll.ToString();
+		NameLabel.text = player.Name;
+		ScoreLabel.text = player.Bankroll.ToString();
 		Avt.GetComponent<Avatar>().SetImage(player.Avatar);	
 
 		GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
@@ -186,7 +179,7 @@ public class PlayerObject : MonoBehaviour {
 		PlayerAct.gameObject.SetActive(active);
 
 		if (!isSelf()) {
-			nameLabel.gameObject.SetActive(!active);
+			NameLabel.gameObject.SetActive(!active);
 		}
 	}
 
@@ -212,7 +205,7 @@ public class PlayerObject : MonoBehaviour {
 		}).AddTo(this);
 
 		player.Bankroll.Subscribe((value) => {
-			scoreLabel.text = value.ToString();
+			ScoreLabel.text = value.ToString();
 		}).AddTo(this);
 
 		player.ActState.AsObservable().Subscribe((e) => {
@@ -281,7 +274,7 @@ public class PlayerObject : MonoBehaviour {
 				Invoke("doChipsAnim", 1f);
 				WinNumber.transform.parent.gameObject.SetActive(true); 
 				WinNumber.text = num2Text(gain);
-				scoreLabel.transform.parent.gameObject.SetActive(false);
+				ScoreLabel.transform.parent.gameObject.SetActive(false);
 			}
 
 			if (!isSelf()) {
@@ -426,7 +419,7 @@ public class PlayerObject : MonoBehaviour {
 
 		getOtherCardGo().SetActive(true);
 		OthersCardDesc.text = desc;
-		nameLabel.gameObject.SetActive(false);
+		NameLabel.gameObject.SetActive(false);
 	}
 
 	private GameObject getShowCard() {
@@ -435,7 +428,7 @@ public class PlayerObject : MonoBehaviour {
 
 	private void hideAnim() {
 		hideGo(Stars, () => {
-			scoreLabel.transform.parent.gameObject.SetActive(true);
+			ScoreLabel.transform.parent.gameObject.SetActive(true);
 		});
 
 		hideGo(WinImageGo);	
@@ -481,7 +474,7 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	private IEnumerator yourTurn(float elaspe) {
-		countdown.SetActive(true);
+		Countdown.SetActive(true);
 		activated = true;
 		AvatarMask.SetActive(true);
 
@@ -494,7 +487,7 @@ public class PlayerObject : MonoBehaviour {
 			time = time - Time.deltaTime;
 			
 			var percent = Mathf.Min(1, time / GameData.Shared.ThinkTime);
-			var image = countdown.GetComponent<ProceduralImage>();
+			var image = Countdown.GetComponent<ProceduralImage>();
 			image.fillAmount = percent;
 			mask.SetTextColor(image.color);
             mask.SetFillAmount(time); 
@@ -503,7 +496,7 @@ public class PlayerObject : MonoBehaviour {
 		}
 
 		activated = false;
-        countdown.SetActive(false); 
+        Countdown.SetActive(false); 
 	}
 
 	private void showOP(Dictionary<string, object> data, int elaspe) {
@@ -512,7 +505,7 @@ public class PlayerObject : MonoBehaviour {
 		}
 		
 		// 隐藏头像
-		circle.SetActive(false);
+		Circle.SetActive(false);
 
 		OPGo = (GameObject)Instantiate(Resources.Load("Prefab/OP"));	
 		var op = OPGo.GetComponent<OP>();
