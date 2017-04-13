@@ -63,15 +63,17 @@ public class Controller : MonoBehaviour {
 		}
 	}
 
+	public static int TopMargin = 290;
+
 	// 顺时针生成位置信息
 	List<Vector2> getVectors(int total) {
 		float width = G.UICvs.GetComponent<RectTransform>().rect.width;
 		float height = G.UICvs.GetComponent<RectTransform>().rect.height;
 
-		float top = height - 200;
-		float bottom = 200; 
-		float right = width / 2 - 70;
-		float left = -width / 2 + 70; 
+		float top = height - TopMargin;
+		float bottom = TopMargin; 
+		float right = width / 2 - 100;
+		float left = -width / 2 + 100; 
 
 		float hh = top - bottom;
 		float ww = width - 200;

@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 9464d79a46b5045d295d5ac991f7ebde
-timeCreated: 1483062257
+timeCreated: 1492083132
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
@@ -16,6 +16,19 @@ TextureImporter:
     21300018: Shuffle_9
     21300020: Shuffle_10
     21300022: Shuffle_11
+    21300024: shuffle_0
+    21300026: shuffle_1
+    21300028: shuffle_2
+    21300030: shuffle_3
+    21300032: shuffle_4
+    21300034: shuffle_5
+    21300036: shuffle_6
+    21300038: shuffle_7
+    21300040: shuffle_8
+    21300042: shuffle_9
+    21300044: shuffle_10
+    21300046: shuffle_11
+    21300048: shuffle_12
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -98,78 +111,78 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Shuffle_0
+      name: shuffle_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 160
-        height: 120
+        width: 240
+        height: 180
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Shuffle_1
+      name: shuffle_1
       rect:
         serializedVersion: 2
-        x: 160
+        x: 240
         y: 0
-        width: 160
-        height: 120
+        width: 240
+        height: 180
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Shuffle_2
-      rect:
-        serializedVersion: 2
-        x: 320
-        y: 0
-        width: 160
-        height: 120
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Shuffle_3
+      name: shuffle_2
       rect:
         serializedVersion: 2
         x: 480
         y: 0
-        width: 160
-        height: 120
+        width: 240
+        height: 180
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Shuffle_4
+      name: shuffle_3
       rect:
         serializedVersion: 2
-        x: 640
+        x: 720
         y: 0
-        width: 160
-        height: 120
+        width: 240
+        height: 180
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Shuffle_5
+      name: shuffle_4
       rect:
         serializedVersion: 2
-        x: 800
+        x: 960
         y: 0
-        width: 160
-        height: 120
+        width: 240
+        height: 180
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: shuffle_5
+      rect:
+        serializedVersion: 2
+        x: 1200
+        y: 0
+        width: 240
+        height: 180
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
