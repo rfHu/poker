@@ -2,11 +2,12 @@
 using System;
 using UnityEngine.UI;
 using UniRx;
+using UnityEngine.UI.ProceduralImage;
 
 public class StatusBar : MonoBehaviour {
 	public Text timeText;
 	public Text power;
-	public Image rect;
+	public ProceduralImage rect;
 	public Text CountDown;
 	public GameObject AuditGo;
 	private IDisposable disposable;
