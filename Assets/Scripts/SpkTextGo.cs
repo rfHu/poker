@@ -7,6 +7,7 @@ public class SpkTextGo: MonoBehaviour {
     public Text MessageText;
     public GameObject Arrow; 
     public GameObject TextCont;
+    public GameObject Up;
 
     public String Uid;
 
@@ -40,6 +41,9 @@ public class SpkTextGo: MonoBehaviour {
         if (pos == SeatPosition.Bottom) {
             rt.anchoredPosition = new Vector2(0, -80);
             trt.anchoredPosition = new Vector2(0, 0);
+
+            Arrow.SetActive(false);
+            Up.SetActive(true);
         }  else if (pos == SeatPosition.Right || pos == SeatPosition.TopLeft) {
             trt.anchoredPosition = new Vector2(-80, 0);
         } else if (pos == SeatPosition.Left || pos == SeatPosition.TopRight) { 
