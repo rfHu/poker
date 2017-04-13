@@ -4,13 +4,14 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UI.ProceduralImage;
+using System.Linq;
 
 [RequireComponent(typeof(DOPopup))]
 public class OwnerPanel : MonoBehaviour {
 	public Text PauseText;
     public Button CloseButton;
-    public Slider LargeMultipeSlider;
-    public Slider SmallMultipeSlider;
+    public Slider MultipleSlider1;
+    public Slider MultipleSlider2;
     public Slider ExtendTimeSlider;
     public Slider AnteSlider;
     public Toggle Need_auditToggle;
@@ -18,8 +19,8 @@ public class OwnerPanel : MonoBehaviour {
 
     public GameObject AnteScriptNum;
     public Transform AnteSuperscript;
-    public Text LMSliderNum;
-    public Text SMSliderNum;
+    public Text MSliderNum1;
+    public Text MSliderNum2;
     public Text ETSliderNum;
     public Text ASliderNum;
 
@@ -44,8 +45,8 @@ public class OwnerPanel : MonoBehaviour {
 			}
 		}).AddTo(this);
 
-        SmallMultipeSlider.value = GameData.Shared.BankrollMul[0];
-        LargeMultipeSlider.value = GameData.Shared.BankrollMul[1];
+        MultipleSlider2.value = GameData.Shared.BankrollMul[0];
+        MultipleSlider1.value = GameData.Shared.BankrollMul[1];
 
         ExtendTimeSlider.value = 0;
 
@@ -150,30 +151,76 @@ public class OwnerPanel : MonoBehaviour {
 		});		
 	}
 
-    public void MultipeSliderChanged() 
-    {
-        if ( SmallMultipeSlider.value >= LargeMultipeSlider.value)
-        {
-            LargeMultipeSlider.value = SmallMultipeSlider.value;
+    private List<int> getMulSortList() {
+        var value1 = (int)MultipleSlider1.value;
+        var value2 = (int)MultipleSlider2.value;
+
+        var list = new List<int>{
+            value1,
+            value2
+        };
+
+        list.Sort();
+
+        return list;
+    }
+
+    private void checkChangeSlider() {
+        var index1 = MultipleSlider1.transform.GetSiblingIndex();
+        var index2 = MultipleSlider1.transform.GetSiblingIndex();
+
+        var value1 = MultipleSlider1.value;
+        var value2 = MultipleSlider2.value;
+
+        // 谁数值小，谁在后面
+        if (index1 > index2 && value1 <= value2) {
+            return ;
         }
 
+        if (value1 > value2) {
+            setMulDown(MultipleSlider2);
+            setMulUp(MultipleSlider1);
+        } else {
+            setMulDown(MultipleSlider1);
+            setMulUp(MultipleSlider2);
+        }
+    }
+
+    private void setMulUp(Slider slider) {
+        slider.transform.Find("Background").gameObject.SetActive(true);
+        setColor(slider, MaterialUI.MaterialColor.cyanA200); // 青色
+    }
+
+    private void setMulDown(Slider slider) {
+        slider.transform.SetAsLastSibling();
+        slider.transform.Find("Background").gameObject.SetActive(false);
+        setColor(slider, _.HexColor("#A7A9AE")); // 灰色
+    }
+
+    private void setColor(Slider slider, Color color) {
+        slider.transform.Find("Fill Area").Find("Fill").GetComponent<Image>().color = color;
+    }
+
+    public void MultipeSliderChanged() 
+    {
         dict.Remove("bankroll_multiple");
+        var bankroll_multiple = getMulSortList();
 
-        LMSliderNum.text = LargeMultipeSlider.value.ToString();
-        SMSliderNum.text = SmallMultipeSlider.value.ToString();
+        MSliderNum1.text = MultipleSlider1.value.ToString();
+        MSliderNum2.text = MultipleSlider2.value.ToString();
 
-        if (SmallMultipeSlider.value != GameData.Shared.BankrollMul[0] || LargeMultipeSlider.value != GameData.Shared.BankrollMul[1])
+        checkChangeSlider();
+
+        if (bankroll_multiple.SequenceEqual(GameData.Shared.BankrollMul))
         {
-            List<int> bankroll_multiple = new List<int>();
-            bankroll_multiple.Add((int)SmallMultipeSlider.value);
-            bankroll_multiple.Add((int)LargeMultipeSlider.value);
-            dict.Add("bankroll_multiple", bankroll_multiple);
-            isChanged[0] = true;
+            isChanged[0] = false;            
         }
         else 
         {
-            isChanged[0] = false;
+            dict.Add("bankroll_multiple", bankroll_multiple);
+            isChanged[0] = true;
         }
+
         SaveButtonInteractable();
     }
 
@@ -255,15 +302,7 @@ public class OwnerPanel : MonoBehaviour {
         }
         SaveButtonInteractable();
     }
-
-    // void OnDestroy() 
-    // {
-    //     if (isChanged)
-    //     {
-    //         SendRequest();
-    //     }
-    // }
-
+    
     void SaveButtonInteractable() 
     {
         foreach (var item in isChanged)
