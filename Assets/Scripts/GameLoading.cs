@@ -3,7 +3,7 @@
 public class GameLoading : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
-		Time.timeScale = 0;
+		// Time.timeScale = 0;
 
 		var external = External.Instance;
 
@@ -11,7 +11,7 @@ public class GameLoading : MonoBehaviour {
 
         external.SetSid("s%3Ajx5Nlt5_0arXHMvLzJp7MoyoK26zVyoe.2J5B2yabA7I99eVolsgFtU9mgTpP2WXP%2FyQJPcdOLro");
 			external.SetProxy("http://localhost:8888");
-            external.SetRoomID("58eefe7e21202036fccf05b2");
+            external.SetRoomID("58ef1e4721202036fccf08fd");
 
 
 		#endif

@@ -89,7 +89,7 @@ public class External : MonoBehaviour{
 		#endif
 
 		// 暂停游戏
-		Time.timeScale = 0;
+		// Time.timeScale = 0;
 	}
 
 	void OnApplicationQuit()
