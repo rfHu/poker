@@ -35,15 +35,15 @@ public class UserDetail : MonoBehaviour {
         if (GameData.Shared.Owner && Uid != GameData.Shared.Uid)
         {
             ButtonTeam.SetActive(true);
-            rectTransform.sizeDelta = new Vector2(550, 595);
+            rectTransform.sizeDelta = new Vector2(825, 892.5f);
         }
 
         if (Uid == GameData.Shared.Uid || GameData.Shared.MySeat == -1 || GameData.Shared.FindPlayerIndex(Uid) == -1)
         {
             EmoticonsTeam.SetActive(false);
-            rectTransform.sizeDelta -= new Vector2(0, 144);
-            R1.GetComponent<RectTransform>().localPosition -=  new Vector3(0, 144, 0);
-            R2.GetComponent<RectTransform>().localPosition -= new Vector3(0, 144, 0);
+            rectTransform.sizeDelta -= new Vector2(0, 216);
+            R1.GetComponent<RectTransform>().localPosition -=  new Vector3(0, 216, 0);
+            R2.GetComponent<RectTransform>().localPosition -= new Vector3(0, 216, 0);
         }
 
         foreach (var button in EmoticonButtons)
