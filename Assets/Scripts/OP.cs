@@ -157,7 +157,14 @@ public class OP : MonoBehaviour {
 		var pointerDown = false;
 
 		Slid.OnValueChangedAsObservable().Subscribe((value) => {
-			var newValue = value.StepValue(GameData.Shared.BB);
+			int newValue;
+
+			if (value >= range[1]) {
+				newValue = (int)value;
+			} else {
+				newValue = value.StepValue(GameData.Shared.BB);
+			}
+
 			Slid.value = newValue;			
 
 			if (newValue < range[1]) {
@@ -187,7 +194,7 @@ public class OP : MonoBehaviour {
 
 		// 展示遮罩
 		modal = ModalHelper.Create();
-		modal.Show(G.UICvs, close);
+		modal.Show(G.UICvs, close, true);
 		transform.SetAsLastSibling();
 
 		setToggle(false);
