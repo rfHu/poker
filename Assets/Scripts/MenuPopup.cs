@@ -21,6 +21,22 @@ public class MenuPopup : MonoBehaviour {
 		RxSubjects.TakeCoin.OnNext(new RxData());	
 	}
 
+	private static string muteTag = "persist.txt?tag=mute";
+
+	private bool muted {
+		get {
+			if (ES2.Exists(muteTag)) {
+				return ES2.Load<bool>(muteTag);
+			}
+
+			return false;
+		}
+
+		set {
+			ES2.Save(value, muteTag);
+		}
+	}
+
 	void Start()
 	{
 		if (GameData.MyCmd.Unseat) {
@@ -31,7 +47,7 @@ public class MenuPopup : MonoBehaviour {
 			SuppCG.alpha = 1;
 		}	
 
-		if (isMuted) {
+		if (muted) {
 			setVolumeImage("volume_off");
 		}
 	}
@@ -48,10 +64,8 @@ public class MenuPopup : MonoBehaviour {
 		gameObject.GetComponent<DOPopup>().Close();
 	}
 
-	private static bool isMuted = false;
-
 	public void ToggleMute() {
-		if (isMuted) {
+		if (muted) {
 			MasterAudio.UnmuteEverything();
 			setVolumeImage("volume_up");	
 		} else {
@@ -59,7 +73,7 @@ public class MenuPopup : MonoBehaviour {
 			setVolumeImage("volume_off");
 		}
 
-		isMuted = !isMuted;
+		muted = !muted;
 	}
 
 	public void Exit() {
