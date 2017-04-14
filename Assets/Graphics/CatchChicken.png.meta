@@ -1,35 +1,24 @@
 fileFormatVersion: 2
-guid: 8f12c3e4b14c31547884235bf75d3a03
-timeCreated: 1490839241
+guid: f2702fa46805ee04e96cc82f88f68d7e
+timeCreated: 1492142612
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
-    21300000: "\u6293\u9E21_0"
-    21300002: "\u6293\u9E21_1"
-    21300004: "\u6293\u9E21_2"
-    21300006: "\u6293\u9E21_3"
-    21300008: "\u6293\u9E21_4"
-    21300010: "\u6293\u9E21_5"
-    21300012: "\u6293\u9E21_6"
-    21300014: "\u6293\u9E21_7"
-    21300016: "\u6293\u9E21_8"
-    21300018: "\u6293\u9E21_9"
-    21300020: "\u6293\u9E21_10"
-    21300022: CatchChicken_0
-    21300024: CatchChicken_1
-    21300026: CatchChicken_2
-    21300028: CatchChicken_3
-    21300030: CatchChicken_4
-    21300032: CatchChicken_5
-    21300034: CatchChicken_6
-    21300036: CatchChicken_7
-    21300038: CatchChicken_8
-    21300040: CatchChicken_9
-    21300042: CatchChicken_10
+    21300000: CatchChicken_0
+    21300002: CatchChicken_1
+    21300004: CatchChicken_2
+    21300006: CatchChicken_3
+    21300008: CatchChicken_4
+    21300010: CatchChicken_5
+    21300012: CatchChicken_6
+    21300014: CatchChicken_7
+    21300016: CatchChicken_8
+    21300018: CatchChicken_9
+    21300020: CatchChicken_10
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 0
+    enableMipMap: 1
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
@@ -52,7 +41,7 @@ TextureImporter:
     filterMode: -1
     aniso: 16
     mipBias: -1
-    wrapMode: 1
+    wrapMode: -1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -64,7 +53,7 @@ TextureImporter:
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spritePixelsToUnits: 100
   alphaUsage: 1
-  alphaIsTransparency: 1
+  alphaIsTransparency: 0
   spriteTessellationDetail: -1
   textureType: 8
   textureShape: 1
@@ -77,7 +66,7 @@ TextureImporter:
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
-    crunchedCompression: 1
+    crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
   - buildTarget: Standalone
@@ -85,7 +74,7 @@ TextureImporter:
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
-    crunchedCompression: 1
+    crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
   - buildTarget: iPhone
@@ -93,7 +82,7 @@ TextureImporter:
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
-    crunchedCompression: 1
+    crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
   - buildTarget: Android
@@ -101,7 +90,7 @@ TextureImporter:
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
-    crunchedCompression: 1
+    crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
   - buildTarget: Windows Store Apps
@@ -129,8 +118,8 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 200
-        height: 200
+        width: 300
+        height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -140,10 +129,10 @@ TextureImporter:
       name: CatchChicken_1
       rect:
         serializedVersion: 2
-        x: 200
+        x: 300
         y: 0
-        width: 200
-        height: 200
+        width: 300
+        height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -153,10 +142,10 @@ TextureImporter:
       name: CatchChicken_2
       rect:
         serializedVersion: 2
-        x: 400
+        x: 600
         y: 0
-        width: 200
-        height: 200
+        width: 300
+        height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -166,10 +155,10 @@ TextureImporter:
       name: CatchChicken_3
       rect:
         serializedVersion: 2
-        x: 600
+        x: 900
         y: 0
-        width: 200
-        height: 200
+        width: 300
+        height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -179,10 +168,10 @@ TextureImporter:
       name: CatchChicken_4
       rect:
         serializedVersion: 2
-        x: 800
+        x: 1200
         y: 0
-        width: 200
-        height: 200
+        width: 300
+        height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -192,10 +181,10 @@ TextureImporter:
       name: CatchChicken_5
       rect:
         serializedVersion: 2
-        x: 1000
+        x: 1500
         y: 0
-        width: 200
-        height: 200
+        width: 300
+        height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -205,10 +194,10 @@ TextureImporter:
       name: CatchChicken_6
       rect:
         serializedVersion: 2
-        x: 1200
+        x: 1800
         y: 0
-        width: 200
-        height: 200
+        width: 300
+        height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -218,10 +207,10 @@ TextureImporter:
       name: CatchChicken_7
       rect:
         serializedVersion: 2
-        x: 1400
+        x: 2100
         y: 0
-        width: 200
-        height: 200
+        width: 300
+        height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -231,10 +220,10 @@ TextureImporter:
       name: CatchChicken_8
       rect:
         serializedVersion: 2
-        x: 1600
+        x: 2400
         y: 0
-        width: 200
-        height: 200
+        width: 300
+        height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -244,10 +233,10 @@ TextureImporter:
       name: CatchChicken_9
       rect:
         serializedVersion: 2
-        x: 1800
+        x: 2700
         y: 0
-        width: 200
-        height: 200
+        width: 300
+        height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -257,10 +246,10 @@ TextureImporter:
       name: CatchChicken_10
       rect:
         serializedVersion: 2
-        x: 2000
+        x: 3000
         y: 0
-        width: 200
-        height: 200
+        width: 300
+        height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

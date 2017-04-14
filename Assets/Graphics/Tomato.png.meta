@@ -1,15 +1,16 @@
 fileFormatVersion: 2
-guid: 60615eca33a5b754ca21fcf223d155d8
-timeCreated: 1491460855
+guid: 3957b475b8e27e74585868334db2f67b
+timeCreated: 1492144010
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Tomato1_0
-    21300002: Tomato1_1
-    21300004: Tomato1_2
-    21300006: Tomato1_3
-    21300008: Tomato1_4
-    21300010: Tomato1_5
+    21300000: Tomato_0
+    21300002: Tomato_1
+    21300004: Tomato_2
+    21300006: Tomato_4
+    21300008: Tomato_5
+    21300010: Tomato_2
+    21300012: Tomato_3
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -36,7 +37,7 @@ TextureImporter:
     filterMode: -1
     aniso: 16
     mipBias: -1
-    wrapMode: 1
+    wrapMode: -1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -61,7 +62,7 @@ TextureImporter:
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
-    crunchedCompression: 1
+    crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
   - buildTarget: Standalone
@@ -69,7 +70,7 @@ TextureImporter:
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
-    crunchedCompression: 1
+    crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
   - buildTarget: iPhone
@@ -77,7 +78,7 @@ TextureImporter:
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
-    crunchedCompression: 1
+    crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
   - buildTarget: Android
@@ -85,7 +86,7 @@ TextureImporter:
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
-    crunchedCompression: 1
+    crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
   - buildTarget: Windows Store Apps
@@ -108,78 +109,78 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Tomato1_0
+      name: Tomato_0
       rect:
         serializedVersion: 2
-        x: 46
-        y: 50
-        width: 106
-        height: 114
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Tomato1_1
-      rect:
-        serializedVersion: 2
-        x: 233
-        y: 50
-        width: 133
-        height: 107
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Tomato1_2
-      rect:
-        serializedVersion: 2
-        x: 465
-        y: 66
-        width: 87
-        height: 76
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Tomato1_3
-      rect:
-        serializedVersion: 2
-        x: 670
-        y: 37
-        width: 63
-        height: 98
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Tomato1_4
-      rect:
-        serializedVersion: 2
-        x: 834
-        y: 50
-        width: 133
-        height: 107
+        x: 69
+        y: 74
+        width: 160
+        height: 172
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Tomato1_5
+      name: Tomato_1
       rect:
         serializedVersion: 2
-        x: 1033
-        y: 50
-        width: 133
-        height: 107
+        x: 349
+        y: 74
+        width: 201
+        height: 162
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Tomato_4
+      rect:
+        serializedVersion: 2
+        x: 1250
+        y: 74
+        width: 201
+        height: 162
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Tomato_5
+      rect:
+        serializedVersion: 2
+        x: 1549
+        y: 74
+        width: 200
+        height: 162
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Tomato_2
+      rect:
+        serializedVersion: 2
+        x: 697
+        y: 98
+        width: 115
+        height: 110
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Tomato_3
+      rect:
+        serializedVersion: 2
+        x: 1004
+        y: 55
+        width: 96
+        height: 148
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
