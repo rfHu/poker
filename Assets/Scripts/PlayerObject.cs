@@ -154,7 +154,7 @@ public class PlayerObject : MonoBehaviour {
 			foldCards(Cardfaces);			
 		}
 
-		transform.Find("Info").GetComponent<CanvasGroup>().alpha = foldOpacity;
+		Circle.GetComponent<CanvasGroup>().alpha = foldOpacity;
 	}
 
 	private void darkenCards() {
@@ -188,7 +188,7 @@ public class PlayerObject : MonoBehaviour {
 			darkenCards();	
 		}
 
-		transform.Find("Info").GetComponent<CanvasGroup>().alpha = foldOpacity;
+		Circle.GetComponent<CanvasGroup>().alpha = foldOpacity;
 	}
 
 	private bool isSelf() {

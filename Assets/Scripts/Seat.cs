@@ -40,7 +40,7 @@ public class Seat : MonoBehaviour {
 		var y = realVector.y;
 
 		// y轴距顶部不超过TopMargin，则认为是顶部
-		if (h - y < Controller.TopMargin) {
+		if (h - y <= Controller.TopMargin) {
 			if (x < 0) {
 				return SeatPosition.TopLeft;
 			}

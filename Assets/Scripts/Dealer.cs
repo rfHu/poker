@@ -42,11 +42,11 @@ public class Dealer : MonoBehaviour {
 	}
 
 	private void setPosition(SeatPosition pos) {
-		var y = -55;
-		var x = 65;
+		var y = -65;
+		var x = 90;
 
 		if (pos == SeatPosition.Right) {
-			x =  -65;
+			x =  -90;
 		}
 
 		GetComponent<RectTransform>().DOAnchorPos(new Vector2(x, y), 0.15f);
