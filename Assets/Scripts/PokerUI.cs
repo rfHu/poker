@@ -50,6 +50,6 @@ public class PokerUI: MonoBehaviour {
 	}
 
 	static public void Toast(string msg, float seconds = 2) {
-		ToastManager.Show(msg, seconds, _.HexColor("#212932"), new Color(1, 1, 1, 1), 26, null);	
+		ToastManager.Show(msg, seconds, _.HexColor("#212932"), new Color(1, 1, 1, 1), 39, null);	
 	}
 }

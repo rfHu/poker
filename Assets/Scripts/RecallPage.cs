@@ -68,7 +68,7 @@ public class RecallPage : MonoBehaviour {
 		for (int i = 0; i < 5; i++) {
 			var go = (GameObject)Instantiate(Resources.Load("Prefab/Card"));
 			var card = go.GetComponent<Card>();
-			card.SetSize(new Vector2(58, 83));
+			card.SetSize(new Vector2(87, 125));
 
 			if (i < comCards.Count) {
 				card.Show(comCards[i]);
