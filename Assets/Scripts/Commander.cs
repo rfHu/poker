@@ -175,6 +175,9 @@ public class iOSCommander: ICommander {
 	[DllImport("__Internal")]
 	private static extern void _ex_callShareRoom(string text);
 
+	[DllImport("__Internal")]
+	private static extern void void _ex_callVoiceIconState(BOOL isShow);
+
 	public void Exit() {
 		_ex_callExitGame();
 	}
@@ -209,6 +212,10 @@ public class iOSCommander: ICommander {
 
     public void ShareGameRoom(string shareText) {
         _ex_callShareRoom(shareText);
+    }
+
+    public void VoiceIconToggle(bool isShowing) {
+        _ex_callVoiceIconState(isShowing);
     }
 }
 #endif
