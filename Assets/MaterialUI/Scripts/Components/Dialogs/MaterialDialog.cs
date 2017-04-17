@@ -103,10 +103,12 @@ namespace MaterialUI
             if (canvasWidth < 448)
             {
                 rectTransform.sizeDelta = new Vector2(canvasWidth - 48f, rectTransform.sizeDelta.y);
-            }
+            } 
             else if (canvasWidth < 648f)
             {
                 rectTransform.sizeDelta = new Vector2(400, rectTransform.sizeDelta.y);
+            } else if (canvasWidth > 1000f) {
+                rectTransform.sizeDelta = new Vector2(900, rectTransform.sizeDelta.y);
             }
             else
             {

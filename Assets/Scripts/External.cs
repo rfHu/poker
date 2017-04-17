@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
+using UniRx;
 
 // Unity提供方法给Native
 public class External : MonoBehaviour{
@@ -85,11 +86,12 @@ public class External : MonoBehaviour{
 			// Nothing to do
 		#else
 			SceneManager.LoadScene("GameLoading");
-			callback();
+			// 延时执行突出逻辑
+			Observable.Timer(TimeSpan.FromMilliseconds(90)).AsObservable().Subscribe((_) => {
+				callback();
+				Time.timeScale = 0;
+			});
 		#endif
-
-		// 暂停游戏
-		// Time.timeScale = 0;
 	}
 
 	void OnApplicationQuit()
