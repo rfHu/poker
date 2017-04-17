@@ -52,7 +52,7 @@ public class OwnerPanel : MonoBehaviour {
 
         AnteSliderInit();
 
-        ETSliderNum.text = "0h";
+        ETSliderNum.text = "0时";
 
         Need_auditToggle.isOn = GameData.Shared.NeedAudit;
         StraddleToggle.isOn = GameData.Shared.Straddle;      
@@ -72,11 +72,11 @@ public class OwnerPanel : MonoBehaviour {
                 if (BBsub == 0)
                 {
                     AnteSlider.maxValue = 2;
-                    AnteSuperscript.GetComponent<RectTransform>().sizeDelta = new Vector2(653, 28);
+                    AnteSuperscript.GetComponent<RectTransform>().sizeDelta = new Vector2(993, 42);
                 }
                 else if (BBsub == 1)
                 {
-                    AnteSuperscript.GetComponent<RectTransform>().sizeDelta = new Vector2(588, 28);
+                    AnteSuperscript.GetComponent<RectTransform>().sizeDelta = new Vector2(882, 42);
                     AnteSlider.maxValue = 3;
                 }
                 else
@@ -227,11 +227,11 @@ public class OwnerPanel : MonoBehaviour {
     public void ETSliderChanged() 
     {
         if (ExtendTimeSlider.value == 0)
-            ETSliderNum.text = "0h";
+            ETSliderNum.text = "0时";
         else if (ExtendTimeSlider.value == 1)
-            ETSliderNum.text = "0.5h";
+            ETSliderNum.text = "0.5时";
         else
-            ETSliderNum.text = (ExtendTimeSlider.value - 1).ToString() + "h";
+            ETSliderNum.text = (ExtendTimeSlider.value - 1).ToString() + "时";
 
         dict.Remove("time_limit");
 
