@@ -145,7 +145,13 @@ sealed public class GameData {
 
 			if (loginStatus == 1) {
 				SceneManager.LoadScene("PokerGame");
-			} 	
+
+#if UNITY_EDITOR
+#else
+			    Commander.Shared.VoiceIconToggle(true);
+#endif
+
+            } 	
 		});
 
 		RxSubjects.Deal.Subscribe((e) => {

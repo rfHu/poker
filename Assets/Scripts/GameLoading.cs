@@ -10,7 +10,7 @@ public class GameLoading : MonoBehaviour {
 		#if UNITY_EDITOR  
         external.SetSid("s%3ASAbXEJECbr6EIhP-VFSnAKfbgpHkWM-4.7ZJkZ23kXVZA1F7s%2FirnHteuWcBTma%2BIii5OhqmUKyQ");
 			external.SetProxy("http://localhost:8888");
-            external.SetRoomID("58f06d8e4164574711d44924");
+            external.SetRoomID("58f435a54164574711d459ad");
 		#endif
 	}
 	

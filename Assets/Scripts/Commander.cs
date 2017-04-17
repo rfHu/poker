@@ -80,6 +80,10 @@ public class Commander {
     public void ShareGameRoom(string shareText) {
         ic.ShareGameRoom(shareText);
     }
+
+    public void VoiceIconToggle(bool isShowing) {
+        ic.VoiceIconToggle(isShowing);
+    }
 }
 
 public interface ICommander {
@@ -91,6 +95,7 @@ public interface ICommander {
 	void Chat();
     void ShareRecord(int handID);
     void ShareGameRoom(string shareText);
+    void VoiceIconToggle(bool isShowing);
 }
 
 #if UNITY_ANDROID
@@ -136,6 +141,10 @@ public class AndroidCommander: ICommander {
 
     public void ShareGameRoom(string shareText) {
         getJo().Call("shareGame", shareText);
+    }
+
+    public void VoiceIconToggle(bool isShowing) {
+        getJo().Call("voiceIconToggle", isShowing);
     }
 }
 #endif
