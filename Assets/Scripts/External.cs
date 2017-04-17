@@ -69,11 +69,11 @@ public class External : MonoBehaviour{
 	}
 
 	public void SetProxy(string proxy) {
-		GameData.Shared.Proxy = proxy;		
+		Connect.Proxy = proxy;		
 	}
 
 	public void SetSocket(string domain) {
-		GameData.Shared.Domain = domain;	
+		Connect.Domain = domain;	
 	}
 
 	private void close(Action callback) {

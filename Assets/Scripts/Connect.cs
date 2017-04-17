@@ -9,6 +9,9 @@ using UniRx;
 using MaterialUI;
 
 public sealed class Connect  {
+	public static string Proxy;
+	public static string Domain = "https://socket.dev.poker.top";
+
 	private SocketManager manager;
 
 	private Dictionary<int, Action<Dictionary<string, object>>> successCallbacks = new Dictionary<int, Action<Dictionary<string, object>>>();
@@ -19,16 +22,16 @@ public sealed class Connect  {
 
 	private Connect() {
 		// Charles Proxy
-		if (!string.IsNullOrEmpty(GameData.Shared.Proxy)) {
-			HTTPManager.Proxy = new HTTPProxy(new Uri(GameData.Shared.Proxy));
+		if (!string.IsNullOrEmpty(Connect.Proxy)) {
+			HTTPManager.Proxy = new HTTPProxy(new Uri(Connect.Proxy));
 		}
 
 		SocketOptions options = new SocketOptions();
 		options.ConnectWith = TransportTypes.WebSocket;
 
-		_.Log("Unity: Socket URL=" + GameData.Shared.Domain);
+		_.Log("Unity: Socket URL=" + Connect.Domain);
 
-		manager = new SocketManager(new Uri(GameData.Shared.Domain + "/socket.io/"), options);
+		manager = new SocketManager(new Uri(Connect.Domain + "/socket.io/"), options);
 		manager.Socket.On("connect", onConnect);
 		manager.Socket.On("connecting", onNotConnect);
 		manager.Socket.On("disconnect", onNotConnect);
