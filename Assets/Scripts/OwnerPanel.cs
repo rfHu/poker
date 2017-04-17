@@ -52,7 +52,7 @@ public class OwnerPanel : MonoBehaviour {
 
         AnteSliderInit();
 
-        ETSliderNum.text = "0时";
+        ETSliderNum.text = "0h";
 
         Need_auditToggle.isOn = GameData.Shared.NeedAudit;
         StraddleToggle.isOn = GameData.Shared.Straddle;      
@@ -227,11 +227,11 @@ public class OwnerPanel : MonoBehaviour {
     public void ETSliderChanged() 
     {
         if (ExtendTimeSlider.value == 0)
-            ETSliderNum.text = "0时";
+            ETSliderNum.text = "0h";
         else if (ExtendTimeSlider.value == 1)
-            ETSliderNum.text = "0.5时";
+            ETSliderNum.text = "0.5h";
         else
-            ETSliderNum.text = (ExtendTimeSlider.value - 1).ToString() + "时";
+            ETSliderNum.text = (ExtendTimeSlider.value - 1).ToString() + "h";
 
         dict.Remove("time_limit");
 
