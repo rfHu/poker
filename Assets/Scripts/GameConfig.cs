@@ -406,9 +406,6 @@ sealed public class GameData {
 		}
 	}
 
-	public string Proxy;
-	public string Domain = "https://socket.dev.poker.top";
-
 	public ReactiveProperty<List<object>> AuditList = new ReactiveProperty<List<object>>();
 	public bool GameStartState = false;
 	public bool SeeCardState = false;
