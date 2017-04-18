@@ -36,7 +36,7 @@ public class SpkTextGo: MonoBehaviour {
         var rt = GetComponent<RectTransform>();
         var trt = TextCont.GetComponent<RectTransform>(); 
         var offsetX = 120;
-        rt.anchoredPosition = new Vector2(0, 120);
+        rt.anchoredPosition = new Vector2(0, 75);
 
         if (pos == SeatPosition.Bottom) {
             rt.anchoredPosition = new Vector2(0, -218);

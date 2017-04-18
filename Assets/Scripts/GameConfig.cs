@@ -128,22 +128,18 @@ sealed public class GameData {
 		RxSubjects.GameStart.AsObservable().Subscribe((e) => {
 			var json = e.Data.Dict("room");
 			GameStartState = true;
-			// 重置状态
-			AuditList = new ReactiveProperty<List<object>>();
 			byJson(json);
 		});
 	
 		RxSubjects.Look.Subscribe((e) => {
 			GameStartState = false;
-			// 重置状态
-			AuditList = new ReactiveProperty<List<object>>();
-
 			byJson(e.Data);
 
 			// 重连的用户，reload scene
 			var loginStatus = e.Data.Int("is_enter_look");
 
 			if (loginStatus == 1) {
+				AuditList.Value = new List<object>();
 				SceneManager.LoadScene("PokerGame");
 
 #if UNITY_EDITOR
@@ -458,8 +454,6 @@ sealed public class GameData {
 
 	public DateTime StartTime;
 	public bool InGame = false;  
-
-	public ReactiveProperty<bool> Muted = new ReactiveProperty<bool>(false);
 
 	public ReactiveProperty<int> AuditCD = new ReactiveProperty<int>(); 
 
