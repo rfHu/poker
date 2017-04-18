@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: dfa4a32d0c3968f408b63d7921d554e1
-timeCreated: 1492159121
+guid: 2c677b8d2581944439a130d00a983d18
+timeCreated: 1492508455
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
@@ -12,7 +12,6 @@ TextureImporter:
     21300010: Labber_5
     21300012: Labber_6
     21300014: Labber_7
-    21300016: Labber_8
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -116,7 +115,7 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 300
+        width: 300.2857
         height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -129,7 +128,7 @@ TextureImporter:
         serializedVersion: 2
         x: 300
         y: 0
-        width: 300
+        width: 300.2857
         height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -142,7 +141,7 @@ TextureImporter:
         serializedVersion: 2
         x: 600
         y: 0
-        width: 300
+        width: 300.2857
         height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -155,7 +154,7 @@ TextureImporter:
         serializedVersion: 2
         x: 900
         y: 0
-        width: 300
+        width: 300.2857
         height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -168,7 +167,7 @@ TextureImporter:
         serializedVersion: 2
         x: 1200
         y: 0
-        width: 300
+        width: 300.2857
         height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -181,7 +180,7 @@ TextureImporter:
         serializedVersion: 2
         x: 1500
         y: 0
-        width: 300
+        width: 300.2857
         height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -192,12 +191,12 @@ TextureImporter:
       name: Labber_6
       rect:
         serializedVersion: 2
-        x: 1800
-        y: 0
-        width: 300
-        height: 300
+        x: 1803
+        y: 13
+        width: 297
+        height: 44
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -205,22 +204,9 @@ TextureImporter:
       name: Labber_7
       rect:
         serializedVersion: 2
-        x: 2100
-        y: 13
-        width: 300
-        height: 43
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Labber_8
-      rect:
-        serializedVersion: 2
-        x: 2213
-        y: 134
-        width: 29
+        x: 1897
+        y: 83
+        width: 31
         height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
