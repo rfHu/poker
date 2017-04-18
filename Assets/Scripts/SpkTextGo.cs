@@ -38,6 +38,9 @@ public class SpkTextGo: MonoBehaviour {
         var offsetX = 120;
         rt.anchoredPosition = new Vector2(0, 75);
 
+        Arrow.SetActive(true);
+        Up.SetActive(false);
+
         if (pos == SeatPosition.Bottom) {
             rt.anchoredPosition = new Vector2(0, -218);
             trt.anchoredPosition = new Vector2(0, 0);
