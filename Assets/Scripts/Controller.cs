@@ -153,22 +153,7 @@ public class Controller : MonoBehaviour {
 			OwnerButton.SetActive(true);
 		} else {
 			OwnerButton.SetActive(false);
-		}
-
-		var sb = GameData.Shared.SB;
-		var bb = GameData.Shared.BB; 
-		var straStr = "";
-		var anteStr = "";
-
-		if (GameData.Shared.Straddle) {
-			straStr = string.Format("/{0}", bb * 2);
-		}
-
-		if (GameData.Shared.Ante > 0) {
-			anteStr = string.Format(" ({0})", GameData.Shared.Ante);
-		}
-			
-		setText(BBGo, string.Format("{0}/{1}{2}{3}", sb, bb, straStr, anteStr));			
+		}	
 
 		if (!String.IsNullOrEmpty(GameData.Shared.GameCode)) {
 			InviteCodeGo.SetActive(true);
@@ -195,6 +180,27 @@ public class Controller : MonoBehaviour {
 			addGameInfo("IP 限制");
 		}
 	}
+
+    private void setBBGoText()
+    {
+
+        var sb = GameData.Shared.SB;
+        var bb = GameData.Shared.BB;
+        var straStr = "";
+        var anteStr = "";
+
+        if (GameData.Shared.Straddle.Value)
+        {
+            straStr = string.Format("/{0}", bb * 2);
+        }
+
+        if (GameData.Shared.Ante.Value > 0)
+        {
+            anteStr = string.Format(" ({0})", GameData.Shared.Ante.Value);
+        }
+
+        setText(BBGo, string.Format("{0}/{1}{2}{3}", sb, bb, straStr, anteStr));
+    }
 
 	private void setupDealer() {
 		var dealer = (GameObject)Instantiate(Resources.Load("Prefab/Dealer"));
@@ -263,6 +269,14 @@ public class Controller : MonoBehaviour {
 
 			setText(TimeLeftGo, secToStr(value));
 		}).AddTo(this);
+
+        GameData.Shared.Ante.Subscribe((value) => {
+            setBBGoText();
+        }).AddTo(this);
+
+        GameData.Shared.Straddle.Subscribe((value) => {
+            setBBGoText();
+        }).AddTo(this);
 
 		GameData.Shared.Paused.Subscribe((pause) => {
 			if (!GameData.Shared.GameStarted) {

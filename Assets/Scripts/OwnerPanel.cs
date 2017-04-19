@@ -55,7 +55,7 @@ public class OwnerPanel : MonoBehaviour {
         ETSliderNum.text = "0h";
 
         Need_auditToggle.isOn = GameData.Shared.NeedAudit;
-        StraddleToggle.isOn = GameData.Shared.Straddle;      
+        StraddleToggle.isOn = GameData.Shared.Straddle.Value;      
 	}
 
     private void AnteSliderInit()
@@ -102,7 +102,7 @@ public class OwnerPanel : MonoBehaviour {
             text.transform.SetParent(AnteSuperscript,false);
             text.SetActive(true);
 
-            if (AnteSuperScriptNums[j] == GameData.Shared.Ante)
+            if (AnteSuperScriptNums[j] == GameData.Shared.Ante.Value)
             {
                 ASliderNum.text = AnteSuperScriptNums[j].ToString();
                 AnteSlider.value = j;
@@ -258,7 +258,7 @@ public class OwnerPanel : MonoBehaviour {
 
         dict.Remove("ante");
 
-        if (AnteSuperScriptNums[(int)AnteSlider.value] != GameData.Shared.Ante)
+        if (AnteSuperScriptNums[(int)AnteSlider.value] != GameData.Shared.Ante.Value)
         {
             int ante = AnteSuperScriptNums[(int)AnteSlider.value];
             dict.Add("ante", ante);
@@ -291,7 +291,7 @@ public class OwnerPanel : MonoBehaviour {
     {
         dict.Remove("straddle");
 
-        if (StraddleToggle.isOn != GameData.Shared.Straddle)
+        if (StraddleToggle.isOn != GameData.Shared.Straddle.Value)
         {
             dict.Add("straddle", StraddleToggle.isOn ? 1 : 0);
             isChanged[4] = true;
