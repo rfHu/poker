@@ -49,6 +49,7 @@ public class MenuPopup : MonoBehaviour {
 
 		if (muted) {
 			setVolumeImage("volume_off");
+			MasterAudio.UnmuteEverything();
 		}
 	}
 
