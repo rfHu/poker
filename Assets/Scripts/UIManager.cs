@@ -111,12 +111,12 @@ public class UIManager : MonoBehaviour {
         
         str += "，盲注[";
 
-        if (GameData.Shared.Straddle)
+        if (GameData.Shared.Straddle.Value)
             str += GameData.Shared.SB/2 + "/";
 
         str += GameData.Shared.SB + "/" + GameData.Shared.BB + "]";
 
-        if (GameData.Shared.Ante >0)
+        if (GameData.Shared.Ante.Value >0)
             str += "，底注[" + GameData.Shared.Ante + "]";
         
         str += "。一键约局，与好友畅享德州扑克的乐趣。";

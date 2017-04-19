@@ -332,8 +332,8 @@ sealed public class GameData {
                         break;
 
                     case "ante":
-                        Ante = data.Int("ante");
-                        str = "房主将底注改为：" + GameData.Shared.Ante; 
+                        Ante.Value = data.Int("ante");
+                        str = "房主将底注改为：" + Ante.Value; 
                         PokerUI.Toast(str);
                         break;
 
@@ -344,8 +344,8 @@ sealed public class GameData {
                         break;
 
                     case "straddle":
-                        Straddle = data.Int("straddle") != 0;
-                        str = GameData.Shared.Straddle ? "房主开启了Straddle" : "房主关闭了Straddle"; 
+                        Straddle.Value = data.Int("straddle") != 0;
+                        str = Straddle.Value ? "房主开启了Straddle" : "房主关闭了Straddle"; 
                         PokerUI.Toast(str);
 						break;
 
@@ -427,11 +427,11 @@ sealed public class GameData {
 		}
 	}
 
-	public int Ante = 0;
+	//public int Ante = 0;
 	public int Coins = 0;
 	public int SB = 0;
 	public int BB = 0;
-	public bool Straddle = false;
+	//public bool Straddle = false;
 	public string RoomName = "";
 
 	// 游戏是否已经开始，跟暂停状态无关
@@ -441,7 +441,9 @@ sealed public class GameData {
 	public bool NeedAudit = false;
 	public bool IPLimit = false;
 	public bool GPSLimit = false;
-	public ReactiveProperty<long> LeftTime = new ReactiveProperty<long>(0); 
+	public ReactiveProperty<long> LeftTime = new ReactiveProperty<long>(0);
+    public ReactiveProperty<int> Ante = new ReactiveProperty<int>(0);
+    public ReactiveProperty<bool> Straddle = new ReactiveProperty<bool>(false);
 
 	public ReactiveProperty<int> Pot = new ReactiveProperty<int>();
 	public ReactiveProperty<int> PrPot = new ReactiveProperty<int>();
@@ -476,7 +478,7 @@ sealed public class GameData {
 
 		Owner = options.String("ownerid") == GameData.Shared.Uid;
 		BankrollMul = options.IL("bankroll_multiple"); 
-		Ante = options.Int("ante");
+		Ante.Value = options.Int("ante");
 		PlayerCount = options.Int("max_seats");
 		Rake = options.Float("rake_percent");
 		Duration = options.Long("time_limit");
@@ -484,7 +486,7 @@ sealed public class GameData {
 		GPSLimit = options.Int("gps_limit") > 0;
 		IPLimit = options.Int("ip_limit") == 1;
 		GameCode = options.String("code");
-		Straddle = options.Int("straddle") != 0;
+		Straddle.Value = options.Int("straddle") != 0;
 		var bb = options.Int("limit");
 		BB = bb ;
 		SB = bb / 2;
