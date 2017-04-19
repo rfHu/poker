@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 41c385485d77f4745a2b1c04da7b794f
-timeCreated: 1492508408
+timeCreated: 1492573896
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
@@ -118,8 +118,8 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 300
-        height: 300
+        width: 194
+        height: 194
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -129,10 +129,10 @@ TextureImporter:
       name: CatchChicken_1
       rect:
         serializedVersion: 2
-        x: 300
+        x: 194
         y: 0
-        width: 300
-        height: 300
+        width: 194
+        height: 194
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -142,10 +142,10 @@ TextureImporter:
       name: CatchChicken_2
       rect:
         serializedVersion: 2
-        x: 600
+        x: 388
         y: 0
-        width: 300
-        height: 300
+        width: 194
+        height: 194
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -155,10 +155,10 @@ TextureImporter:
       name: CatchChicken_3
       rect:
         serializedVersion: 2
-        x: 900
+        x: 582
         y: 0
-        width: 300
-        height: 300
+        width: 194
+        height: 194
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -168,10 +168,10 @@ TextureImporter:
       name: CatchChicken_4
       rect:
         serializedVersion: 2
-        x: 1200
+        x: 776
         y: 0
-        width: 300
-        height: 300
+        width: 194
+        height: 194
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -181,10 +181,10 @@ TextureImporter:
       name: CatchChicken_5
       rect:
         serializedVersion: 2
-        x: 1500
+        x: 970
         y: 0
-        width: 300
-        height: 300
+        width: 194
+        height: 194
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -194,10 +194,10 @@ TextureImporter:
       name: CatchChicken_6
       rect:
         serializedVersion: 2
-        x: 1800
+        x: 1164
         y: 0
-        width: 300
-        height: 300
+        width: 194
+        height: 194
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -207,10 +207,10 @@ TextureImporter:
       name: CatchChicken_7
       rect:
         serializedVersion: 2
-        x: 2100
+        x: 1358
         y: 0
-        width: 300
-        height: 300
+        width: 194
+        height: 194
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -220,10 +220,10 @@ TextureImporter:
       name: CatchChicken_8
       rect:
         serializedVersion: 2
-        x: 2400
+        x: 1552
         y: 0
-        width: 300
-        height: 300
+        width: 194
+        height: 194
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -233,10 +233,10 @@ TextureImporter:
       name: CatchChicken_9
       rect:
         serializedVersion: 2
-        x: 2700
+        x: 1746
         y: 0
-        width: 300
-        height: 300
+        width: 194
+        height: 194
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -246,10 +246,10 @@ TextureImporter:
       name: CatchChicken_10
       rect:
         serializedVersion: 2
-        x: 3000
+        x: 1940
         y: 0
-        width: 300
-        height: 300
+        width: 194
+        height: 194
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

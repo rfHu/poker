@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 738cd8d5368e42c469023eef5b511669
-timeCreated: 1492149581
+timeCreated: 1492574190
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
@@ -115,8 +115,8 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 300
-        height: 300
+        width: 212
+        height: 212
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -126,10 +126,10 @@ TextureImporter:
       name: Boom_1
       rect:
         serializedVersion: 2
-        x: 300
+        x: 212
         y: 0
-        width: 300
-        height: 300
+        width: 212
+        height: 212
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -139,10 +139,10 @@ TextureImporter:
       name: Boom_2
       rect:
         serializedVersion: 2
-        x: 600
+        x: 424
         y: 0
-        width: 300
-        height: 300
+        width: 212
+        height: 212
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -152,10 +152,10 @@ TextureImporter:
       name: Boom_3
       rect:
         serializedVersion: 2
-        x: 900
+        x: 636
         y: 0
-        width: 300
-        height: 300
+        width: 212
+        height: 212
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -165,10 +165,10 @@ TextureImporter:
       name: Boom_4
       rect:
         serializedVersion: 2
-        x: 1200
+        x: 848
         y: 0
-        width: 300
-        height: 300
+        width: 212
+        height: 212
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -178,10 +178,10 @@ TextureImporter:
       name: Boom_5
       rect:
         serializedVersion: 2
-        x: 1500
+        x: 1060
         y: 0
-        width: 300
-        height: 300
+        width: 212
+        height: 212
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -191,10 +191,10 @@ TextureImporter:
       name: Boom_6
       rect:
         serializedVersion: 2
-        x: 1798
+        x: 1271
         y: 0
-        width: 300
-        height: 300
+        width: 212
+        height: 212
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -204,10 +204,10 @@ TextureImporter:
       name: Boom_7
       rect:
         serializedVersion: 2
-        x: 2100
+        x: 1484
         y: 0
-        width: 300
-        height: 300
+        width: 212
+        height: 212
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
