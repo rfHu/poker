@@ -96,6 +96,10 @@ public class PlayerObject : MonoBehaviour {
 		if (OPGo != null) {
 			Destroy(OPGo);
 		}
+
+		if (SpkText != null) {
+			Destroy(SpkText);
+		}
 	}
 
 	public void ShowPlayer(Player player, Transform parent) {

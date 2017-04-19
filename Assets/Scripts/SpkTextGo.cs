@@ -12,11 +12,17 @@ public class SpkTextGo: MonoBehaviour {
     public String Uid;
 
     private IDisposable disposable;
+    private Transform parent;
+    
+       void Awake()
+    {
+        parent = transform.parent;
+    }
 
     public void ShowMessage(string text) {
-        _.Log("调用ShowMessage");
-
         gameObject.SetActive(true);
+        transform.SetParent(G.UICvs.transform, true);
+        
         MessageText.text = text;
 
         if (disposable != null) {
@@ -32,6 +38,8 @@ public class SpkTextGo: MonoBehaviour {
     }
 
     public void ChangePos(SeatPosition pos) {
+        transform.SetParent(parent, true);
+
         // Vector2 vector = new Vector2(0, 0);
         var rt = GetComponent<RectTransform>();
         var trt = TextCont.GetComponent<RectTransform>(); 
@@ -54,6 +62,8 @@ public class SpkTextGo: MonoBehaviour {
         } else if (pos == SeatPosition.Top) {
             trt.anchoredPosition = new Vector2(0, 0);
         }
+
+        transform.SetParent(G.UICvs.transform, true);
     }
 
     public void Hide() {

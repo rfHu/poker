@@ -11,7 +11,7 @@ public class Card : MonoBehaviour {
 
 	public AnimationCurve scaleCurve;
 
-	public static float TurnCardDuration = 0.5f;
+	public static float TurnCardDuration = 0.3f;
 
 	void Awake() {
 		var img = GetComponent<Image>();
