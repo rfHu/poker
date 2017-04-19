@@ -86,7 +86,7 @@ public class OwnerPanel : MonoBehaviour {
         }
         AnteSuperScriptNums = new List<int>();
         AnteSuperScriptNums.Add(0);
-        int i = BBsub - 3;
+        int i = BBsub - 2;
         if (i < 0)
             i = 0;
 
