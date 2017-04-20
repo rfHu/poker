@@ -1,16 +1,27 @@
 fileFormatVersion: 2
 guid: 8c355a1f22814fb4caee2b0291b41b3f
-timeCreated: 1492144386
+timeCreated: 1492676462
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
     21300000: Flower_0
     21300002: Flower_1
     21300004: Flower_2
-    21300006: Flower_3
-    21300008: Flower_4
-    21300010: Flower_5
-    21300012: Flower_6
+    21300006: Flower_0
+    21300008: Flower_1
+    21300010: Flower_2
+    21300012: Flower_5
+    21300014: Flower_7
+    21300016: Flower_8
+    21300018: Flower_9
+    21300020: Flower_3
+    21300022: Flower_11
+    21300024: Flower_6
+    21300026: Flower_7
+    21300028: Flower_14
+    21300030: Flower_4
+    21300032: Flower_16
+    21300034: Flower_6
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -112,12 +123,12 @@ TextureImporter:
       name: Flower_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 300
-        height: 300
+        x: 139
+        y: 250
+        width: 181
+        height: 119
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -125,12 +136,12 @@ TextureImporter:
       name: Flower_1
       rect:
         serializedVersion: 2
-        x: 300
-        y: 0
-        width: 300
-        height: 300
+        x: 325
+        y: 243
+        width: 229
+        height: 129
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -138,12 +149,12 @@ TextureImporter:
       name: Flower_2
       rect:
         serializedVersion: 2
-        x: 600
-        y: 0
-        width: 300
-        height: 300
+        x: 1
+        y: 255
+        width: 136
+        height: 115
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -151,38 +162,12 @@ TextureImporter:
       name: Flower_3
       rect:
         serializedVersion: 2
-        x: 900
-        y: 0
-        width: 300
-        height: 300
+        x: 0
+        y: 135
+        width: 138
+        height: 118
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Flower_4
-      rect:
-        serializedVersion: 2
-        x: 1200
-        y: 0
-        width: 300
-        height: 300
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Flower_5
-      rect:
-        serializedVersion: 2
-        x: 1500
-        y: 0
-        width: 300
-        height: 300
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -190,12 +175,51 @@ TextureImporter:
       name: Flower_6
       rect:
         serializedVersion: 2
-        x: 1800
+        x: 141
         y: 0
-        width: 300
-        height: 300
+        width: 276
+        height: 245
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Flower_7
+      rect:
+        serializedVersion: 2
+        x: 474
+        y: 177
+        width: 35
+        height: 36
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Flower_4
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 10
+        width: 137
+        height: 123
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Flower_5
+      rect:
+        serializedVersion: 2
+        x: 420
+        y: 8
+        width: 137
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
