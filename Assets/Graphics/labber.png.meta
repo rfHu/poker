@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 2c677b8d2581944439a130d00a983d18
-timeCreated: 1492677419
+timeCreated: 1492681775
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
@@ -20,6 +20,9 @@ TextureImporter:
     21300026: labber_2
     21300028: labber_0
     21300030: labber_1
+    21300032: labber_8
+    21300034: labber_10
+    21300036: labber_11
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -118,91 +121,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: labber_7
-      rect:
-        serializedVersion: 2
-        x: 68
-        y: 258
-        width: 28
-        height: 25
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: labber_4
-      rect:
-        serializedVersion: 2
-        x: 571
-        y: 0
-        width: 142
-        height: 297
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: labber_6
-      rect:
-        serializedVersion: 2
-        x: 2
-        y: 198
-        width: 272
-        height: 39
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: labber_3
-      rect:
-        serializedVersion: 2
-        x: 405
-        y: 0
-        width: 163
-        height: 257
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: labber_5
-      rect:
-        serializedVersion: 2
-        x: 718
-        y: 52
-        width: 151
-        height: 184
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: labber_2
-      rect:
-        serializedVersion: 2
-        x: 277
-        y: 0
-        width: 127
-        height: 214
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
       name: labber_0
       rect:
         serializedVersion: 2
-        x: 17
-        y: 0
+        x: 3
+        y: 228
         width: 127
-        height: 135
+        height: 138
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -212,10 +137,101 @@ TextureImporter:
       name: labber_1
       rect:
         serializedVersion: 2
-        x: 147
-        y: 0
-        width: 125
-        height: 149
+        x: 151
+        y: 329
+        width: 273
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: labber_2
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 282
+        width: 103
+        height: 36
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: labber_3
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 186
+        width: 141
+        height: 131
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: labber_4
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 207
+        width: 83
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: labber_5
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 189
+        width: 94
+        height: 83
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: labber_8
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 7
+        width: 151
+        height: 183
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: labber_10
+      rect:
+        serializedVersion: 2
+        x: 292
+        y: 154
+        width: 29
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: labber_11
+      rect:
+        serializedVersion: 2
+        x: 179
+        y: 13
+        width: 184
+        height: 116
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
