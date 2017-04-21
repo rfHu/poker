@@ -52,7 +52,14 @@ sealed public class Player {
 		InGame = json.Bool("is_ingame");	
 		AuditCD = json.Int("unaudit_countdown");
 		Coins = json.Int("coins");
-		ShowCard.Value = Convert.ToString(json.Int("showcard"), 2);
+
+		var showValue = Convert.ToString(json.Int("showcard"), 2);
+
+		if (showValue.Length < 2) {
+			showValue = "0" + showValue;
+		} 
+
+		ShowCard.Value = showValue;
 
 		var cd = json.Int("turn_countdown");
 		if (cd > 0) {

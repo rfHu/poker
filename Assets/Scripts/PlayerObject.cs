@@ -151,11 +151,14 @@ public class PlayerObject : MonoBehaviour {
 
 		player.ShowCard.Value = value.ToString();
 
+		// 转换10进制
+		var num = Convert.ToInt16(value.ToString(), 2); 
+
 		// 发送请求
 		Connect.Shared.Emit(new Dictionary<string, object> {
 			{"f", "showcard"},
 			{"args", new Dictionary<string, object> {
-				{"num", value.ToString()}
+				{"showcard", num}
 			}}
 		});
 	}
@@ -388,7 +391,7 @@ public class PlayerObject : MonoBehaviour {
                 CardDesc.text = Card.GetCardDesc(value);
             }).AddTo(this);
 
-			Player.ShowCard.Subscribe((value) => {
+			player.ShowCard.Subscribe((value) => {
 				if (value[0] == '1') {
 					Eyes[0].SetActive(true);
 				} else {
