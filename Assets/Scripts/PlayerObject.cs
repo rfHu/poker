@@ -32,6 +32,7 @@ public class PlayerObject : MonoBehaviour {
 	public GameObject Countdown;
 	public GameObject Circle;
 	public GameObject AutoArea;
+	public GameObject[] AutoOperas; 
 	public GameObject[] Eyes; 
 
 	private GameObject OPGo;
@@ -48,6 +49,7 @@ public class PlayerObject : MonoBehaviour {
 
 	public SpkTextGo SpkText;
 	public GameObject Volume;
+
 
 	private Seat theSeat {
 		get {
@@ -144,7 +146,7 @@ public class PlayerObject : MonoBehaviour {
 	public void AutoCall() {
 
 	}
-
+	
 	private void toggleEye(int index) {
 		var value = new System.Text.StringBuilder(player.ShowCard.Value);
 		value[index] =  value[index] == '0' ? '1' : '0';
@@ -403,6 +405,18 @@ public class PlayerObject : MonoBehaviour {
 				} else {
 					Eyes[1].SetActive(false);
 				}
+			}).AddTo(this);
+
+			player.Trust.ShouldShow.Subscribe((active) => {
+				AutoArea.SetActive(active);
+			}).AddTo(this);
+
+			player.Trust.CallNumber.Subscribe((num) => {
+
+			}).AddTo(this);
+
+			player.Trust.SelectedFlag.Subscribe((flags) => {
+
 			}).AddTo(this);
 		}
 

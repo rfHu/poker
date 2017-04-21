@@ -14,6 +14,22 @@ public enum ActionState {
 	Raise = 5
 }
 
+public class AutoDeposit {
+	public ReactiveProperty<string> SelectedFlag = new ReactiveProperty<string>();
+	public ReactiveProperty<int> CallNumber = new ReactiveProperty<int>();
+	public ReactiveProperty<bool> ShouldShow =  new ReactiveProperty<bool>();
+
+	public AutoDeposit(string flag, int num) {
+		SelectedFlag.Value = flag;
+		CallNumber.Value = num;
+		ShouldShow.Value = true;
+	}
+
+	public AutoDeposit() {
+		ShouldShow.Value = false;
+	}
+}
+
 sealed public class Player {
 	sealed public class RestoreData {
 		public int seconds = 0;
@@ -29,6 +45,7 @@ sealed public class Player {
 	public bool InGame = false;
 	public int AuditCD = 0; 
 	public int Coins = 0;
+	public AutoDeposit Trust; 
 	public ReactiveProperty<string> ShowCard = new ReactiveProperty<string>();
 
 	public BehaviorSubject<RestoreData> Countdown = new BehaviorSubject<RestoreData>(new RestoreData());
@@ -60,6 +77,8 @@ sealed public class Player {
 		} 
 
 		ShowCard.Value = showValue;
+		var trust = json.Dict("trust");
+		// Trust.Value = new AutoDeposit();
 
 		var cd = json.Int("turn_countdown");
 		if (cd > 0) {
