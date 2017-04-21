@@ -354,6 +354,12 @@ public class PlayerObject : MonoBehaviour {
 			fixChatPos(pos);
 		}).AddTo(this);
 
+		// fixChatPos(SeatPosition.Right);
+		// Observable.Timer(TimeSpan.FromSeconds(1)).AsObservable().Subscribe((e) => {
+		// 	SpkText.ShowMessage("快来看啊~~");
+		// });
+
+
 		if (isSelf()) {
 			GameData.Shared.MaxFiveRank.Subscribe((value) => {
 				var parent = CardDesc.transform.parent.gameObject;

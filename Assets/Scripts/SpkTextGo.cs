@@ -14,12 +14,11 @@ public class SpkTextGo: MonoBehaviour {
     private IDisposable disposable;
     private Transform parent;
     
-       void Awake()
-    {
-        parent = transform.parent;
-    }
-
     public void ShowMessage(string text) {
+        if (parent == null) {
+            parent = transform.parent;
+        }
+
         gameObject.SetActive(true);
         transform.SetParent(G.UICvs.transform, true);
         
@@ -38,9 +37,12 @@ public class SpkTextGo: MonoBehaviour {
     }
 
     public void ChangePos(SeatPosition pos) {
+        if (parent == null) {
+            parent = transform.parent;
+        }
+
         transform.SetParent(parent, true);
 
-        // Vector2 vector = new Vector2(0, 0);
         var rt = GetComponent<RectTransform>();
         var trt = TextCont.GetComponent<RectTransform>(); 
         var offsetX = 120;
