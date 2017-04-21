@@ -145,12 +145,27 @@ public class PlayerObject : MonoBehaviour {
 
 	}
 
-	public void ShowFirstCard() {
+	private void toggleEye(int index) {
+		var value = new System.Text.StringBuilder(player.ShowCard.Value);
+		value[index] =  value[index] == '0' ? '1' : '0';
 
+		player.ShowCard.Value = value.ToString();
+
+		// 发送请求
+		Connect.Shared.Emit(new Dictionary<string, object> {
+			{"f", "showcard"},
+			{"args", new Dictionary<string, object> {
+				{"num", value.ToString()}
+			}}
+		});
+	}
+
+	public void ShowFirstCard() {
+		toggleEye(0);	
 	}
 
 	public void ShowSecondCard() {
-
+		toggleEye(1);
 	}
 
 	public void Fold() {
@@ -372,6 +387,20 @@ public class PlayerObject : MonoBehaviour {
                 parent.SetActive(true);
                 CardDesc.text = Card.GetCardDesc(value);
             }).AddTo(this);
+
+			Player.ShowCard.Subscribe((value) => {
+				if (value[0] == '1') {
+					Eyes[0].SetActive(true);
+				} else {
+					Eyes[0].SetActive(false);
+				}
+
+				if (value[1] == '1') {
+					Eyes[1].SetActive(true);
+				} else {
+					Eyes[1].SetActive(false);
+				}
+			}).AddTo(this);
 		}
 
 		RxSubjects.ShowAudio.Where(isSelf).Subscribe((jsonStr) => {
@@ -421,13 +450,18 @@ public class PlayerObject : MonoBehaviour {
 			return ;
 		}
 	
-		if (cards[0] > 0 && cards[1] > 0) {
+		if (cards[0] > 0 || cards[1] > 0) {
 			// 显示GameObject
 			getShowCard().SetActive(true);
 
 			// 显示手牌
-			ShowCards[0].Show(cards[0], true);
-			ShowCards[1].Show(cards[1], true);
+			if (cards[0] > 0) {
+				ShowCards[0].Show(cards[0], true);
+			} 
+
+			if (cards[1] > 0) {
+				ShowCards[1].Show(cards[1], true);
+			}
 
 			Cardfaces.SetActive(false);
 		}

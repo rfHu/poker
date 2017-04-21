@@ -29,6 +29,7 @@ sealed public class Player {
 	public bool InGame = false;
 	public int AuditCD = 0; 
 	public int Coins = 0;
+	public ReactiveProperty<string> ShowCard = new ReactiveProperty<string>();
 
 	public BehaviorSubject<RestoreData> Countdown = new BehaviorSubject<RestoreData>(new RestoreData());
 
@@ -51,6 +52,7 @@ sealed public class Player {
 		InGame = json.Bool("is_ingame");	
 		AuditCD = json.Int("unaudit_countdown");
 		Coins = json.Int("coins");
+		ShowCard.Value = Convert.ToString(json.Int("showcard"), 2);
 
 		var cd = json.Int("turn_countdown");
 		if (cd > 0) {
