@@ -355,10 +355,9 @@ public class PlayerObject : MonoBehaviour {
 		}).AddTo(this);
 
 		// fixChatPos(SeatPosition.Right);
-		// Observable.Timer(TimeSpan.FromSeconds(1)).AsObservable().Subscribe((e) => {
+		// Observable.Timer(TimeSpan.FromSeconds(5)).AsObservable().Subscribe((e) => {
 		// 	SpkText.ShowMessage("快来看啊~~");
-		// });
-
+		// }).AddTo(this);
 
 		if (isSelf()) {
 			GameData.Shared.MaxFiveRank.Subscribe((value) => {
@@ -481,6 +480,7 @@ public class PlayerObject : MonoBehaviour {
 	private void setPrChips(int value) {
 		var chips = (GameObject)Instantiate(Resources.Load("Prefab/UpChip"));
 		chips.transform.SetParent(transform, false);
+		chips.transform.SetAsFirstSibling();
 
 		if (cgo == null) {
 			cgo = chips.GetComponent<ChipsGo>();
