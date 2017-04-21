@@ -7,7 +7,6 @@ using DG.Tweening;
 
 public class EmoticonEvemt : MonoBehaviour {
 
-    public GameObject tomatoPart2;
 
     public GameObject laberPart2;
     public RectTransform[] ice;
@@ -25,11 +24,6 @@ public class EmoticonEvemt : MonoBehaviour {
 
     public void Destroythis() {
         GameObject.Destroy(gameObject);
-    }
-
-    public void TomatoPart2() 
-    {
-        tomatoPart2.SetActive(true);
     }
 
     public void LabberPart2() 

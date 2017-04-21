@@ -1,17 +1,17 @@
 fileFormatVersion: 2
 guid: 738cd8d5368e42c469023eef5b511669
-timeCreated: 1492574190
+timeCreated: 1492669735
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
     21300000: Boom_0
-    21300002: Boom_1
-    21300004: Boom_2
-    21300006: Boom_3
-    21300008: Boom_4
+    21300002: Boom_2
+    21300004: Boom_3
+    21300006: Boom_4
+    21300008: Boom_1
     21300010: Boom_5
-    21300012: Boom_6
-    21300014: Boom_7
+    21300012: Boom_7
+    21300014: Boom_6
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -114,22 +114,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 212
-        height: 212
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Boom_1
-      rect:
-        serializedVersion: 2
-        x: 212
-        y: 0
-        width: 212
-        height: 212
+        y: 286
+        width: 133
+        height: 84
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -139,10 +126,10 @@ TextureImporter:
       name: Boom_2
       rect:
         serializedVersion: 2
-        x: 424
-        y: 0
-        width: 212
-        height: 212
+        x: 136
+        y: 260
+        width: 113
+        height: 112
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -152,10 +139,10 @@ TextureImporter:
       name: Boom_3
       rect:
         serializedVersion: 2
-        x: 636
-        y: 0
-        width: 212
-        height: 212
+        x: 247
+        y: 209
+        width: 166
+        height: 163
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -165,10 +152,23 @@ TextureImporter:
       name: Boom_4
       rect:
         serializedVersion: 2
-        x: 848
-        y: 0
-        width: 212
-        height: 212
+        x: 411
+        y: 194
+        width: 187
+        height: 178
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Boom_1
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 197
+        width: 73
+        height: 81
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -178,23 +178,10 @@ TextureImporter:
       name: Boom_5
       rect:
         serializedVersion: 2
-        x: 1060
-        y: 0
-        width: 212
-        height: 212
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Boom_6
-      rect:
-        serializedVersion: 2
-        x: 1271
-        y: 0
-        width: 212
-        height: 212
+        x: 323
+        y: 1
+        width: 215
+        height: 197
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -204,10 +191,23 @@ TextureImporter:
       name: Boom_7
       rect:
         serializedVersion: 2
-        x: 1484
-        y: 0
-        width: 212
-        height: 212
+        x: 1
+        y: 3
+        width: 159
+        height: 179
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Boom_6
+      rect:
+        serializedVersion: 2
+        x: 164
+        y: 3
+        width: 159
+        height: 179
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}

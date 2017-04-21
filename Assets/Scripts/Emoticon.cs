@@ -32,7 +32,7 @@ public class Emoticon : MonoBehaviour {
             transform.localScale = new Vector3(-1, 1, 0);
 
 
-        Vector2 aimSeat = toSeat.transform.localPosition;
+        Vector2 aimSeat = toSeat.transform.localPosition + new Vector3(0, 60, 0);
 
         if (isToMe) 
         {
