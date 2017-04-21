@@ -31,6 +31,8 @@ public class PlayerObject : MonoBehaviour {
 	public Text ScoreLabel;
 	public GameObject Countdown;
 	public GameObject Circle;
+	public GameObject AutoArea;
+	public GameObject[] Eyes; 
 
 	private GameObject OPGo;
 	private ChipsGo cgo; 
@@ -133,6 +135,22 @@ public class PlayerObject : MonoBehaviour {
 		var image = parent.gameObject.GetComponent<Image>();
 		image.enabled = false;
 		registerRxEvent();
+	}
+
+	public void AutoCheckOrFold() {
+
+	}
+
+	public void AutoCall() {
+
+	}
+
+	public void ShowFirstCard() {
+
+	}
+
+	public void ShowSecondCard() {
+
 	}
 
 	public void Fold() {
