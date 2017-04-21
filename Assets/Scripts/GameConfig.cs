@@ -583,6 +583,22 @@ sealed public class GameData {
 	
 	public ReactiveCollection<int> PublicCards = new ReactiveCollection<int>();
 
+	// 静音设置
+	private static string muteTag = "persist.txt?tag=mute";
+	public bool muted {
+		get {
+			if (ES2.Exists(muteTag)) {
+				return ES2.Load<bool>(muteTag);
+			}
+
+			return false;
+		}
+
+		set {
+			ES2.Save(value, muteTag);
+		}
+	}
+
 	public class MyCmd {
 		public static bool Takecoin = false;
 		public static bool Unseat = false;

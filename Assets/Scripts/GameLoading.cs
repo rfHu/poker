@@ -8,9 +8,9 @@ public class GameLoading : MonoBehaviour {
 		var external = External.Instance;
 
 		#if UNITY_EDITOR  
-        external.SetSid("s%3AaKO446984Zhoh8sbLrUzLTbTQ6Lp2r9p.yAdua3Ygx8BGuL%2FWmOcAqiM15JizO9Fb%2F%2FmKstZCG2A");
+        	external.SetSid("s%3AcWb4R4muxh-isFoOGqAQZS2_rf5UNMJt.nCR2EBzPu3h%2BrKxHoSRiJwpk%2FxJCKaq1xvaZXS4eNUI");
 			external.SetProxy("http://localhost:8888");
-            external.SetRoomID("58f97d0c5630a67fe7d267f0");
+            external.SetRoomID("58f9a2f05630a67fe7d26b47");
 		#endif
 	}
 	

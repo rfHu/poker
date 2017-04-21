@@ -39,6 +39,7 @@ public class Controller : MonoBehaviour {
 		GameData.Shared.Reload();
 		showGameInfo();
 		setupDealer();
+		setMuteState();
 	}
 
 	public void OnStartClick() {
@@ -205,6 +206,12 @@ public class Controller : MonoBehaviour {
 	private void setupDealer() {
 		var dealer = (GameObject)Instantiate(Resources.Load("Prefab/Dealer"));
 		dealer.GetComponent<Dealer>().Init(Seats);
+	}
+
+	private void setMuteState() {
+		if (GameData.Shared.muted) {
+			MasterAudio.MuteEverything();
+		}
 	}
 
 	private void addGameInfo(string text) {
