@@ -98,7 +98,7 @@ public class OwnerPanel : MonoBehaviour {
         for (int j = 0; j < AnteSuperScriptNums.Count; j++)
         {
             GameObject text = Instantiate(AnteScriptNum);
-            text.GetComponent<Text>().text = "" + AnteSuperScriptNums[j];
+            text.GetComponent<Text>().text = ("" + AnteSuperScriptNums[j]).PadRight(3,' ');
             text.transform.SetParent(AnteSuperscript,false);
             text.SetActive(true);
 
