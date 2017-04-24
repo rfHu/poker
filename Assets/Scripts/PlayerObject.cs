@@ -140,11 +140,29 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	public void AutoCheckOrFold() {
-
+		toggleAutoBtns(0);	
 	}
 
 	public void AutoCall() {
+		toggleAutoBtns(1);	
+	}
 
+	private void toggleAutoBtns(int index) {
+		var value = new System.Text.StringBuilder(player.Trust.SelectedFlag.Value);
+
+		value[index] = value[index] == '0' ? '1' : '0';
+		value[index ^ 1] = '0';	
+
+		player.Trust.SelectedFlag.Value = value.ToString();	
+
+		var num = Convert.ToInt16(value.ToString(), 2);
+
+		Connect.Shared.Emit(new Dictionary<string, object>{
+			{"f", "trust"},
+			{"args", new Dictionary<string, object> {
+				{"chooseid", num}
+			}}
+		});
 	}
 	
 	private void toggleEye(int index) {
@@ -356,6 +374,11 @@ public class PlayerObject : MonoBehaviour {
 				} else {
 					MoveOut();
 				}
+
+				// 自动托管
+				if (isSelf()) {
+					player.SetTrust(e.Data.Dict("trust"));
+				}
 			});
 		}).AddTo(this);
 
@@ -364,6 +387,7 @@ public class PlayerObject : MonoBehaviour {
 			MoveOut();
 			PlayerAct.gameObject.SetActive(false);
 			AllinGo.SetActive(false);
+			AutoArea.SetActive(false);
 
 			if (cgo != null) {
 			 	cgo.Hide();
@@ -407,16 +431,44 @@ public class PlayerObject : MonoBehaviour {
 				}
 			}).AddTo(this);
 
-			player.Trust.ShouldShow.Subscribe((active) => {
-				AutoArea.SetActive(active);
+			player.Trust.ShouldShow.Subscribe((show) => {
+				AutoArea.SetActive(show);
 			}).AddTo(this);
 
 			player.Trust.CallNumber.Subscribe((num) => {
+				var text = AutoOperas[1].transform.Find("Text").GetComponent<Text>();
 
+				if (num == 0) {
+					text.text = "自动让牌";
+				} else if (num == -1) {
+					text.text = "全下";
+				} else if (num > 0) {
+					text.text = "跟注\n" + num;
+				}
 			}).AddTo(this);
 
-			player.Trust.SelectedFlag.Subscribe((flags) => {
+			player.Trust.SelectedFlag.Where((flags) => { return flags != null; }).Subscribe((flags) => {
+				var ncolor = _.HexColor("#2196F364");
+				var scolor = _.HexColor("#2196F3");
+				
+				var img0 = AutoOperas[0].GetComponent<ProceduralImage>();
+				var img1 = AutoOperas[1].GetComponent<ProceduralImage>();
 
+				if (flags[0] == '0') {
+					img0.color = ncolor;
+				} else {
+					img0.color = scolor;
+				}
+
+				if (flags[1] == '0') {
+					img1.color = ncolor;
+				} else {
+					img1.color = scolor;
+				}
+			}).AddTo(this);
+
+			RxSubjects.Deal.Subscribe((_) => {
+				player.Trust.Hide();
 			}).AddTo(this);
 		}
 
@@ -480,7 +532,9 @@ public class PlayerObject : MonoBehaviour {
 				ShowCards[1].Show(cards[1], true);
 			}
 
-			Cardfaces.SetActive(false);
+			if (Cardfaces != null) {
+				Cardfaces.SetActive(false);
+			}
 		}
 	}
 
