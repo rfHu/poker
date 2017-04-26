@@ -349,7 +349,12 @@ public sealed class Connect  {
                 case "kickout":
                     RxSubjects.KickOut.OnNext(rxdata);
                     break;
-
+                case "insurance":
+                    RxSubjects.Insurance.OnNext(rxdata);
+                    break;
+                case "to_insurance":
+                    RxSubjects.ToInsurance.OnNext(rxdata);
+                    break;
 				default:
 					break;
 			}

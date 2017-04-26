@@ -43,6 +43,8 @@ public class RxSubjects {
     public static Subject<RxData> Emoticon = new Subject<RxData>();
     public static Subject<RxData> KickOut = new Subject<RxData>();
     public static Subject<RxData> StandUp = new Subject<RxData>();
+    public static Subject<RxData> Insurance = new Subject<RxData>();
+    public static Subject<RxData> ToInsurance = new Subject<RxData>();
 
 	// 跟网络无关事件
 	public static Subject<int> ChangeVectorsByIndex = new Subject<int>();
