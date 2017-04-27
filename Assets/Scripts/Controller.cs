@@ -425,25 +425,6 @@ public class Controller : MonoBehaviour {
 
 			PokerUI.Toast(String.Format("{0}: {1}", name, text), 3f);
 		}).AddTo(this);
-
-
-        RxSubjects.Insurance.Subscribe((e) =>
-        {
-
-        }).AddTo(this);
-
-        RxSubjects.ToInsurance.Subscribe((e) =>
-        {
-            var outsCard = e.Data.IL("outs");
-            var pot = e.Data.Int("pot");
-            var cost = e.Data.Int("cost");
-            var scope = e.Data.IL("scope");
-            var mustBuy = e.Data.Int("must_buy")==2?true:false;
-
-            var InsurancePopup = (GameObject)Instantiate(Resources.Load("Prefab/Insurance"));
-            InsurancePopup.GetComponent<Insurance>().Init(outsCard, pot, cost, scope, mustBuy);
-
-        }).AddTo(this);
 	}
 
 	private bool isGuest(string json) {

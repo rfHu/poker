@@ -386,7 +386,35 @@ public class PlayerObject : MonoBehaviour {
             var N = JSON.Parse(jsonStr);
             var text = N["text"].Value;
             SpkText.ShowMessage(text);
-        }).AddTo(this); 
+        }).AddTo(this);
+
+        RxSubjects.Insurance.Subscribe((e) =>
+        {
+            _.Log("1");
+            string name = "";
+
+            if (e.Data.Int("type") == 3)
+            {
+                name += GameData.Shared.FindPlayer(e.Data.String("uid")).Name;
+                PokerUI.Toast(name + " 玩家正在购买保险");
+            }
+        }).AddTo(this);
+
+        RxSubjects.ToInsurance.Subscribe((e) =>
+        {
+            var outsCard = e.Data.IL("outs");
+            var pot = e.Data.Int("pot");
+            var cost = e.Data.Int("cost");
+            var scope = e.Data.IL("scope");
+            var mustBuy = e.Data.Int("must_buy") == 2 ? true : false;
+            var time = e.Data.Int("time");
+
+            var InsurancePopup = (GameObject)GameObject.Instantiate(Resources.Load("Prefab/Insurance"));
+            InsurancePopup.GetComponent<DOPopup>().Show();
+            InsurancePopup.GetComponent<Insurance>().Init(outsCard, pot, cost, scope, mustBuy, time);
+
+        }).AddTo(this);
+
 	}
 
 	private void fixChatPos(SeatPosition pos) {

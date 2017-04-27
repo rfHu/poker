@@ -4,6 +4,7 @@ using Extensions;
 using UniRx;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using UnityEngine;
 
 public enum ActionState {
 	None = 0,
@@ -380,6 +381,8 @@ sealed public class GameData {
 			var value = Math.Max(0, LeftTime.Value - 1);
 			LeftTime.Value = value;
 		});
+
+
 	}
    
 	private void setPbCards(List<int> list, int state) {

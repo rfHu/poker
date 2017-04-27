@@ -355,6 +355,9 @@ public sealed class Connect  {
                 case "to_insurance":
                     RxSubjects.ToInsurance.OnNext(rxdata);
                     break;
+                case "moretime":
+                    RxSubjects.Moretime.OnNext(rxdata);
+                    break;
 				default:
 					break;
 			}
