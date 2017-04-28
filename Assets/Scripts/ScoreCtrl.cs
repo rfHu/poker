@@ -14,6 +14,10 @@ public class ScoreCtrl : MonoBehaviour {
 	public GameObject GridLayout;
 
 	public GameObject Guest;
+
+    public GameObject Insurance;
+
+    public Text InsuranceData;
 	
 	void Awake()
 	{
@@ -22,8 +26,15 @@ public class ScoreCtrl : MonoBehaviour {
         }, (json) =>
         {
 			var ret = json.Dict("ret");
-			Hands.text = string.Format("第{0}手", ret.Int("handid")); 
-			
+            var insurance = ret.Dict("insurance");
+			Hands.text = string.Format("第{0}手", ret.Int("handid"));
+
+            if (insurance.Int("need") == 1)
+            {
+                Insurance.SetActive(true);
+                InsuranceData.text = insurance.Int("pay").ToString();
+            }
+
 			var list = ret.List("list");
 			var guestList = new List<Dictionary<string, object>>();
 			var playerList = new List<Dictionary<string, object>>();
@@ -53,10 +64,21 @@ public class ScoreCtrl : MonoBehaviour {
 				entry.SetActive(true);
 				var all = player.Int("takecoin");
 
-				entry.transform.Find("Name").GetComponent<Text>().text = player.String("name");
-				entry.transform.Find("Total").GetComponent<Text>().text = all.ToString(); 
-				entry.transform.Find("Score").GetComponent<Text>().text = (player.Int("bankroll") - all).ToString();
+                Text name = entry.transform.Find("Name").GetComponent<Text>();
+                Text total = entry.transform.Find("Total").GetComponent<Text>();
+                Text score = entry.transform.Find("Score").GetComponent<Text>();
+
+				name.text = player.String("name");
+				total.text = all.ToString(); 
+				score.text = (player.Int("bankroll") - all).ToString();
 				entry.transform.SetParent(viewport.transform, false);
+
+                if (!player.Bool("in_room"))
+                {
+                    name.color = new Color(1, 1, 1, 0.2f);
+                    total.color = new Color(1, 1, 1, 0.2f);
+                    score.color = new Color(1, 1, 1, 0.2f);
+                }
         	}
 
 			// 游客
@@ -83,8 +105,15 @@ public class ScoreCtrl : MonoBehaviour {
 					GetComponent<DOPopup>().Close();
 				};
 
-				guestObj.transform.Find("Text").GetComponent<Text>().text = guest.String("name");
+                Text name = guestObj.transform.Find("Text").GetComponent<Text>();
+				name.text = guest.String("name");
 				guestObj.transform.SetParent(grid.transform, false);
+
+                if (!guest.Bool("in_room"))
+                {
+                    name.color = new Color(1, 1, 1, 0.2f);
+                    avatar.GetComponent<RawImage>().color = new Color(1, 1, 1, 0.5f);
+                }
 			} 
         });
     }

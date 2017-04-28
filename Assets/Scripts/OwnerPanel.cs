@@ -14,6 +14,7 @@ public class OwnerPanel : MonoBehaviour {
     public Slider MultipleSlider2;
     public Slider ExtendTimeSlider;
     public Slider AnteSlider;
+    public Slider Turn_countdownSlider;
     public Toggle Need_auditToggle;
     public Toggle StraddleToggle;
 
@@ -23,6 +24,7 @@ public class OwnerPanel : MonoBehaviour {
     public Text MSliderNum2;
     public Text ETSliderNum;
     public Text ASliderNum;
+    public Text T_cNum;
 
     public Button SaveButton;
 	private string pauseStr = "暂停牌局";
@@ -33,7 +35,9 @@ public class OwnerPanel : MonoBehaviour {
     private List<int> bankroll_multiple;
 
     private Dictionary<string, object> dict = new Dictionary<string, object>();
-    private bool[] isChanged = new bool[5]{ false, false, false, false, false };
+    private bool[] isChanged = new bool[6]{ false, false, false, false, false ,false};
+    private List<int> turn_countdownNum =new List<int>{ 10, 12, 15, 20 };
+    private List<int> a;
 
 	void Awake()
 	{
@@ -55,7 +59,9 @@ public class OwnerPanel : MonoBehaviour {
         ETSliderNum.text = "0h";
 
         Need_auditToggle.isOn = GameData.Shared.NeedAudit;
-        StraddleToggle.isOn = GameData.Shared.Straddle.Value;      
+        StraddleToggle.isOn = GameData.Shared.Straddle.Value;
+
+        Turn_countdownSlider.value = turn_countdownNum.IndexOf(GameData.Shared.ThinkTime);
 	}
 
     private void AnteSliderInit()
@@ -302,6 +308,28 @@ public class OwnerPanel : MonoBehaviour {
         }
         SaveButtonInteractable();
     }
+
+
+    public void Turn_countdownSliderChanged()
+    {
+        T_cNum.text = turn_countdownNum[(int)Turn_countdownSlider.value] + "s";
+
+        dict.Remove("turn_countdown");
+
+        if (GameData.Shared.ThinkTime != turn_countdownNum[(int)Turn_countdownSlider.value])
+        {
+            int turnTime = turn_countdownNum[(int)Turn_countdownSlider.value];
+            dict.Add("turn_countdown", turnTime);
+            isChanged[5] = true;
+        }
+        else 
+        {
+            isChanged[5] = false;
+        }
+        SaveButtonInteractable();
+
+    }
+
     
     void SaveButtonInteractable() 
     {

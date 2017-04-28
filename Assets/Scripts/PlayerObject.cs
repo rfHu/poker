@@ -701,6 +701,7 @@ public class PlayerObject : MonoBehaviour {
         List<Tween> tweens = countdownColorAni.GetTweens();
         for (int i = 0; i < tweens.Count; i++)
         {
+            tweens[i].timeScale = 15f / GameData.Shared.ThinkTime;
             tweens[i].Goto(elaspe);
             tweens[i].Play();
         }

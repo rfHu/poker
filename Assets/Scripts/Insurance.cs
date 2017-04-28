@@ -18,6 +18,7 @@ public class Insurance : MonoBehaviour {
     public Text AutoPurchase;
     public Slider CASlider;
     public Button ExitButton;
+    public Button SelectAll;
 
     int cost;
     float OddsNum;
@@ -31,9 +32,6 @@ public class Insurance : MonoBehaviour {
 
     public void Init(List<int> outCards, int pot,int cost, List<int> scope, bool mustBuy, int time) 
     {
-
-        _.Log("1");
-
         _rectTransform = GetComponent<RectTransform>();
         if (mustBuy)
             ExitButton.interactable = false;
@@ -99,6 +97,13 @@ public class Insurance : MonoBehaviour {
     private void SelectedChanged(bool value, int num)
     {
         selected += value ? 1 : -1;
+        if (selected == 0)
+        {
+            PokerUI.Toast("至少选择一张");
+            OUTSCards[0].isOn = true;
+            return;
+        }
+
         if (value)
             selectedCards.Add(num);
         else
@@ -180,5 +185,26 @@ public class Insurance : MonoBehaviour {
 				{"f", "moretime"},
                 {"args", data}
 			});
+    }
+
+    public void OnSLButtonClick() 
+    {
+        if (selected == WholeOUTSNum)
+        {
+            foreach (var item in OUTSCards)
+            {
+                item.isOn = false;
+            }
+        }
+        else
+        {
+            foreach (var item in OUTSCards)
+            {
+                if (!item.isOn)
+                {
+                    item.isOn = true;
+                }
+            }
+        }
     }
 }
