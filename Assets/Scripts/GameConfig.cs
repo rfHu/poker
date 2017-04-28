@@ -15,6 +15,29 @@ public enum ActionState {
 	Raise = 5
 }
 
+public class AutoDeposit {
+	public ReactiveProperty<string> SelectedFlag = new ReactiveProperty<string>();
+	public ReactiveProperty<int> CallNumber = new ReactiveProperty<int>();
+
+	public ReactiveProperty<bool> ShouldShow = new ReactiveProperty<bool>();
+
+	public void SetDeposit(string flag, int num) {
+		if (flag.Length < 2) {
+			flag = "0" + flag;
+		}
+
+		SelectedFlag.Value = flag;
+		CallNumber.Value = num;
+		ShouldShow.Value = true;
+	}
+
+	public void Hide() {
+		SelectedFlag.Value = null;
+		CallNumber.Value = -100;
+		ShouldShow.Value = false;
+	}
+}
+
 sealed public class Player {
 	sealed public class RestoreData {
 		public int seconds = 0;
@@ -30,6 +53,8 @@ sealed public class Player {
 	public bool InGame = false;
 	public int AuditCD = 0; 
 	public int Coins = 0;
+	public AutoDeposit Trust = new AutoDeposit(); 
+	public ReactiveProperty<string> ShowCard = new ReactiveProperty<string>();
 
 	public BehaviorSubject<RestoreData> Countdown = new BehaviorSubject<RestoreData>(new RestoreData());
 
@@ -53,6 +78,17 @@ sealed public class Player {
 		AuditCD = json.Int("unaudit_countdown");
 		Coins = json.Int("coins");
 
+		var showValue = Convert.ToString(json.Int("showcard"), 2);
+
+		if (showValue.Length < 2) {
+			showValue = "0" + showValue;
+		} 
+
+		ShowCard.Value = showValue;
+
+		var trust = json.Dict("trust");
+		SetTrust(trust);
+
 		var cd = json.Int("turn_countdown");
 		if (cd > 0) {
 			var dt = new RestoreData();
@@ -69,6 +105,17 @@ sealed public class Player {
 	}
 
 	public Player() {}
+
+	public void SetTrust(Dictionary<string, object> trust) {
+		if (trust.ContainsKey("chooseid") && trust.ContainsKey("call")) {
+			var flag = Convert.ToString(trust.Int("chooseid"), 2);
+			var num = trust.Int("call");
+
+			Trust.SetDeposit(flag, num);
+		} else {
+			Trust.ShouldShow.Value = false;
+		}
+	}
 
 	public ReactiveProperty<bool> Destroyed = new ReactiveProperty<bool>(false);
 

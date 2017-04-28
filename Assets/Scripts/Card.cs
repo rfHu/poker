@@ -65,8 +65,8 @@ public class Card : MonoBehaviour {
 		var rectTrans = GetComponent<RectTransform>();
 		
 		while(time < 1f) {
-			float scale = scaleCurve.Evaluate(time);
 			time = Mathf.Min(time + Time.deltaTime / TurnCardDuration, 1);
+			float scale = scaleCurve.Evaluate(time);
 
 			Vector2 vector = rectTrans.localScale;
 			vector.x = scale;
@@ -78,6 +78,8 @@ public class Card : MonoBehaviour {
 
 			yield return new WaitForFixedUpdate();
 		}
+
+		rectTrans.localScale = new Vector2(1, 1);
 	}
 
 	public void Turnback() {

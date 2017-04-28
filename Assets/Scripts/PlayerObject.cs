@@ -32,6 +32,7 @@ public class PlayerObject : MonoBehaviour {
 	public GameObject Countdown;
 	public GameObject Circle;
 	public GameObject AutoArea;
+	public GameObject[] AutoOperas; 
 	public GameObject[] Eyes; 
 
 	private GameObject OPGo;
@@ -48,6 +49,7 @@ public class PlayerObject : MonoBehaviour {
 
 	public SpkTextGo SpkText;
 	public GameObject Volume;
+
 
 	private Seat theSeat {
 		get {
@@ -138,19 +140,55 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	public void AutoCheckOrFold() {
-
+		toggleAutoBtns(0);	
 	}
 
 	public void AutoCall() {
+		toggleAutoBtns(1);	
+	}
 
+	private void toggleAutoBtns(int index) {
+		var value = new System.Text.StringBuilder(player.Trust.SelectedFlag.Value);
+
+		value[index] = value[index] == '0' ? '1' : '0';
+		value[index ^ 1] = '0';	
+
+		player.Trust.SelectedFlag.Value = value.ToString();	
+
+		var num = Convert.ToInt16(value.ToString(), 2);
+
+		Connect.Shared.Emit(new Dictionary<string, object>{
+			{"f", "trust"},
+			{"args", new Dictionary<string, object> {
+				{"chooseid", num}
+			}}
+		});
+	}
+	
+	private void toggleEye(int index) {
+		var value = new System.Text.StringBuilder(player.ShowCard.Value);
+		value[index] =  value[index] == '0' ? '1' : '0';
+
+		player.ShowCard.Value = value.ToString();
+
+		// 转换10进制
+		var num = Convert.ToInt16(value.ToString(), 2); 
+
+		// 发送请求
+		Connect.Shared.Emit(new Dictionary<string, object> {
+			{"f", "showcard"},
+			{"args", new Dictionary<string, object> {
+				{"showcard", num}
+			}}
+		});
 	}
 
 	public void ShowFirstCard() {
-
+		toggleEye(0);	
 	}
 
 	public void ShowSecondCard() {
-
+		toggleEye(1);
 	}
 
 	public void Fold() {
@@ -336,6 +374,11 @@ public class PlayerObject : MonoBehaviour {
 				} else {
 					MoveOut();
 				}
+
+				// 自动托管
+				if (isSelf()) {
+					player.SetTrust(e.Data.Dict("trust"));
+				}
 			});
 		}).AddTo(this);
 
@@ -344,6 +387,7 @@ public class PlayerObject : MonoBehaviour {
 			MoveOut();
 			PlayerAct.gameObject.SetActive(false);
 			AllinGo.SetActive(false);
+			AutoArea.SetActive(false);
 
 			if (cgo != null) {
 			 	cgo.Hide();
@@ -372,6 +416,60 @@ public class PlayerObject : MonoBehaviour {
                 parent.SetActive(true);
                 CardDesc.text = Card.GetCardDesc(value);
             }).AddTo(this);
+
+			player.ShowCard.Subscribe((value) => {
+				if (value[0] == '1') {
+					Eyes[0].SetActive(true);
+				} else {
+					Eyes[0].SetActive(false);
+				}
+
+				if (value[1] == '1') {
+					Eyes[1].SetActive(true);
+				} else {
+					Eyes[1].SetActive(false);
+				}
+			}).AddTo(this);
+
+			player.Trust.ShouldShow.Subscribe((show) => {
+				AutoArea.SetActive(show);
+			}).AddTo(this);
+
+			player.Trust.CallNumber.Subscribe((num) => {
+				var text = AutoOperas[1].transform.Find("Text").GetComponent<Text>();
+
+				if (num == 0) {
+					text.text = "自动让牌";
+				} else if (num == -1) {
+					text.text = "全下";
+				} else if (num > 0) {
+					text.text = "跟注\n" + num;
+				}
+			}).AddTo(this);
+
+			player.Trust.SelectedFlag.Where((flags) => { return flags != null; }).Subscribe((flags) => {
+				var ncolor = _.HexColor("#2196F364");
+				var scolor = _.HexColor("#2196F3");
+				
+				var img0 = AutoOperas[0].GetComponent<ProceduralImage>();
+				var img1 = AutoOperas[1].GetComponent<ProceduralImage>();
+
+				if (flags[0] == '0') {
+					img0.color = ncolor;
+				} else {
+					img0.color = scolor;
+				}
+
+				if (flags[1] == '0') {
+					img1.color = ncolor;
+				} else {
+					img1.color = scolor;
+				}
+			}).AddTo(this);
+
+			RxSubjects.Deal.Subscribe((_) => {
+				player.Trust.Hide();
+			}).AddTo(this);
 		}
 
 		RxSubjects.ShowAudio.Where(isSelf).Subscribe((jsonStr) => {
@@ -449,15 +547,22 @@ public class PlayerObject : MonoBehaviour {
 			return ;
 		}
 	
-		if (cards[0] > 0 && cards[1] > 0) {
+		if (cards[0] > 0 || cards[1] > 0) {
 			// 显示GameObject
 			getShowCard().SetActive(true);
 
 			// 显示手牌
-			ShowCards[0].Show(cards[0], true);
-			ShowCards[1].Show(cards[1], true);
+			if (cards[0] > 0) {
+				ShowCards[0].Show(cards[0], true);
+			} 
 
-			Cardfaces.SetActive(false);
+			if (cards[1] > 0) {
+				ShowCards[1].Show(cards[1], true);
+			}
+
+			if (Cardfaces != null) {
+				Cardfaces.SetActive(false);
+			}
 		}
 	}
 

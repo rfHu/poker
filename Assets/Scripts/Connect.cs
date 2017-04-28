@@ -18,7 +18,7 @@ public sealed class Connect  {
 
 	private int seq = 0;
 
-	private bool login = false;
+	private bool connected = false;
 
 	private Connect() {
 		// Charles Proxy
@@ -33,9 +33,10 @@ public sealed class Connect  {
 
 		manager = new SocketManager(new Uri(Connect.Domain + "/socket.io/"), options);
 		manager.Socket.On("connect", onConnect);
+		manager.Socket.On("reconnect", onConnect);
+
 		manager.Socket.On("connecting", onNotConnect);
 		manager.Socket.On("disconnect", onNotConnect);
-		manager.Socket.On("reconnect", onNotConnect);
 		manager.Socket.On("reconnecting", onNotConnect);
 		manager.Socket.On("reconnect_attempt", onNotConnect);
 
@@ -63,22 +64,22 @@ public sealed class Connect  {
 
 			_.Log("Unity: 登陆成功，准备进入房间……");
 
-			login = true;
+			connected = true;
 
 			// 登陆成功，写用户数据
 			saveUserInfo(json);
 
 			// 进入房间
 			enterGame();
-		}, needLogin: false);
+		}, needConnected: false);
 	}
 
 	private void onNotConnect(Socket socket, Packet packet, params object[] args) {
-		login = false;
+		connected = false;
 	}
 
 	private void onError(Socket socket, Packet packet, params object[] args) {
-		login = false;
+		connected = false;
 		// PokerUI.DisAlert("服务器错误");
 	}
 
@@ -110,8 +111,8 @@ public sealed class Connect  {
 		GameData.Shared.Pin = token.String("pin");
 	}
 
-	public void Emit(Dictionary<string, object> json, Action<Dictionary<string, object>> success = null, Action error = null, int timeout = 5, bool needLogin = true) {
-		if (!login && needLogin) {
+	public void Emit(Dictionary<string, object> json, Action<Dictionary<string, object>> success = null, Action error = null, int timeout = 5, bool needConnected = true) {
+		if (!connected && needConnected) {
 			return ;
 		}
 
@@ -155,7 +156,15 @@ public sealed class Connect  {
 	}
 
 	public void Close(Action callback = null) {
+		var acted = false;
+
 		Action act = () => {
+			if (acted) {
+				return ;
+			}
+
+			acted = true;
+
 			if (callback != null) {
 				callback();
 			}
@@ -163,12 +172,17 @@ public sealed class Connect  {
 			close();
 		};
 
+		// 2s后，不管服务器是否退出成功，客户端都强制退出
+		Observable.Timer(TimeSpan.FromSeconds(2)).Subscribe((_) => {
+			act();
+		});
+		
 		if (manager.State == SocketManager.States.Open) {
 			Emit(new Dictionary<string, object>{
 				{"f", "exit"}
 			}, (_) => {
 				act();
-			}, act, 2);
+			});
 		} else {
 			act();
 		}
