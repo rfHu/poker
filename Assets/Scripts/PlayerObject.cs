@@ -496,13 +496,25 @@ public class PlayerObject : MonoBehaviour {
 
         RxSubjects.Insurance.Subscribe((e) =>
         {
-            _.Log("1");
-            string name = "";
-
-            if (e.Data.Int("type") == 3)
+            switch (e.Data.Int("type"))
             {
-                name += GameData.Shared.FindPlayer(e.Data.String("uid")).Name;
-                PokerUI.Toast(name + " 玩家正在购买保险");
+                case 1:
+                    PokerUI.Toast("多名玩家领先，不支持购买保险");break;
+                case 2:
+                    PokerUI.Toast("领先玩家无风险，不支持购买保险");break;
+                case 3:
+                    string name = GameData.Shared.FindPlayer(e.Data.String("uid")).Name;
+                    PokerUI.Toast(name + " 玩家正在购买保险");
+                    StartCoroutine(yourTurn(e.Data.Int("time")));
+                    break;
+                case 10:
+                    PokerUI.Toast("玩家购买的保险没有命中");break;
+                case 11:
+                    PokerUI.Toast("玩家购买的保险命中了");break;
+                case 12:
+                    PokerUI.Toast("系统自动购买的保险命中了");break;
+                default:
+                    break;
             }
         }).AddTo(this);
 

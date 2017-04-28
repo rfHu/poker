@@ -27,6 +27,7 @@ public class Insurance : MonoBehaviour {
     int WholeOUTSNum;
     List<Toggle> OUTSCards;
     List<int> selectedCards;
+    bool isBuy = false;
 
     RectTransform _rectTransform;
 
@@ -152,6 +153,8 @@ public class Insurance : MonoBehaviour {
             return;
         }
 
+        isBuy = true;
+
         var data = new Dictionary<string, object>(){
 			        {"outs", selectedCards},
                     {"amount", int.Parse(SumInsured.text)},
@@ -168,10 +171,6 @@ public class Insurance : MonoBehaviour {
 
     public void Exit() 
     {
-        Connect.Shared.Emit(new Dictionary<string, object>() {
-				{"f", "noinsurance"}
-			});
-
         GetComponent<DOPopup>().Close();
     }
 
@@ -206,5 +205,15 @@ public class Insurance : MonoBehaviour {
                 }
             }
         }
+    }
+
+    void OnDestroy() 
+    {
+        if (isBuy)
+            return;
+
+        Connect.Shared.Emit(new Dictionary<string, object>() {
+				{"f", "noinsurance"}
+			});
     }
 }
