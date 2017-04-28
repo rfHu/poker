@@ -23,6 +23,12 @@ public class UIManager : MonoBehaviour {
 		if (cvs.gameObject.tag != "UICanvas") {
 			return ;
 		}
+
+		// 有遮罩的情况下不触发手势
+		var modal = cvs.transform.GetComponentInChildren<ModalHelper>();
+		if (modal != null) {
+			return ;
+		}
 		
 		if (gesture.swipe == EasyTouch.SwipeDirection.Left) {
 			OnShowRecalls();

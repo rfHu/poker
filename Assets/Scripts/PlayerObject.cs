@@ -338,9 +338,7 @@ public class PlayerObject : MonoBehaviour {
 			}
 
 			if (!isSelf()) {
-				if (!AllinGo.activeSelf) {
-					showTheCards(data.cards);
-				}
+				showTheCards(data.cards);
 				showCardType(data.maxFiveRank);
 			}
 
@@ -486,6 +484,16 @@ public class PlayerObject : MonoBehaviour {
             SpkText.ShowMessage(text);
         }).AddTo(this);
 
+		RxSubjects.ShowCard.Subscribe((e) => {
+			var uid = e.Data.String("uid");
+			if (uid != Uid) {
+				return ;
+			}
+
+			var cards = e.Data.IL("cards");
+			showTheCards(cards);
+		}).AddTo(this);
+
         RxSubjects.Insurance.Subscribe((e) =>
         {
             _.Log("1");
@@ -543,7 +551,7 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	private void showTheCards(List<int> cards) {
-		if (cards.Count < 2) {
+		if (cards.Count < 2 || isSelf()) {
 			return ;
 		}
 	

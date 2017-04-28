@@ -7,7 +7,7 @@ public class Card : MonoBehaviour {
 	public Sprite[] faces;
 	public Sprite cardBack;
 
-	public bool IsBack = true;
+	public bool HasShow = false;
 
 	public AnimationCurve scaleCurve;
 
@@ -33,8 +33,6 @@ public class Card : MonoBehaviour {
 		} else {
 			image.sprite = faces[index];
 		}
-		
-		IsBack = false;
 	}
 
 	public void SetSize(Vector2 size) {
@@ -47,14 +45,11 @@ public class Card : MonoBehaviour {
 	}
 
 	public void Show(int index, bool anim = false) {
-		if (index == 0) {
+		if (index == 0 || HasShow) {
 			return ;
 		}
 
-		if (!IsBack) {
-			return ;
-		}
-
+		HasShow = true;
 		var realIndex = Card.CardIndex(index);
 		show(realIndex, anim);
 	}
@@ -84,7 +79,7 @@ public class Card : MonoBehaviour {
 
 	public void Turnback() {
 		GetComponent<Image>().sprite = cardBack;
-		IsBack = true;
+		HasShow = false;
 	}
 
 	public void Hide() {

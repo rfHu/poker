@@ -144,6 +144,20 @@ public class OP : MonoBehaviour {
 		});
 	}
 
+	private void changeTipsPosition(RectTransform rect, Vector2 position, Camera camera) {
+		Vector2 vector;
+		RectTransformUtility.ScreenPointToLocalPointInRectangle(rect, position, camera, out vector);
+
+		var tipsTransform = RoundTipsGo.GetComponent<RectTransform>();
+		var y = tipsTransform.anchoredPosition.y;
+
+		if (vector.x >= 0) {
+			tipsTransform.anchoredPosition = new Vector2(-160, y);
+		} else {
+			tipsTransform.anchoredPosition = new Vector2(160, y);
+		}
+	}
+
 	public void OnRaiseClick() {
 		Slid.gameObject.SetActive(true);
 		Slid.value = Slid.minValue = range[0];
@@ -182,9 +196,17 @@ public class OP : MonoBehaviour {
 			TipsText.text = newValue.ToString();
 		}).AddTo(this);
 
-		Slid.OnPointerDownAsObservable().Subscribe((_) => {
+		Slid.OnPointerDownAsObservable().Subscribe((pointerEvt) => {
+			var rect = Slid.GetComponent<RectTransform>();
+
+			changeTipsPosition(rect, pointerEvt.position, pointerEvt.pressEventCamera);
 			pointerDown = true;
 			RoundTipsGo.SetActive(true);
+		}).AddTo(this);
+
+		Slid.OnDragAsObservable().Subscribe((dragEvt) => {
+			var rect = Slid.GetComponent<RectTransform>();
+			changeTipsPosition(rect, dragEvt.position, dragEvt.pressEventCamera);
 		}).AddTo(this);
 
 		Slid.OnPointerUpAsObservable().Subscribe((_) => {
