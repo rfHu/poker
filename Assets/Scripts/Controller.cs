@@ -25,6 +25,9 @@ public class Controller : MonoBehaviour {
 	public GameObject InviteCodeGo;
 	public GameObject TimeLeftGo;
 
+    public GameObject SeeLeftCard;
+    public GameObject BuyTurnTime;
+
 	// public GameObject Cutoff;
 
 	List<Vector2> anchorPositions = new List<Vector2>();
@@ -425,6 +428,30 @@ public class Controller : MonoBehaviour {
 
 			PokerUI.Toast(String.Format("{0}: {1}", name, text), 3f);
 		}).AddTo(this);
+
+
+        RxSubjects.GameOver.Subscribe((e) =>{
+
+            SeeLeftCard.SetActive(true);
+        });
+
+        RxSubjects.GameStart.Subscribe((e) => {
+            SeeLeftCard.SetActive(false);
+        });
+
+        RxSubjects.MoveTurn.Subscribe((e) => {
+
+            var index = e.Data.Int("seat");
+            if (index == GameData.Shared.FindPlayerIndex(GameData.Shared.Uid))
+            {
+                BuyTurnTime.SetActive(true);
+            }
+            else 
+            {
+                BuyTurnTime.SetActive(false);
+            }
+            
+        });
 	}
 
 	private bool isGuest(string json) {

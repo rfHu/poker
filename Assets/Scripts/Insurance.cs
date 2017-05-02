@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using Extensions;
 
 public class Insurance : MonoBehaviour {
     public Text Pot;
@@ -21,6 +22,7 @@ public class Insurance : MonoBehaviour {
     public Button SelectAll;
 
     int cost;
+    float timer;
     float OddsNum;
     float[] OddsNums = { 30, 16, 10, 8, 6, 5, 4, 3.5f, 3, 2.5f, 2.2f, 2, 1.7f, 1.5f, 1.3f, 1.1f, 1, 0.8f, 0.7f, 0.6f, 0.5f };
     int selected;
@@ -50,6 +52,9 @@ public class Insurance : MonoBehaviour {
 
         //主池数字
         Pot.text = pot.ToString();
+
+        timer = time;
+        StartCoroutine(Timer());
 
         //allin用户
         foreach (var player in GameData.Shared.Players)
@@ -183,7 +188,18 @@ public class Insurance : MonoBehaviour {
         Connect.Shared.Emit(new Dictionary<string, object>() {
 				{"f", "moretime"},
                 {"args", data}
-			});
+			},(redata) => {
+                var err = redata.Int("err");
+                if (err == 1401)
+                {
+                    PokerUI.Toast("金币不足");
+                }
+
+                if (err == 0)
+                {
+                    timer += 20;
+                }
+            });
     }
 
     public void OnSLButtonClick() 
@@ -215,5 +231,18 @@ public class Insurance : MonoBehaviour {
         Connect.Shared.Emit(new Dictionary<string, object>() {
 				{"f", "noinsurance"}
 			});
+    }
+
+    private IEnumerator Timer() 
+    {
+        while (timer > 0)
+        {
+            timer = timer - Time.deltaTime;
+            CountDown.text = ((int)timer).ToString();
+
+            yield return new WaitForFixedUpdate();
+        }
+
+        GetComponent<DOPopup>().Close(); 
     }
 }

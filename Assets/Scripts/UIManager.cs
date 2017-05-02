@@ -56,6 +56,37 @@ public class UIManager : MonoBehaviour {
         Commander.Shared.ShareGameRoom(shareText);
     }
 
+    public void OnClickSeeCard() 
+    {
+        Connect.Shared.Emit(new Dictionary<string, object>() {
+				{"f", "moretime"},
+                {"args", null}
+        });
+    }
+
+    public void OnClickBuyTurnTime() 
+    {
+                var data = new Dictionary<string, object>(){
+                    {"type",111}
+		        };
+
+        Connect.Shared.Emit(new Dictionary<string, object>() { 
+            
+				{"f", "moretime"},
+                {"args", data}
+        },(redata) => {
+                var err = redata.Int("err");
+                if (err == 1401)
+                {
+                    PokerUI.Toast("金币不足");
+                }
+
+                if (err == 0)
+                {
+                }
+        });
+    }
+
 	void Awake()
 	{
 		GameData.Shared.AuditList.AsObservable().Where((list) => list != null).Subscribe((list) => {
