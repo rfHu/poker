@@ -180,8 +180,9 @@ public class Insurance : MonoBehaviour {
 
     public void OnBTButton() 
     {
+        _.Log("1");
         var data = new Dictionary<string, object>(){
-                    {"type",112}
+                    {"type",111}
 		        };
 
         Connect.Shared.Emit(new Dictionary<string, object>() {
@@ -189,6 +190,7 @@ public class Insurance : MonoBehaviour {
                 {"args", data}
 			},(redata) => {
                 var err = redata.Int("err");
+                _.Log("1");
                 if (err == 1401)
                 {
                     PokerUI.Toast("金币不足");
@@ -224,11 +226,21 @@ public class Insurance : MonoBehaviour {
 
     void OnDestroy() 
     {
+        
+        
+        _.Log("1");
         if (isBuy)
             return;
 
+
+        var data = new Dictionary<string, object>(){
+			        {"outs", selectedCards},
+                    {"amount", CASlider.minValue},
+		        };
+
         Connect.Shared.Emit(new Dictionary<string, object>() {
-				{"f", "noinsurance"}
+				{"f", "insurance"},
+                {"args", data}
 			});
     }
 

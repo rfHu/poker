@@ -496,6 +496,7 @@ public class PlayerObject : MonoBehaviour {
 
         RxSubjects.Insurance.Subscribe((e) =>
         {
+            _.Log("1");
             switch (e.Data.Int("type"))
             {
                 case 1:
@@ -520,16 +521,22 @@ public class PlayerObject : MonoBehaviour {
 
         RxSubjects.ToInsurance.Subscribe((e) =>
         {
-            var outsCard = e.Data.IL("outs");
-            var pot = e.Data.Int("pot");
-            var cost = e.Data.Int("cost");
-            var scope = e.Data.IL("scope");
-            var mustBuy = e.Data.Int("must_buy") == 2 ? true : false;
-            var time = e.Data.Int("time");
+            _.Log("1");
 
-            var InsurancePopup = (GameObject)GameObject.Instantiate(Resources.Load("Prefab/Insurance"));
-            InsurancePopup.GetComponent<DOPopup>().Show();
-            InsurancePopup.GetComponent<Insurance>().Init(outsCard, pot, cost, scope, mustBuy, time);
+            if (GameObject.Find("Insurance") == null)
+                {
+                var outsCard = e.Data.IL("outs");
+                var pot = e.Data.Int("pot");
+                var cost = e.Data.Int("cost");
+                var scope = e.Data.IL("scope");
+                var mustBuy = e.Data.Int("must_buy") == 2 ? true : false;
+                var time = e.Data.Int("time");
+
+                var InsurancePopup = (GameObject)GameObject.Instantiate(Resources.Load("Prefab/Insurance"));
+                InsurancePopup.GetComponent<DOPopup>().Show();
+                InsurancePopup.GetComponent<Insurance>().Init(outsCard, pot, cost, scope, mustBuy, time);
+            }
+
 
         }).AddTo(this);
 
