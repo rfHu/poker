@@ -1,7 +1,14 @@
 ﻿using UnityEngine;
+using System;
 
 public class AuditMsg : MonoBehaviour {
+	public Action Click;
+
 	public void OnClick() {
-		Commander.Shared.Audit();
+		if (Click == null) {
+			return ;
+		}
+
+		Click();	
 	}
 }

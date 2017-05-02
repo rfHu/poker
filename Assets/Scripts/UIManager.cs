@@ -96,6 +96,9 @@ public class UIManager : MonoBehaviour {
 			if (!auditMsg)
             {
                 auditMsg = (GameObject)Instantiate(Resources.Load("Prefab/AuditMsg"));
+				auditMsg.GetComponent<AuditMsg>().Click = () => {
+					Commander.Shared.Audit();
+				};
             }
 
             if (list.Count == 0)
