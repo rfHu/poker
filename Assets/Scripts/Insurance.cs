@@ -39,7 +39,6 @@ public class Insurance : MonoBehaviour {
         if (mustBuy)
             ExitButton.interactable = false;
 
-
         this.cost = cost;
         WholeOUTSNum = outCards.Count;
         selected = outCards.Count;

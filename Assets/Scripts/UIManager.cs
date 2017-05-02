@@ -59,7 +59,7 @@ public class UIManager : MonoBehaviour {
     public void OnClickSeeCard() 
     {
         Connect.Shared.Emit(new Dictionary<string, object>() {
-				{"f", "moretime"},
+				{"f", "seecard"},
                 {"args", null}
         });
     }
