@@ -399,7 +399,7 @@ sealed public class GameData {
 
                     case "turn_countdown":
                         ThinkTime = data.Int("turn_countdown");
-                        str = "房主将思考时长更改为：" + ThinkTime +"（下一局开始）";
+                        str = "房主将思考时长改为" + ThinkTime +"秒";
                         PokerUI.Toast(str);
                         break;
                     default:

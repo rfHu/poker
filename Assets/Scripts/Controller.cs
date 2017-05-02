@@ -451,7 +451,7 @@ public class Controller : MonoBehaviour {
                 BuyTurnTime.SetActive(false);
             }
             
-        });
+        }).AddTo(this);
 	}
 
 	private bool isGuest(string json) {
