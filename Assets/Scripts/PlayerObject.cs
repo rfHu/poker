@@ -499,9 +499,9 @@ public class PlayerObject : MonoBehaviour {
             switch (e.Data.Int("type"))
             {
                 case 1:
-                    PokerUI.Toast("多名玩家领先，不支持购买保险");break;
+                    PokerUI.Toast("多名领先玩家，不支持购买保险");break;
                 case 2:
-                    PokerUI.Toast("领先玩家无风险，不支持购买保险");break;
+                    PokerUI.Toast("无反超风险，不用购买保险");break;
                 case 3:
                     string name = GameData.Shared.FindPlayer(e.Data.String("uid")).Name;
                     PokerUI.Toast(name + " 玩家正在购买保险");
