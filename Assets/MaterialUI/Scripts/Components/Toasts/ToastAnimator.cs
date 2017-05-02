@@ -55,8 +55,8 @@ namespace MaterialUI
 			// m_OnPos = new Vector2(Screen.width / 2f, (Screen.height / 8f));
 			// m_OffPos = new Vector2(Screen.width / 2f, Screen.height / 10f);
 
-            m_OnPos = new Vector2(Screen.width / 2f, 80f);
-            m_OffPos = new Vector2(Screen.width / 2f, 40f);
+            m_OnPos = new Vector2(Screen.width / 2f, Screen.height / 2);
+            m_OffPos = new Vector2(Screen.width / 2f, Screen.height / 2 - 40);
 
 			m_RectTransform.position = m_OffPos;
 
