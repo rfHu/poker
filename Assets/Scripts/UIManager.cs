@@ -58,16 +58,25 @@ public class UIManager : MonoBehaviour {
 
     public void OnClickSeeCard() 
     {
+        _.Log("1");
         Connect.Shared.Emit(new Dictionary<string, object>() {
-				{"f", "moretime"},
+				{"f", "seecard"},
                 {"args", null}
+        }, (data) => {
+            var err = data.Int("err");
+            var args = data.Dict("args");
+
+            if (err != 0)
+            {
+                PokerUI.Toast(data.String("ret"));
+            }
         });
     }
 
     public void OnClickBuyTurnTime() 
     {
                 var data = new Dictionary<string, object>(){
-                    {"type",111}
+                    {"type",112}
 		        };
 
         Connect.Shared.Emit(new Dictionary<string, object>() { 
@@ -76,12 +85,13 @@ public class UIManager : MonoBehaviour {
                 {"args", data}
         },(redata) => {
                 var err = redata.Int("err");
-                if (err == 1401)
-                {
-                    PokerUI.Toast("金币不足");
-                }
 
-                if (err == 0)
+                _.Log("1");
+                if (err != 0)
+                {
+                    PokerUI.Toast(redata.String("msg"));
+                }
+                else
                 {
                 }
         });
