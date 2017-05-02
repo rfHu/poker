@@ -433,11 +433,11 @@ public class Controller : MonoBehaviour {
         RxSubjects.GameOver.Subscribe((e) =>{
 
             SeeLeftCard.SetActive(true);
-        });
+        }).AddTo(this);
 
         RxSubjects.GameStart.Subscribe((e) => {
             SeeLeftCard.SetActive(false);
-        });
+        }).AddTo(this);
 
         RxSubjects.MoveTurn.Subscribe((e) => {
 
