@@ -58,13 +58,11 @@ public class UIManager : MonoBehaviour {
 
     public void OnClickSeeCard() 
     {
-        _.Log("1");
         Connect.Shared.Emit(new Dictionary<string, object>() {
 				{"f", "seecard"},
                 {"args", null}
         }, (data) => {
             var err = data.Int("err");
-            var args = data.Dict("args");
 
             if (err != 0)
             {
@@ -85,14 +83,9 @@ public class UIManager : MonoBehaviour {
                 {"args", data}
         },(redata) => {
                 var err = redata.Int("err");
-
-                _.Log("1");
                 if (err != 0)
                 {
                     PokerUI.Toast(redata.String("msg"));
-                }
-                else
-                {
                 }
         });
     }

@@ -434,7 +434,67 @@ sealed public class GameData {
 			LeftTime.Value = value;
 		});
 
+        RxSubjects.Insurance.Subscribe((e) =>
+        {
+            switch (e.Data.Int("type"))
+            {
+                case 1:
+                    PokerUI.Toast("多名领先玩家，不支持购买保险"); break;
+                case 2:
+                    PokerUI.Toast("无反超风险，不用购买保险"); break;
+                case 3:
+                    string name = FindPlayer(e.Data.String("uid")).Name;
+                    PokerUI.Toast(name + " 玩家正在购买保险");
+                    break;
+                case 10:
+                    PokerUI.Toast("玩家购买的保险没有命中"); break;
+                case 11:
+                    PokerUI.Toast("玩家购买的保险命中了"); break;
+                case 12:
+                    PokerUI.Toast("系统自动购买的保险命中了"); break;
+                default:
+                    break;
+            }
+        });
 
+        RxSubjects.ToInsurance.Subscribe((e) =>
+        {
+            var outsCard = e.Data.IL("outs");
+            var pot = e.Data.Int("pot");
+            var cost = e.Data.Int("cost");
+            var scope = e.Data.IL("scope");
+            var mustBuy = e.Data.Int("must_buy") == 2 ? true : false;
+            var time = e.Data.Int("time");
+
+            var InsurancePopup = (GameObject)GameObject.Instantiate(Resources.Load("Prefab/Insurance"));
+            InsurancePopup.GetComponent<DOPopup>().Show();
+            InsurancePopup.GetComponent<Insurance>().Init(outsCard, pot, cost, scope, mustBuy, time);
+            
+        });
+
+        RxSubjects.Moretime.Subscribe((e) => 
+        {
+            var args = e.Data.Dict("args");
+
+            var type = args.Int("type");
+            var time = args.Int("time");
+            var uid = args.String("uid");
+
+            if (uid != Uid)
+            {
+                string name = FindPlayer(uid).Name;
+
+                if (type == 111)
+                    PokerUI.Toast("玩家 " + name + "申请保险延时" + time + "秒");
+                else
+                    PokerUI.Toast("玩家 " + name + "申请回合延时" + time + "秒");
+            }
+            else 
+            {
+
+            }
+
+        });
 	}
    
 	private void setPbCards(List<int> list, int state) {

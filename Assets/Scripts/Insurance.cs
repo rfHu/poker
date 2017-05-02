@@ -30,11 +30,14 @@ public class Insurance : MonoBehaviour {
     List<Toggle> OUTSCards;
     List<int> selectedCards;
     bool isBuy = false;
+    int purchaseTimes = 0;
 
     RectTransform _rectTransform;
 
     public void Init(List<int> outCards, int pot,int cost, List<int> scope, bool mustBuy, int time) 
     {
+        _.Log("1");
+
         _rectTransform = GetComponent<RectTransform>();
         if (mustBuy)
             ExitButton.interactable = false;
@@ -180,7 +183,13 @@ public class Insurance : MonoBehaviour {
 
     public void OnBTButton() 
     {
-        _.Log("1");
+        purchaseTimes++;
+        if (purchaseTimes > 2)
+        {
+            PokerUI.Toast("您已经购买两次，不能再购买了");
+            return;
+        }
+
         var data = new Dictionary<string, object>(){
                     {"type",111}
 		        };
@@ -190,15 +199,9 @@ public class Insurance : MonoBehaviour {
                 {"args", data}
 			},(redata) => {
                 var err = redata.Int("err");
-                _.Log("1");
                 if (err == 1401)
                 {
                     PokerUI.Toast("金币不足");
-                }
-
-                if (err == 0)
-                {
-                    timer += 20;
                 }
             });
     }
