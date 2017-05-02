@@ -486,11 +486,17 @@ sealed public class GameData {
 
                 if (type == 111)
                     PokerUI.Toast("玩家 " + name + "申请保险延时" + time + "秒");
-                else
+                else if(type == 112)
                     PokerUI.Toast("玩家 " + name + "申请回合延时" + time + "秒");
             }
             else 
             {
+                if (type == 111)
+                    GameObject.Find("Insurance").GetComponent<Insurance>().SetTimer += time;
+                else if(type == 112)
+                {
+
+                }
 
             }
 

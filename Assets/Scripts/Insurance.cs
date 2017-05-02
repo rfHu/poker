@@ -23,6 +23,12 @@ public class Insurance : MonoBehaviour {
 
     int cost;
     float timer;
+    public float SetTimer
+    {
+        get { return timer; }
+        set { timer = value; }
+    }
+
     float OddsNum;
     float[] OddsNums = { 30, 16, 10, 8, 6, 5, 4, 3.5f, 3, 2.5f, 2.2f, 2, 1.7f, 1.5f, 1.3f, 1.1f, 1, 0.8f, 0.7f, 0.6f, 0.5f };
     int selected;
