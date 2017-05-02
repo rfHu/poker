@@ -362,46 +362,44 @@ sealed public class GameData {
             var data = e.Data;
             var str = "";
 
-            PokerUI.Toast("房主进行了如下更改：");
-
             foreach (var item in e.Data)
 	        {
                 switch (item.Key) 
                 {
                     case "bankroll_multiple":
                         BankrollMul = data.IL("bankroll_multiple");
-                        str = "记分牌带入倍数：" + GameData.Shared.BankrollMul[0] + "-" + GameData.Shared.BankrollMul[1];
+                        str = "房主将记分牌带入倍数改为：" + GameData.Shared.BankrollMul[0] + "-" + GameData.Shared.BankrollMul[1];
                         PokerUI.Toast(str);
                         break;
 
                     case "time_limit": 
                         Duration += data.Long("time_limit");
                         LeftTime.Value += data.Long("time_limit");
-                        str = "牌局时间延长：" + data.Long("time_limit") / 3600f + "小时";
+                        str = "房主将牌局时间延长了" + data.Long("time_limit") / 3600f + "小时";
                         PokerUI.Toast(str);
                         break;
 
                     case "ante":
                         Ante.Value = data.Int("ante");
-                        str = "底注为：" + Ante.Value; 
+                        str = "房主将底注更改为：" + Ante.Value; 
                         PokerUI.Toast(str);
                         break;
 
                     case "need_audit":
                         NeedAudit = data.Int("need_audit") == 1;
-                        str = GameData.Shared.NeedAudit ? "开启授权带入" : "关闭授权带入";
+                        str = GameData.Shared.NeedAudit ? "房主开启授权带入" : "房主关闭授权带入";
                         PokerUI.Toast(str);
                         break;
 
                     case "straddle":
                         Straddle.Value = data.Int("straddle") != 0;
-                        str = Straddle.Value ? "开启Straddle" : "关闭Straddle"; 
+                        str = Straddle.Value ? "房主开启Straddle" : "房主关闭Straddle"; 
                         PokerUI.Toast(str);
 						break;
 
                     case "turn_countdown":
                         ThinkTime = data.Int("turn_countdown");
-                        str = "思考时长：" + ThinkTime +"（下一局开始）";
+                        str = "房主将思考时长更改为：" + ThinkTime +"（下一局开始）";
                         PokerUI.Toast(str);
                         break;
                     default:
