@@ -37,6 +37,11 @@ public class CircleMask : MonoBehaviour {
 		StartCoroutine(run(elaspe));
 	}
 
+	public void Reset(float elaspe) {
+		StopCoroutine("run");
+		StartCoroutine(run(elaspe));
+	}
+
 	public void Disable() {
 		activated = false;
 		proImage.enabled = false;

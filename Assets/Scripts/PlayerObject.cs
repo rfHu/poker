@@ -498,17 +498,16 @@ public class PlayerObject : MonoBehaviour {
 		RxSubjects.Moretime.Subscribe((e) => {
 			var model = e.Data.ToObject<MoreTimeModel>();
 
-			if (!model.IsRound()) {
+			if (model.uid != Uid) {
 				return ;
 			}
 
-			if (model.uid != Uid || isSelf()) {
-				return ;
+			if (isSelf()) {
+				OPGo.GetComponent<OP>().Reset(model.time);
+			} else {
+				StopCoroutine("yourTurn");
+				StartCoroutine(yourTurn(model.time));
 			} 
-
-			StopCoroutine("yourTurn");
-
-			StartCoroutine(yourTurn(model.time));
 		}).AddTo(this);
 	}
 

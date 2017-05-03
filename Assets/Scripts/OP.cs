@@ -31,6 +31,7 @@ public class OP : MonoBehaviour {
 	private ModalHelper modal;
 
 	private static OP instance; 
+	private CircleMask circleMask;
 
 	void Awake()
 	{
@@ -74,8 +75,8 @@ public class OP : MonoBehaviour {
 			CheckGo.GetComponent<CanvasGroup>().alpha = 0.4f;
 		}
 
-		var mask = FoldGo.transform.Find("CD").GetComponent<CircleMask>();
-		mask.Enable(elaspe, true);
+		circleMask = FoldGo.transform.Find("CD").GetComponent<CircleMask>();
+		circleMask.Enable(elaspe, true);
 
 		if (range.Count >= 2) { // 可加注
 			AllinGo.SetActive(false);
@@ -92,6 +93,14 @@ public class OP : MonoBehaviour {
 			RaiseGo.SetActive(true);
 			RaiseGo.GetComponent<CanvasGroup>().alpha = 0.4f;
 		}	
+	}
+
+	public void Reset(float elaspe) {
+		if (circleMask == null) {
+			return ;
+		}
+
+		circleMask.Reset(elaspe);
 	}
 
 	private void setRaiseButtons(int call) {
