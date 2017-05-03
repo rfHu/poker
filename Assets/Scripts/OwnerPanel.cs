@@ -149,6 +149,8 @@ public class OwnerPanel : MonoBehaviour {
 				} else {
 					PauseText.text = continueStr;
 				}
+
+                GetComponent<DOPopup>().Close();
 			} else {
 				var msg = data.String("ret");
 				GetComponent<DOPopup>().Close();

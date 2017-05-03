@@ -233,8 +233,8 @@ sealed public class GameData {
 			var pbList = data.IL("-1");
 			float delay = 1f;
 			
-			if (pbList.Count >= 3) { // 翻牌 
-				delay += 3 * Card.TurnCardDuration;	
+			if (pbList.Count >= 3) { // 等待亮牌动画
+				delay += pbList.Count * Card.TurnCardDuration;	
 			} 
 
 			Observable.Timer(TimeSpan.FromSeconds(delay)).AsObservable().Subscribe((_) => {

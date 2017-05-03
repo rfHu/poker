@@ -453,6 +453,14 @@ public class Controller : MonoBehaviour {
                 BuyTurnTime.SetActive(false);
             }
         }).AddTo(this);
+
+		RxSubjects.Pass.Subscribe((_) => {
+			if (GameData.Shared.InGame) {
+				PokerUI.Toast("记分牌带入成功，将在下局游戏生效");
+			} else {
+				PokerUI.Toast("记分牌带入成功");
+			}
+		}).AddTo(this);
 	}
 
 	private bool isGuest(string json) {
