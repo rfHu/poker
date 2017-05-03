@@ -4,8 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Card : MonoBehaviour {
-	public Sprite[] faces;
-	public Sprite cardBack;
+	public Sprite[] Faces;
+	public Sprite CardBack;
 
 	public bool HasShow = false;
 
@@ -15,7 +15,7 @@ public class Card : MonoBehaviour {
 
 	void Awake() {
 		var img = GetComponent<Image>();
-		img.sprite = cardBack;
+		img.sprite = CardBack;
 
 		scaleCurve = new AnimationCurve();
 		scaleCurve.AddKey(0, 1);
@@ -31,7 +31,7 @@ public class Card : MonoBehaviour {
 		if (anim) {
 			StartCoroutine(flipCard(index));
 		} else {
-			image.sprite = faces[index];
+			image.sprite = Faces[index];
 		}
 	}
 
@@ -68,7 +68,7 @@ public class Card : MonoBehaviour {
 			rectTrans.localScale = vector;
 
 			if (time >= 0.5) {
-				image.sprite = faces[index];
+				image.sprite = Faces[index];
 			}
 
 			yield return new WaitForFixedUpdate();
@@ -78,7 +78,7 @@ public class Card : MonoBehaviour {
 	}
 
 	public void Turnback() {
-		GetComponent<Image>().sprite = cardBack;
+		GetComponent<Image>().sprite = CardBack;
 		HasShow = false;
 	}
 

@@ -101,13 +101,13 @@ public class DOPopup : MonoBehaviour {
 		Destroy(gameObject);
 	}
 
-	public void Close() {
+	public Tween Hide() {
 		hideModal();
 
-#if UNITY_EDITOR
-#else
-		Commander.Shared.VoiceIconToggle(true);
-#endif
+		#if UNITY_EDITOR
+		#else
+				Commander.Shared.VoiceIconToggle(true);
+		#endif
 
         Tween tween = null;
 
@@ -121,6 +121,12 @@ public class DOPopup : MonoBehaviour {
 			default:
 				break;
 		}
+
+		return tween;
+	}
+
+	public void Close() {
+		var tween = Hide();	
 
 		if (tween == null) {
 			Destroy(gameObject);
