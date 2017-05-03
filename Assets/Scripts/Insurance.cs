@@ -257,8 +257,6 @@ public class Insurance : MonoBehaviour {
 
     void OnDestroy() 
     {
-
-        _.Log("1");
         if (isBuy)
             return;
 
