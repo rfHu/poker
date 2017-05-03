@@ -102,6 +102,10 @@ public class DOPopup : MonoBehaviour {
 	}
 
 	public Tween Hide() {
+		if (!hasShow) {
+			return null;
+		}
+
 		hideModal();
 
 		#if UNITY_EDITOR
