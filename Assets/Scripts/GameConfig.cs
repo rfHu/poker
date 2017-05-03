@@ -476,6 +476,8 @@ sealed public class GameData {
 		if (list.Count <= 0) {
 			return ;
 		}
+
+		DealState = state;
 		
 		if (state == 5 && PublicCards.Count >= 4) { // 转牌
 			return ;	
@@ -483,7 +485,7 @@ sealed public class GameData {
 			return ;
 		}
 
-		if (state == 4) { // 翻牌
+		if (state == 4 || state == 0) { // 翻牌
 			PublicCards.Clear();
 		}  
 
@@ -492,6 +494,7 @@ sealed public class GameData {
 		}
 	}
 
+	public int DealState = -1;
 	public ReactiveProperty<List<object>> AuditList = new ReactiveProperty<List<object>>();
 	public bool GameStartState = false;
 	public bool SeeCardState = false;

@@ -338,28 +338,14 @@ public class Controller : MonoBehaviour {
 			if (GameData.Shared.GameStartState) {
 				var data = GameData.Shared.PublicCards;
 
-				if (data.Count < 3) {
-					return ;
-				}
+				G.WaitSound(() => {
+					if (this == null) {
+						return ;
+					}
 
-				// 延时一下，等收集筹码逻辑
-				Observable.Timer(TimeSpan.FromMilliseconds(100)).AsObservable().Subscribe(
-					(_) => {
-						G.waitSound(() => {
-							if (this == null) {
-								return ;
-							}
-
-							MasterAudio.PlaySound("fapai");
-
-							if (data.Count == 3) {
-								showCards();
-							} else {
-								getCardFrom(e.Index).Show(e.Value, true);
-							}
-						});
-					} 
-				).AddTo(this);	
+					MasterAudio.PlaySound("fapai");
+					getCardFrom(e.Index).Show(e.Value, true);
+				});	
 			} else {
 				getCardFrom(e.Index).Show(e.Value, false);
 			}
@@ -474,10 +460,10 @@ public class Controller : MonoBehaviour {
 		return PublicCards[index].GetComponent<Card>();
 	}
 
-	private void showCards() {
+	private void showAllCards() {
 		var cards = GameData.Shared.PublicCards.ToList();
 
-		if (cards.Count != 3) {
+		if (cards.Count < 3) {
 			return ;
 		}
 

@@ -14,7 +14,7 @@ public class WaitForAudit : MonoBehaviour {
 
     private void addEvents() {
 		RxSubjects.Pass.Subscribe((e) => {
-			hideWithMsg("带入成功");
+			Hide();
 		}).AddTo(this);
 
 		RxSubjects.UnPass.Subscribe((e) => {

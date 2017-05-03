@@ -27,7 +27,7 @@ public class G {
 	private static Canvas uiCanvas;
 	private static Canvas dialogCanvas;
 
-	public static void waitSound(SoundGroupVariation.SoundFinishedEventHandler  cb) {
+	public static void WaitSound(SoundGroupVariation.SoundFinishedEventHandler  cb) {
 		var sounds = MasterAudio.GetAllPlayingVariationsInBus("Wait");
 
 		if (sounds.Count > 0) {
