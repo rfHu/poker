@@ -499,10 +499,10 @@ public class PlayerObject : MonoBehaviour {
 			}
 
 			if (isSelf()) {
-				OPGo.GetComponent<OP>().Reset(model.time);
+				OPGo.GetComponent<OP>().Reset(model.total);
 			} else {
 				StopCoroutine("yourTurn");
-				StartCoroutine(yourTurn(model.time));
+				StartCoroutine(yourTurn(model.total));
 			} 
 		}).AddTo(this);
 	}
