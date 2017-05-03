@@ -498,6 +498,11 @@ public class PlayerObject : MonoBehaviour {
 				return ;
 			}
 
+            if (!model.IsRound())
+            {
+                return;
+            }
+
 			if (isSelf()) {
 				OPGo.GetComponent<OP>().Reset(model.total);
 			} else {
