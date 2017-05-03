@@ -31,6 +31,7 @@ public class Insurance : MonoBehaviour {
     List<Toggle> OUTSCards;
     List<int> selectedCards;
     bool isBuy = false;
+    bool mustBuy = false;
     int purchaseTimes = 0;
 
     RectTransform _rectTransform;
@@ -43,6 +44,7 @@ public class Insurance : MonoBehaviour {
         {
             ExitButton.interactable = false;
             SelectAll.interactable = false;
+            this.mustBuy = mustBuy; 
         }
 
         this.cost = cost;
@@ -255,10 +257,12 @@ public class Insurance : MonoBehaviour {
 
     void OnDestroy() 
     {
+
+        _.Log("1");
         if (isBuy)
             return;
 
-        if (ExitButton.IsActive())
+        if (!mustBuy)
         {
             Connect.Shared.Emit(new Dictionary<string, object>() { 
                 {"f", "noinsurance"},
