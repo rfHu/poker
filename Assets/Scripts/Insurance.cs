@@ -41,9 +41,7 @@ public class Insurance : MonoBehaviour {
     RectTransform _rectTransform;
 
     public void Init(List<int> outCards, int pot,int cost, List<int> scope, bool mustBuy, int time) 
-    {
-        _.Log("1");
-
+    {;
         _rectTransform = GetComponent<RectTransform>();
         if (mustBuy)
             ExitButton.interactable = false;
@@ -61,7 +59,7 @@ public class Insurance : MonoBehaviour {
         //主池数字
         Pot.text = pot.ToString();
 
-        timer = time;
+        timer = 15;
         StartCoroutine(Timer());
 
         //allin用户
@@ -265,4 +263,29 @@ public class Insurance : MonoBehaviour {
 
         GetComponent<DOPopup>().Close(); 
     }
+}
+
+class AllInPlayer
+{
+
+    Text Name;
+
+    List<Card> Cards;
+
+    Text Kind;
+
+    string kind1 = "AllIn玩家";
+    string kind2 = "正在购买保险";
+
+    public void Init(string name, List<int> cards, bool isSelf)
+    {
+        Name.text = name;
+
+
+        Cards[0].Show(cards[0]);
+        Cards[1].Show(cards[1]);
+
+        Kind.text = isSelf ? kind2 : kind1;
+    }
+
 }
