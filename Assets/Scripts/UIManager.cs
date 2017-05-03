@@ -56,21 +56,6 @@ public class UIManager : MonoBehaviour {
         Commander.Shared.ShareGameRoom(shareText);
     }
 
-    public void OnClickSeeCard() 
-    {
-        Connect.Shared.Emit(new Dictionary<string, object>() {
-				{"f", "seecard"},
-                {"args", null}
-        }, (data) => {
-            var err = data.Int("err");
-
-            if (err != 0)
-            {
-                PokerUI.Toast(data.String("ret"));
-            }
-        });
-    }
-
     public void OnClickBuyTurnTime() 
     {
                 var data = new Dictionary<string, object>(){
