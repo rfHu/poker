@@ -374,31 +374,31 @@ sealed public class GameData {
                     case "time_limit": 
                         Duration += data.Long("time_limit");
                         LeftTime.Value += data.Long("time_limit");
-                        str = "房主将牌局时间延长了" + data.Long("time_limit") / 3600f + "小时";
+                        str = "房主将牌局延长了" + data.Long("time_limit") / 3600f + "小时";
                         PokerUI.Toast(str);
                         break;
 
                     case "ante":
                         Ante.Value = data.Int("ante");
-                        str = "房主将底注更改为：" + Ante.Value; 
+                        str = "房主将底注改为：" + Ante.Value; 
                         PokerUI.Toast(str);
                         break;
 
                     case "need_audit":
                         NeedAudit = data.Int("need_audit") == 1;
-                        str = GameData.Shared.NeedAudit ? "房主开启授权带入" : "房主关闭授权带入";
+                        str = GameData.Shared.NeedAudit ? "房主开启了授权带入" : "房主关闭了授权带入";
                         PokerUI.Toast(str);
                         break;
 
                     case "straddle":
                         Straddle.Value = data.Int("straddle") != 0;
-                        str = Straddle.Value ? "房主开启Straddle" : "房主关闭Straddle"; 
+                        str = Straddle.Value ? "房主开启了Straddle" : "房主关闭了Straddle"; 
                         PokerUI.Toast(str);
 						break;
 
                     case "turn_countdown":
 						SettingThinkTime = data.Int("turn_countdown");
-                        str = "房主将思考时长改为" + SettingThinkTime +"秒";
+                        str = "房主将思考时间改为" + SettingThinkTime +"秒";
                         PokerUI.Toast(str);
                         break;
                     default:
