@@ -22,12 +22,6 @@ public class Insurance : MonoBehaviour {
     public Button SelectAll;
 
     int cost;
-    float timer;
-    public float SetTimer
-    {
-        get { return timer; }
-        set { timer = value; }
-    }
 
     float OddsNum;
     float[] OddsNums = { 30, 16, 10, 8, 6, 5, 4, 3.5f, 3, 2.5f, 2.2f, 2, 1.7f, 1.5f, 1.3f, 1.1f, 1, 0.8f, 0.7f, 0.6f, 0.5f };
@@ -41,7 +35,8 @@ public class Insurance : MonoBehaviour {
     RectTransform _rectTransform;
 
     public void Init(List<int> outCards, int pot,int cost, List<int> scope, bool mustBuy, int time) 
-    {;
+    {
+
         _rectTransform = GetComponent<RectTransform>();
         if (mustBuy)
             ExitButton.interactable = false;
@@ -59,8 +54,7 @@ public class Insurance : MonoBehaviour {
         //主池数字
         Pot.text = pot.ToString();
 
-        timer = 15;
-        StartCoroutine(Timer());
+        StartCoroutine(Timer(time));
 
         //allin用户
         foreach (var player in GameData.Shared.Players)
@@ -74,7 +68,7 @@ public class Insurance : MonoBehaviour {
                         var playerMes = Instantiate(AllinPlayer);
                         playerMes.transform.SetParent(AllinPlayer.transform.parent,false);
                         playerMes.SetActive(true);
-                        playerMes.GetComponent<AllInPlayer>().Init(player.Value.Name, player.Value.Cards.Value, false);
+                        playerMes.GetComponent<AllInPlayerModel>().Init(player.Value.Name, player.Value.Cards.Value, false);
                     }
                 }
             }
@@ -104,6 +98,21 @@ public class Insurance : MonoBehaviour {
                 SelectedChanged(value, cardNum);
             });
         }
+
+        //RxSubjects.Moretime.Subscribe((e) =>
+        //{
+        //    var model = e.Data.ToObject<MoreTimeModel>();
+
+        //    if (model.IsRound())
+        //    {
+        //        return;
+        //    }
+
+        //    StopCoroutine("Timer");
+
+        //    StartCoroutine(Timer(model.time));
+        //}).AddTo(this);
+
     }
 
     private void SelectedChanged(bool value, int num)
@@ -233,12 +242,8 @@ public class Insurance : MonoBehaviour {
 
     void OnDestroy() 
     {
-        
-        
-        _.Log("1");
         if (isBuy)
             return;
-
 
         var data = new Dictionary<string, object>(){
 			        {"outs", selectedCards},
@@ -251,41 +256,16 @@ public class Insurance : MonoBehaviour {
 			});
     }
 
-    private IEnumerator Timer() 
+    private IEnumerator Timer(float time) 
     {
-        while (timer > 0)
+        while (time > 0)
         {
-            timer = timer - Time.deltaTime;
-            CountDown.text = ((int)timer).ToString();
+            time = time - Time.deltaTime;
+            CountDown.text = ((int)time).ToString();
 
             yield return new WaitForFixedUpdate();
         }
 
         GetComponent<DOPopup>().Close(); 
     }
-}
-
-class AllInPlayer
-{
-
-    Text Name;
-
-    List<Card> Cards;
-
-    Text Kind;
-
-    string kind1 = "AllIn玩家";
-    string kind2 = "正在购买保险";
-
-    public void Init(string name, List<int> cards, bool isSelf)
-    {
-        Name.text = name;
-
-
-        Cards[0].Show(cards[0]);
-        Cards[1].Show(cards[1]);
-
-        Kind.text = isSelf ? kind2 : kind1;
-    }
-
 }
