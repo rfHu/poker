@@ -42,6 +42,7 @@ public class Insurance : MonoBehaviour {
         if (mustBuy)
         {
             ExitButton.interactable = false;
+            SelectAll.interactable = false;
         }
 
         this.cost = cost;
@@ -73,7 +74,7 @@ public class Insurance : MonoBehaviour {
                         var playerMes = Instantiate(AllinPlayer);
                         playerMes.transform.SetParent(AllinPlayer.transform.parent,false);
                         playerMes.SetActive(true);
-                        playerMes.GetComponent<AllInPlayer>().Init(player.Value.Name, player.Value.Cards.Value, false);
+                        playerMes.GetComponent<AllInPlayer>().Init(player.Value.Name, player.Value.Cards.Value, player.Value.Uid);
                     }
                 }
             }
@@ -102,6 +103,8 @@ public class Insurance : MonoBehaviour {
             {
                 SelectedChanged(value, cardNum);
             });
+            if (mustBuy)
+                card.GetComponent<Toggle>().interactable = false;
         }
 
         RxSubjects.Moretime.Subscribe((e) =>{
