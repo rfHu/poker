@@ -493,6 +493,23 @@ public class PlayerObject : MonoBehaviour {
 			var cards = e.Data.IL("cards");
 			showTheCards(cards);
 		}).AddTo(this);
+
+		// 思考延时
+		RxSubjects.Moretime.Subscribe((e) => {
+			var model = e.Data.ToObject<MoreTimeModel>();
+
+			if (!model.IsRound()) {
+				return ;
+			}
+
+			if (model.uid != Uid || isSelf()) {
+				return ;
+			} 
+
+			StopCoroutine("yourTurn");
+
+			StartCoroutine(yourTurn(model.time));
+		}).AddTo(this);
 	}
 
 	private void fixChatPos(SeatPosition pos) {

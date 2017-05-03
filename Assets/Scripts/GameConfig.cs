@@ -471,36 +471,6 @@ sealed public class GameData {
             InsurancePopup.GetComponent<Insurance>().Init(outsCard, pot, cost, scope, mustBuy, time);
             
         });
-
-        RxSubjects.Moretime.Subscribe((e) => 
-        {
-            var args = e.Data.Dict("args");
-
-            var type = args.Int("type");
-            var time = args.Int("time");
-            var uid = args.String("uid");
-
-            if (uid != Uid)
-            {
-                string name = FindPlayer(uid).Name;
-
-                if (type == 111)
-                    PokerUI.Toast("玩家 " + name + "申请保险延时" + time + "秒");
-                else if(type == 112)
-                    PokerUI.Toast("玩家 " + name + "申请回合延时" + time + "秒");
-            }
-            else 
-            {
-                if (type == 111)
-                    GameObject.Find("Insurance").GetComponent<Insurance>().SetTimer += time;
-                else if(type == 112)
-                {
-
-                }
-
-            }
-
-        });
 	}
    
 	private void setPbCards(List<int> list, int state) {
