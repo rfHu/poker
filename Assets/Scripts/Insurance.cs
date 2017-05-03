@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using Extensions;
+using UniRx;
 
 public class Insurance : MonoBehaviour {
     public Text Pot;
@@ -99,21 +100,21 @@ public class Insurance : MonoBehaviour {
             });
         }
 
-        //RxSubjects.Moretime.Subscribe((e) =>
-        //{
-        //    var model = e.Data.ToObject<MoreTimeModel>();
+        RxSubjects.Moretime.Subscribe((e) =>{
+            var model = e.Data.ToObject<MoreTimeModel>();
 
-        //    if (model.IsRound())
-        //    {
-        //        return;
-        //    }
+            if (model.IsRound())
+            {
+                return;
+            }
 
-        //    StopCoroutine("Timer");
+            StopCoroutine("Timer");
 
-        //    StartCoroutine(Timer(model.time));
-        //}).AddTo(this);
+            StartCoroutine(Timer(model.total));
+        }).AddTo(this);
 
     }
+
 
     private void SelectedChanged(bool value, int num)
     {

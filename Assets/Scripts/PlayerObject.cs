@@ -508,7 +508,7 @@ public class PlayerObject : MonoBehaviour {
 
 			StopCoroutine("yourTurn");
 
-			StartCoroutine(yourTurn(model.time));
+			StartCoroutine(yourTurn(model.total));
 		}).AddTo(this);
 	}
 
