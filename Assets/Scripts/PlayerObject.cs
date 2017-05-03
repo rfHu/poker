@@ -349,7 +349,7 @@ public class PlayerObject : MonoBehaviour {
 		}).AddTo(this);
 
 		RxSubjects.MoveTurn.Subscribe((e) => {
-			G.waitSound(() => {
+			G.WaitSound(() => {
 				if (this == null) {
 					return ;
 				}
@@ -614,11 +614,11 @@ public class PlayerObject : MonoBehaviour {
 
 		if (cgo == null) {
 			cgo = chips.GetComponent<ChipsGo>();
-			cgo.Create(value, theSeat);
+			cgo.Create(value, theSeat, player);
 		} else {
 			chips.GetComponent<ChipsGo>().AddMore(() => {
 				cgo.SetChips(value);
-			}, theSeat);	
+			}, theSeat, player);	
 		}	
 	}
 

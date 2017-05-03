@@ -12,22 +12,16 @@ public class ChipsGo : MonoBehaviour {
 
 	private Seat theSeat;
 	private bool hided = false;
-
-
-	void Awake() {
-		RxSubjects.Deal.AsObservable().Where((e) => {
-			return e.Data.Dict("deals").ContainsKey("-1");
-		}).Subscribe((e) => {
-			Hide();
-		}).AddTo(this);
-	}
+	private Player player;
 
 	public void SetChips(int chips) {
 		TextNumber.text = _.Num2Text(chips);
 	}
 
-	public void Create(int value, Seat seat) {
+	public void Create(int value, Seat seat, Player player) {
 		theSeat = seat;
+		this.player = player;
+		addEvents();
 
 		MasterAudio.PlaySound("chip");
 		doTween().OnComplete(() => {
@@ -40,8 +34,10 @@ public class ChipsGo : MonoBehaviour {
 		});
 	}
 
-	public void AddMore(Action callback, Seat seat) {
+	public void AddMore(Action callback, Seat seat, Player player) {
 		theSeat = seat;
+		this.player = player;
+		addEvents();
 
 		MasterAudio.PlaySound("chip");
 		doTween().OnComplete(() => {
@@ -67,6 +63,14 @@ public class ChipsGo : MonoBehaviour {
 		.OnComplete(() => {
 			Destroy(gameObject);
 		});
+	}
+
+	private void addEvents() {
+		player.PrChips.Subscribe((value) => {
+			if (value == 0) {
+				Hide();
+			}
+		}).AddTo(this);
 	}
 	
 	private Tweener doTween() {

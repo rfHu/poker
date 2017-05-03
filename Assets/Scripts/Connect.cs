@@ -35,12 +35,12 @@ public sealed class Connect  {
 		manager.Socket.On("connect", onConnect);
 		manager.Socket.On("reconnect", onConnect);
 
-		manager.Socket.On("connecting", onNotConnect);
-		manager.Socket.On("disconnect", onNotConnect);
-		manager.Socket.On("reconnecting", onNotConnect);
-		manager.Socket.On("reconnect_attempt", onNotConnect);
+		manager.Socket.On("connecting", onDisconnect);
+		manager.Socket.On("disconnect", onDisconnect);
+		manager.Socket.On("reconnecting", onDisconnect);
+		manager.Socket.On("reconnect_attempt", onDisconnect);
 
-		manager.Socket.On("reconnect_failed", onError);
+		manager.Socket.On("reconnect_failed", onReconnectFail);
 		manager.Socket.On("error", onError);
 
 		manager.Open();	
@@ -74,13 +74,19 @@ public sealed class Connect  {
 		}, needConnected: false);
 	}
 
-	private void onNotConnect(Socket socket, Packet packet, params object[] args) {
+	private void onDisconnect(Socket socket, Packet packet, params object[] args) {
 		connected = false;
 	}
 
+	private void onReconnectFail(Socket socket, Packet packet, params object[] args) {
+		connected = false;
+		_.Log("Reconnect Fail");
+	}	
+
 	private void onError(Socket socket, Packet packet, params object[] args) {
 		connected = false;
-		PokerUI.DisAlert("服务器异常，请退出后重新进入游戏");
+		_.Log("Connect Error");
+		// PokerUI.DisAlert("服务器异常，请退出后重新进入游戏");
 	}
 
 	private void enterGame() {
