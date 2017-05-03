@@ -40,7 +40,9 @@ public class Insurance : MonoBehaviour {
 
         _rectTransform = GetComponent<RectTransform>();
         if (mustBuy)
+        {
             ExitButton.interactable = false;
+        }
 
         this.cost = cost;
         WholeOUTSNum = outCards.Count;
@@ -69,7 +71,7 @@ public class Insurance : MonoBehaviour {
                         var playerMes = Instantiate(AllinPlayer);
                         playerMes.transform.SetParent(AllinPlayer.transform.parent,false);
                         playerMes.SetActive(true);
-                        playerMes.GetComponent<AllInPlayerModel>().Init(player.Value.Name, player.Value.Cards.Value, false);
+                        playerMes.GetComponent<AllInPlayer>().Init(player.Value.Name, player.Value.Cards.Value, false);
                     }
                 }
             }
@@ -245,6 +247,14 @@ public class Insurance : MonoBehaviour {
     {
         if (isBuy)
             return;
+
+        if (CASlider.minValue == 0)
+        {
+            Connect.Shared.Emit(new Dictionary<string, object>() { 
+                {"f", "noinsurance"},
+            });
+            return;
+        }
 
         var data = new Dictionary<string, object>(){
 			        {"outs", selectedCards},
