@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AllInPlayerModel : MonoBehaviour {
+public class AllInPlayer : MonoBehaviour {
 
         public Text Name;
 
