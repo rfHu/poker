@@ -7,7 +7,6 @@ using UniRx;
 using Extensions;
 using DarkTonic.MasterAudio;
 using SimpleJSON;
-using System.Collections;
 
 public class Controller : MonoBehaviour {
 	public GameObject seat;
@@ -432,39 +431,29 @@ public class Controller : MonoBehaviour {
 
 
         RxSubjects.GameOver.Subscribe((e) =>{
-
-            SeeLeftCard.SetActive(true);
-            BuyTurnTime.SetActive(false);
-            StartCoroutine("hideButton");
+			if (GameData.Shared.PublicCards.Count < 5) {
+            	SeeLeftCard.SetActive(true);
+			}
         }).AddTo(this);
 
-        RxSubjects.MoveTurn.Subscribe((e) => {
+        RxSubjects.GameStart.Subscribe((e) => {
+            SeeLeftCard.SetActive(false);
+        }).AddTo(this);
 
-            var index = e.Data.Int("seat");
-            if (index == GameData.Shared.FindPlayerIndex(GameData.Shared.Uid))
-            {
+		RxSubjects.Look.Subscribe((e) => {
+			SeeLeftCard.SetActive(false);
+		}).AddTo(this);
+
+        RxSubjects.TurnToMyAction.Subscribe((action) => {
+            if (action){
                 BuyTurnTime.SetActive(true);
             }
             else 
             {
                 BuyTurnTime.SetActive(false);
             }
-            
         }).AddTo(this);
 	}
-
-    private IEnumerator hideButton() 
-    {
-        float time = 0;
-        while (time < 5) 
-        {
-            time += Time.deltaTime;
-
-            yield return new WaitForFixedUpdate();
-        }
-
-        SeeLeftCard.SetActive(false);
-    }
 
 	private bool isGuest(string json) {
 		var N = JSON.Parse(json);
