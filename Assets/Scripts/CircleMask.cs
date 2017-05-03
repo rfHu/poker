@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System;
 using DarkTonic.MasterAudio;
 using UniRx;
+using Extensions;
 
 public class CircleMask : MonoBehaviour {
 	bool activated = false;
@@ -25,21 +26,21 @@ public class CircleMask : MonoBehaviour {
 		numberText.enabled = false;	
 	}
 
-	public void Enable(float elaspe, bool enableTick) {
+	public void Enable(float left, bool enableTick) {
 		this.EnableTick = enableTick;
 
-		if (elaspe > GameData.Shared.ThinkTime || elaspe < 0) {
+		if (left < 0) {
 			return ;
 		}
 
 		proImage.enabled = true;
 		numberText.enabled = true;
-		StartCoroutine(run(elaspe));
+		StartCoroutine(run(left));
 	}
 
-	public void Reset(float elaspe) {
+	public void Reset(float left) {
 		StopCoroutine("run");
-		StartCoroutine(run(elaspe));
+		StartCoroutine(run(left));
 	}
 
 	public void Disable() {
@@ -48,15 +49,16 @@ public class CircleMask : MonoBehaviour {
 		numberText.enabled = false;
 	}
 
-	IEnumerator run(float elaspe = 0) {
+	IEnumerator run(float left) {
 		activated = true;
 
-		float time = GameData.Shared.ThinkTime - elaspe;
+		float time = left;
+		float total = left.GetThinkTime();
 		var flag = false;
 
 		while (time > 0 && activated) {
 			time = time - Time.deltaTime;
-			SetFillAmount(time);
+			SetFillAmount(time / total, time);
 
 			// 最后8秒出倒计时的声音
 			if (!flag && time <= 8) {
@@ -69,6 +71,8 @@ public class CircleMask : MonoBehaviour {
 
 		activated = false;
 	}
+
+
 
 	private void tickSound() {
 		if (!activated) {
@@ -84,17 +88,17 @@ public class CircleMask : MonoBehaviour {
 		numberText.color = color;
 	}
 
-	public void SetFillAmount(float left) {
+	public void SetFillAmount(float percent, float left) {
 		if (!proImage.enabled) {
 			proImage.enabled = true;
 			numberText.enabled = true;
 		}
 
-		if (left <= 0) {
+		if (percent <= 0) {
 			numberText.gameObject.SetActive(false);
 		} 
 
-		proImage.fillAmount = left / GameData.Shared.ThinkTime;
+		proImage.fillAmount = percent;
 		numberText.text =  (Math.Ceiling(left)).ToString();
 	}
 }

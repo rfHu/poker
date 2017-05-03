@@ -431,26 +431,27 @@ public class Controller : MonoBehaviour {
 
 
         RxSubjects.GameOver.Subscribe((e) =>{
-
-            SeeLeftCard.SetActive(true);
+			if (GameData.Shared.PublicCards.Count < 5) {
+            	SeeLeftCard.SetActive(true);
+			}
         }).AddTo(this);
 
         RxSubjects.GameStart.Subscribe((e) => {
             SeeLeftCard.SetActive(false);
         }).AddTo(this);
 
-        RxSubjects.MoveTurn.Subscribe((e) => {
+		RxSubjects.Look.Subscribe((e) => {
+			SeeLeftCard.SetActive(false);
+		}).AddTo(this);
 
-            var index = e.Data.Int("seat");
-            if (index == GameData.Shared.FindPlayerIndex(GameData.Shared.Uid))
-            {
+        RxSubjects.TurnToMyAction.Subscribe((action) => {
+            if (action){
                 BuyTurnTime.SetActive(true);
             }
             else 
             {
                 BuyTurnTime.SetActive(false);
             }
-            
         }).AddTo(this);
 	}
 

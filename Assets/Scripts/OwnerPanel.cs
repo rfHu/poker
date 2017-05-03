@@ -61,7 +61,7 @@ public class OwnerPanel : MonoBehaviour {
         Need_auditToggle.isOn = GameData.Shared.NeedAudit;
         StraddleToggle.isOn = GameData.Shared.Straddle.Value;
 
-        Turn_countdownSlider.value = turn_countdownNum.IndexOf(GameData.Shared.ThinkTime);
+        Turn_countdownSlider.value = turn_countdownNum.IndexOf(GameData.Shared.SettingThinkTime);
 	}
 
     private void AnteSliderInit()
@@ -316,7 +316,7 @@ public class OwnerPanel : MonoBehaviour {
 
         dict.Remove("turn_countdown");
 
-        if (GameData.Shared.ThinkTime != turn_countdownNum[(int)Turn_countdownSlider.value])
+        if (GameData.Shared.SettingThinkTime != turn_countdownNum[(int)Turn_countdownSlider.value])
         {
             int turnTime = turn_countdownNum[(int)Turn_countdownSlider.value];
             dict.Add("turn_countdown", turnTime);

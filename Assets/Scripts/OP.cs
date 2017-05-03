@@ -48,9 +48,10 @@ public class OP : MonoBehaviour {
 	void OnDestroy()
 	{
 		hideModal();
+		RxSubjects.TurnToMyAction.OnNext(false);
 	}
 	
-	public void StartWithCmds(Dictionary<string, object> data, int elaspe) {
+	public void StartWithCmds(Dictionary<string, object> data, int left) {
         var cmds = data.Dict("cmds");
 		var check = cmds.Bool("check");
 		var callNum = cmds.Int("call");
@@ -76,7 +77,7 @@ public class OP : MonoBehaviour {
 		}
 
 		circleMask = FoldGo.transform.Find("CD").GetComponent<CircleMask>();
-		circleMask.Enable(elaspe, true);
+		circleMask.Enable(left, true);
 
 		if (range.Count >= 2) { // 可加注
 			AllinGo.SetActive(false);
@@ -93,14 +94,16 @@ public class OP : MonoBehaviour {
 			RaiseGo.SetActive(true);
 			RaiseGo.GetComponent<CanvasGroup>().alpha = 0.4f;
 		}	
+
+		RxSubjects.TurnToMyAction.OnNext(true);
 	}
 
-	public void Reset(float elaspe) {
+	public void Reset(float left) {
 		if (circleMask == null) {
 			return ;
 		}
 
-		circleMask.Reset(elaspe);
+		circleMask.Reset(left);
 	}
 
 	private void setRaiseButtons(int call) {

@@ -148,21 +148,18 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	private void toggleAutoBtns(int index) {
-		var value = new System.Text.StringBuilder(player.Trust.SelectedFlag.Value);
+		var valStr = player.Trust.SelectedFlag.Value;
+
+		if (String.IsNullOrEmpty(valStr)) {
+			valStr = "00";
+		}
+
+		var value = new System.Text.StringBuilder(valStr);
 
 		value[index] = value[index] == '0' ? '1' : '0';
 		value[index ^ 1] = '0';	
 
 		player.Trust.SelectedFlag.Value = value.ToString();	
-
-		var num = Convert.ToInt16(value.ToString(), 2);
-
-		Connect.Shared.Emit(new Dictionary<string, object>{
-			{"f", "trust"},
-			{"args", new Dictionary<string, object> {
-				{"chooseid", num}
-			}}
-		});
 	}
 	
 	private void toggleEye(int index) {
@@ -348,8 +345,7 @@ public class PlayerObject : MonoBehaviour {
 
 		// 中途复原行动
 		player.Countdown.AsObservable().Where((obj) => obj.seconds > 0).Subscribe((obj) => {
-			var elaspe = Math.Max(GameData.Shared.ThinkTime - obj.seconds, 0);
-			turnTo(obj.data, elaspe);	
+			turnTo(obj.data, obj.seconds);	
 		}).AddTo(this);
 
 		RxSubjects.MoveTurn.Subscribe((e) => {
@@ -367,7 +363,7 @@ public class PlayerObject : MonoBehaviour {
 				}
 			
 				if (index == Index) {
-					turnTo(e.Data, 0);
+					turnTo(e.Data, GameData.Shared.ThinkTime);
 					setPlayerAct(false);
 				} else {
 					MoveOut();
@@ -446,7 +442,7 @@ public class PlayerObject : MonoBehaviour {
 			}).AddTo(this);
 
 			player.Trust.SelectedFlag.Where((flags) => { return flags != null; }).Subscribe((flags) => {
-				var ncolor = _.HexColor("#2196F364");
+				var ncolor = _.HexColor("#2196F300");
 				var scolor = _.HexColor("#2196F3");
 				
 				var img0 = AutoOperas[0].GetComponent<ProceduralImage>();
@@ -621,33 +617,34 @@ public class PlayerObject : MonoBehaviour {
 		}	
 	}
 
-	private void turnTo(Dictionary<string, object> dict, int elaspe) {
+	private void turnTo(Dictionary<string, object> dict, int left) {
 		if (isSelf()) {
 			MasterAudio.PlaySound("on_turn");
-			showOP(dict, elaspe);
+			showOP(dict, left);
 		} else {
-			StartCoroutine(yourTurn(elaspe));				
+			StartCoroutine(yourTurn(left));				
 		}
 	}
 
-	private IEnumerator yourTurn(float elaspe) {
+	private IEnumerator yourTurn(float left) {
 		Countdown.SetActive(true);
 		activated = true;
 		AvatarMask.SetActive(true);
 
-		float time = GameData.Shared.ThinkTime - elaspe;
+		float time = left;
+		float total = left.GetThinkTime();
 		var mask = Avt.GetComponent<CircleMask>();
 
-        PlayCountdownAni(elaspe);
+        PlayCountdownAni(left, total);
 
 		while (time > 0 && activated) {
 			time = time - Time.deltaTime;
 			
-			var percent = Mathf.Min(1, time / GameData.Shared.ThinkTime);
+			var percent = Mathf.Min(1, time / total);
 			var image = Countdown.GetComponent<ProceduralImage>();
 			image.fillAmount = percent;
 			mask.SetTextColor(image.color);
-            mask.SetFillAmount(time); 
+            mask.SetFillAmount(time / total, time); 
 
 			yield return new WaitForFixedUpdate();
 		}
@@ -656,7 +653,7 @@ public class PlayerObject : MonoBehaviour {
         Countdown.SetActive(false); 
 	}
 
-	private void showOP(Dictionary<string, object> data, int elaspe) {
+	private void showOP(Dictionary<string, object> data, int left) {
 		if (this == null) {
 			return ;
 		}
@@ -666,7 +663,7 @@ public class PlayerObject : MonoBehaviour {
 
 		OPGo = (GameObject)Instantiate(Resources.Load("Prefab/OP"));	
 		var op = OPGo.GetComponent<OP>();
-		op.StartWithCmds(data, elaspe);
+		op.StartWithCmds(data, left);
 	}
 
 	private void foldCards(GameObject go, Action callback = null) {
@@ -692,13 +689,13 @@ public class PlayerObject : MonoBehaviour {
 		});
 	}
 
-    private void PlayCountdownAni(float elaspe)
+    private void PlayCountdownAni(float left, float total)
     {
         List<Tween> tweens = countdownColorAni.GetTweens();
         for (int i = 0; i < tweens.Count; i++)
         {
-            tweens[i].timeScale = 15f / GameData.Shared.ThinkTime;
-            tweens[i].Goto(elaspe);
+            // tweens[i].timeScale = 15f / GameData.Shared.ThinkTime;
+            tweens[i].Goto(total - left);
             tweens[i].Play();
         }
     }

@@ -122,6 +122,10 @@ namespace Extensions
             return JSON.Parse(source.Serialize());
         }
 
+        public static float GetThinkTime(this float num) {
+            return num > GameData.Shared.ThinkTime ? num : GameData.Shared.ThinkTime;
+        }
+
         public static Dictionary<string, object> AsDictionary(this object source, BindingFlags bindingAttr = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance)
         {
             return source.GetType().GetProperties(bindingAttr).ToDictionary
