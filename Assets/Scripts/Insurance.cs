@@ -25,7 +25,7 @@ public class Insurance : MonoBehaviour {
     int cost;
 
     float OddsNum;
-    float[] OddsNums = { 30, 16, 10, 8, 6, 5, 4, 3.5f, 3, 2.5f, 2.2f, 2, 1.7f, 1.5f, 1.3f, 1.1f, 1, 0.8f, 0.7f, 0.6f, 0.5f };
+    float[] OddsNums = { 30, 16, 10, 8, 6, 5, 4, 3.5f, 3, 2.5f, 2.2f, 2, 1.7f, 1.5f, 1.3f, 1.1f, 1, 0.8f, 0.6f, 0.5f };
     int selected;
     int WholeOUTSNum;
     List<Toggle> OUTSCards;
@@ -50,12 +50,14 @@ public class Insurance : MonoBehaviour {
         OddsNum = OddsNums[selected - 1];
         Odds.text = OddsNum.ToString();
         OUTSCards = new List<Toggle>();
+
         CASlider.minValue = scope[0];
         CASlider.maxValue = scope[1];
         CASlider.value = CASlider.maxValue;
 
         //主池数字
         Pot.text = pot.ToString();
+        InputValue.text = GameData.Shared.FindPlayer(GameData.Shared.Uid).Bankroll.ToString();
 
         StartCoroutine(Timer(time));
 
@@ -148,7 +150,12 @@ public class Insurance : MonoBehaviour {
     {
         int auto = 0;
         AutoPurchase.text = "无自动投保额";
-        SumInsured.text = ((int)(CASlider.value / OddsNum)).ToString();
+        int sumNum = ((int)(CASlider.value / OddsNum));
+        if (CASlider.value % OddsNum != 0)
+            sumNum++;
+      
+        SumInsured.text = sumNum.ToString();
+
         int left = WholeOUTSNum - selected;
         if (left != 0)
         {
@@ -248,7 +255,7 @@ public class Insurance : MonoBehaviour {
         if (isBuy)
             return;
 
-        if (CASlider.minValue == 0)
+        if (ExitButton.IsActive())
         {
             Connect.Shared.Emit(new Dictionary<string, object>() { 
                 {"f", "noinsurance"},
