@@ -56,6 +56,23 @@ public class Controller : MonoBehaviour {
 		});
 	}
 
+	public void OnClickSeeCard() 
+    {
+		SeeLeftCard.SetActive(false);
+
+        Connect.Shared.Emit(new Dictionary<string, object>() {
+				{"f", "seecard"},
+                {"args", null}
+        }, (data) => {
+            var err = data.Int("err");
+
+            if (err != 0)
+            {
+                PokerUI.Toast(data.String("ret"));
+            }
+        });
+    }
+
 	void changePositions(int index) {
 		var count = GameData.Shared.PlayerCount;
 		var left = anchorPositions.Skip(count - index).Take(index);
