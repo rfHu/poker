@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class Card : MonoBehaviour {
 	public Sprite[] Faces;
@@ -23,13 +24,13 @@ public class Card : MonoBehaviour {
 		scaleCurve.AddKey(1, 1);
 	}
 
-	private void show(int index, bool anim = false) {	
+	private void show(int index, bool anim = false, Action complete = null) {	
 		gameObject.SetActive(true);
 		GetComponent<Image>().enabled = true;
 		var image = GetComponent<Image>();
 		
 		if (anim) {
-			StartCoroutine(flipCard(index));
+			StartCoroutine(flipCard(index, complete));
 		} else {
 			image.sprite = Faces[index];
 		}
@@ -44,17 +45,17 @@ public class Card : MonoBehaviour {
 		GetComponent<Image>().color = new Color(150 / 255f ,150 / 255f, 150 / 255f, 1);
 	}
 
-	public void Show(int index, bool anim = false) {
+	public void Show(int index, bool anim = false, Action complete = null) {
 		if (index == 0 || HasShow) {
 			return ;
 		}
 
 		HasShow = true;
 		var realIndex = Card.CardIndex(index);
-		show(realIndex, anim);
+		show(realIndex, anim, complete);
 	}
 
-	IEnumerator flipCard(int index) {
+	IEnumerator flipCard(int index, Action complete = null) {
 		float time = 0f;
 		var image = GetComponent<Image>();
 		var rectTrans = GetComponent<RectTransform>();
@@ -75,6 +76,10 @@ public class Card : MonoBehaviour {
 		}
 
 		rectTrans.localScale = new Vector2(1, 1);
+
+		if (complete != null) {
+			complete();
+		}
 	}
 
 	public void Turnback() {

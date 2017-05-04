@@ -485,7 +485,7 @@ sealed public class GameData {
 			return ;
 		}
 
-		if (state == 4 || state == 0) { // 翻牌
+		if (state == 4) { // 翻牌
 			PublicCards.Clear();
 		}  
 
