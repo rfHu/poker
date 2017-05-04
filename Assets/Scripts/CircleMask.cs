@@ -35,15 +35,15 @@ public class CircleMask : MonoBehaviour {
 
 		proImage.enabled = true;
 		numberText.enabled = true;
-        RunCoroutine = run(left);
-        StartCoroutine(RunCoroutine);
+        runCoroutine = run(left);
+        StartCoroutine(runCoroutine);
 	}
 
-    IEnumerator RunCoroutine;
+    IEnumerator runCoroutine;
 
 	public void Reset(float left) {
-        StopCoroutine(RunCoroutine);
-        RunCoroutine = run(left);
+        StopCoroutine(runCoroutine);
+        runCoroutine = run(left);
 		StartCoroutine(run(left));
 	}
 

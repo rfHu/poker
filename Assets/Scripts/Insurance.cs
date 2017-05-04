@@ -33,7 +33,7 @@ public class Insurance : MonoBehaviour {
     bool isBuy = false;
     bool mustBuy = false;
     int purchaseTimes = 0;
-    IEnumerator MyCoroutine;
+    IEnumerator myCoroutine;
 
     RectTransform _rectTransform;
 
@@ -63,8 +63,8 @@ public class Insurance : MonoBehaviour {
         Pot.text = pot.ToString();
         InputValue.text = GameData.Shared.FindPlayer(GameData.Shared.Uid).Bankroll.ToString();
 
-        MyCoroutine = Timer(time);
-        StartCoroutine(MyCoroutine);
+        myCoroutine = Timer(time);
+        StartCoroutine(myCoroutine);
 
         //allin用户
         foreach (var player in GameData.Shared.Players)
@@ -119,9 +119,9 @@ public class Insurance : MonoBehaviour {
                 return;
             }
 
-            StopCoroutine(MyCoroutine);
-            MyCoroutine = Timer(model.total);
-            StartCoroutine(MyCoroutine);
+            StopCoroutine(myCoroutine);
+            myCoroutine = Timer(model.total);
+            StartCoroutine(myCoroutine);
         }).AddTo(this);
 
     }

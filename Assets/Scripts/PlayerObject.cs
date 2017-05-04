@@ -506,9 +506,9 @@ public class PlayerObject : MonoBehaviour {
 			if (isSelf()) {
 				OPGo.GetComponent<OP>().Reset(model.total);
 			} else {
-				StopCoroutine(TurnCoroutine);
-                TurnCoroutine = yourTurn(model.total);
-				StartCoroutine(TurnCoroutine);
+				StopCoroutine(turnCoroutine);
+                turnCoroutine = yourTurn(model.total);
+				StartCoroutine(turnCoroutine);
 			} 
 		}).AddTo(this);
 	}
@@ -628,12 +628,12 @@ public class PlayerObject : MonoBehaviour {
 			MasterAudio.PlaySound("on_turn");
 			showOP(dict, left);
 		} else {
-            TurnCoroutine = yourTurn(left);
-			StartCoroutine(TurnCoroutine);				
+            turnCoroutine = yourTurn(left);
+			StartCoroutine(turnCoroutine);				
 		}
 	}
 
-    IEnumerator TurnCoroutine;
+    IEnumerator turnCoroutine;
 
 	private IEnumerator yourTurn(float left) {
 		Countdown.SetActive(true);
