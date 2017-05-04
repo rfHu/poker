@@ -22,6 +22,7 @@ public class Insurance : MonoBehaviour {
     public Button ExitButton;
     public Button SelectAll;
     public GameObject BuyTime;
+    public RectTransform PlayerList;
 
     int cost;
 
@@ -49,11 +50,11 @@ public class Insurance : MonoBehaviour {
         }
 
         this.cost = cost;
+        InputValue.text = cost.ToString();
+
         WholeOUTSNum = outCards.Count;
         selected = outCards.Count;
-        OddsNum = OddsNums[selected - 1];
-        Odds.text = OddsNum.ToString();
-        OUTSCards = new List<Toggle>();
+        SetOdds();
 
         CASlider.minValue = scope[0];
         CASlider.maxValue = scope[1];
@@ -61,7 +62,6 @@ public class Insurance : MonoBehaviour {
 
         //主池数字
         Pot.text = pot.ToString();
-        InputValue.text = GameData.Shared.FindPlayer(GameData.Shared.Uid).Bankroll.ToString();
 
         myCoroutine = Timer(time);
         StartCoroutine(myCoroutine);
@@ -79,6 +79,7 @@ public class Insurance : MonoBehaviour {
                         playerMes.transform.SetParent(AllinPlayer.transform.parent,false);
                         playerMes.SetActive(true);
                         playerMes.GetComponent<AllInPlayer>().Init(player.Value.Name, player.Value.Cards.Value, player.Value.Uid);
+                        PlayerList.sizeDelta += new Vector2(230, 0);
                     }
                 }
             }
@@ -94,6 +95,7 @@ public class Insurance : MonoBehaviour {
 		}
 
         //OUTS牌展示
+        OUTSCards = new List<Toggle>();
         _rectTransform.sizeDelta += new Vector2(0, 130 * ((outCards.Count - 1) / 7));
         selectedCards = outCards;
         foreach (var cardNum in outCards)
@@ -126,6 +128,18 @@ public class Insurance : MonoBehaviour {
 
     }
 
+    private void SetOdds()
+    {
+
+        int num = selected - 1;
+        if (num > 19)
+        {
+            num = 19;
+        }
+        OddsNum = OddsNums[num];
+        Odds.text = OddsNum.ToString();
+    }
+
 
     private void SelectedChanged(bool value, int num)
     {
@@ -142,8 +156,7 @@ public class Insurance : MonoBehaviour {
         else
             selectedCards.Remove(num);
 
-        OddsNum = OddsNums[selected - 1];
-        Odds.text = OddsNum.ToString();
+        SetOdds();
         DependentValue();
     }
 
@@ -220,18 +233,9 @@ public class Insurance : MonoBehaviour {
         Connect.Shared.Emit(new Dictionary<string, object>() {
 				{"f", "moretime"},
                 {"args", data}
-			},(redata) => {
-                var err = redata.Int("err");
-                if (err != 0)
-                {
-                    PokerUI.Toast(redata.String("msg"));
-                }
-                if (redata.Int("display") == 0)
-                {
-                    BuyTime.SetActive(false);
-                }
+			});
 
-            });
+        BuyTime.SetActive(false);
     }
 
     public void OnSLButtonClick() 

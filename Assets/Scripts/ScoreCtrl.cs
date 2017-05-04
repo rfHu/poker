@@ -75,9 +75,9 @@ public class ScoreCtrl : MonoBehaviour {
 
                 if (!player.Bool("in_room"))
                 {
-                    name.color = new Color(1, 1, 1, 0.2f);
-                    total.color = new Color(1, 1, 1, 0.2f);
-                    score.color = new Color(1, 1, 1, 0.2f);
+                    name.color = new Color(1, 1, 1, 0.4f);
+                    total.color = new Color(1, 1, 1, 0.4f);
+                    score.color = new Color(1, 1, 1, 0.4f);
                 }
         	}
 
@@ -111,7 +111,7 @@ public class ScoreCtrl : MonoBehaviour {
 
                 if (!guest.Bool("in_room"))
                 {
-                    name.color = new Color(1, 1, 1, 0.2f);
+                    name.color = new Color(1, 1, 1, 0.4f);
                     avatar.GetComponent<RawImage>().color = new Color(1, 1, 1, 0.5f);
                 }
 			} 
