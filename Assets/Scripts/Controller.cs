@@ -56,6 +56,23 @@ public class Controller : MonoBehaviour {
 		});
 	}
 
+	public void OnClickBuyTime() {
+		var data = new Dictionary<string, object>(){
+			{"type",112}
+		};
+
+        Connect.Shared.Emit(new Dictionary<string, object>() { 
+			{"f", "moretime"},
+			{"args", data}
+        },(redata) => {
+			var display = redata.Dict("ret").Int("display");
+			if (display == 0)
+			{
+				BuyTurnTime.SetActive(false);
+			}
+        });
+	}
+
 	public void OnClickSeeCard() 
     {
 		SeeLeftCard.SetActive(false);
@@ -284,6 +301,22 @@ public class Controller : MonoBehaviour {
 		return str;
 	}
 
+	private bool queueIsActive = false;
+	private Queue<KeyValuePair<int, int>> cardAnimQueue = new Queue<KeyValuePair<int, int>>();
+	private void startQueue()  {
+		if (cardAnimQueue.Count <= 0 || queueIsActive) {
+			return ;
+		}
+
+		queueIsActive = true;
+
+		var pair = cardAnimQueue.Dequeue();
+		getCardFrom(pair.Key).Show(pair.Value, true, () => {
+			queueIsActive = false;
+			startQueue();
+		});
+	}
+
 	void registerRxEvents() {
 		GameData.Shared.LeftTime.Subscribe((value) => {
 			if (!GameData.Shared.GameStarted) {
@@ -361,7 +394,9 @@ public class Controller : MonoBehaviour {
 					}
 
 					MasterAudio.PlaySound("fapai");
-					getCardFrom(e.Index).Show(e.Value, true);
+
+					cardAnimQueue.Enqueue(new KeyValuePair<int, int>(e.Index, e.Value));
+					startQueue();
 				});	
 			} else {
 				getCardFrom(e.Index).Show(e.Value, false);

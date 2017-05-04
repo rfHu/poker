@@ -56,25 +56,6 @@ public class UIManager : MonoBehaviour {
         Commander.Shared.ShareGameRoom(shareText);
     }
 
-    public void OnClickBuyTurnTime() 
-    {
-                var data = new Dictionary<string, object>(){
-                    {"type",112}
-		        };
-
-        Connect.Shared.Emit(new Dictionary<string, object>() { 
-            
-				{"f", "moretime"},
-                {"args", data}
-        },(redata) => {
-                var err = redata.Int("err");
-                if (err != 0)
-                {
-                    PokerUI.Toast(redata.String("msg"));
-                }
-        });
-    }
-
 	void Awake()
 	{
 		GameData.Shared.AuditList.AsObservable().Where((list) => list != null).Subscribe((list) => {
