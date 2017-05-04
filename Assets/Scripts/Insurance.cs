@@ -21,6 +21,7 @@ public class Insurance : MonoBehaviour {
     public Slider CASlider;
     public Button ExitButton;
     public Button SelectAll;
+    public GameObject BuyTime;
 
     int cost;
 
@@ -32,7 +33,6 @@ public class Insurance : MonoBehaviour {
     List<int> selectedCards;
     bool isBuy = false;
     bool mustBuy = false;
-    int purchaseTimes = 0;
     IEnumerator myCoroutine;
 
     RectTransform _rectTransform;
@@ -213,13 +213,6 @@ public class Insurance : MonoBehaviour {
 
     public void OnBTButton() 
     {
-        purchaseTimes++;
-        if (purchaseTimes > 2)
-        {
-            PokerUI.Toast("您已经购买两次，不能再购买了");
-            return;
-        }
-
         var data = new Dictionary<string, object>(){
                     {"type",111}
 		        };
@@ -229,10 +222,15 @@ public class Insurance : MonoBehaviour {
                 {"args", data}
 			},(redata) => {
                 var err = redata.Int("err");
-                if (err == 1401)
+                if (err != 0)
                 {
-                    PokerUI.Toast("金币不足");
+                    PokerUI.Toast(redata.String("msg"));
                 }
+                if (redata.Int("display") == 0)
+                {
+                    BuyTime.SetActive(false);
+                }
+
             });
     }
 
