@@ -506,8 +506,9 @@ public class PlayerObject : MonoBehaviour {
 			if (isSelf()) {
 				OPGo.GetComponent<OP>().Reset(model.total);
 			} else {
-				StopCoroutine("yourTurn");
-				StartCoroutine(yourTurn(model.total));
+				StopCoroutine(TurnCoroutine);
+                TurnCoroutine = yourTurn(model.total);
+				StartCoroutine(TurnCoroutine);
 			} 
 		}).AddTo(this);
 	}
@@ -627,9 +628,12 @@ public class PlayerObject : MonoBehaviour {
 			MasterAudio.PlaySound("on_turn");
 			showOP(dict, left);
 		} else {
-			StartCoroutine(yourTurn(left));				
+            TurnCoroutine = yourTurn(left);
+			StartCoroutine(TurnCoroutine);				
 		}
 	}
+
+    IEnumerator TurnCoroutine;
 
 	private IEnumerator yourTurn(float left) {
 		Countdown.SetActive(true);
@@ -696,10 +700,11 @@ public class PlayerObject : MonoBehaviour {
 
     private void PlayCountdownAni(float left, float total)
     {
+        _.Log("1");
         List<Tween> tweens = countdownColorAni.GetTweens();
         for (int i = 0; i < tweens.Count; i++)
         {
-            // tweens[i].timeScale = 15f / GameData.Shared.ThinkTime;
+            tweens[i].timeScale = 15f / GameData.Shared.ThinkTime;
             tweens[i].Goto(total - left);
             tweens[i].Play();
         }
