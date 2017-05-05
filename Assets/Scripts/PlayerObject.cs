@@ -166,7 +166,7 @@ public class PlayerObject : MonoBehaviour {
 		var value = new System.Text.StringBuilder(player.ShowCard.Value);
 
 		// 这一手结束后，只能亮牌，不能关闭亮牌
-		if (value[index] == '1') {
+		if (value[index] == '1' && gameover) {
 			return ;
 		}
 
