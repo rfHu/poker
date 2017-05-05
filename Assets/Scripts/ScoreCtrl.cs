@@ -29,7 +29,7 @@ public class ScoreCtrl : MonoBehaviour {
             var insurance = ret.Dict("insurance");
 			Hands.text = string.Format("第{0}手", ret.Int("handid"));
 
-            if (insurance.Int("need") == 1)
+            if (GameData.Shared.NeedInsurance)
             {
                 Insurance.SetActive(true);
                 InsuranceData.text = insurance.Int("pay").ToString();
