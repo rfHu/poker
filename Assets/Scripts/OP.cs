@@ -48,7 +48,6 @@ public class OP : MonoBehaviour {
 	void OnDestroy()
 	{
 		hideModal();
-		RxSubjects.TurnToMyAction.OnNext(false);
 	}
 	
 	public void StartWithCmds(Dictionary<string, object> data, int left) {
@@ -94,8 +93,6 @@ public class OP : MonoBehaviour {
 			RaiseGo.SetActive(true);
 			RaiseGo.GetComponent<CanvasGroup>().alpha = 0.4f;
 		}	
-
-		RxSubjects.TurnToMyAction.OnNext(true);
 	}
 
 	public void Reset(float left) {

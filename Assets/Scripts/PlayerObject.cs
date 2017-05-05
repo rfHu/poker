@@ -88,6 +88,7 @@ public class PlayerObject : MonoBehaviour {
 
 		if (OPGo != null) {
 			Destroy(OPGo);
+			RxSubjects.TurnToMyAction.OnNext(false);
 			OPGo = null;
 			Circle.SetActive(true); // 显示头像
 		}
@@ -667,9 +668,11 @@ public class PlayerObject : MonoBehaviour {
 					}
 				} else {
 					MasterAudio.PlaySound("on_turn");
+					RxSubjects.TurnToMyAction.OnNext(true);
 				}
 			} else {
 				MasterAudio.PlaySound("on_turn");
+				RxSubjects.TurnToMyAction.OnNext(true);
 			}
 			
 			player.Trust.SelectedFlag.Value = "00";

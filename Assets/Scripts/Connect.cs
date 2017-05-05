@@ -381,6 +381,9 @@ public sealed class Connect  {
                 case "moretime":
                     RxSubjects.Moretime.OnNext(rxdata);
                     break;
+				case "someone_seecard":
+					RxSubjects.SomeOneSeeCard.OnNext(rxdata);
+					break;
 				default:
 					break;
 			}
