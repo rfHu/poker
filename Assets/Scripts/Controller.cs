@@ -519,7 +519,13 @@ public class Controller : MonoBehaviour {
 		}).AddTo(this);
 
 		RxSubjects.Pausing.Subscribe((_) => {
-			PokerUI.Toast("房主已暂停游戏（下一手生效）");
+			var text = "房主已暂停游戏";
+
+			if (GameData.Shared.InGame) {
+				text += "（下一手生效）";
+			}
+
+			PokerUI.Toast(text);
 		}).AddTo(this);
 	}
 
