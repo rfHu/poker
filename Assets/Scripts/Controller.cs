@@ -45,7 +45,7 @@ public class Controller : MonoBehaviour {
 		showGameInfo();
 		setupDealer();
 		setMuteState();
-	}
+    }
 
 	public void OnStartClick() {
 		Connect.Shared.Emit(new Dictionary<string, object>(){
@@ -323,11 +323,8 @@ public class Controller : MonoBehaviour {
 		GameData.Shared.LeftTime.Subscribe((value) => {
 			if (!GameData.Shared.GameStarted) {
 				setText(TimeLeftGo, "暂未开始");
+                return;
 			} 
-
-			if (GameData.Shared.Paused.Value) {
-				return ;
-			}
 
 			setText(TimeLeftGo, secToStr(value));
 		}).AddTo(this);

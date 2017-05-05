@@ -700,7 +700,6 @@ public class PlayerObject : MonoBehaviour {
 
     private void PlayCountdownAni(float left, float total)
     {
-        _.Log("1");
         List<Tween> tweens = countdownColorAni.GetTweens();
         for (int i = 0; i < tweens.Count; i++)
         {
