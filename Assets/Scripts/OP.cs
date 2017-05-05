@@ -62,12 +62,12 @@ public class OP : MonoBehaviour {
 		if (check) { // 看牌
 			CallGo.SetActive(false);
 			CheckGo.SetActive(true);
-			CheckGo.GetComponent<Button>().onClick.AddListener(OPS.check);
+			CheckGo.GetComponent<Button>().onClick.AddListener(OPS.Check);
 		} else if (callNum > 0) { // 跟注
 			CheckGo.SetActive(false);
 			CallGo.SetActive(true);
 			CallGo.GetComponent<Button>().onClick.AddListener(() => {
-				OPS.call();
+				OPS.Call();
 			});
 			CallNumber.text = callNum.ToString();
 		} else { // 不能跟注、不能看牌，展示灰掉的看牌按钮
@@ -87,7 +87,7 @@ public class OP : MonoBehaviour {
 		} else if(allin) { // 不可加注、可Allin
 			RaiseGo.SetActive(false);
 			AllinGo.SetActive(true);
-			AllinGo.GetComponent<Button>().onClick.AddListener(OPS.allIn);
+			AllinGo.GetComponent<Button>().onClick.AddListener(OPS.AllIn);
 			disableAllBtns();
 		} else { // 不可加注、不可Allin
 			disableAllBtns();
@@ -235,14 +235,14 @@ public class OP : MonoBehaviour {
 	}
 
 	public void OnFoldClick() {
-		OPS.fold();
+		OPS.Fold();
 	}
 
 	public void OnSliderOK() {
 		var value = (int)Slid.value;
 
 		if (value >= range[1]) {
-			OPS.allIn();
+			OPS.AllIn();
 		} else {
 			OPS.raise(value);
 		}
@@ -281,20 +281,20 @@ public class OP : MonoBehaviour {
 		disableBtn(R3);
 	}
 
-	class OPS {
-		internal static void fold() {
+	public class OPS {
+		public static void Fold() {
 			OPS.invoke("fold");	
 		}
 
-		internal static void call() {
+		public static void Call() {
 			OPS.invoke("call");		
 		}
 
-		internal static void check() {
+		public static void Check() {
 			OPS.invoke("check");		
 		}
 
-		internal static void allIn() {
+		public static void AllIn() {
 			OPS.invoke("all_in");
 		}
 
@@ -321,7 +321,7 @@ public class OP : MonoBehaviour {
 			}
 		}
 
-		internal static void raise(int number) {
+		public static void raise(int number) {
 			hide();
 
 			Connect.Shared.Emit(new Dictionary<string, object>() {
