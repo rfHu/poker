@@ -35,6 +35,16 @@ public class AutoDeposit {
 		CallNumber.Value = -100;
 		ShouldShow.Value = false;
 	}
+
+	public string FlagString() {
+		var flag = SelectedFlag.Value;
+
+		if (flag == null) {
+			return "00";
+		}
+
+		return flag;
+	}
 }
 
 sealed public class Player {

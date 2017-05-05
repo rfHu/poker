@@ -51,8 +51,6 @@ public class PlayerObject : MonoBehaviour {
 	public SpkTextGo SpkText;
 	public GameObject Volume;
 
-
-
 	private Seat theSeat {
 		get {
 			return  transform.parent.GetComponent<Seat>();
@@ -90,6 +88,7 @@ public class PlayerObject : MonoBehaviour {
 
 		if (OPGo != null) {
 			Destroy(OPGo);
+			RxSubjects.TurnToMyAction.OnNext(false);
 			OPGo = null;
 			Circle.SetActive(true); // 显示头像
 		}
@@ -155,7 +154,7 @@ public class PlayerObject : MonoBehaviour {
 		if (String.IsNullOrEmpty(valStr)) {
 			valStr = "00";
 		}
-
+		
 		var value = new System.Text.StringBuilder(valStr);
 
 		value[index] = value[index] == '0' ? '1' : '0';
@@ -168,7 +167,7 @@ public class PlayerObject : MonoBehaviour {
 		var value = new System.Text.StringBuilder(player.ShowCard.Value);
 
 		// 这一手结束后，只能亮牌，不能关闭亮牌
-		if (value[index] == '1') {
+		if (value[index] == '1' && gameover) {
 			return ;
 		}
 
@@ -448,6 +447,11 @@ public class PlayerObject : MonoBehaviour {
 				} else if (num > 0) {
 					text.text = "跟注\n" + num;
 				}
+
+				var flag = player.Trust.FlagString();
+				if (flag == "01") {
+					player.Trust.SelectedFlag.Value = "00";	
+				}
 			}).AddTo(this);
 
 			player.Trust.SelectedFlag.Where((flags) => { return flags != null; }).Subscribe((flags) => {
@@ -634,8 +638,44 @@ public class PlayerObject : MonoBehaviour {
 
 	private void turnTo(Dictionary<string, object> dict, int left) {
 		if (isSelf()) {
-			MasterAudio.PlaySound("on_turn");
-			showOP(dict, left);
+			var op = showOP(dict, left);
+			var flag = player.Trust.FlagString();
+			var callNum = player.Trust.CallNumber.Value;
+
+			if (flag == "10") { // 选中左边
+				op.gameObject.SetActive(false);
+				var check = dict.Dict("cmds").Bool("check");
+
+				if (check) {
+					OP.OPS.Check();
+ 				} else {
+					OP.OPS.Fold();
+				 }
+			} else if (flag == "01") { // 选中右边
+				var data = dict.Dict("cmds");
+				var call = data.Int("call");
+				var check = data.Bool("check");
+
+				if (callNum == -1 || (callNum == 0 && check) || (callNum == call && call != 0)) {
+					op.gameObject.SetActive(false);
+
+					if (callNum == 0) {
+						OP.OPS.Check();
+					} else if (callNum == -1) {
+						OP.OPS.AllIn();
+					} else {
+						OP.OPS.Call();
+					}
+				} else {
+					MasterAudio.PlaySound("on_turn");
+					RxSubjects.TurnToMyAction.OnNext(true);
+				}
+			} else {
+				MasterAudio.PlaySound("on_turn");
+				RxSubjects.TurnToMyAction.OnNext(true);
+			}
+			
+			player.Trust.SelectedFlag.Value = "00";
 		} else {
             turnCoroutine = yourTurn(left);
 			StartCoroutine(turnCoroutine);				
@@ -671,9 +711,9 @@ public class PlayerObject : MonoBehaviour {
         Countdown.SetActive(false); 
 	}
 
-	private void showOP(Dictionary<string, object> data, int left) {
+	private OP showOP(Dictionary<string, object> data, int left) {
 		if (this == null) {
-			return ;
+			return null;
 		}
 		
 		// 隐藏头像
@@ -682,6 +722,8 @@ public class PlayerObject : MonoBehaviour {
 		OPGo = (GameObject)Instantiate(Resources.Load("Prefab/OP"));	
 		var op = OPGo.GetComponent<OP>();
 		op.StartWithCmds(data, left);
+
+		return op;
 	}
 
 	private void foldCards(GameObject go, Action callback = null) {

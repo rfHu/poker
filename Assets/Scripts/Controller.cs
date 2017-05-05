@@ -7,6 +7,7 @@ using UniRx;
 using Extensions;
 using DarkTonic.MasterAudio;
 using SimpleJSON;
+using DG.Tweening;
 
 public class Controller : MonoBehaviour {
 	public GameObject seat;
@@ -29,6 +30,9 @@ public class Controller : MonoBehaviour {
     public GameObject BuyTurnTime;
 
 	public SpkTextGo SpkText;
+
+	public GameObject SeeCardTable;
+	public GameObject SeeCardTips;
 
 	// public GameObject Cutoff;
 
@@ -497,6 +501,21 @@ public class Controller : MonoBehaviour {
 			} else {
 				PokerUI.Toast("记分牌带入成功");
 			}
+		}).AddTo(this);
+
+		RxSubjects.SomeOneSeeCard.Subscribe((_) => {
+			var go = (GameObject)GameObject.Instantiate(SeeCardTips);
+			var cvs = go.GetComponent<CanvasGroup>(); 
+			
+			go.SetActive(true);
+			cvs.alpha = 0;
+			go.transform.SetParent(SeeCardTable.transform);
+			
+			cvs.DOFade(1, 0.2f).OnComplete(() => {
+				Observable.Timer(TimeSpan.FromSeconds(2.5)).Subscribe((tmp) => {
+					Destroy(go);
+				}).AddTo(this);
+			});	
 		}).AddTo(this);
 	}
 
