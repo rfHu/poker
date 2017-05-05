@@ -11,14 +11,7 @@ public class RecallUser : MonoBehaviour {
 	public GameObject[] Cards;
 	public ProceduralImage ProceImage;
 	public GameObject MaxFive;
-
-	// 三种不同颜色
-	private string[] colors = new string[]{
-		"#ff1744",
-		"#646464",
-		"#00c853"
-	};
-
+	
 	public void Show(Dictionary<string, object> dict) {
 		var uid = dict.String("uid");
 
@@ -60,19 +53,8 @@ public class RecallUser : MonoBehaviour {
 	}
 
 
-	void setScoreColor(int earn) {
-		var color = new Color();
-		string c;
-
-		if (earn > 0) {
-			c = colors[0];
-		} else if (earn < 0) {
-			c = colors[2];
-		} else {
-			c = colors[1];
-		}
-
-		ColorUtility.TryParseHtmlString(c, out color);
+	void setScoreColor(int num) {
+		var color = _.GetColor(num);
 		ProceImage.color = color;
 	}
 

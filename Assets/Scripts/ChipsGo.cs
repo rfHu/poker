@@ -15,7 +15,7 @@ public class ChipsGo : MonoBehaviour {
 	private Player player;
 
 	public void SetChips(int chips) {
-		TextNumber.text = _.Num2Text(chips);
+		TextNumber.text = _.Num2CnDigit(chips);
 	}
 
 	public void Create(int value, Seat seat, Player player) {

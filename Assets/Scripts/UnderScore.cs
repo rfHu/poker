@@ -60,7 +60,7 @@ public class _ {
         }
     }
 
-    static public string Num2Text<T>(T num) {
+    static public string Num2CnDigit<T>(T num) {
         var value = Convert.ToDouble(num);
 
         if (Double.IsInfinity(value)) {
@@ -95,6 +95,35 @@ public class _ {
         ColorUtility.TryParseHtmlString(hex, out color);
         return color;
     }
+
+    static public Color GetColor(int num) {
+        string[] colors = new string[]{
+		    "#ff1744",
+		    "#646464",
+		    "#00c853"
+	    };
+		var color = new Color();
+		string c;
+
+		if (num > 0) {
+			c = colors[0];
+		} else if (num < 0) {
+			c = colors[2];
+		} else {
+			c = colors[1];
+		}
+
+		ColorUtility.TryParseHtmlString(c, out color);
+		return color;
+    }
+
+    static public string Number2Text(int num) {
+		if (num <= 0) {
+			return num.ToString();
+		}
+
+		return "+" + num.ToString();
+	}
 
     static public string PercentStr(float number) {
         if (float.IsNaN(number) || float.IsInfinity(number)) { 

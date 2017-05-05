@@ -336,7 +336,7 @@ public class PlayerObject : MonoBehaviour {
 			if (data.prize > 0) {
 				Invoke("doChipsAnim", 1f);
 				WinNumber.transform.parent.gameObject.SetActive(true); 
-				WinNumber.text = num2Text(gain);
+				WinNumber.text = _.Number2Text(gain);
 				ScoreLabel.transform.parent.gameObject.SetActive(false);
 			}
 
@@ -400,9 +400,9 @@ public class PlayerObject : MonoBehaviour {
 		}).AddTo(this);
 
 		// fixChatPos(SeatPosition.Right);
-		Observable.Timer(TimeSpan.FromSeconds(5)).AsObservable().Subscribe((e) => {
-			SpkText.ShowMessage("快来看啊~~这时很长很长的文字很长很长的文字很长很长的问题很长的文字");
-		}).AddTo(this);
+		// Observable.Timer(TimeSpan.FromSeconds(5)).AsObservable().Subscribe((e) => {
+		// 	SpkText.ShowMessage("快来看啊~~这时很长很长的文字很长很长的文字很长很长的问题很长的文字");
+		// }).AddTo(this);
 
 		if (isSelf()) {
 			GameData.Shared.MaxFiveRank.Subscribe((value) => {
@@ -542,14 +542,6 @@ public class PlayerObject : MonoBehaviour {
 	private void doChipsAnim() {
 		var grp = Pots.CloneChipsHideSource();
         grp.ToPlayer(this);
-	}
-
-	private string num2Text(int num) {
-		if (num <= 0) {
-			return num.ToString();
-		}
-
-		return "+" + num.ToString();
 	}
 
 	private void showTheCards(List<int> cards) {
