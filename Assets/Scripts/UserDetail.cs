@@ -133,7 +133,6 @@ public class UserDetail : MonoBehaviour {
     public void OnStandUp() 
     {
         if (GameData.Shared.FindPlayerIndex(Uid) == -1) {
-            PokerUI.Toast("该玩家没有坐下");
             return;
         }
 

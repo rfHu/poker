@@ -159,12 +159,9 @@ public class RecallPage : MonoBehaviour {
                 if (json.Int("err") == 0) {
                     if (f == "fav")
                     {
-                        PokerUI.Toast("成功收藏牌局");
                         var ret = json.Dict("ret");
                         favhand_id = ret.String("favhand_id");
                     }
-                    else
-                        PokerUI.Toast("取消收藏牌局");
                 } 
             }
         );

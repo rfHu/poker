@@ -408,7 +408,7 @@ sealed public class GameData {
         RxSubjects.KickOut.Subscribe((e) =>{
             string Uid = e.Data.String("uid");
             string name = FindPlayer(Uid).Name;
-            string str = "玩家 " + name + " 被房主请出房间";
+            string str = name + "被房主请出房间";
             PokerUI.Toast(str);
         });
 
@@ -416,7 +416,7 @@ sealed public class GameData {
         {
             string Uid = e.Data.String("uid");
             string name = FindPlayer(Uid).Name;
-            string str = "玩家 " + name + " 被房主强制站起";
+            string str = name + "被房主强制站起";
             PokerUI.Toast(str);
         });
 
