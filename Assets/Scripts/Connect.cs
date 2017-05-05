@@ -333,7 +333,10 @@ public sealed class Connect  {
 				case "gameover":
 					RxSubjects.GameOver.OnNext(rxdata);
 					break;
-				case "pausing": case "paused":
+				case "pausing": 
+					RxSubjects.Pausing.OnNext(rxdata);
+					break;
+				case "paused":
 					RxSubjects.Paused.OnNext(rxdata);
 					break;
 				case "start":

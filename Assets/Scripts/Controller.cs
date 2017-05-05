@@ -517,6 +517,16 @@ public class Controller : MonoBehaviour {
 				}).AddTo(this);
 			});	
 		}).AddTo(this);
+
+		RxSubjects.Pausing.Subscribe((_) => {
+			var text = "房主已暂停游戏";
+
+			if (GameData.Shared.InGame) {
+				text += "（下一手生效）";
+			}
+
+			PokerUI.Toast(text);
+		}).AddTo(this);
 	}
 
 	private bool isGuest(string json) {
