@@ -180,6 +180,9 @@ public class Insurance : MonoBehaviour {
         int left = WholeOUTSNum - selected;
         if (left != 0)
         {
+            if (left > 20)
+                left = 20;
+
             auto = (int)((CASlider.value / OddsNum) / OddsNums[left - 1]) + 1;
             AutoPurchase.text = "剩余" + left + "张，赔率1-" + OddsNums[left - 1] + "，自动投保额" + auto;
         }
@@ -193,7 +196,7 @@ public class Insurance : MonoBehaviour {
 
     public void OnEPButtonClick() 
     {
-        CASlider.value = int.Parse(Pot.text);
+        CASlider.value = int.Parse(Pot.text) * OddsNum / (1 + OddsNum);
     }
 
     public void Buy() 
