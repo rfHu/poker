@@ -201,12 +201,6 @@ public class Insurance : MonoBehaviour {
 
     public void Buy() 
     {
-        if (CASlider.value == 0)
-        {
-            PokerUI.Toast("您的投保额为0");
-            return;
-        }
-
         isBuy = true;
 
         var data = new Dictionary<string, object>(){
