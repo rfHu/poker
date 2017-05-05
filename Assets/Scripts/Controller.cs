@@ -28,6 +28,8 @@ public class Controller : MonoBehaviour {
     public GameObject SeeLeftCard;
     public GameObject BuyTurnTime;
 
+	public SpkTextGo SpkText;
+
 	// public GameObject Cutoff;
 
 	List<Vector2> anchorPositions = new List<Vector2>();
@@ -456,7 +458,7 @@ public class Controller : MonoBehaviour {
 		RxSubjects.ShowAudio.Where(isGuest).Subscribe((json) => {
 			var N = JSON.Parse(json);
 			var name = N["name"].Value;
-			PokerUI.Toast(String.Format("{0}发送了一段语音", name), 3f);
+			SpkText.ShowMessage(String.Format("{0}发送了一段语音", name));
 		}).AddTo(this);
 
 		RxSubjects.SendChat.Where(isGuest).Subscribe((json) => {
@@ -464,7 +466,7 @@ public class Controller : MonoBehaviour {
 			var name = N["name"].Value;
 			var text = N["text"].Value;
 
-			PokerUI.Toast(String.Format("{0}: {1}", name, text), 3f);
+			SpkText.ShowMessage(String.Format("{0}: {1}", name, text));
 		}).AddTo(this);
 
 

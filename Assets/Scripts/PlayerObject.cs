@@ -394,7 +394,7 @@ public class PlayerObject : MonoBehaviour {
 
 		// fixChatPos(SeatPosition.Right);
 		// Observable.Timer(TimeSpan.FromSeconds(5)).AsObservable().Subscribe((e) => {
-		// 	SpkText.ShowMessage("快来看啊~~");
+		// 	SpkText.ShowMessage("快来看啊~~这时很长很长的文字很长很长的文字很长很长的问题很长的文字");
 		// }).AddTo(this);
 
 		if (isSelf()) {
