@@ -187,13 +187,11 @@ sealed public class GameData {
 
 			if (loginStatus == 1) {
 				AuditList.Value = new List<object>();
-				SceneManager.LoadScene("PokerGame");
-
 #if UNITY_EDITOR
 #else
 			    Commander.Shared.VoiceIconToggle(true);
 #endif
-
+				SceneManager.LoadScene("PokerGame");
             } 	
 		});
 

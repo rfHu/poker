@@ -43,7 +43,7 @@ public class Controller : MonoBehaviour {
 		showGameInfo();
 		setupDealer();
 		setMuteState();
-	}
+    }
 
 	public void OnStartClick() {
 		Connect.Shared.Emit(new Dictionary<string, object>(){

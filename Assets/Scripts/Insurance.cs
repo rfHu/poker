@@ -130,6 +130,7 @@ public class Insurance : MonoBehaviour {
 
     private void SetOdds()
     {
+        SelectNum.text = selected.ToString();
 
         int num = selected - 1;
         if (num > 19)
