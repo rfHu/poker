@@ -197,10 +197,7 @@ sealed public class GameData {
 
 			if (loginStatus == 1) {
 				AuditList.Value = new List<object>();
-#if UNITY_EDITOR
-#else
-			    Commander.Shared.VoiceIconToggle(true);
-#endif
+
 				SceneManager.LoadScene("PokerGame");
             } 	
 		});
@@ -547,6 +544,7 @@ sealed public class GameData {
 	public bool NeedAudit = false;
 	public bool IPLimit = false;
 	public bool GPSLimit = false;
+    public bool NeedInsurance = false;
 	public ReactiveProperty<long> LeftTime = new ReactiveProperty<long>(0);
     public ReactiveProperty<int> Ante = new ReactiveProperty<int>(0);
     public ReactiveProperty<bool> Straddle = new ReactiveProperty<bool>(false);
@@ -597,6 +595,7 @@ sealed public class GameData {
 		var bb = options.Int("limit");
 		BB = bb ;
 		SB = bb / 2;
+        NeedInsurance = options.Int("need_insurance") == 1;
 		DealerSeat.Value = json.Int("dealer_seat");
 		RoomName = json.String("name");
 		Pot.Value = json.Int("pot");

@@ -49,6 +49,10 @@ public class Controller : MonoBehaviour {
 		showGameInfo();
 		setupDealer();
 		setMuteState();
+#if UNITY_EDITOR
+#else
+        Commander.Shared.VoiceIconToggle(true);
+#endif
     }
 
 	public void OnStartClick() {
@@ -223,6 +227,11 @@ public class Controller : MonoBehaviour {
 		} else if (ipLimit) {
 			addGameInfo("IP 限制");
 		}
+
+        if (GameData.Shared.NeedInsurance)
+        {
+            addGameInfo("[保险模式]");
+        }
 	}
 
     private void setBBGoText()
