@@ -43,12 +43,14 @@ public class PlayerObject : MonoBehaviour {
     private float hideDuration = 0.3f; 
     private DOTweenAnimation countdownColorAni;
 	private ActionState lastState;
+	private bool gameover = false;
 
 	public Text CardDesc;
 	public Text OthersCardDesc;
 
 	public SpkTextGo SpkText;
 	public GameObject Volume;
+
 
 
 	private Seat theSeat {
@@ -164,6 +166,12 @@ public class PlayerObject : MonoBehaviour {
 	
 	private void toggleEye(int index) {
 		var value = new System.Text.StringBuilder(player.ShowCard.Value);
+
+		// 这一手结束后，只能亮牌，不能关闭亮牌
+		if (value[index] == '1') {
+			return ;
+		}
+
 		value[index] =  value[index] == '0' ? '1' : '0';
 
 		player.ShowCard.Value = value.ToString();
@@ -382,6 +390,7 @@ public class PlayerObject : MonoBehaviour {
 			PlayerAct.gameObject.SetActive(false);
 			AllinGo.SetActive(false);
 			AutoArea.SetActive(false);
+			gameover = true;
 
 			if (cgo != null) {
 			 	cgo.Hide();
