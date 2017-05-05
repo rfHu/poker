@@ -62,8 +62,6 @@ public class PlayerObject : MonoBehaviour {
 
 		// 倒计时隐藏
 		Countdown.SetActive(false);
-
-		SpkText.Uid = Uid;
 	}
 
 	public void SeeCard(List<int> cards) {
@@ -110,6 +108,7 @@ public class PlayerObject : MonoBehaviour {
 	public void ShowPlayer(Player player, Transform parent) {
 		Index = player.Index;
 		Uid = player.Uid;
+		SpkText.Uid = Uid;
 
 		this.player = player;
 
@@ -401,9 +400,9 @@ public class PlayerObject : MonoBehaviour {
 		}).AddTo(this);
 
 		// fixChatPos(SeatPosition.Right);
-		// Observable.Timer(TimeSpan.FromSeconds(5)).AsObservable().Subscribe((e) => {
-		// 	SpkText.ShowMessage("快来看啊~~这时很长很长的文字很长很长的文字很长很长的问题很长的文字");
-		// }).AddTo(this);
+		Observable.Timer(TimeSpan.FromSeconds(5)).AsObservable().Subscribe((e) => {
+			SpkText.ShowMessage("快来看啊~~这时很长很长的文字很长很长的文字很长很长的问题很长的文字");
+		}).AddTo(this);
 
 		if (isSelf()) {
 			GameData.Shared.MaxFiveRank.Subscribe((value) => {

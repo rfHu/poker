@@ -6,7 +6,6 @@ public class SpkTextGo: MonoBehaviour {
     public ScrollText Text;
     public GameObject Arrow; 
     public GameObject TextCont;
-    public GameObject Arrow2;
     public CanvasGroup cvg;
 
     public String Uid;
@@ -43,15 +42,13 @@ public class SpkTextGo: MonoBehaviour {
         rt.anchoredPosition = new Vector2(0, 68);
 
         Arrow.SetActive(true);
-        Arrow2.SetActive(false);
 
         // 当玩家参与游戏时，调整特殊的位置
         if (Uid == GameData.Shared.Uid)  {
             rt.anchoredPosition = new Vector2(0, -220);
+            // rt.anchoredPosition = new Vector2(-270, -110);
             trt.anchoredPosition = new Vector2(0, 0);
-
             Arrow.SetActive(false);
-            Arrow2.SetActive(true);
         }  else if (pos == SeatPosition.Right || pos == SeatPosition.TopLeft) {
             trt.anchoredPosition = new Vector2(-offsetX, 0);
         } else if (pos == SeatPosition.Left || pos == SeatPosition.TopRight) { 
