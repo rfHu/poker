@@ -230,7 +230,7 @@ public class Controller : MonoBehaviour {
 
         if (GameData.Shared.NeedInsurance)
         {
-            addGameInfo("[保险模式]");
+            addGameInfo("保险模式");
         }
 	}
 

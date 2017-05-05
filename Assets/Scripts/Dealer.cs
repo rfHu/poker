@@ -33,6 +33,7 @@ public class Dealer : MonoBehaviour {
 
 		var seat = seats[value].GetComponent<Seat>();
 		transform.SetParent(seat.transform, true);
+		transform.SetAsFirstSibling();
 
 		cancel = seat.GetComponent<Seat>().SeatPos.Subscribe(
 			(pos) => {
