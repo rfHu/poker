@@ -46,6 +46,7 @@ public class CircleMask : MonoBehaviour {
 
         proImage.enabled = true;
         numberText.enabled = true;
+        numberText.gameObject.SetActive(true);
         runCoroutine = run(left);
 		StartCoroutine(runCoroutine);
 	}
