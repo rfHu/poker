@@ -6,7 +6,6 @@ using Extensions;
 using UnityEngine;
 using BestHTTP;
 using UniRx;
-using MaterialUI;
 
 public sealed class Connect  {
 	public static string Proxy;
@@ -86,7 +85,6 @@ public sealed class Connect  {
 	private void onError(Socket socket, Packet packet, params object[] args) {
 		connected = false;
 		_.Log("Connect Error");
-		// PokerUI.DisAlert("服务器异常，请退出后重新进入游戏");
 	}
 
 	private void enterGame() {
