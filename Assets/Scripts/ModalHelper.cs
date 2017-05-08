@@ -27,15 +27,29 @@ public class ModalHelper: MonoBehaviour {
 
 		if (modalColor) {
 			GetComponent<Image>().color = new Color(0, 0, 0, 40 / 255f);
-		}
-	}
+        }
+
+#if UNITY_EDITOR
+#else
+		    Commander.Shared.VoiceIconToggle(false);
+#endif
+    }
 
 	public void Hide() {
 		if (gameObject == null) {
 			return ;
-		}
+        }
 
-		Destroy(gameObject);
+        Destroy(gameObject);
+
+		#if UNITY_EDITOR
+		#else
+			var modal = GameObject.FindObjectOfType<ModalHelper>();
+
+			if (modal == null) {
+				Commander.Shared.VoiceIconToggle(true);
+			}
+		#endif
 	}
 
 	public static ModalHelper Create() {

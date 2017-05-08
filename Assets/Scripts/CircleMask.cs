@@ -44,7 +44,7 @@ public class CircleMask : MonoBehaviour {
 	public void Reset(float left) {
         StopCoroutine(runCoroutine);
         runCoroutine = run(left);
-		StartCoroutine(run(left));
+		StartCoroutine(runCoroutine);
 	}
 
 	public void Disable() {
