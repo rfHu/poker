@@ -521,18 +521,20 @@ public class Controller : MonoBehaviour {
 			}
 
 			var go = (GameObject)GameObject.Instantiate(SeeCardTips);
-			var cvs = go.GetComponent<CanvasGroup>(); 
+			var cvg = go.GetComponent<CanvasGroup>(); 
 			var text = go.transform.Find("Text").GetComponent<Text>();
 
 			text.text = String.Format("<color=#4FC3F7FF>{0}</color>看了剩余公共牌", player.Name);
 			
 			go.SetActive(true);
-			cvs.alpha = 0;
+			cvg.alpha = 0;
 			go.transform.SetParent(SeeCardTable.transform);
 			
-			cvs.DOFade(1, 0.2f).OnComplete(() => {
+			cvg.DOFade(1, 0.2f).OnComplete(() => {
 				Observable.Timer(TimeSpan.FromSeconds(2.5)).Subscribe((tmp) => {
-					Destroy(go);
+					cvg.DOFade(0, 0.2f).OnComplete(() => {
+						Destroy(go);
+					});
 				}).AddTo(this);
 			});	
 		}).AddTo(this);
@@ -623,7 +625,7 @@ public class Controller : MonoBehaviour {
             var time = e.Data.Int("time");
 
             var InsurancePopup = (GameObject)GameObject.Instantiate(Resources.Load("Prefab/Insurance"));
-            InsurancePopup.GetComponent<DOPopup>().Show();
+            InsurancePopup.GetComponent<DOPopup>().Show(modal: false);
             InsurancePopup.GetComponent<Insurance>().Init(outsCard, pot, cost, scope, mustBuy, time);
         }).AddTo(this);
 	}
