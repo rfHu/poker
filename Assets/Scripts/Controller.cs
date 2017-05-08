@@ -512,9 +512,19 @@ public class Controller : MonoBehaviour {
 			}
 		}).AddTo(this);
 
-		RxSubjects.SomeOneSeeCard.Subscribe((_) => {
+		RxSubjects.SomeOneSeeCard.Subscribe((e) => {
+			var uid = e.Data.String("uid");
+			var player = GameData.Shared.FindPlayer(uid);
+
+			if (!player.IsValid()) {
+				return ;
+			}
+
 			var go = (GameObject)GameObject.Instantiate(SeeCardTips);
 			var cvs = go.GetComponent<CanvasGroup>(); 
+			var text = go.transform.Find("Text").GetComponent<Text>();
+
+			text.text = player.Name  +  "看了剩余公共牌";
 			
 			go.SetActive(true);
 			cvs.alpha = 0;
@@ -536,6 +546,27 @@ public class Controller : MonoBehaviour {
 
 			PokerUI.Toast(text);
 		}).AddTo(this);
+
+		RxSubjects.Insurance.Subscribe((e) =>
+        {
+            switch (e.Data.Int("type"))
+            {
+                case 1:
+                    PokerUI.Toast("多名领先玩家，将直接发牌"); break;
+                case 2:
+                    PokerUI.Toast("无需风险控制，将直接发牌"); break;
+                case 3:
+                    // string name = FindPlayer(e.Data.String("uid")).Name;
+                    // PokerUI.Toast(name + " 玩家正在购买保险");
+                    break;
+                case 10:
+                    PokerUI.Toast("玩家购买的保险没有命中"); break;
+                case 11:
+                    PokerUI.Toast("玩家购买的保险命中了"); break;
+                default:
+                    break;
+            }
+        }).AddTo(this);
 	}
 
 	private bool isGuest(string json) {
