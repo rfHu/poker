@@ -683,6 +683,7 @@ public class PlayerObject : MonoBehaviour {
 		float time = left;
 		float total = left.GetThinkTime();
 		var mask = Avt.GetComponent<CircleMask>();
+        mask.numberText.gameObject.SetActive(true);
 
         PlayCountdownAni(left, total);
 

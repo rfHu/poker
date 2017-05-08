@@ -10,7 +10,7 @@ using Extensions;
 public class CircleMask : MonoBehaviour {
 	bool activated = false;
 	ProceduralImage proImage;
-	Text numberText;
+	public Text numberText;
 
 	public bool EnableTick = false;
 
