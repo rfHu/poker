@@ -524,7 +524,7 @@ public class Controller : MonoBehaviour {
 			var cvs = go.GetComponent<CanvasGroup>(); 
 			var text = go.transform.Find("Text").GetComponent<Text>();
 
-			text.text = player.Name  +  "看了剩余公共牌";
+			text.text = String.Format("<color=#4FC3F7FF>{0}</color>看了剩余公共牌", player.Name);
 			
 			go.SetActive(true);
 			cvs.alpha = 0;
@@ -549,7 +549,14 @@ public class Controller : MonoBehaviour {
 
 		RxSubjects.Insurance.Subscribe((e) =>
         {
-			PokerUI.Toast("领先玩家选择直接发牌");
+			// PokerUI.Toast("领先玩家选择直接发牌");
+			// var text = "玩家购买保险中<color=#18FFFFFF>34s</color>";
+			// var text = "已购买<color=#18FFFFFF>6</color>张OUTS\n保费<color=#FFAB40FF>37</color>，预计赔付<color=#FFAB40FF>185</color>";
+			// var text = "<color=#FFAB40FF>继续领先</color>\n结算时将扣除保费";
+			// var text = "获得底池：<color=#FFAB40FF>666</color>\n扣除保费：<color=#FFAB40FF>666</color>";
+			// var text = "获得保险赔付：<color=#FFAB40FF>666</color>\n扣除保费：<color=#FFAB40FF>666</color>";
+			// var text = "未买中保险\n被<color=#4FC3F7FF>看你不顺眼</color>反超";
+			// var text = "未买中保险，牌面打平";
 
             switch (e.Data.Int("type"))
             {
