@@ -549,6 +549,8 @@ public class Controller : MonoBehaviour {
 
 		RxSubjects.Insurance.Subscribe((e) =>
         {
+			PokerUI.Toast("领先玩家选择直接发牌");
+
             switch (e.Data.Int("type"))
             {
                 case 1:
