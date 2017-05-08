@@ -96,7 +96,7 @@ public class Insurance : MonoBehaviour {
 
         //OUTS牌展示
         OUTSCards = new List<Toggle>();
-        _rectTransform.sizeDelta += new Vector2(0, 130 * ((outCards.Count - 1) / 7));
+        _rectTransform.sizeDelta += new Vector2(0, 125 * ((outCards.Count - 1) / 7));
         selectedCards = outCards;
         foreach (var cardNum in outCards)
         {

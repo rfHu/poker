@@ -10,7 +10,7 @@ using Extensions;
 public class CircleMask : MonoBehaviour {
 	bool activated = false;
 	ProceduralImage proImage;
-	Text numberText;
+	public Text numberText;
 
 	public bool EnableTick = false;
 
@@ -43,6 +43,10 @@ public class CircleMask : MonoBehaviour {
 
 	public void Reset(float left) {
         StopCoroutine(runCoroutine);
+
+        proImage.enabled = true;
+        numberText.enabled = true;
+        numberText.gameObject.SetActive(true);
         runCoroutine = run(left);
 		StartCoroutine(runCoroutine);
 	}
@@ -79,7 +83,7 @@ public class CircleMask : MonoBehaviour {
 
 
 	private void tickSound() {
-		if (!activated) {
+		if (!activated || int.Parse(numberText.text) > 8) {
 			return ;
 		}
 
