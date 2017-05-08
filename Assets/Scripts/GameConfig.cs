@@ -126,6 +126,10 @@ sealed public class Player {
 		}
 	}
 
+	public bool IsValid() {
+		return !string.IsNullOrEmpty(Uid);
+	}
+
 	public ReactiveProperty<bool> Destroyed = new ReactiveProperty<bool>(false);
 
 	public ReactiveProperty<GameOverJson> OverData = new ReactiveProperty<GameOverJson>();

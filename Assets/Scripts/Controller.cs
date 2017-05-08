@@ -512,9 +512,19 @@ public class Controller : MonoBehaviour {
 			}
 		}).AddTo(this);
 
-		RxSubjects.SomeOneSeeCard.Subscribe((_) => {
+		RxSubjects.SomeOneSeeCard.Subscribe((e) => {
+			var uid = e.Data.String("uid");
+			var player = GameData.Shared.FindPlayer(uid);
+
+			if (!player.IsValid()) {
+				return ;
+			}
+
 			var go = (GameObject)GameObject.Instantiate(SeeCardTips);
 			var cvs = go.GetComponent<CanvasGroup>(); 
+			var text = go.transform.Find("Text").GetComponent<Text>();
+
+			text.text = player.Name  +  "看了剩余公共牌";
 			
 			go.SetActive(true);
 			cvs.alpha = 0;
