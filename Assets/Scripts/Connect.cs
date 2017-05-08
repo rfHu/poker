@@ -17,8 +17,6 @@ public sealed class Connect  {
 
 	private int seq = 0;
 
-	private bool connected = false;
-
 	private Connect() {
 		// Charles Proxy
 		if (!string.IsNullOrEmpty(Connect.Proxy)) {
@@ -63,27 +61,23 @@ public sealed class Connect  {
 
 			_.Log("Unity: 登陆成功，准备进入房间……");
 
-			connected = true;
-
 			// 登陆成功，写用户数据
 			saveUserInfo(json);
 
 			// 进入房间
 			enterGame();
-		}, needConnected: false);
+		});
 	}
 
 	private void onDisconnect(Socket socket, Packet packet, params object[] args) {
-		connected = false;
+		
 	}
 
 	private void onReconnectFail(Socket socket, Packet packet, params object[] args) {
-		connected = false;
 		_.Log("Reconnect Fail");
 	}	
 
 	private void onError(Socket socket, Packet packet, params object[] args) {
-		connected = false;
 		_.Log("Connect Error");
 	}
 
@@ -115,8 +109,8 @@ public sealed class Connect  {
 		GameData.Shared.Pin = token.String("pin");
 	}
 
-	public void Emit(Dictionary<string, object> json, Action<Dictionary<string, object>> success = null, Action error = null, int timeout = 5, bool needConnected = true) {
-		if (!connected && needConnected) {
+	public void Emit(Dictionary<string, object> json, Action<Dictionary<string, object>> success = null, Action error = null, int timeout = 5) {
+		if (manager.State != BestHTTP.SocketIO.SocketManager.States.Open) {
 			return ;
 		}
 

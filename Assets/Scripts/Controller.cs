@@ -547,34 +547,84 @@ public class Controller : MonoBehaviour {
 			PokerUI.Toast(text);
 		}).AddTo(this);
 
-		RxSubjects.Insurance.Subscribe((e) =>
-        {
-			// PokerUI.Toast("领先玩家选择直接发牌");
-			// var text = "玩家购买保险中<color=#18FFFFFF>34s</color>";
-			// var text = "已购买<color=#18FFFFFF>6</color>张OUTS\n保费<color=#FFAB40FF>37</color>，预计赔付<color=#FFAB40FF>185</color>";
-			// var text = "<color=#FFAB40FF>继续领先</color>\n结算时将扣除保费";
-			// var text = "获得底池：<color=#FFAB40FF>666</color>\n扣除保费：<color=#FFAB40FF>666</color>";
-			// var text = "获得保险赔付：<color=#FFAB40FF>666</color>\n扣除保费：<color=#FFAB40FF>666</color>";
-			// var text = "未买中保险\n被<color=#4FC3F7FF>看你不顺眼</color>反超";
-			// var text = "未买中保险，牌面打平";
+		RxSubjects.Modify.Subscribe((e) =>{
 
-            switch (e.Data.Int("type"))
-            {
-                case 1:
-                    PokerUI.Toast("多名领先玩家，将直接发牌"); break;
-                case 2:
-                    PokerUI.Toast("无需风险控制，将直接发牌"); break;
-                case 3:
-                    // string name = FindPlayer(e.Data.String("uid")).Name;
-                    // PokerUI.Toast(name + " 玩家正在购买保险");
-                    break;
-                case 10:
-                    PokerUI.Toast("玩家购买的保险没有命中"); break;
-                case 11:
-                    PokerUI.Toast("玩家购买的保险命中了"); break;
-                default:
-                    break;
+            var data = e.Data;
+            var str = "";
+
+            foreach (var item in e.Data)
+	        {
+                switch (item.Key) 
+                {
+                    case "bankroll_multiple":
+                        GameData.Shared.BankrollMul = data.IL("bankroll_multiple");
+                        str = "房主将记分牌带入倍数改为：" + GameData.Shared.BankrollMul[0] + "-" + GameData.Shared.BankrollMul[1];
+                        PokerUI.Toast(str);
+                        break;
+
+                    case "time_limit": 
+                        GameData.Shared.Duration += data.Long("time_limit");
+                        GameData.Shared.LeftTime.Value += data.Long("time_limit");
+                        str = "房主将牌局延长了" + data.Long("time_limit") / 3600f + "小时";
+                        PokerUI.Toast(str);
+                        break;
+
+                    case "ante":
+                        GameData.Shared.Ante.Value = data.Int("ante");
+                        str = "房主将底注改为：" + GameData.Shared.Ante.Value; 
+                        PokerUI.Toast(str);
+                        break;
+
+                    case "need_audit":
+                        GameData.Shared.NeedAudit = data.Int("need_audit") == 1;
+                        str = GameData.Shared.NeedAudit ? "房主开启了授权带入" : "房主关闭了授权带入";
+                        PokerUI.Toast(str);
+                        break;
+
+                    case "straddle":
+                        GameData.Shared.Straddle.Value = data.Int("straddle") != 0;
+                        str = GameData.Shared.Straddle.Value ? "房主开启了Straddle" : "房主关闭了Straddle"; 
+                        PokerUI.Toast(str);
+						break;
+
+                    case "turn_countdown":
+						GameData.Shared.SettingThinkTime = data.Int("turn_countdown");
+                        str = "房主将思考时间改为" + GameData.Shared.SettingThinkTime +"秒";
+                        PokerUI.Toast(str);
+                        break;
+                    default:
+                        break;
+                }
             }
+        }).AddTo(this);
+
+		 RxSubjects.KickOut.Subscribe((e) =>{
+            string Uid = e.Data.String("uid");
+            string name = GameData.Shared.FindPlayer(Uid).Name;
+            string str = name + "被房主请出房间";
+            PokerUI.Toast(str);
+        }).AddTo(this);
+
+        RxSubjects.StandUp.Subscribe((e) =>
+        {
+            string Uid = e.Data.String("uid");
+            string name = GameData.Shared.FindPlayer(Uid).Name;
+            string str = name + "被房主强制站起";
+            PokerUI.Toast(str);
+        }).AddTo(this);
+
+		 RxSubjects.ToInsurance.Subscribe((e) =>
+        {
+            var outsCard = e.Data.IL("outs");
+            var pot = e.Data.Int("pot");
+            var cost = e.Data.Int("cost");
+            var scope = e.Data.IL("scope");
+            var mustBuy = e.Data.Int("must_buy") == 2 ? true : false;
+            var time = e.Data.Int("time");
+
+            var InsurancePopup = (GameObject)GameObject.Instantiate(Resources.Load("Prefab/Insurance"));
+            InsurancePopup.GetComponent<DOPopup>().Show();
+            InsurancePopup.GetComponent<Insurance>().Init(outsCard, pot, cost, scope, mustBuy, time);
         }).AddTo(this);
 	}
 
