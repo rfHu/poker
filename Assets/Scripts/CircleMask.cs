@@ -43,6 +43,9 @@ public class CircleMask : MonoBehaviour {
 
 	public void Reset(float left) {
         StopCoroutine(runCoroutine);
+
+        proImage.enabled = true;
+        numberText.enabled = true;
         runCoroutine = run(left);
 		StartCoroutine(runCoroutine);
 	}
@@ -79,7 +82,7 @@ public class CircleMask : MonoBehaviour {
 
 
 	private void tickSound() {
-		if (!activated) {
+		if (!activated || int.Parse(numberText.text) > 8) {
 			return ;
 		}
 
