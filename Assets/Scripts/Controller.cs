@@ -492,7 +492,7 @@ public class Controller : MonoBehaviour {
 
 		RxSubjects.Look.Subscribe((e) => {
 			SeeLeftCard.SetActive(false);
-		}).AddTo(this);
+        }).AddTo(this);
 
         RxSubjects.TurnToMyAction.Subscribe((action) => {
             if (action){

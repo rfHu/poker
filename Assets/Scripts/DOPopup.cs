@@ -24,11 +24,6 @@ public class DOPopup : MonoBehaviour {
 
 	void Awake()
     {
-#if UNITY_EDITOR
-#else
-		Commander.Shared.VoiceIconToggle(false);
-#endif
-
         var rectTrans = GetComponent<RectTransform>();
 
 		// @TODO: 处理ContentSizeFitter
@@ -107,11 +102,6 @@ public class DOPopup : MonoBehaviour {
 		}
 
 		hideModal();
-
-		#if UNITY_EDITOR
-		#else
-				Commander.Shared.VoiceIconToggle(true);
-		#endif
 
         Tween tween = null;
 

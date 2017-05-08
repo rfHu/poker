@@ -447,7 +447,7 @@ sealed public class GameData {
                 case 2:
                     PokerUI.Toast("无反超风险，不用购买保险"); break;
                 case 3:
-                    string name = FindPlayer(e.Data.String("uid")).Name;
+                    var name = FindPlayer(e.Data.String("uid")).Name;
                     PokerUI.Toast(name + " 玩家正在购买保险");
                     break;
                 case 10:
