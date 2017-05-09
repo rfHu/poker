@@ -38,7 +38,7 @@ public class Insurance : MonoBehaviour {
 
     RectTransform _rectTransform;
 
-    public void Init(List<int> outCards, int pot,int cost, List<int> scope, bool mustBuy, int time) 
+    public void Init(List<int> outCards, int pot,int cost, List<int> scope, bool mustBuy, int time, List<object> uids) 
     {
 
         _rectTransform = GetComponent<RectTransform>();
@@ -67,22 +67,15 @@ public class Insurance : MonoBehaviour {
         StartCoroutine(myCoroutine);
 
         //allin用户
-        foreach (var player in GameData.Shared.Players)
+        foreach (var uid in uids)
         {
-            if (player.Value.InGame)
-            {
-                if (true)
-                {
-                    if (player.Value.Cards != null)
-                    {
-                        var playerMes = Instantiate(AllinPlayer);
-                        playerMes.transform.SetParent(AllinPlayer.transform.parent,false);
-                        playerMes.SetActive(true);
-                        playerMes.GetComponent<AllInPlayer>().Init(player.Value.Name, player.Value.Cards.Value, player.Value.Uid);
-                        PlayerList.sizeDelta += new Vector2(230, 0);
-                    }
-                }
-            }
+            var player = GameData.Shared.FindPlayer((string)uid);
+
+            var playerMes = Instantiate(AllinPlayer);
+            playerMes.transform.SetParent(AllinPlayer.transform.parent,false);
+            playerMes.SetActive(true);
+            playerMes.GetComponent<AllInPlayer>().Init(player.Name, player.Cards.Value, player.Uid);
+            PlayerList.sizeDelta += new Vector2(230, 0);
             
         }
 
@@ -171,8 +164,8 @@ public class Insurance : MonoBehaviour {
 
     public void OnCASliderChange() 
     {
-        ClaimAmount.text = (CASlider.value).ToString();
         DependentValue();
+        ClaimAmount.text = (CASlider.value).ToString();
     }
 
     private void DependentValue()
@@ -180,8 +173,14 @@ public class Insurance : MonoBehaviour {
         int auto = 0;
         AutoPurchase.text = "无自动投保额";
         int sumNum = ((int)(CASlider.value / OddsNum));
-        if (CASlider.value % OddsNum != 0)
-            sumNum++;
+        //if (CASlider.value % OddsNum != 0)
+        //    sumNum++;
+
+        if (sumNum > int.Parse(Pot.text)/3)
+        {
+            CASlider.value = int.Parse(Pot.text) / 3 * OddsNum;
+            return;
+        }
       
         SumInsured.text = sumNum.ToString();
 
