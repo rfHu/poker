@@ -523,6 +523,12 @@ public class PlayerObject : MonoBehaviour {
 				StartCoroutine(turnCoroutine);
 			} 
 		}).AddTo(this);
+
+		player.Allin.Subscribe((allin) => {
+			if (allin) {
+				player.ActState.OnNext(ActionState.Allin);
+			}
+		}).AddTo(this);
 	}
 
 	private void fixChatPos(SeatPosition pos) {

@@ -62,6 +62,8 @@ sealed public class Player {
 	public bool InGame = false;
 	public int AuditCD = 0; 
 	public int Coins = 0;
+	public ReactiveProperty<bool> Allin = new ReactiveProperty<bool>(); 
+
 	public AutoDeposit Trust = new AutoDeposit(); 
 	public ReactiveProperty<string> ShowCard = new ReactiveProperty<string>();
 
@@ -86,6 +88,7 @@ sealed public class Player {
 		InGame = json.Bool("is_ingame");	
 		AuditCD = json.Int("unaudit_countdown");
 		Coins = json.Int("coins");
+		Allin.Value = json.Bool("is_allin");
 
 		var showValue = Convert.ToString(json.Int("showcard"), 2);
 
