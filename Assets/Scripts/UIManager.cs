@@ -13,6 +13,10 @@ public class UIManager : MonoBehaviour {
 	}
 
 	public void OnSwipe(Gesture gesture) {
+		if (this == null) {
+			return ;
+		}
+
 		var go = gesture.pickedUIElement;
 		var cvs = go.GetComponentInParent<Canvas>();
 
