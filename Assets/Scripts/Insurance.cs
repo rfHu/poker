@@ -140,7 +140,6 @@ public class Insurance : MonoBehaviour {
         selected += value ? 1 : -1;
         if (selected == 0)
         {
-            PokerUI.Toast("至少选择一张");
             OUTSCards[0].isOn = true;
             return;
         }
