@@ -25,6 +25,7 @@ public class Insurance : MonoBehaviour {
     public GameObject BuyTime;
     public RectTransform PlayerList;
     public RectTransform MidPart;
+    public GameObject Countdown;
 
     int cost;
     List<int> scope;
@@ -217,12 +218,12 @@ public class Insurance : MonoBehaviour {
 
     public void OnBEButtonClick() 
     {
-        CASlider.value = cost;
+        CASlider.value = cost / OddsNum;
     }
 
     public void OnEPButtonClick() 
     {
-        CASlider.value = int.Parse(Pot.text) * OddsNum / (1 + OddsNum);
+        CASlider.value = int.Parse(Pot.text) * (1 + OddsNum);
     }
 
     public void Buy() 
@@ -300,10 +301,19 @@ public class Insurance : MonoBehaviour {
 
     private IEnumerator Timer(float time) 
     {
+        
+        Countdown.GetComponent<Animator>().SetTrigger("1");
+        Countdown.GetComponent<Animator>().speed = 1 / time;
+
+        float wholeTime = time;
+        var length = Countdown.GetComponent<Scrollbar>();
+
         while (time > 0)
         {
             time = time - Time.deltaTime;
             CountDown.text = ((int)time).ToString();
+
+            length.size = time / wholeTime;
 
             yield return new WaitForFixedUpdate();
         }
