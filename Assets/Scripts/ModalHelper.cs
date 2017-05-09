@@ -44,11 +44,11 @@ public class ModalHelper: MonoBehaviour {
 
 		#if UNITY_EDITOR
 		#else
-			var modal = GameObject.FindObjectOfType<ModalHelper>();
+            //var modal = GameObject.FindObjectOfType<ModalHelper>();
 
-			if (modal == null) {
+            //if (modal == null) {
 				Commander.Shared.VoiceIconToggle(true);
-			}
+            //}
 		#endif
 	}
 

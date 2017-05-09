@@ -20,7 +20,8 @@ public class Insurance : MonoBehaviour {
     public Text AutoPurchase;
     public Slider CASlider;
     public Button ExitButton;
-    public Button SelectAll;
+    public Button CheckAll;
+    public Toggle CheckAllToggle;
     public GameObject BuyTime;
     public RectTransform PlayerList;
 
@@ -45,7 +46,7 @@ public class Insurance : MonoBehaviour {
         if (mustBuy)
         {
             ExitButton.interactable = false;
-            SelectAll.interactable = false;
+            CheckAll.interactable = false;
             this.mustBuy = mustBuy; 
         }
 
@@ -150,6 +151,14 @@ public class Insurance : MonoBehaviour {
             PokerUI.Toast("至少选择一张");
             OUTSCards[0].isOn = true;
             return;
+        }
+
+
+        if (selected == WholeOUTSNum)
+            CheckAllToggle.isOn = true;
+        else 
+        {
+            CheckAllToggle.isOn = false;
         }
 
         if (value)
