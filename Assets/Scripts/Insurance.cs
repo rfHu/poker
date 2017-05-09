@@ -23,7 +23,7 @@ public class Insurance : MonoBehaviour {
     public Button CheckAll;
     public Toggle CheckAllToggle;
     public GameObject BuyTime;
-    public RectTransform PlayerList;
+    public RectTransform MidPart;
 
     int cost;
 
@@ -75,7 +75,7 @@ public class Insurance : MonoBehaviour {
             playerMes.transform.SetParent(AllinPlayer.transform.parent,false);
             playerMes.SetActive(true);
             playerMes.GetComponent<AllInPlayer>().Init(player.Name, player.Cards.Value, player.Uid);
-            PlayerList.sizeDelta += new Vector2(230, 0);
+            MidPart.sizeDelta += new Vector2(230, 0);
             
         }
 
