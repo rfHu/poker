@@ -23,16 +23,20 @@ public class Insurance : MonoBehaviour {
     public Button CheckAll;
     public Toggle CheckAllToggle;
     public GameObject BuyTime;
+    public RectTransform PlayerList;
     public RectTransform MidPart;
 
     int cost;
+    List<int> scope;
 
     float OddsNum;
     float[] OddsNums = { 30, 16, 10, 8, 6, 5, 4, 3.5f, 3, 2.5f, 2.2f, 2, 1.7f, 1.5f, 1.3f, 1.1f, 1, 0.8f, 0.6f, 0.5f };
+
     int selected;
     int WholeOUTSNum;
     List<Toggle> OUTSCards;
     List<int> selectedCards;
+
     bool mustBuy = false;
     IEnumerator myCoroutine;
 
@@ -49,15 +53,18 @@ public class Insurance : MonoBehaviour {
             this.mustBuy = mustBuy; 
         }
 
+        //投入金额
         this.cost = cost;
+        this.scope = scope;
+
         InputValue.text = cost.ToString();
 
         WholeOUTSNum = outCards.Count;
         selected = outCards.Count;
         SetOdds();
 
-        CASlider.minValue = scope[0];
-        CASlider.maxValue = scope[1];
+
+
         CASlider.value = CASlider.maxValue;
 
         //主池数字
@@ -75,8 +82,7 @@ public class Insurance : MonoBehaviour {
             playerMes.transform.SetParent(AllinPlayer.transform.parent,false);
             playerMes.SetActive(true);
             playerMes.GetComponent<AllInPlayer>().Init(player.Name, player.Cards.Value, player.Uid);
-            MidPart.sizeDelta += new Vector2(230, 0);
-            
+            PlayerList.sizeDelta += new Vector2(230, 0);
         }
 
         //公共牌展示
@@ -89,7 +95,7 @@ public class Insurance : MonoBehaviour {
 
         //OUTS牌展示
         OUTSCards = new List<Toggle>();
-        _rectTransform.sizeDelta += new Vector2(0, 125 * ((outCards.Count - 1) / 7));
+        MidPart.sizeDelta += new Vector2(0, 124 * ((outCards.Count - 1) / 7));
         selectedCards = outCards;
         foreach (var cardNum in outCards)
         {
@@ -121,6 +127,22 @@ public class Insurance : MonoBehaviour {
 
     }
 
+    private void SetCASlider()
+    {
+        CASlider.minValue = (int)scope[0] / OddsNum;
+        if (scope[0] % OddsNum != 0)
+            CASlider.minValue++;
+
+        if (OddsNum > 3)
+        {
+            CASlider.maxValue = (int)(scope[1] / OddsNum);
+        }
+        else
+        {
+            CASlider.maxValue = (int)(scope[1] / 3 / OddsNum);
+        }
+    }
+
     private void SetOdds()
     {
         SelectNum.text = selected.ToString();
@@ -132,6 +154,8 @@ public class Insurance : MonoBehaviour {
         }
         OddsNum = OddsNums[num];
         Odds.text = OddsNum.ToString();
+
+        SetCASlider();
     }
 
 
@@ -143,7 +167,6 @@ public class Insurance : MonoBehaviour {
             OUTSCards[0].isOn = true;
             return;
         }
-
 
         if (selected == WholeOUTSNum)
             CheckAllToggle.isOn = true;
@@ -163,25 +186,17 @@ public class Insurance : MonoBehaviour {
 
     public void OnCASliderChange() 
     {
+        SumInsured.text = (CASlider.value).ToString();
         DependentValue();
-        ClaimAmount.text = (CASlider.value).ToString();
     }
 
     private void DependentValue()
     {
         int auto = 0;
         AutoPurchase.text = "无自动投保额";
-        int sumNum = ((int)(CASlider.value / OddsNum));
-        //if (CASlider.value % OddsNum != 0)
-        //    sumNum++;
-
-        if (sumNum > int.Parse(Pot.text)/3)
-        {
-            CASlider.value = int.Parse(Pot.text) / 3 * OddsNum;
-            return;
-        }
+        int num = (int)(CASlider.value * OddsNum);
       
-        SumInsured.text = sumNum.ToString();
+        ClaimAmount.text = num.ToString();
 
         int left = WholeOUTSNum - selected;
         if (left != 0)
@@ -189,7 +204,12 @@ public class Insurance : MonoBehaviour {
             if (left > 20)
                 left = 20;
 
-            auto = (int)((CASlider.value / OddsNum) / OddsNums[left - 1]) + 1;
+            auto = (int)(CASlider.value  / OddsNums[left - 1]);
+            if (CASlider.value % OddsNums[left - 1] != 0)
+            {
+                auto++;
+            }
+
             AutoPurchase.text = "剩余" + left + "张，赔率1-" + OddsNums[left - 1] + "，自动投保额" + auto;
         }
 
