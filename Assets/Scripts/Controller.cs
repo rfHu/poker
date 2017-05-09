@@ -623,10 +623,11 @@ public class Controller : MonoBehaviour {
             var scope = e.Data.IL("scope");
             var mustBuy = e.Data.Int("must_buy") == 2 ? true : false;
             var time = e.Data.Int("time");
+            var uids = e.Data.List("uids");
 
             var InsurancePopup = (GameObject)GameObject.Instantiate(Resources.Load("Prefab/Insurance"));
             InsurancePopup.GetComponent<DOPopup>().Show(modal: false);
-            InsurancePopup.GetComponent<Insurance>().Init(outsCard, pot, cost, scope, mustBuy, time);
+            InsurancePopup.GetComponent<Insurance>().Init(outsCard, pot, cost, scope, mustBuy, time, uids);
         }).AddTo(this);
 	}
 
