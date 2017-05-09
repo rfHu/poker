@@ -192,27 +192,9 @@ public class Insurance : MonoBehaviour {
 
     private void DependentValue()
     {
-        int auto = 0;
-        AutoPurchase.text = "无自动投保额";
         int num = (int)(CASlider.value * OddsNum);
       
         ClaimAmount.text = num.ToString();
-
-        int left = WholeOUTSNum - selected;
-        if (left != 0)
-        {
-            if (left > 20)
-                left = 20;
-
-            auto = (int)(CASlider.value  / OddsNums[left - 1]);
-            if (CASlider.value % OddsNums[left - 1] != 0)
-            {
-                auto++;
-            }
-
-            AutoPurchase.text = "剩余" + left + "张，赔率1-" + OddsNums[left - 1] + "，自动投保额" + auto;
-        }
-
     }
 
     public void OnBEButtonClick() 
