@@ -686,12 +686,15 @@ public class PlayerObject : MonoBehaviour {
 		activated = true;
 		AvatarMask.SetActive(true);
 
+        Countdown.GetComponent<Animator>().SetTrigger("1");
+        Countdown.GetComponent<Animator>().speed = 1 / left;
+
 		float time = left;
 		float total = left.GetThinkTime();
 		var mask = Avt.GetComponent<CircleMask>();
         mask.numberText.gameObject.SetActive(true);
 
-        PlayCountdownAni(left, total);
+
 
 		while (time > 0 && activated) {
 			time = time - Time.deltaTime;
@@ -746,14 +749,4 @@ public class PlayerObject : MonoBehaviour {
 			}
 		});
 	}
-
-    private void PlayCountdownAni(float left, float total)
-    {
-        List<Tween> tweens = countdownColorAni.GetTweens();
-        for (int i = 0; i < tweens.Count; i++)
-        {
-            tweens[i].Goto(total - left);
-            tweens[i].Play();
-        }
-    }
 }
