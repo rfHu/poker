@@ -33,7 +33,6 @@ public class Insurance : MonoBehaviour {
     int WholeOUTSNum;
     List<Toggle> OUTSCards;
     List<int> selectedCards;
-    bool isBuy = false;
     bool mustBuy = false;
     IEnumerator myCoroutine;
 
@@ -210,8 +209,6 @@ public class Insurance : MonoBehaviour {
 
     public void Buy() 
     {
-        isBuy = true;
-
         var data = new Dictionary<string, object>(){
 			        {"outs", selectedCards},
                     {"amount", int.Parse(SumInsured.text)},
@@ -228,6 +225,23 @@ public class Insurance : MonoBehaviour {
 
     public void Exit() 
     {
+        if (!mustBuy)
+        {
+            Connect.Shared.Emit(new Dictionary<string, object>() { 
+                {"f", "noinsurance"},
+            });
+        } else {
+            var data = new Dictionary<string, object>(){
+                {"outs", selectedCards},
+                {"amount", CASlider.minValue},
+            };
+
+            Connect.Shared.Emit(new Dictionary<string, object>() {
+				{"f", "insurance"},
+                {"args", data}
+			});
+        }
+
         GetComponent<DOPopup>().Close();
     }
 
@@ -266,30 +280,6 @@ public class Insurance : MonoBehaviour {
         }
     }
 
-    void OnDestroy() 
-    {
-        if (isBuy)
-            return;
-
-        if (!mustBuy)
-        {
-            Connect.Shared.Emit(new Dictionary<string, object>() { 
-                {"f", "noinsurance"},
-            });
-            return;
-        }
-
-        var data = new Dictionary<string, object>(){
-			        {"outs", selectedCards},
-                    {"amount", CASlider.minValue},
-		        };
-
-        Connect.Shared.Emit(new Dictionary<string, object>() {
-				{"f", "insurance"},
-                {"args", data}
-			});
-    }
-
     private IEnumerator Timer(float time) 
     {
         while (time > 0)
@@ -300,6 +290,6 @@ public class Insurance : MonoBehaviour {
             yield return new WaitForFixedUpdate();
         }
 
-        GetComponent<DOPopup>().Close(); 
+        Exit();
     }
 }

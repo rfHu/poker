@@ -365,72 +365,6 @@ sealed public class GameData {
 			AuditList.Value = array;
 		});
 
-        RxSubjects.Modify.Subscribe((e) =>{
-
-            var data = e.Data;
-            var str = "";
-
-            foreach (var item in e.Data)
-	        {
-                switch (item.Key) 
-                {
-                    case "bankroll_multiple":
-                        BankrollMul = data.IL("bankroll_multiple");
-                        str = "房主将记分牌带入倍数改为：" + GameData.Shared.BankrollMul[0] + "-" + GameData.Shared.BankrollMul[1];
-                        PokerUI.Toast(str);
-                        break;
-
-                    case "time_limit": 
-                        Duration += data.Long("time_limit");
-                        LeftTime.Value += data.Long("time_limit");
-                        str = "房主将牌局延长了" + data.Long("time_limit") / 3600f + "小时";
-                        PokerUI.Toast(str);
-                        break;
-
-                    case "ante":
-                        Ante.Value = data.Int("ante");
-                        str = "房主将底注改为：" + Ante.Value; 
-                        PokerUI.Toast(str);
-                        break;
-
-                    case "need_audit":
-                        NeedAudit = data.Int("need_audit") == 1;
-                        str = GameData.Shared.NeedAudit ? "房主开启了授权带入" : "房主关闭了授权带入";
-                        PokerUI.Toast(str);
-                        break;
-
-                    case "straddle":
-                        Straddle.Value = data.Int("straddle") != 0;
-                        str = Straddle.Value ? "房主开启了Straddle" : "房主关闭了Straddle"; 
-                        PokerUI.Toast(str);
-						break;
-
-                    case "turn_countdown":
-						SettingThinkTime = data.Int("turn_countdown");
-                        str = "房主将思考时间改为" + SettingThinkTime +"秒";
-                        PokerUI.Toast(str);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        });
-
-        RxSubjects.KickOut.Subscribe((e) =>{
-            string Uid = e.Data.String("uid");
-            string name = FindPlayer(Uid).Name;
-            string str = name + "被房主请出房间";
-            PokerUI.Toast(str);
-        });
-
-        RxSubjects.StandUp.Subscribe((e) =>
-        {
-            string Uid = e.Data.String("uid");
-            string name = FindPlayer(Uid).Name;
-            string str = name + "被房主强制站起";
-            PokerUI.Toast(str);
-        });
-
 		// 倒计时
 		Observable.Interval(TimeSpan.FromSeconds(1)).AsObservable().Subscribe((_) => {
 			// 游戏已暂停，不需要修改
@@ -441,21 +375,6 @@ sealed public class GameData {
 			var value = Math.Max(0, LeftTime.Value - 1);
 			LeftTime.Value = value;
 		});
-
-        RxSubjects.ToInsurance.Subscribe((e) =>
-        {
-            var outsCard = e.Data.IL("outs");
-            var pot = e.Data.Int("pot");
-            var cost = e.Data.Int("cost");
-            var scope = e.Data.IL("scope");
-            var mustBuy = e.Data.Int("must_buy") == 2 ? true : false;
-            var time = e.Data.Int("time");
-
-            var InsurancePopup = (GameObject)GameObject.Instantiate(Resources.Load("Prefab/Insurance"));
-            InsurancePopup.GetComponent<DOPopup>().Show();
-            InsurancePopup.GetComponent<Insurance>().Init(outsCard, pot, cost, scope, mustBuy, time);
-            
-        });
 	}
    
 	private void setPbCards(List<int> list, int state) {
