@@ -139,7 +139,7 @@ public class Insurance : MonoBehaviour {
         }
         else
         {
-            CASlider.maxValue = (int)(scope[1] / 3 / OddsNum);
+            CASlider.maxValue = (int)(scope[1] / 3);
         }
     }
 
