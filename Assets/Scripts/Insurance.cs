@@ -223,7 +223,7 @@ public class Insurance : MonoBehaviour {
 
     public void OnEPButtonClick() 
     {
-        CASlider.value = int.Parse(Pot.text) * (1 + OddsNum);
+        CASlider.value = int.Parse(Pot.text) / (1 + OddsNum);
     }
 
     public void Buy() 
