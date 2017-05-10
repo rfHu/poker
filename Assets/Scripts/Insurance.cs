@@ -6,6 +6,7 @@ using System.Linq;
 using Extensions;
 using UniRx;
 using System;
+using UnityEngine.UI.ProceduralImage;
 
 public class Insurance : MonoBehaviour {
     public Text Pot;
@@ -20,110 +21,116 @@ public class Insurance : MonoBehaviour {
     public Text InputValue;
     public Text AutoPurchase;
     public Slider CASlider;
-    public Button ExitButton;
-    public Button CheckAll;
+    public CButton ExitButton;
+    public CButton EqualButton;
+    public CButton BreakEventButton;
     public Toggle CheckAllToggle;
     public GameObject BuyTime;
     public RectTransform PlayerList;
     public RectTransform MidPart;
     public Text TotalSupass;
+    public GameObject Countdown;
 
     int cost;
     List<int> scope;
+    private int potValue;
 
     float OddsNum;
     float[] OddsNums = { 30, 16, 10, 8, 6, 5, 4, 3.5f, 3, 2.5f, 2.2f, 2, 1.7f, 1.5f, 1.3f, 1.1f, 1, 0.8f, 0.6f, 0.5f };
 
-    int selected;
-    int WholeOUTSNum;
-    List<Toggle> OUTSCards;
+    List<Toggle> OUTSCards = new List<Toggle>();
     List<int> selectedCards;
+    private List<int> outsCardArray;
+    private List<object> allinPlayers;
 
     bool mustBuy = false;
     private bool isFlop = false;
     IEnumerator myCoroutine;
 
-    RectTransform _rectTransform;
-
     public void Init(Dictionary<string, object> data) 
     {
-        var outsCard = data.IL("outs");
-        var pot = data.Int("pot");
-        var cost = data.Int("cost");
-        var scope = data.IL("scope");
-        var mustBuy = data.Int("must_buy") == 2 ? true : false;
+        outsCardArray = data.IL("outs");
+        potValue = data.Int("pot");
+        cost = data.Int("cost");
+        scope = data.IL("scope");
+        mustBuy = data.Int("must_buy") == 2;
+        isFlop = (data.Int("room_state") == 4);
+        allinPlayers = data.List("outs_count");
+        selectedCards = outsCardArray.ToList();
+
         var time = data.Int("time");
-        var uids = data.List("uids");
-
-        isFlop = data.Int("room_state") == 4;
-
-        _rectTransform = GetComponent<RectTransform>();
-        if (mustBuy)
-        {
-            ExitButton.interactable = false;
-            CheckAll.gameObject.SetActive(false);
-            this.mustBuy = mustBuy; 
-        }
-
-        //投入金额
-        this.cost = cost;
-        this.scope = scope;
-
-        // InputValue.text = cost.ToString();
-
-        WholeOUTSNum = outsCard.Count;
-        selected = outsCard.Count;
-        SetOdds();
-
-
-
-        CASlider.value = CASlider.maxValue;
-
-        //主池数字
-        Pot.text = pot.ToString();
-
         myCoroutine = Timer(time);
         StartCoroutine(myCoroutine);
 
-        //allin用户
-        foreach (var uid in uids)
+        if (mustBuy)
         {
-            var player = GameData.Shared.FindPlayer((string)uid);
+            ExitButton.interactable = false;
+            CheckAllToggle.gameObject.SetActive(false);
+        } else {
+            // CheckAllToggle.OnPointerClick
+        }
+
+        SetOdds();
+        CASlider.value = CASlider.minValue;
+
+        Pot.text = potValue.ToString();
+        TotalSupass.text = "/ " + outsCardArray.Count.ToString();
+
+        setupAllinPlayers(); 
+        setupPbCards();
+        setupOutsCards();
+
+        addEvents();        
+    }
+
+    private void setupAllinPlayers() {
+        foreach (var obj in allinPlayers)
+        {
+            var data = obj as Dictionary<string, object>;
+            var player = GameData.Shared.FindPlayer(data.String("uid"));
+            var outsNumber = data.Int("ct");
 
             var playerMes = Instantiate(AllinPlayer);
             playerMes.transform.SetParent(AllinPlayer.transform.parent,false);
             playerMes.SetActive(true);
-            playerMes.GetComponent<AllInPlayer>().Init(player.Name, player.Cards.Value, player.Uid);
+            playerMes.GetComponent<AllInPlayer>().Init(player.Name, player.Cards.Value, player.Uid, outsNumber);
             PlayerList.sizeDelta += new Vector2(230, 0);
         }
+    }
 
-        //公共牌展示
+    private void setupPbCards() {
         var cards = GameData.Shared.PublicCards.ToList();
 
         for (int i = 0; i < cards.Count; i++)
 		{
-            PublicCards[i].Show(cards[i]);
+            var card = PublicCards[i];
+            card.gameObject.SetActive(true);
+            card.Show(cards[i]);
 		}
+    }
 
-        //OUTS牌展示
-        OUTSCards = new List<Toggle>();
-        MidPart.sizeDelta += new Vector2(0, 124 * ((outsCard.Count - 1) / 7));
-        selectedCards = outsCard;
-        foreach (var cardNum in outsCard)
+    private void setupOutsCards() {
+        foreach (var cardNum in outsCardArray)
         {
             var card = Instantiate(Card);
             card.SetActive(true);
             card.transform.SetParent(Card.transform.parent,false);
             card.GetComponent<Card>().Show(cardNum);
             OUTSCards.Add(card.GetComponent<Toggle>());
-            card.GetComponent<Toggle>().onValueChanged.AddListener((bool value) => 
-            {
-                SelectedChanged(value, cardNum);
-            });
-            if (mustBuy)
-                card.GetComponent<Toggle>().interactable = false;
-        }
 
+            var toggle = card.GetComponent<Toggle>();
+
+            toggle.onValueChanged.AddListener((bool value) => 
+            {
+                SelectedChanged(value, cardNum, toggle);
+            });
+            if (mustBuy){
+                card.GetComponent<Toggle>().interactable = false;
+            }
+        }
+    }
+
+    private void addEvents() {
         RxSubjects.Moretime.Subscribe((e) =>{
             var model = e.Data.ToObject<MoreTimeModel>();
 
@@ -136,7 +143,6 @@ public class Insurance : MonoBehaviour {
             myCoroutine = Timer(model.total);
             StartCoroutine(myCoroutine);
         }).AddTo(this);
-
     }
 
     private void SetCASlider()
@@ -148,16 +154,26 @@ public class Insurance : MonoBehaviour {
         var maxValue = (int)Math.Floor(scope[1] / OddsNum);
 
         if (isFlop) {
-            var limit = (int)Math.Floor(scope[1] / 3f); 
+            var limit = (int)Math.Floor(potValue / 3f); 
             maxValue = Math.Min(limit, maxValue);
         }
             
         CASlider.minValue = minValue;
         CASlider.maxValue = maxValue;
+
+        if (eqValue > maxValue) {
+            EqualButton.interactable = false;
+        }
+
+        if (beValue > maxValue) {
+            BreakEventButton.interactable = false;
+        }
     }
 
     private void SetOdds()
     {
+        var selected = selectedCards.Count;
+
         SelectNum.text = selected.ToString();
 
         int num = selected - 1;
@@ -172,25 +188,28 @@ public class Insurance : MonoBehaviour {
     }
 
 
-    private void SelectedChanged(bool value, int num)
+    private void SelectedChanged(bool value, int num, Toggle toggle)
     {
-        selected += value ? 1 : -1;
-        if (selected == 0)
+        if (selectedCards.Count == 1 && !value)
         {
+            toggle.isOn = true;
             return;
         }
 
-        if (selected == WholeOUTSNum)
-            CheckAllToggle.isOn = true;
-        else 
-        {
-            CheckAllToggle.isOn = false;
+        if (value) {
+            selectedCards.Add(num);
+        }
+        else {
+            selectedCards.Remove(num);
         }
 
-        if (value)
-            selectedCards.Add(num);
-        else
-            selectedCards.Remove(num);
+        if (selectedCards.Count == outsCardArray.Count) {
+            SetCheckAllToggle(true);
+        }
+        else 
+        {
+            SetCheckAllToggle(false);
+        }
 
         SetOdds();
         DependentValue();
@@ -209,14 +228,26 @@ public class Insurance : MonoBehaviour {
         ClaimAmount.text = num.ToString();
     }
 
+    private int beValue {
+        get {
+            return (int)Math.Ceiling(cost / OddsNum);
+        }
+    }
+
+    private int eqValue {
+        get {
+            return (int)Math.Ceiling(potValue / (OddsNum + 1));
+        }
+    }
+
     public void OnBEButtonClick() 
     {
-        CASlider.value = cost;
+        CASlider.value = beValue;
     }
 
     public void OnEPButtonClick() 
     {
-        CASlider.value = int.Parse(Pot.text) * OddsNum / (1 + OddsNum);
+        CASlider.value = eqValue;
     }
 
     public void Buy() 
@@ -273,31 +304,61 @@ public class Insurance : MonoBehaviour {
 
     public void OnSLButtonClick() 
     {
-        if (selected == WholeOUTSNum)
+        if (mustBuy) {
+            return ;
+        }
+            
+        if (selectedCards.Count == outsCardArray.Count) 
         {
             foreach (var item in OUTSCards)
             {
                 item.isOn = false;
             }
+
+            OUTSCards[0].isOn = true;
+            selectedCards = new List<int>{outsCardArray[0]};
+            // SetCheckAllToggle(false);
         }
-        else
+        else 
         {
             foreach (var item in OUTSCards)
             {
-                if (!item.isOn)
-                {
-                    item.isOn = true;
-                }
+                item.isOn = true;
             }
+            selectedCards = outsCardArray.ToList();
+            // SetCheckAllToggle(true);
+        }
+
+        SetOdds();
+    }
+
+    private void SetCheckAllToggle(bool isOn) {
+        CheckAllToggle.isOn = isOn;
+        
+        var img = CheckAllToggle.transform.Find("Background").GetComponent<ProceduralImage>();
+
+        if (isOn) {
+            img.color = MaterialUI.MaterialColor.cyanA200;            
+        } else {
+            img.color = MaterialUI.MaterialColor.grey400;
         }
     }
 
     private IEnumerator Timer(float time) 
     {
+        
+        // Countdown.GetComponent<Animator>().SetTrigger("1");
+        // Countdown.GetComponent<Animator>().speed = 1 / time;
+
+        float wholeTime = time;
+        // var length = Countdown.GetComponent<Scrollbar>();
+
         while (time > 0)
         {
             time = time - Time.deltaTime;
             CountDown.text = ((int)time).ToString();
+
+            // length.size = time / wholeTime;
 
             yield return new WaitForFixedUpdate();
         }

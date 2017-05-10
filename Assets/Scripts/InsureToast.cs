@@ -69,11 +69,16 @@ public class InsureToast: MonoBehaviour {
                     text = cdText(time);
                     break;
                 case 11:
-                    text = String.Format(
-                        "获得保险赔付：<color=#FFAB40FF>{0}</color>\n扣除保费：<color=#FFAB40FF>{1}</color>",
-                        pay,
-                        amount
-                    );
+                    if (amount == 0) {
+                        text = String.Format("获得保险赔付：<color=#FFAB40FF>{0}</color>", pay);
+                    } else {
+                        text = String.Format(
+                            "获得保险赔付：<color=#FFAB40FF>{0}</color>\n扣除保费：<color=#FFAB40FF>{1}</color>",
+                            pay,
+                            amount
+                        );
+                    }
+                    
                     break;
                 case 12:
                     text = "未买中保险，牌面打平";
