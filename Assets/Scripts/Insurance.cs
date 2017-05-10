@@ -39,7 +39,7 @@ public class Insurance : MonoBehaviour {
     float[] OddsNums = { 30, 16, 10, 8, 6, 5, 4, 3.5f, 3, 2.5f, 2.2f, 2, 1.7f, 1.5f, 1.3f, 1.1f, 1, 0.8f, 0.6f, 0.5f };
 
     List<Toggle> OUTSCards = new List<Toggle>();
-    List<int> selectedCards;
+    HashSet<int> selectedCards; 
     private List<int> outsCardArray;
     private List<object> allinPlayers;
 
@@ -56,7 +56,7 @@ public class Insurance : MonoBehaviour {
         mustBuy = data.Int("must_buy") == 2;
         isFlop = (data.Int("room_state") == 4);
         allinPlayers = data.List("outs_count");
-        selectedCards = outsCardArray.ToList();
+        selectedCards = new HashSet<int>(outsCardArray.ToList());
 
         var time = data.Int("time");
         myCoroutine = Timer(time);
@@ -180,7 +180,10 @@ public class Insurance : MonoBehaviour {
         if (num > 19)
         {
             num = 19;
+        } else if (num < 0) {
+            num = 0;
         }
+
         OddsNum = OddsNums[num];
         Odds.text = OddsNum.ToString();
 
@@ -190,19 +193,14 @@ public class Insurance : MonoBehaviour {
 
     private void SelectedChanged(bool value, int num, Toggle toggle)
     {
-        if (selectedCards.Count == 1 && !value)
-        {
-            toggle.isOn = true;
-            return;
-        }
-
         if (value) {
             selectedCards.Add(num);
         }
-        else {
+        else if (!value) {
             selectedCards.Remove(num);
         }
 
+        Debug.Log(selectedCards.Count);
         if (selectedCards.Count == outsCardArray.Count) {
             SetCheckAllToggle(true);
         }
@@ -253,7 +251,7 @@ public class Insurance : MonoBehaviour {
     public void Buy() 
     {
         var data = new Dictionary<string, object>(){
-			        {"outs", selectedCards},
+			        {"outs", selectedCards.ToList()},
                     {"amount", int.Parse(SumInsured.text)},
 		        };
 
@@ -316,8 +314,6 @@ public class Insurance : MonoBehaviour {
             }
 
             OUTSCards[0].isOn = true;
-            selectedCards = new List<int>{outsCardArray[0]};
-            // SetCheckAllToggle(false);
         }
         else 
         {
@@ -325,8 +321,6 @@ public class Insurance : MonoBehaviour {
             {
                 item.isOn = true;
             }
-            selectedCards = outsCardArray.ToList();
-            // SetCheckAllToggle(true);
         }
 
         SetOdds();
