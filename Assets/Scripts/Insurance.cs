@@ -8,6 +8,7 @@ using UniRx;
 using System;
 using UnityEngine.UI.ProceduralImage;
 
+[RequireComponent(typeof(DOPopup))]
 public class Insurance : MonoBehaviour {
     public Text Pot;
     public Text CountDown;
@@ -36,6 +37,8 @@ public class Insurance : MonoBehaviour {
     List<int> scope;
     private int potValue;
 
+    private DOPopup popup;
+
     float OddsNum;
     float[] OddsNums = { 30, 16, 10, 8, 6, 5, 4, 3.5f, 3, 2.5f, 2.2f, 2, 1.7f, 1.5f, 1.3f, 1.1f, 1, 0.8f, 0.6f, 0.5f };
 
@@ -47,6 +50,10 @@ public class Insurance : MonoBehaviour {
     bool mustBuy = false;
     private bool isFlop = false;
     IEnumerator myCoroutine;
+
+    void Awake() {
+        popup = GetComponent<DOPopup>();
+    }
 
     public void Init(Dictionary<string, object> data) 
     {
@@ -273,12 +280,25 @@ public class Insurance : MonoBehaviour {
 		        };
 
         Connect.Shared.Emit(new Dictionary<string, object>() {
-				{"f", "insurance"},
-				{"args", data}
+            {"f", "insurance"},
+            {"args", data}
+        }, requestDone);
 
-			});
+        popup.Hide();
+    }
 
-        GetComponent<DOPopup>().Close();
+    private void requestDone(Dictionary<string, object> json) {
+        if (popup == null) {
+            return ;
+        }
+
+        var err = json.Int("err");
+
+        if (err == 0) {
+            popup.Close();
+        } else {
+            popup.Show(modal: false);
+        }
     }
 
     public void Exit() 
@@ -287,20 +307,13 @@ public class Insurance : MonoBehaviour {
         {
             Connect.Shared.Emit(new Dictionary<string, object>() { 
                 {"f", "noinsurance"},
-            });
+            }, requestDone);
+
+            popup.Hide();
         } else {
-            var data = new Dictionary<string, object>(){
-                {"outs", selectedCards},
-                {"amount", CASlider.minValue},
-            };
-
-            Connect.Shared.Emit(new Dictionary<string, object>() {
-				{"f", "insurance"},
-                {"args", data}
-			});
+            // 超时由后台自动购买
+            popup.Close();
         }
-
-        GetComponent<DOPopup>().Close();
     }
 
     public void OnBTButton() 

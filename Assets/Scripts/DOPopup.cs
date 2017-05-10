@@ -53,7 +53,7 @@ public class DOPopup : MonoBehaviour {
 			return ;
 		}
 
-		if (instance != null && singleton) {
+		if (instance != null && instance != this && singleton) {
 			instance.Close();
 		}
 
@@ -100,6 +100,8 @@ public class DOPopup : MonoBehaviour {
 		if (!hasShow) {
 			return null;
 		}
+
+		hasShow = false;
 
 		hideModal();
 
