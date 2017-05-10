@@ -617,17 +617,9 @@ public class Controller : MonoBehaviour {
 
 		 RxSubjects.ToInsurance.Subscribe((e) =>
         {
-            var outsCard = e.Data.IL("outs");
-            var pot = e.Data.Int("pot");
-            var cost = e.Data.Int("cost");
-            var scope = e.Data.IL("scope");
-            var mustBuy = e.Data.Int("must_buy") == 2 ? true : false;
-            var time = e.Data.Int("time");
-            var uids = e.Data.List("uids");
-
             var InsurancePopup = (GameObject)GameObject.Instantiate(Resources.Load("Prefab/Insurance"));
             InsurancePopup.GetComponent<DOPopup>().Show(modal: false);
-            InsurancePopup.GetComponent<Insurance>().Init(outsCard, pot, cost, scope, mustBuy, time, uids);
+            InsurancePopup.GetComponent<Insurance>().Init(e.Data);
         }).AddTo(this);
 	}
 

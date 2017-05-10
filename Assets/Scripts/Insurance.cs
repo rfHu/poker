@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System.Linq;
 using Extensions;
 using UniRx;
+using System;
 
 public class Insurance : MonoBehaviour {
     public Text Pot;
@@ -25,6 +26,7 @@ public class Insurance : MonoBehaviour {
     public GameObject BuyTime;
     public RectTransform PlayerList;
     public RectTransform MidPart;
+    public Text TotalSupass;
 
     int cost;
     List<int> scope;
@@ -38,18 +40,28 @@ public class Insurance : MonoBehaviour {
     List<int> selectedCards;
 
     bool mustBuy = false;
+    private bool isFlop = false;
     IEnumerator myCoroutine;
 
     RectTransform _rectTransform;
 
-    public void Init(List<int> outCards, int pot,int cost, List<int> scope, bool mustBuy, int time, List<object> uids) 
+    public void Init(Dictionary<string, object> data) 
     {
+        var outsCard = data.IL("outs");
+        var pot = data.Int("pot");
+        var cost = data.Int("cost");
+        var scope = data.IL("scope");
+        var mustBuy = data.Int("must_buy") == 2 ? true : false;
+        var time = data.Int("time");
+        var uids = data.List("uids");
+
+        isFlop = data.Int("room_state") == 4;
 
         _rectTransform = GetComponent<RectTransform>();
         if (mustBuy)
         {
             ExitButton.interactable = false;
-            CheckAll.interactable = false;
+            CheckAll.gameObject.SetActive(false);
             this.mustBuy = mustBuy; 
         }
 
@@ -57,10 +69,10 @@ public class Insurance : MonoBehaviour {
         this.cost = cost;
         this.scope = scope;
 
-        InputValue.text = cost.ToString();
+        // InputValue.text = cost.ToString();
 
-        WholeOUTSNum = outCards.Count;
-        selected = outCards.Count;
+        WholeOUTSNum = outsCard.Count;
+        selected = outsCard.Count;
         SetOdds();
 
 
@@ -95,9 +107,9 @@ public class Insurance : MonoBehaviour {
 
         //OUTS牌展示
         OUTSCards = new List<Toggle>();
-        MidPart.sizeDelta += new Vector2(0, 124 * ((outCards.Count - 1) / 7));
-        selectedCards = outCards;
-        foreach (var cardNum in outCards)
+        MidPart.sizeDelta += new Vector2(0, 124 * ((outsCard.Count - 1) / 7));
+        selectedCards = outsCard;
+        foreach (var cardNum in outsCard)
         {
             var card = Instantiate(Card);
             card.SetActive(true);
@@ -129,18 +141,19 @@ public class Insurance : MonoBehaviour {
 
     private void SetCASlider()
     {
-        CASlider.minValue = (int)scope[0] / OddsNum;
-        if (scope[0] % OddsNum != 0)
-            CASlider.minValue++;
+        // 最小值向上取整
+        var minValue = (int)Math.Ceiling(scope[0] / OddsNum);
 
-        if (OddsNum > 3)
-        {
-            CASlider.maxValue = (int)(scope[1] / OddsNum);
+        // 最大值向下取整
+        var maxValue = (int)Math.Floor(scope[1] / OddsNum);
+
+        if (isFlop) {
+            var limit = (int)Math.Floor(scope[1] / 3f); 
+            maxValue = Math.Min(limit, maxValue);
         }
-        else
-        {
-            CASlider.maxValue = (int)(scope[1] / 3);
-        }
+            
+        CASlider.minValue = minValue;
+        CASlider.maxValue = maxValue;
     }
 
     private void SetOdds()
@@ -164,7 +177,6 @@ public class Insurance : MonoBehaviour {
         selected += value ? 1 : -1;
         if (selected == 0)
         {
-            OUTSCards[0].isOn = true;
             return;
         }
 
