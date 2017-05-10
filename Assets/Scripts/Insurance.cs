@@ -21,6 +21,7 @@ public class Insurance : MonoBehaviour {
     public Text InputValue;
     public Text AutoPurchase;
     public Slider CASlider;
+    public CButton BuyButton;
     public CButton ExitButton;
     public CButton EqualButton;
     public CButton BreakEventButton;
@@ -153,6 +154,12 @@ public class Insurance : MonoBehaviour {
         // 最大值向下取整
         var maxValue = (int)Math.Floor(scope[1] / OddsNum);
 
+        if (maxValue < minValue) {
+            BuyButton.interactable = false;
+        } else {
+            BuyButton.interactable = true;
+        }
+
         if (isFlop) {
             var limit = (int)Math.Floor(potValue / 3f); 
             maxValue = Math.Min(limit, maxValue);
@@ -200,7 +207,6 @@ public class Insurance : MonoBehaviour {
             selectedCards.Remove(num);
         }
 
-        Debug.Log(selectedCards.Count);
         if (selectedCards.Count == outsCardArray.Count) {
             SetCheckAllToggle(true);
         }
@@ -210,22 +216,33 @@ public class Insurance : MonoBehaviour {
         }
 
         SetOdds();
-        DependentValue();
+        DependOnClaimAmount();
+
+        if (selectedCards.Count == 0) {
+            toggle.isOn = true;
+        }
     }
 
     public void OnCASliderChange() 
     {
         SumInsured.text = (CASlider.value).ToString();
-        DependentValue();
+        ClaimAmount.text = claimAmountValue.ToString();
     }
 
-    private void DependentValue()
-    {
-        int num = (int)(CASlider.value * OddsNum);
-      
-        ClaimAmount.text = num.ToString();
+    private void DependOnClaimAmount() {
+        var c = int.Parse(ClaimAmount.text);
+        var buyValue = (int)Math.Round(c / OddsNum); 
+    
+        CASlider.value = buyValue;
+        OnCASliderChange();
     }
 
+    private int claimAmountValue {
+        get {
+            return (int)Math.Ceiling(CASlider.value * OddsNum);
+        }
+    }
+   
     private int beValue {
         get {
             return (int)Math.Ceiling(cost / OddsNum);
@@ -308,12 +325,11 @@ public class Insurance : MonoBehaviour {
             
         if (selectedCards.Count == outsCardArray.Count) 
         {
-            foreach (var item in OUTSCards)
-            {
-                item.isOn = false;
-            }
+            var count = OUTSCards.Count;
 
-            OUTSCards[0].isOn = true;
+            for (var i = count - 1; i >= 0; i--) {
+                OUTSCards[i].isOn = false;
+            }
         }
         else 
         {

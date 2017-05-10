@@ -14,7 +14,6 @@ public class CButton : MonoBehaviour {
 	void Awake() {
 		button = GetComponent<Button>();
 		image = GetComponent<ProceduralImage>();
-		text = transform.Find("Text").GetComponent<Text>();
 	}
 
 	public bool interactable {
@@ -26,10 +25,14 @@ public class CButton : MonoBehaviour {
 			button.interactable = value;
 
 			if (value) {
-				text.color = NormalColor;
+				if (text != null) {
+					text.color = NormalColor;
+				}
 				image.color = NormalColor;
 			} else {
-				text.color = DisableColor;
+				if (text != null) {
+					text.color = DisableColor;
+				}
 				image.color = DisableColor;
 			}
 		}
