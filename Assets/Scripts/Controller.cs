@@ -197,6 +197,11 @@ public class Controller : MonoBehaviour {
 	}
 
 	void showGameInfo() {
+		if (GameData.Shared.Owner) {
+			OwnerButton.SetActive(true);
+		} else {
+			OwnerButton.SetActive(false);
+		}	
 
 		if (!String.IsNullOrEmpty(GameData.Shared.GameCode)) {
 			InviteCodeGo.SetActive(true);
