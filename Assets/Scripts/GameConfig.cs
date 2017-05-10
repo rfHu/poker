@@ -413,7 +413,8 @@ sealed public class GameData {
 	// 当前的思考时间
 	public int ThinkTime = 15;
 
-	public bool Owner = false;	
+	public bool Owner = false;
+    public string OwnerName;
 	public List<int> BankrollMul;
 	public int PlayerCount;
 	public string Sid; 
@@ -483,6 +484,7 @@ sealed public class GameData {
 		var options = json.Dict("options");
 		var gamers = json.Dict("gamers");
 
+        OwnerName = json.Dict("owner").String("name");
 		Owner = options.String("ownerid") == GameData.Shared.Uid;
 		BankrollMul = options.IL("bankroll_multiple"); 
 		Ante.Value = options.Int("ante");
