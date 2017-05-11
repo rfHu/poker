@@ -308,7 +308,6 @@ public class OwnerPanel : MonoBehaviour {
         }
 
          image.color = color;
-         text.color = color;
     }
 
     public void SendRequest()

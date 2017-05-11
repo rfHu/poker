@@ -48,7 +48,7 @@ public class ChipsGo : MonoBehaviour {
 	}
 
 	public void Hide() {
-		if (hided) {
+		if (hided || this == null) {
 			return ;
 		}
 
@@ -72,12 +72,9 @@ public class ChipsGo : MonoBehaviour {
 				return ;
 			}
 
-			// 用WaitSound替代？
-			if (tween != null && tween.IsPlaying()) {
-				tween.OnComplete(Hide);
-			} else {
+			G.WaitSound(() => {
 				Hide();
-			}
+			});
 		}).AddTo(this);
 	}
 	
