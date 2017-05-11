@@ -513,18 +513,13 @@ public class Controller : MonoBehaviour {
 		}).AddTo(this);
 
 		RxSubjects.SomeOneSeeCard.Subscribe((e) => {
-			var uid = e.Data.String("uid");
-			var player = GameData.Shared.FindPlayer(uid);
-
-			if (!player.IsValid()) {
-				return ;
-			}
+			var name = e.Data.String("name");
 
 			var go = (GameObject)GameObject.Instantiate(SeeCardTips);
 			var cvg = go.GetComponent<CanvasGroup>(); 
 			var text = go.transform.Find("Text").GetComponent<Text>();
 
-			text.text = String.Format("<color=#4FC3F7FF>{0}</color>看了剩余公共牌", player.Name);
+			text.text = String.Format("<color=#4FC3F7FF>{0}</color>看了剩余公共牌", name);
 			
 			go.SetActive(true);
 			cvg.alpha = 0;

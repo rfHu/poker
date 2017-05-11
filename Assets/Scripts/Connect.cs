@@ -84,7 +84,10 @@ public sealed class Connect  {
 	private void enterGame() {
 		Emit(new Dictionary<string, object>{
 			{"f", "entergame"},
-			{"args", GameData.Shared.Room}
+			{"args", new Dictionary<string, object> {
+				{"roomid", GameData.Shared.Room},
+				{"ver", Application.version}
+			}}
 		}, (json) => {
 			var error = json.Int("err");
 
