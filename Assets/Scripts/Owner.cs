@@ -2,8 +2,7 @@
 
 public class Owner : MonoBehaviour {
 	public void OnClick() {
-        var go = (GameObject)Instantiate(Resources.Load("Prefab/RoomMessage"));
-        go.transform.position = Vector3.zero;
+		var go = (GameObject)Instantiate(Resources.Load("Prefab/OwnerPanel"));
 		go.GetComponent<DOPopup>().Show();
 	}
 }
