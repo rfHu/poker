@@ -13,6 +13,7 @@ public class ChipsGo : MonoBehaviour {
 	private Seat theSeat;
 	private bool hided = false;
 	private Player player;
+	private Tweener tween;
 
 	public void SetChips(int chips) {
 		TextNumber.text = _.Num2CnDigit(chips);
@@ -67,7 +68,14 @@ public class ChipsGo : MonoBehaviour {
 
 	private void addEvents() {
 		player.PrChips.Subscribe((value) => {
-			if (value == 0) {
+			if (value != 0) {
+				return ;
+			}
+
+			// 用WaitSound替代？
+			if (tween != null && tween.IsPlaying()) {
+				tween.OnComplete(Hide);
+			} else {
 				Hide();
 			}
 		}).AddTo(this);
@@ -76,8 +84,10 @@ public class ChipsGo : MonoBehaviour {
 	private Tweener doTween() {
 		var pos = theSeat.GetPos();
 
-		return GetComponent<RectTransform>()
+		tween = GetComponent<RectTransform>()
 		.DOAnchorPos(getVector(pos), 0.4f);
+
+		return tween;
 	}
 
 	private Vector2 getVector(SeatPosition pos) {
