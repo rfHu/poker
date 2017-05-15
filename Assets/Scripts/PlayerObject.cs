@@ -234,15 +234,26 @@ public class PlayerObject : MonoBehaviour {
 		}
 	}
 
-	private void setPlayerAct(bool active) {
+	private void setPlayerAct(bool active, bool anim = true) {
 		if (!active && isPersisState()) {
 			return ;
 		}
 
-		PlayerAct.gameObject.SetActive(active);
+		// PlayerAct.gameObject.SetActive(active);
+		var cvg = PlayerAct.GetComponent<CanvasGroup>();
+		var targetValue = active ? 1 : 0;
+		var duration = 0.1f;
+		var reverse = 1 ^ targetValue;
+
+		if (anim) {
+			cvg.DOFade(targetValue, duration);
+		} else {
+			cvg.alpha = targetValue;
+		}
 
 		if (!isSelf()) {
-			NameLabel.gameObject.SetActive(!active);
+			var nameCvg = NameLabel.GetComponent<CanvasGroup>();
+			nameCvg.DOFade(reverse, duration);
 		}
 	}
 
@@ -362,17 +373,17 @@ public class PlayerObject : MonoBehaviour {
 				
 				var index = e.Data.Int("seat");
 				var dc = e.Data.Int("deal_card");
-
-				// 刚发了牌
-				if (dc == 1) {
-					setPlayerAct(false);
-				}
 			
 				if (index == Index) {
 					turnTo(e.Data, GameData.Shared.ThinkTime);
-					setPlayerAct(false);
+					setPlayerAct(false, false);
 				} else {
 					MoveOut();
+
+					// 刚发了牌
+					if (dc == 1) {
+						setPlayerAct(false);
+					}
 				}
 
 				// 自动托管
