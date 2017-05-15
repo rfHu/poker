@@ -6,7 +6,8 @@ public enum AnimType {
 	Up2Down,
 	Left2Right,
 	Right2Left,
-	Popup
+	Popup,
+	Custom
 }
 
 [RequireComponent(typeof(CanvasGroup))]
@@ -15,12 +16,15 @@ public class DOPopup : MonoBehaviour {
 
     float duration = 0.15f;
 
-	Vector2 beginPosition; 
-	Vector2 endPosition;
+	private Vector2 startPosition; 
+	private Vector2 endPosition;
 
 	private ModalHelper modal;   
 
 	bool hasShow = false;
+
+	public Vector2 StartPosition;
+	public Vector2 EndPosition;
 
 	void Awake()
     {
@@ -30,20 +34,27 @@ public class DOPopup : MonoBehaviour {
 
 		switch(Animate) {
 			case AnimType.Up2Down:
-				beginPosition = new Vector2(0, rectTrans.rect.height);
+				startPosition = new Vector2(0, rectTrans.rect.height);
 				break;
 			case AnimType.Left2Right:
-				beginPosition = new Vector2(-rectTrans.rect.width, 0);
+				startPosition = new Vector2(-rectTrans.rect.width, 0);
 				break;
 			case AnimType.Right2Left:
-				beginPosition = new Vector2(rectTrans.rect.width, 0);
+				startPosition = new Vector2(rectTrans.rect.width, 0);
+				break; 
+			case AnimType.Custom:
+				startPosition = StartPosition;
+				endPosition = EndPosition;
 				break; 
 			default:
 				return;
 		}
 
-		endPosition = new Vector2(0, 0);
-		rectTrans.anchoredPosition = beginPosition;
+		if (endPosition == null) {
+			endPosition = new Vector2(0, 0);
+		}
+
+		rectTrans.anchoredPosition = startPosition;
 	}
 
 	private static DOPopup instance;
@@ -75,7 +86,7 @@ public class DOPopup : MonoBehaviour {
 		}
 
 		switch(Animate) {
-			case AnimType.Up2Down: case AnimType.Left2Right: case AnimType.Right2Left:
+			case AnimType.Up2Down: case AnimType.Left2Right: case AnimType.Right2Left: case AnimType.Custom:
 				GetComponent<RectTransform>().DOAnchorPos(endPosition, duration);
 				break;
 			case AnimType.Popup: 
@@ -108,8 +119,8 @@ public class DOPopup : MonoBehaviour {
         Tween tween = null;
 
 		switch(Animate) {
-			case AnimType.Up2Down: case AnimType.Left2Right: case AnimType.Right2Left:
-				tween = GetComponent<RectTransform>().DOAnchorPos(beginPosition, duration);
+			case AnimType.Up2Down: case AnimType.Left2Right: case AnimType.Right2Left: case AnimType.Custom:
+				tween = GetComponent<RectTransform>().DOAnchorPos(startPosition, duration);
 				break;
 			case AnimType.Popup:
 				tween = gameObject.Popup(false);
