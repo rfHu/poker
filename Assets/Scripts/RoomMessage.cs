@@ -38,7 +38,6 @@ public class RoomMessage : MonoBehaviour {
             }
         }).AddTo(this);
 
-        _.Log("1");
         OwnerName.text = GameData.Shared.OwnerName;
 
         GameData.Shared.LeftTime.Subscribe((value) =>

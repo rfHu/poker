@@ -8,7 +8,6 @@ using System.Linq;
 
 [RequireComponent(typeof(DOPopup))]
 public class OwnerPanel : MonoBehaviour {
-	public Text PauseText;
     public Button CloseButton;
     public Slider MultipleSlider1;
     public Slider MultipleSlider2;
@@ -27,9 +26,6 @@ public class OwnerPanel : MonoBehaviour {
     public Text T_cNum;
 
     public Button SaveButton;
-	private string pauseStr = "暂停牌局";
-	private string continueStr = "继续牌局";
-
     
     private List<int> AnteSuperScriptNums;
     private List<int> bankroll_multiple;
@@ -37,18 +33,9 @@ public class OwnerPanel : MonoBehaviour {
     private Dictionary<string, object> dict = new Dictionary<string, object>();
     private bool[] isChanged = new bool[6]{ false, false, false, false, false ,false};
     private List<int> turn_countdownNum =new List<int>{ 10, 12, 15, 20 };
-    private List<int> a;
 
 	void Awake()
 	{
-		GameData.Shared.Paused.Subscribe((pause) => {
-			if (pause && GameData.Shared.GameStarted) {
-				PauseText.text = continueStr;
-			} else {
-				PauseText.text = pauseStr;
-			}
-		}).AddTo(this);
-
         MultipleSlider2.value = GameData.Shared.BankrollMul[0];
         MultipleSlider1.value = GameData.Shared.BankrollMul[1];
 
@@ -115,49 +102,6 @@ public class OwnerPanel : MonoBehaviour {
             }
         }
     }
-
-	public void Stop() {
-		GetComponent<DOPopup>().Close();
-
-		// 二次确定
-		PokerUI.Alert("确定提前结束牌局", () => {
-			Connect.Shared.Emit(new Dictionary<string, object>() {
-				{"f", "pause"},
-				{"args", "3"}
-			});
-		}, null);
-	}
-
-	public void Pause() {
-		string f;
-
-		if (GameData.Shared.Paused.Value && GameData.Shared.GameStarted) {
-			f = "start";
-		} else {
-			f = "pause";
-		}
-
-		Connect.Shared.Emit(new Dictionary<string, object>() {
-			{"f", f},
-			{"args", "0"}
-		}, (data) => {
-			var err = data.Int("err");
-			
-			if (err == 0) {
-				if (f == "start") {
-					PauseText.text = pauseStr;
-				} else {
-					PauseText.text = continueStr;
-				}
-
-                GetComponent<DOPopup>().Close();
-			} else {
-				var msg = data.String("ret");
-				GetComponent<DOPopup>().Close();
-				PokerUI.Alert(msg);	
-			}
-		});		
-	}
 
     private List<int> getMulSortList() {
         var value1 = (int)MultipleSlider1.value;
@@ -361,7 +305,7 @@ public class OwnerPanel : MonoBehaviour {
         }
 
          image.color = color;
-         text.color = color;
+         //text.color = color;
     }
 
     public void SendRequest()
