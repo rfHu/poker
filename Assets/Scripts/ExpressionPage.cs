@@ -16,7 +16,6 @@ public class ExpressionPage : MonoBehaviour {
 
             item.GetComponent<Button>().onClick.AddListener(() =>
             {
-                _.Log("1");
                 var dict = new Dictionary<string, object>() {
 			        {"expression", item.name}
 		        };
@@ -26,6 +25,8 @@ public class ExpressionPage : MonoBehaviour {
 				        {"f", "expression"},
 				        {"args", dict}
 			    });
+
+                transform.GetComponent<DOPopup>().Close();
             });
         }
     }
