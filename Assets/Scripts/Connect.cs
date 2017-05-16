@@ -382,6 +382,9 @@ public sealed class Connect  {
 				case "someone_seecard":
 					RxSubjects.SomeOneSeeCard.OnNext(rxdata);
 					break;
+                case "expression":
+                    RxSubjects.Expression.OnNext(rxdata);
+                    break;
 				default:
 					break;
 			}
