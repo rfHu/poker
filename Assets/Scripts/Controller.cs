@@ -100,14 +100,14 @@ public class Controller : MonoBehaviour {
         });
     }
 
-	void changePositions(int index) {
+	void changePositions(int index, bool anim = true) {
 		var count = GameData.Shared.PlayerCount;
 		var left = anchorPositions.Skip(count - index).Take(index);
 		var right = anchorPositions.Take(count - index);
 		var newVectors = left.Concat(right).ToList(); 
 
 		for (var i = 0; i < Seats.Count; i++) {
-			Seats[i].GetComponent<Seat>().ChgPos(newVectors[i]);
+			Seats[i].GetComponent<Seat>().ChgPos(newVectors[i], anim);
 		}
 	}
 
@@ -375,7 +375,9 @@ public class Controller : MonoBehaviour {
 			Seats[index].GetComponent<Image>().enabled = true;
 		};
 
-		RxSubjects.ChangeVectorsByIndex.AsObservable().DistinctUntilChanged().Subscribe(changePositions).AddTo(this);
+		RxSubjects.ChangeVectorsByIndex.AsObservable().DistinctUntilChanged().Subscribe((index) => {
+			changePositions(index);
+		}).AddTo(this);
 
 		GameData.Shared.Players.ObserveReplace().Subscribe((data) => {
 			data.OldValue.Destroy();
@@ -397,7 +399,7 @@ public class Controller : MonoBehaviour {
 		}).AddTo(this);
 
 		GameData.Shared.PublicCards.ObserveAdd().Subscribe((e) => {
-			if (GameData.Shared.GameStartState) {
+			if (GameData.Shared.PublicCardAnimState) {
 				var data = GameData.Shared.PublicCards;
 
 				G.WaitSound(() => {

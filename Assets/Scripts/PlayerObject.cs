@@ -362,7 +362,7 @@ public class PlayerObject : MonoBehaviour {
 
 		// 中途复原行动
 		player.Countdown.AsObservable().Where((obj) => obj.seconds > 0).Subscribe((obj) => {
-			turnTo(obj.data, obj.seconds);	
+			turnTo(obj.data, obj.seconds, true);	
 		}).AddTo(this);
 
 		RxSubjects.MoveTurn.Subscribe((e) => {
@@ -644,7 +644,7 @@ public class PlayerObject : MonoBehaviour {
 		}	
 	}
 
-	private void turnTo(Dictionary<string, object> dict, int left) {
+	private void turnTo(Dictionary<string, object> dict, int left, bool restore = false) {
 		if (isSelf()) {
 			var op = showOP(dict, left);
 			var flag = player.Trust.FlagString();
@@ -675,11 +675,15 @@ public class PlayerObject : MonoBehaviour {
 						OP.OPS.Call();
 					}
 				} else {
-					MasterAudio.PlaySound("on_turn");
+					if (!restore) {
+						MasterAudio.PlaySound("on_turn");
+					}
 					RxSubjects.TurnToMyAction.OnNext(true);
 				}
 			} else {
-				MasterAudio.PlaySound("on_turn");
+				if (!restore) {
+					MasterAudio.PlaySound("on_turn");
+				}
 				RxSubjects.TurnToMyAction.OnNext(true);
 			}
 			
