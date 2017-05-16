@@ -49,6 +49,7 @@ public class RxSubjects {
     public static Subject<RxData> Moretime = new Subject<RxData>();
 	public static Subject<RxData> ShowCard = new Subject<RxData>();
 	public static Subject<RxData> SomeOneSeeCard = new Subject<RxData>();
+    public static Subject<RxData> Expression = new Subject<RxData>();
 
 	// 跟网络无关事件
 	public static Subject<int> ChangeVectorsByIndex = new Subject<int>();

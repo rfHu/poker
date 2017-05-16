@@ -61,6 +61,12 @@ public class UIManager : MonoBehaviour {
         Commander.Shared.ShareGameRoom(shareText);
     }
 
+    public void OnClickExpressionPage() 
+    {
+        var expressionPage = (GameObject)Instantiate(Resources.Load("Prefab/ExpressionPage"));
+        expressionPage.GetComponent<DOPopup>().Show();
+    }
+
 	void Awake()
 	{
 		GameData.Shared.AuditList.AsObservable().Where((list) => list != null).Subscribe((list) => {

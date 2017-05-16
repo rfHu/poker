@@ -465,6 +465,31 @@ public class Controller : MonoBehaviour {
             em.GetComponent<Emoticon>().Init(fromSeat, toSeat, pid, isToMe);
         }).AddTo(this);
 
+        RxSubjects.Expression.Subscribe((e) => {
+            var seatIndex = e.Data.Int("seat");
+            var expressionName = e.Data.String("expression");
+            var aimSeat = Seats[0];
+
+            foreach (var seat in Seats)
+            {
+                if (seat.GetComponent<Seat>().Index == seatIndex) 
+                {
+                    aimSeat = seat;
+                    break;
+                }
+            }
+
+            var expression = (GameObject)GameObject.Instantiate(Resources.Load("Prefab/Expression"));
+            expression.transform.SetParent(G.UICvs.transform, false);
+            expression.GetComponent<RectTransform>().localPosition = aimSeat.GetComponent<RectTransform>().localPosition;
+            if (e.Data.String("uid") == GameData.Shared.Uid)
+            {
+                expression.GetComponent<RectTransform>().anchoredPosition -= new Vector2(0,165);
+            }
+            expression.transform.FindChild("Face").GetComponent<Animator>().SetTrigger(expressionName);
+            Destroy(expression, 3f);
+        }).AddTo(this);
+
 		RxSubjects.ShowAudio.Where(isGuest).Subscribe((json) => {
 			var N = JSON.Parse(json);
 			var name = N["name"].Value;
