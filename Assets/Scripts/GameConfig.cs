@@ -65,6 +65,8 @@ sealed public class Player {
 	public bool ChipsChange = false;
 	public ReactiveProperty<bool> Allin = new ReactiveProperty<bool>(); 
 
+	public bool ActStateTrigger = true;
+
 	public AutoDeposit Trust = new AutoDeposit(); 
 	public ReactiveProperty<string> ShowCard = new ReactiveProperty<string>();
 

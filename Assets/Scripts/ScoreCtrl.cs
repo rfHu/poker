@@ -18,6 +18,8 @@ public class ScoreCtrl : MonoBehaviour {
     public GameObject Insurance;
 
     public Text InsuranceData;
+
+	private Color offlineColor = new Color(1, 1, 1, 0.4f);
 	
 	void Awake()
 	{
@@ -32,7 +34,11 @@ public class ScoreCtrl : MonoBehaviour {
             if (GameData.Shared.NeedInsurance)
             {
                 Insurance.SetActive(true);
-                InsuranceData.text = insurance.Int("pay").ToString();
+
+				var insuValue = insurance.Int("pay");
+
+                InsuranceData.text = _.Number2Text(insuValue);
+				InsuranceData.color = _.GetColor(insuValue);
             }
 
 			var list = ret.List("list");
@@ -69,15 +75,18 @@ public class ScoreCtrl : MonoBehaviour {
                 Text score = entry.transform.Find("Score").GetComponent<Text>();
 
 				name.text = player.String("name");
-				total.text = all.ToString(); 
-				score.text = (player.Int("bankroll") - all).ToString();
+				total.text = all.ToString();
+
+				var profit = player.Int("bankroll") - all; 
+				score.text = _.Number2Text(profit);
+				score.color = _.GetColor(profit);
 				entry.transform.SetParent(viewport.transform, false);
 
                 if (!player.Bool("in_room"))
                 {
-                    name.color = new Color(1, 1, 1, 0.4f);
-                    total.color = new Color(1, 1, 1, 0.4f);
-                    score.color = new Color(1, 1, 1, 0.4f);
+                    name.color = offlineColor;
+                    total.color = offlineColor;
+                    score.color = offlineColor;
                 }
         	}
 
@@ -111,8 +120,8 @@ public class ScoreCtrl : MonoBehaviour {
 
                 if (!guest.Bool("in_room"))
                 {
-                    name.color = new Color(1, 1, 1, 0.4f);
-                    avatar.GetComponent<RawImage>().color = new Color(1, 1, 1, 0.5f);
+                    name.color = offlineColor;
+                    avatar.GetComponent<RawImage>().color = offlineColor;
                 }
 			} 
         });

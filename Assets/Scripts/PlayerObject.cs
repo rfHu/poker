@@ -297,7 +297,19 @@ public class PlayerObject : MonoBehaviour {
 					MasterAudio.PlaySound("check");
 					break;
 				case ActionState.Fold:
+					MasterAudio.PlaySound("fold_boy");
 					MasterAudio.PlaySound("foldpai");
+					break;
+				case ActionState.Call:
+					MasterAudio.PlaySound("call_boy");
+					break;
+				case ActionState.Allin:
+					if (player.ActStateTrigger) {
+						MasterAudio.PlaySound("allin_boy");
+					}
+					break;
+				case ActionState.Raise:
+					MasterAudio.PlaySound("raise_boy");
 					break;
 				default:
 					break;
@@ -537,6 +549,7 @@ public class PlayerObject : MonoBehaviour {
 
 		player.Allin.Subscribe((allin) => {
 			if (allin) {
+				player.ActStateTrigger = false;
 				player.ActState.OnNext(ActionState.Allin);
 			}
 		}).AddTo(this);
