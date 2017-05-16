@@ -75,6 +75,8 @@ sealed public class Player {
 	public Subject<ActionState> ActState = new Subject<ActionState>();
 
 	public ReactiveProperty<List<int>> Cards = new ReactiveProperty<List<int>>();
+
+	public bool SeeCardAnim = false;
 	
 	public Player(Dictionary<string, object> json, int index) {
 		Name = json.String("name");
@@ -248,7 +250,9 @@ sealed public class GameData {
 						continue;
 					}
 
-					Players[k].Cards.Value = list;
+					var player = Players[k];
+					player.SeeCardAnim = true;
+					player.Cards.Value = list;
 				}
 			}
 
@@ -332,12 +336,12 @@ sealed public class GameData {
 		RxSubjects.Raise.Subscribe(act);
 
 		RxSubjects.SeeCard.Subscribe((e) => {
-			SeeCardState = true;
-
 			var cards = e.Data.IL("cards");
 			var index = e.Data.Int("seat");
 			if (Players.ContainsKey(index)) {
-				Players[index].Cards.Value = cards;
+				var player = Players[index];
+				player.SeeCardAnim = true;
+				player.Cards.Value = cards;
 			}
 		});
 
@@ -416,7 +420,6 @@ sealed public class GameData {
 	public int DealState = -1;
 	public ReactiveProperty<List<object>> AuditList = new ReactiveProperty<List<object>>();
 	public bool PublicCardAnimState = false;
-	public bool SeeCardState = false;
 
 	// 已设置的思考时间（下一手生效）
 	public int SettingThinkTime = 15;	
@@ -488,9 +491,6 @@ sealed public class GameData {
 
 	private void byJson(Dictionary<string, object> json) {
 		jsonData = json;
-
-		// 除了gamestart状态外，其他状态都在这里重置
-		SeeCardState = false;
 
 		var options = json.Dict("options");
 		var gamers = json.Dict("gamers");

@@ -70,7 +70,7 @@ public class PlayerObject : MonoBehaviour {
 
 		MyCards.SetActive(true);
 
-		var state = GameData.Shared.SeeCardState;
+		var state = player.SeeCardAnim;
 		first.GetComponent<Card>().Show(cards[0], state);
 		second.GetComponent<Card>().Show(cards[1], state);
 	}
@@ -341,7 +341,7 @@ public class PlayerObject : MonoBehaviour {
 			if (isSelf()) {
 				SeeCard(cards);
 			} else {
-				showTheCards(cards);
+				showTheCards(cards, player.SeeCardAnim);
 			}
 		}).AddTo(this);
 
@@ -364,7 +364,7 @@ public class PlayerObject : MonoBehaviour {
 			}
 
 			if (!isSelf()) {
-				showTheCards(data.cards);
+				showTheCards(data.cards, true);
 				showCardType(data.maxFiveRank);
 			}
 
@@ -522,7 +522,7 @@ public class PlayerObject : MonoBehaviour {
 			}
 
 			var cards = e.Data.IL("cards");
-			showTheCards(cards);
+			showTheCards(cards, true);
 		}).AddTo(this);
 
 		// 思考延时
@@ -574,7 +574,7 @@ public class PlayerObject : MonoBehaviour {
         grp.ToPlayer(this);
 	}
 
-	private void showTheCards(List<int> cards) {
+	private void showTheCards(List<int> cards, bool anim) {
 		if (cards.Count < 2 || isSelf()) {
 			return ;
 		}
@@ -585,11 +585,11 @@ public class PlayerObject : MonoBehaviour {
 
 			// 显示手牌
 			if (cards[0] > 0) {
-				ShowCards[0].Show(cards[0], true);
+				ShowCards[0].Show(cards[0], anim);
 			} 
 
 			if (cards[1] > 0) {
-				ShowCards[1].Show(cards[1], true);
+				ShowCards[1].Show(cards[1], anim);
 			}
 
 			if (Cardfaces != null) {
