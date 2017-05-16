@@ -24,15 +24,22 @@ public class ChipsGo : MonoBehaviour {
 		this.player = player;
 		addEvents();
 
-		MasterAudio.PlaySound("chip");
-		doTween().OnComplete(() => {
+		TweenCallback cb = () => {
 			SetChips(value);
 			TextNumber.gameObject.SetActive(true);
 			
 			theSeat.SeatPos.AsObservable().Subscribe((pos) => {
 				GetComponent<RectTransform>().anchoredPosition = getVector(pos);
 			}).AddTo(this);
-		});
+		};
+
+		if (player.ChipsChange) {
+			MasterAudio.PlaySound("chip");
+			doTween().OnComplete(cb);
+		} else {
+			GetComponent<RectTransform>().anchoredPosition = getVector();
+			cb();
+		}
 	}
 
 	public void AddMore(Action callback, Seat seat, Player player) {
@@ -76,6 +83,10 @@ public class ChipsGo : MonoBehaviour {
 				Hide();
 			});
 		}).AddTo(this);
+
+		RxSubjects.Look.Subscribe((_) => {
+			Destroy(gameObject);
+		}).AddTo(this);
 	}
 	
 	private Tweener doTween() {
@@ -99,5 +110,9 @@ public class ChipsGo : MonoBehaviour {
 		}
 
 		return vector;
+	}
+
+	private Vector2 getVector() {
+		return getVector(theSeat.GetPos());
 	}
 }

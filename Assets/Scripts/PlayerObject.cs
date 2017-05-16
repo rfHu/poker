@@ -234,15 +234,26 @@ public class PlayerObject : MonoBehaviour {
 		}
 	}
 
-	private void setPlayerAct(bool active) {
+	private void setPlayerAct(bool active, bool anim = true) {
 		if (!active && isPersisState()) {
 			return ;
 		}
 
-		PlayerAct.gameObject.SetActive(active);
+		// PlayerAct.gameObject.SetActive(active);
+		var cvg = PlayerAct.GetComponent<CanvasGroup>();
+		var targetValue = active ? 1 : 0;
+		var duration = 0.1f;
+		var reverse = 1 ^ targetValue;
+
+		if (anim) {
+			cvg.DOFade(targetValue, duration);
+		} else {
+			cvg.alpha = targetValue;
+		}
 
 		if (!isSelf()) {
-			NameLabel.gameObject.SetActive(!active);
+			var nameCvg = NameLabel.GetComponent<CanvasGroup>();
+			nameCvg.DOFade(reverse, duration);
 		}
 	}
 
@@ -286,7 +297,19 @@ public class PlayerObject : MonoBehaviour {
 					MasterAudio.PlaySound("check");
 					break;
 				case ActionState.Fold:
+					MasterAudio.PlaySound("fold_boy");
 					MasterAudio.PlaySound("foldpai");
+					break;
+				case ActionState.Call:
+					MasterAudio.PlaySound("call_boy");
+					break;
+				case ActionState.Allin:
+					if (player.ActStateTrigger) {
+						MasterAudio.PlaySound("allin_boy");
+					}
+					break;
+				case ActionState.Raise:
+					MasterAudio.PlaySound("raise_boy");
 					break;
 				default:
 					break;
@@ -351,7 +374,7 @@ public class PlayerObject : MonoBehaviour {
 
 		// 中途复原行动
 		player.Countdown.AsObservable().Where((obj) => obj.seconds > 0).Subscribe((obj) => {
-			turnTo(obj.data, obj.seconds);	
+			turnTo(obj.data, obj.seconds, true);	
 		}).AddTo(this);
 
 		RxSubjects.MoveTurn.Subscribe((e) => {
@@ -362,17 +385,17 @@ public class PlayerObject : MonoBehaviour {
 				
 				var index = e.Data.Int("seat");
 				var dc = e.Data.Int("deal_card");
-
-				// 刚发了牌
-				if (dc == 1) {
-					setPlayerAct(false);
-				}
 			
 				if (index == Index) {
 					turnTo(e.Data, GameData.Shared.ThinkTime);
-					setPlayerAct(false);
+					setPlayerAct(false, false);
 				} else {
 					MoveOut();
+
+					// 刚发了牌
+					if (dc == 1) {
+						setPlayerAct(false);
+					}
 				}
 
 				// 自动托管
@@ -526,6 +549,7 @@ public class PlayerObject : MonoBehaviour {
 
 		player.Allin.Subscribe((allin) => {
 			if (allin) {
+				player.ActStateTrigger = false;
 				player.ActState.OnNext(ActionState.Allin);
 			}
 		}).AddTo(this);
@@ -633,7 +657,7 @@ public class PlayerObject : MonoBehaviour {
 		}	
 	}
 
-	private void turnTo(Dictionary<string, object> dict, int left) {
+	private void turnTo(Dictionary<string, object> dict, int left, bool restore = false) {
 		if (isSelf()) {
 			var op = showOP(dict, left);
 			var flag = player.Trust.FlagString();
@@ -664,11 +688,15 @@ public class PlayerObject : MonoBehaviour {
 						OP.OPS.Call();
 					}
 				} else {
-					MasterAudio.PlaySound("on_turn");
+					if (!restore) {
+						MasterAudio.PlaySound("on_turn");
+					}
 					RxSubjects.TurnToMyAction.OnNext(true);
 				}
 			} else {
-				MasterAudio.PlaySound("on_turn");
+				if (!restore) {
+					MasterAudio.PlaySound("on_turn");
+				}
 				RxSubjects.TurnToMyAction.OnNext(true);
 			}
 			

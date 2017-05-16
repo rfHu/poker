@@ -62,7 +62,10 @@ sealed public class Player {
 	public bool InGame = false;
 	public int AuditCD = 0; 
 	public int Coins = 0;
+	public bool ChipsChange = false;
 	public ReactiveProperty<bool> Allin = new ReactiveProperty<bool>(); 
+
+	public bool ActStateTrigger = true;
 
 	public AutoDeposit Trust = new AutoDeposit(); 
 	public ReactiveProperty<string> ShowCard = new ReactiveProperty<string>();
@@ -191,12 +194,12 @@ sealed public class GameData {
 
 		RxSubjects.GameStart.AsObservable().Subscribe((e) => {
 			var json = e.Data.Dict("room");
-			GameStartState = true;
+			PublicCardAnimState = true;
 			byJson(json);
 		});
 	
 		RxSubjects.Look.Subscribe((e) => {
-			GameStartState = false;
+			PublicCardAnimState = false;
 			byJson(e.Data);
 
 			// 重连的用户，reload scene
@@ -204,6 +207,12 @@ sealed public class GameData {
 
 			if (loginStatus == 1) {
 				AuditList.Value = new List<object>();
+
+				var scene = SceneManager.GetActiveScene();
+
+				if (scene.name == "PokerGame") {
+					return ;
+				}
 
 				SceneManager.LoadScene("PokerGame");
             } 	
@@ -213,13 +222,14 @@ sealed public class GameData {
 			Pot.Value = e.Data.Int("pot");
 			PrPot.Value = Pot.Value - e.Data.Int("pr_pot");
 
-			GameStartState = true;
+			PublicCardAnimState = true;
 
 			var state = e.Data.Int("state");
 
 			// 发下一张牌的时候，重置所有prchips
 			foreach(Player player in Players.Values) {
 				player.PrChips.Value = 0;
+				player.ChipsChange = false;
 			}
 
 			var data = e.Data.Dict("deals");
@@ -309,6 +319,7 @@ sealed public class GameData {
 			}
 			
 			var player = Players[index];
+			player.ChipsChange = true;
 			player.PrChips.Value = userAction.pr_chips;
 			player.Bankroll.Value = userAction.bankroll;
 
@@ -404,7 +415,7 @@ sealed public class GameData {
 
 	public int DealState = -1;
 	public ReactiveProperty<List<object>> AuditList = new ReactiveProperty<List<object>>();
-	public bool GameStartState = false;
+	public bool PublicCardAnimState = false;
 	public bool SeeCardState = false;
 
 	// 已设置的思考时间（下一手生效）

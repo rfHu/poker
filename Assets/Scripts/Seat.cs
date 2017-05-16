@@ -63,11 +63,17 @@ public class Seat : MonoBehaviour {
 		return SeatPosition.Bottom;
 	}
 
-	public void ChgPos(Vector2 vector) {
+	public void ChgPos(Vector2 vector, bool anim) {
 		realVector = vector;
-		GetComponent<RectTransform>().DOAnchorPos(vector, 0.15f).OnComplete(() => {
+
+		if (anim) {
+			GetComponent<RectTransform>().DOAnchorPos(vector, 0.15f).OnComplete(() => {
+				SeatPos.Value = GetPos();
+			});	
+		} else {
+			GetComponent<RectTransform>().anchoredPosition = vector;
 			SeatPos.Value = GetPos();
-		});
+		}
 	}
 
 	public void Init(int index, Vector2 vector) {

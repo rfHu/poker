@@ -120,10 +120,13 @@ public class OP : MonoBehaviour {
 			names.Add("X4\n盲注");
 		} else {
 			var nextPot = pot + call;
+			var value1 = fixBB(Mathf.CeilToInt(nextPot / 2f) + call);
+			var value2 = fixBB(Mathf.CeilToInt(nextPot * 2f / 3f) + call);
+			var value3 = fixBB(nextPot + call);
 			
-			values.Add(Mathf.CeilToInt(nextPot / 2f) + call);
-			values.Add(Mathf.CeilToInt(nextPot * 2f / 3f) + call);
-			values.Add(nextPot + call);
+			values.Add(value1);
+			values.Add(value2);
+			values.Add(value3);
 
 			names.Add("1/2\n底池");
 			names.Add("2/3\n底池");
@@ -143,6 +146,11 @@ public class OP : MonoBehaviour {
 		} else if (values[2] > max) {
 			disableBtn(R3);
 		}
+	}
+
+	private int fixBB(int value) {
+		var num = Mathf.CeilToInt(value / (float)GameData.Shared.BB);
+		return num * GameData.Shared.BB;
 	}
 
 	private void addProperty(GameObject go, string text, int value) {
