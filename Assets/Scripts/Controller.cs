@@ -401,17 +401,10 @@ public class Controller : MonoBehaviour {
 		GameData.Shared.PublicCards.ObserveAdd().Subscribe((e) => {
 			if (GameData.Shared.PublicCardAnimState) {
 				var data = GameData.Shared.PublicCards;
+				MasterAudio.PlaySound("fapai");
 
-				G.WaitSound(() => {
-					if (this == null) {
-						return ;
-					}
-
-					MasterAudio.PlaySound("fapai");
-
-					cardAnimQueue.Enqueue(new KeyValuePair<int, int>(e.Index, e.Value));
-					startQueue();
-				});	
+				cardAnimQueue.Enqueue(new KeyValuePair<int, int>(e.Index, e.Value));
+				startQueue();
 			} else {
 				getCardFrom(e.Index).Show(e.Value, false);
 			}

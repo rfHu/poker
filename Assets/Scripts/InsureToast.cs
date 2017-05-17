@@ -134,6 +134,10 @@ public class InsureToast: MonoBehaviour {
         RxSubjects.ToInsurance.Subscribe((_) => {
             Hide();
         }).AddTo(this);
+
+        RxSubjects.Look.Subscribe((_) => {
+            Hide();
+        }).AddTo(this);
     }
 
     private string cdText(int time) {
