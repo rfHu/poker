@@ -100,6 +100,11 @@ public class PlayerObject : MonoBehaviour {
 		if (SpkText != null) {
 			Destroy(SpkText);
 		}
+
+        if (isSelf())
+        {
+            RxSubjects.Seating.OnNext(false);
+        }
 	}
 
 	public void ShowPlayer(Player player, Transform parent) {
@@ -109,6 +114,8 @@ public class PlayerObject : MonoBehaviour {
 
 		this.player = player;
 
+        Debug.Log(22);
+
 		// 头像点击事件
 		Avt.GetComponent<Avatar>().Uid = Uid;
 		Debug.Log(111111);
@@ -116,6 +123,7 @@ public class PlayerObject : MonoBehaviour {
 		if (isSelf()) {
 			NameLabel.gameObject.SetActive(false);
 			RxSubjects.ChangeVectorsByIndex.OnNext(Index);
+            RxSubjects.Seating.OnNext(true);
 		} else if(player.InGame) { 
 			Cardfaces.SetActive(true);
 		}
