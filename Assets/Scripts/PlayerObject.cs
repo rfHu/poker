@@ -41,7 +41,6 @@ public class PlayerObject : MonoBehaviour {
 	private float foldOpacity = 0.6f;
 	private float animDuration = 0.4f;
     private float hideDuration = 0.3f; 
-    private DOTweenAnimation countdownColorAni;
 	private ActionState lastState;
 	private bool gameover = false;
 
@@ -58,8 +57,6 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	void Awake() {
-        countdownColorAni = Countdown.GetComponent<DOTweenAnimation>();
-
 		// 倒计时隐藏
 		Countdown.SetActive(false);
 	}
@@ -467,7 +464,7 @@ public class PlayerObject : MonoBehaviour {
 				} else if (num == -1) {
 					text.text = "全下";
 				} else if (num > 0) {
-					text.text = "跟注\n" + num;
+					text.text = String.Format("跟注\n<size=36>{0}</size>", num);
 				}
 
 				var flag = player.Trust.FlagString();

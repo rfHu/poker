@@ -95,7 +95,7 @@ public class Insurance : MonoBehaviour {
             playerMes.transform.SetParent(AllinPlayer.transform.parent,false);
             playerMes.SetActive(true);
             playerMes.GetComponent<AllInPlayer>().Init(player.Name, player.Cards.Value, player.Uid, outsNumber);
-            PlayerList.sizeDelta += new Vector2(230, 0);
+            // PlayerList.sizeDelta += new Vector2(230, 0);
         }
     }
 

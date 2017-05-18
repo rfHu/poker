@@ -21,8 +21,6 @@ public class MenuPopup : MonoBehaviour {
 		RxSubjects.TakeCoin.OnNext(new RxData());	
 	}
 
-	private static string muteTag = "persist.txt?tag=mute";
-
 	void Start()
 	{
 		if (GameData.MyCmd.Unseat) {
