@@ -2,6 +2,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Extensions;
+using UnityEngine.UI.ProceduralImage;
+using MaterialUI;
 
 [RequireComponent(typeof(DOPopup))]
 public class UserDetail : MonoBehaviour {
@@ -21,6 +23,7 @@ public class UserDetail : MonoBehaviour {
     public GameObject R1;
     public GameObject R2;
     public Button[] EmoticonButtons;
+    public Button StandUpButton;
     public Text[] EmoticonPrice;
 
     RectTransform rectTransform;
@@ -36,6 +39,11 @@ public class UserDetail : MonoBehaviour {
         {
             ButtonTeam.SetActive(true);
             rectTransform.sizeDelta = new Vector2(825, 892.5f);
+
+            if (GameData.Shared.FindPlayerIndex(Uid) == -1)
+            {
+                setStandUpButton(false);
+            }
         }
 
         if (Uid == GameData.Shared.Uid || GameData.Shared.MySeat == -1 || GameData.Shared.FindPlayerIndex(Uid) == -1)
@@ -132,11 +140,7 @@ public class UserDetail : MonoBehaviour {
 
     public void OnStandUp() 
     {
-        if (GameData.Shared.FindPlayerIndex(Uid) == -1) {
-            return;
-        }
-
-        var data = new Dictionary<string, object>(){
+       var data = new Dictionary<string, object>(){
 			{"uid", Uid}
 		};
 
@@ -162,5 +166,28 @@ public class UserDetail : MonoBehaviour {
 		        });
 
         gameObject.GetComponent<DOPopup>().Close();
+    }
+
+    private void setStandUpButton(bool interactable)
+    {
+        StandUpButton.interactable = interactable;
+
+        var image = StandUpButton.GetComponent<ProceduralImage>();
+        var text = StandUpButton.transform.Find("Text").GetComponent<Text>();
+        var icon = StandUpButton.transform.FindChild("Image").GetComponent<VectorImage>();
+        Color color;
+
+        if (interactable)
+        {
+            color = MaterialUI.MaterialColor.cyanA200;
+        }
+        else
+        {
+            color = MaterialUI.MaterialColor.grey400;
+        }
+
+        image.color = color;
+        text.color = color;
+        icon.color = color;
     }
 }

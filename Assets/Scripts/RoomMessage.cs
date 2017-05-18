@@ -20,9 +20,13 @@ public class RoomMessage : MonoBehaviour {
     public Text SbBb;
     public Text Small;
     public Text Large;
+    public Text ThinkTime;
     public Text Insurance;
     public Text Straddle;
     public Text NeedAudit;
+    public Text GPSMes;
+    public Text IPMes;
+
     public GameObject Buttons;
 
 	void Awake () {
@@ -57,8 +61,9 @@ public class RoomMessage : MonoBehaviour {
         GameTime.text = (float)GameData.Shared.Duration / 3600 + "小时";
         AnteMeg.text = GameData.Shared.Ante.Value.ToString();
         SbBb.text = GameData.Shared.SB + "/" + GameData.Shared.BB;
-        Small.text = GameData.Shared.BankrollMul[0].ToString();
-        Large.text = GameData.Shared.BankrollMul[1].ToString();
+        Small.text = GameData.Shared.BankrollMul[0] * 100 + "BB";
+        Large.text = GameData.Shared.BankrollMul[1] * 100 + "BB";
+        ThinkTime.text = GameData.Shared.ThinkTime + "s";
         if (GameData.Shared.NeedInsurance)
         { 
             Insurance.text = "启动";
@@ -75,11 +80,24 @@ public class RoomMessage : MonoBehaviour {
             NeedAudit.color = new Color(0.09375f, 1, 1);
         }
 
+        if (GameData.Shared.GPSLimit)
+        {
+            GPSMes.text = "启动";
+            GPSMes.color = new Color(0.09375f, 1, 1);
+        }
+
+        if (GameData.Shared.IPLimit)
+        {
+            IPMes.text = "启动";
+            IPMes.color = new Color(0.09375f, 1, 1);
+        }
+
         if (GameData.Shared.Owner)
         {
             Buttons.SetActive(true);
             GetComponent<RectTransform>().sizeDelta += new Vector2(0, 128);
         }
+
 	}
 
     private void setText(Text go, String text)
@@ -157,9 +175,9 @@ public class RoomMessage : MonoBehaviour {
             else
             {
                 var msg = data.String("ret");
-                GetComponent<DOPopup>().Close();
                 PokerUI.Alert(msg);
             }
+            GetComponent<DOPopup>().Close();
         });
     }
 
