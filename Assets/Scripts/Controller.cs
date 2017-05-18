@@ -474,9 +474,14 @@ public class Controller : MonoBehaviour {
                 }
             }
 
+            var player = aimSeat.transform.FindChild("Player(Clone)");
+            if (player.FindChild("Expression(Clone)") != null)
+                Destroy(player.FindChild("Expression(Clone)").gameObject);
+
             var expression = (GameObject)GameObject.Instantiate(Resources.Load("Prefab/Expression"));
-            expression.transform.SetParent(G.UICvs.transform, false);
-            expression.GetComponent<RectTransform>().localPosition = aimSeat.GetComponent<RectTransform>().localPosition;
+            expression.transform.SetParent(player, false);
+            //expression.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+
             if (e.Data.String("uid") == GameData.Shared.Uid)
             {
                 expression.GetComponent<RectTransform>().anchoredPosition -= new Vector2(0,165);
