@@ -385,6 +385,9 @@ public sealed class Connect  {
                 case "expression":
                     RxSubjects.Expression.OnNext(rxdata);
                     break;
+				case "gamer_hang":
+					RxSubjects.Hang.OnNext(rxdata);
+					break;
 				default:
 					break;
 			}

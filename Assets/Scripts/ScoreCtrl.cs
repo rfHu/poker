@@ -38,7 +38,7 @@ public class ScoreCtrl : MonoBehaviour {
 				var insuValue = insurance.Int("pay");
 
                 InsuranceData.text = _.Number2Text(insuValue);
-				InsuranceData.color = _.GetColor(insuValue);
+				InsuranceData.color = _.GetColor(insuValue, false);
             }
 
 			var list = ret.List("list");
@@ -79,7 +79,7 @@ public class ScoreCtrl : MonoBehaviour {
 
 				var profit = player.Int("bankroll") - all; 
 				score.text = _.Number2Text(profit);
-				score.color = _.GetColor(profit);
+				score.color = _.GetColor(profit, false);
 				entry.transform.SetParent(viewport.transform, false);
 
                 if (!player.Bool("in_room"))

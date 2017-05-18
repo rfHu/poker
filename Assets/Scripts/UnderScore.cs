@@ -101,12 +101,17 @@ public class _ {
 		return int.TryParse(number, out n);
     }
 
-    static public Color GetColor(int num) {
+    static public Color GetColor(int num, bool background = true) {
         string[] colors = new string[]{
 		    "#ff1744",
 		    "#646464",
 		    "#00c853"
 	    };
+
+        if (!background) {
+            colors[2] = "#ffffff";
+        }
+
 		var color = new Color();
 		string c;
 

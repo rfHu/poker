@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using DG.Tweening;
 using System;
+using UnityEngine.UI;
 
 public enum AnimType {
 	Up2Down,
@@ -30,11 +31,17 @@ public class DOPopup : MonoBehaviour {
     {
         var rectTrans = GetComponent<RectTransform>();
 
-		// @TODO: 处理ContentSizeFitter
-
 		switch(Animate) {
 			case AnimType.Up2Down:
+				var fitter = GetComponent<ContentSizeFitter>();
+				var height = rectTrans.rect.height;
+
+				if (fitter != null && fitter.verticalFit == ContentSizeFitter.FitMode.PreferredSize) {
+					height = GetComponent<VerticalLayoutGroup>().preferredHeight;
+				} 
+
 				startPosition = new Vector2(0, rectTrans.rect.height);
+
 				break;
 			case AnimType.Left2Right:
 				startPosition = new Vector2(-rectTrans.rect.width, 0);
