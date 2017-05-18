@@ -38,7 +38,9 @@ public class Controller : MonoBehaviour {
 
 	List<Vector2> anchorPositions = new List<Vector2>();
 
-	public GameObject OwnerButton; 
+	public GameObject OwnerButton;
+
+    public GameObject ExpressionButton;
 
 	void Awake () {
 		setupSeats();
@@ -634,6 +636,11 @@ public class Controller : MonoBehaviour {
             InsurancePopup.GetComponent<DOPopup>().Show(modal: false);
             InsurancePopup.GetComponent<Insurance>().Init(e.Data);
         }).AddTo(this);
+
+         RxSubjects.Seating.Subscribe((action) => 
+         {
+             ExpressionButton.SetActive(action);
+         }).AddTo(this);
 	}
 
 	private bool isGuest(string json) {
