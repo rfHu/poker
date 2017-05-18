@@ -101,7 +101,8 @@ public class PlayerObject : MonoBehaviour {
 			Destroy(SpkText);
 		}
 
-        if (isSelf())
+		// OnDestory是异步的，存在时序的问题，所以要判断用户是否还在座位中
+        if (isSelf() && GameData.Shared.MySeat == -1)
         {
             RxSubjects.Seating.OnNext(false);
         }
@@ -113,8 +114,6 @@ public class PlayerObject : MonoBehaviour {
 		SpkText.Uid = Uid;
 
 		this.player = player;
-
-        Debug.Log(22);
 
 		// 头像点击事件
 		Avt.GetComponent<Avatar>().Uid = Uid;

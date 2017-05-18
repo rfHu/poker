@@ -177,9 +177,6 @@ sealed public class GameData {
 			var player = new Player(playerInfo, index);
 
 			GameData.Shared.Players[index] = player;
-
-            //if (playerInfo.String("uid") == Uid)
-            //    RxSubjects.Seating.OnNext(true);
 		});
 
 		RxSubjects.Paused.AsObservable().Subscribe((e) => {
@@ -195,9 +192,6 @@ sealed public class GameData {
 		RxSubjects.UnSeat.AsObservable().Subscribe((e) => {
 			var index = e.Data.Int("where");
 			GameData.Shared.Players.Remove(index);
-
-            //if (e.Data.String("uid") == Uid)
-            //    RxSubjects.Seating.OnNext(false);
 		});
 
 		RxSubjects.GameStart.AsObservable().Subscribe((e) => {
@@ -568,8 +562,6 @@ sealed public class GameData {
 		if (mySeat != -1 && Players.ContainsKey(mySeat)) {
 			AuditCD.Value = Players[mySeat].AuditCD;
 			Coins = Players[mySeat].Coins;
-
-            //RxSubjects.Seating.OnNext(true);
 		} else {
 			AuditCD.Value = 0;
 		}
