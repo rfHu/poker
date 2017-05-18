@@ -15,6 +15,14 @@ public enum ActionState {
 	Raise = 5
 }
 
+public enum PlayerState {
+	Waiting,
+	Auditing,
+	Normal,
+	Hanging,
+	Reserve
+}
+
 public class AutoDeposit {
 	public ReactiveProperty<string> SelectedFlag = new ReactiveProperty<string>();
 	public ReactiveProperty<int> CallNumber = new ReactiveProperty<int>();
@@ -77,6 +85,8 @@ sealed public class Player {
 	public ReactiveProperty<List<int>> Cards = new ReactiveProperty<List<int>>();
 
 	public bool SeeCardAnim = false;
+
+	public ReactiveProperty<PlayerState> PlayerStat = new ReactiveProperty<PlayerState>();
 	
 	public Player(Dictionary<string, object> json, int index) {
 		Name = json.String("name");

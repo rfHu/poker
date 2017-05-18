@@ -34,6 +34,7 @@ public class PlayerObject : MonoBehaviour {
 	public GameObject AutoArea;
 	public GameObject[] AutoOperas; 
 	public GameObject[] Eyes; 
+	public GameObject BackGameBtn;
 
 	private GameObject OPGo;
 	private ChipsGo cgo; 
@@ -49,6 +50,8 @@ public class PlayerObject : MonoBehaviour {
 
 	public SpkTextGo SpkText;
 	public GameObject Volume;
+	public GameObject HandGo;
+	public Text StateLabel;
 
 	private Seat theSeat {
 		get {
@@ -89,6 +92,12 @@ public class PlayerObject : MonoBehaviour {
 		}
 
 		Avt.GetComponent<CircleMask>().Disable();
+	}
+
+	public void BackGame() {
+		Connect.Shared.Emit(new Dictionary<string, object>{
+			{"f", "ready"}
+		});
 	}
 
 	void OnDestroy()
@@ -207,7 +216,7 @@ public class PlayerObject : MonoBehaviour {
 			var copy = Instantiate(MyCards, canvas.transform, true);
 			
 			// 图片灰掉
-			darkenCards();
+			// darkenCards();
 
 			MyCards.SetActive(false);
 
@@ -221,7 +230,7 @@ public class PlayerObject : MonoBehaviour {
 			foldCards(Cardfaces);			
 		}
 
-		Circle.GetComponent<CanvasGroup>().alpha = foldOpacity;
+		setFolded();
 	}
 
 	private void darkenCards() {
@@ -266,7 +275,7 @@ public class PlayerObject : MonoBehaviour {
 			darkenCards();	
 		}
 
-		Circle.GetComponent<CanvasGroup>().alpha = foldOpacity;
+		Circle.transform.Find("Avatar").GetComponent<CanvasGroup>().alpha = foldOpacity;
 	}
 
 	private bool isSelf() {
@@ -557,6 +566,38 @@ public class PlayerObject : MonoBehaviour {
 				player.ActState.OnNext(ActionState.Allin);
 			}
 		}).AddTo(this);
+
+		player.PlayerStat.Subscribe((state) => {
+			HandGo.SetActive(false);
+			BackGameBtn.SetActive(false);
+			StateLabel.transform.parent.gameObject.SetActive(false);
+
+			switch(state) {
+				case PlayerState.Waiting: case PlayerState.Auditing:
+					ScoreLabel.text = "<size=28>等待</size>";
+					break;
+				case PlayerState.Hanging:
+					HandGo.SetActive(true);
+					if (isSelf()) {
+						BackGameBtn.SetActive(true);
+					}
+					break;
+				case PlayerState.Reserve:
+					setStateLabel("留座\n<b>120s</b>");
+
+					if (isSelf()) {
+						BackGameBtn.SetActive(true);
+					}
+					break;
+				default: 
+					break;
+			}
+		}).AddTo(this);
+	}
+
+	private void setStateLabel(string text) {
+		StateLabel.transform.parent.gameObject.SetActive(true);
+		StateLabel.text = text;
 	}
 
 	private void fixChatPos(SeatPosition pos) {
@@ -725,8 +766,6 @@ public class PlayerObject : MonoBehaviour {
 		float total = left.GetThinkTime();
 		var mask = Avt.GetComponent<CircleMask>();
         mask.numberText.gameObject.SetActive(true);
-
-
 
 		while (time > 0 && activated) {
 			time = time - Time.deltaTime;
