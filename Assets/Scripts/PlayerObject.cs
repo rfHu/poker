@@ -111,6 +111,7 @@ public class PlayerObject : MonoBehaviour {
 
 		// 头像点击事件
 		Avt.GetComponent<Avatar>().Uid = Uid;
+		Debug.Log(111111);
 
 		if (isSelf()) {
 			NameLabel.gameObject.SetActive(false);
