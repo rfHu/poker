@@ -44,13 +44,14 @@ public class DOPopup : MonoBehaviour {
 				break; 
 			case AnimType.Custom:
 				startPosition = StartPosition;
-				endPosition = EndPosition;
 				break; 
 			default:
 				return;
 		}
 
-		if (endPosition == null) {
+		if (Animate == AnimType.Custom) {
+			endPosition = EndPosition;			
+		} else {
 			endPosition = new Vector2(0, 0);
 		}
 

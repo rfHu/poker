@@ -96,6 +96,11 @@ public class _ {
         return color;
     }
 
+    static public bool IsNumeric(string number) {
+        int n;
+		return int.TryParse(number, out n);
+    }
+
     static public Color GetColor(int num) {
         string[] colors = new string[]{
 		    "#ff1744",

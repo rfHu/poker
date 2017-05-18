@@ -16,6 +16,8 @@ public class OP : MonoBehaviour {
 	public GameObject R1;
 	public GameObject R2;
 	public GameObject R3;
+	public Button AccurateCacel;
+	public Button AccurateYes;
 
 	public Text CallNumber;
 	public Text CallText;
@@ -23,6 +25,8 @@ public class OP : MonoBehaviour {
 	public GameObject Allin;
 	public Text RaiseNumber;
 	public Text MaxText;
+	public AccurateRaise AccuratePanel;
+	public GameObject AccurateBtn;
 
 	public GameObject RoundTipsGo;
 	public Text TipsText;
@@ -32,6 +36,8 @@ public class OP : MonoBehaviour {
 
 	private static OP instance; 
 	private CircleMask circleMask;
+	private int accurateValue;
+	private float disableAlpha = 0.4f;
 
 	void Awake()
 	{
@@ -40,6 +46,10 @@ public class OP : MonoBehaviour {
 		}
 
 		instance = this;
+
+		if (G.UICvs == null) {
+			return ;
+		}
 
 		// 设置位置等信息
 		transform.SetParent(G.UICvs.transform, false);
@@ -72,7 +82,7 @@ public class OP : MonoBehaviour {
 		} else { // 不能跟注、不能看牌，展示灰掉的看牌按钮
 			CallGo.SetActive(false);
 			CheckGo.SetActive(true);
-			CheckGo.GetComponent<CanvasGroup>().alpha = 0.4f;
+			CheckGo.GetComponent<CanvasGroup>().alpha = disableAlpha;
 		}
 
 		circleMask = FoldGo.transform.Find("CD").GetComponent<CircleMask>();
@@ -86,12 +96,11 @@ public class OP : MonoBehaviour {
 		} else if(allin) { // 不可加注、可Allin
 			RaiseGo.SetActive(false);
 			AllinGo.SetActive(true);
-			AllinGo.GetComponent<Button>().onClick.AddListener(OPS.AllIn);
 			disableAllBtns();
 		} else { // 不可加注、不可Allin
 			disableAllBtns();
 			RaiseGo.SetActive(true);
-			RaiseGo.GetComponent<CanvasGroup>().alpha = 0.4f;
+			RaiseGo.GetComponent<CanvasGroup>().alpha = disableAlpha;
 		}	
 	}
 
@@ -103,6 +112,63 @@ public class OP : MonoBehaviour {
 		circleMask.Reset(left);
 	}
 
+	public void OnAccurate() {
+		AccuratePanel.Show(range);
+		AccuratePanel.OnValueChange = (num) => {
+			accurateValue = num;
+
+			if (num >= range[1]) { // allin
+				setAccurateBtns(AccurateType.Allin);
+			} else if (num < range[0]) {
+				setAccurateBtns(AccurateType.Cancel);
+			} else {
+				setAccurateBtns(AccurateType.Yes);
+			}
+		};
+		AccuratePanel.Close = () => {
+			setAccurateBtns(AccurateType.Default);
+		};
+
+		setAccurateBtns(AccurateType.Cancel);	
+	}
+
+	private void setAccurateBtns(AccurateType type) {
+		RaiseGo.SetActive(false);
+		AllinGo.SetActive(false);
+		AccurateCacel.gameObject.SetActive(false);
+		AccurateYes.gameObject.SetActive(false);
+
+		if (type == AccurateType.Cancel) {
+			AccurateCacel.gameObject.SetActive(true);
+		} else if (type == AccurateType.Yes) {
+			AccurateYes.gameObject.SetActive(true);
+		} else if (type == AccurateType.Allin) {
+			AllinGo.SetActive(true);
+		} else {
+			RaiseGo.SetActive(true);
+			AccuratePanel.gameObject.SetActive(false);
+		}
+	}
+
+	private void disableAccurateBtns() {
+		RaiseGo.SetActive(false);
+		AllinGo.SetActive(false);
+		AccurateCacel.gameObject.SetActive(false);
+		AccurateYes.gameObject.SetActive(false);
+	}
+
+	public void OnAllinClick() {
+		OPS.AllIn();
+	}
+
+	public void OnAccurateYes() {
+		OPS.raise(accurateValue);
+	}
+
+	public void OnAccurateCancel() {
+		setAccurateBtns(AccurateType.Default);
+	}
+	
 	private void setRaiseButtons(int call) {
 		var pot = GameData.Shared.Pot.Value;
 		var bb = GameData.Shared.BB;
@@ -184,6 +250,7 @@ public class OP : MonoBehaviour {
 
 		// 未按下时，隐藏加注提示
 		RoundTipsGo.SetActive(false);
+		AccurateBtn.SetActive(false);
 
 		var pointerDown = false;
 
@@ -256,6 +323,7 @@ public class OP : MonoBehaviour {
 	private void close() {
 		hideModal();
 		Slid.gameObject.SetActive(false);
+		AccurateBtn.SetActive(true);
 		setToggle(true);
 	}
 
@@ -277,13 +345,16 @@ public class OP : MonoBehaviour {
 	private void disableBtn(GameObject go) {
 		var button = go.GetComponent<Button>();
 		button.onClick.RemoveAllListeners();
-		go.GetComponent<CanvasGroup>().alpha = 0.4f;	
+		go.GetComponent<CanvasGroup>().alpha = disableAlpha;	
 	}
 
 	private void disableAllBtns() {
 		disableBtn(R1);
 		disableBtn(R2);
 		disableBtn(R3);
+
+		AccurateBtn.GetComponent<CanvasGroup>().alpha = disableAlpha;
+		AccurateBtn.GetComponent<Button>().interactable = false;
 	}
 
 	public class OPS {
@@ -344,4 +415,10 @@ public class OP : MonoBehaviour {
 		}
 	}
 	
+	internal enum AccurateType {
+		 Cancel,
+		 Yes,
+		 Allin,
+		 Default
+	}
 }

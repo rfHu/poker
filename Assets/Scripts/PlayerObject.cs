@@ -41,7 +41,6 @@ public class PlayerObject : MonoBehaviour {
 	private float foldOpacity = 0.6f;
 	private float animDuration = 0.4f;
     private float hideDuration = 0.3f; 
-    private DOTweenAnimation countdownColorAni;
 	private ActionState lastState;
 	private bool gameover = false;
 
@@ -58,8 +57,6 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	void Awake() {
-        countdownColorAni = Countdown.GetComponent<DOTweenAnimation>();
-
 		// 倒计时隐藏
 		Countdown.SetActive(false);
 	}
@@ -70,7 +67,7 @@ public class PlayerObject : MonoBehaviour {
 
 		MyCards.SetActive(true);
 
-		var state = GameData.Shared.SeeCardState;
+		var state = player.SeeCardAnim;
 		first.GetComponent<Card>().Show(cards[0], state);
 		second.GetComponent<Card>().Show(cards[1], state);
 	}
@@ -341,7 +338,7 @@ public class PlayerObject : MonoBehaviour {
 			if (isSelf()) {
 				SeeCard(cards);
 			} else {
-				showTheCards(cards);
+				showTheCards(cards, player.SeeCardAnim);
 			}
 		}).AddTo(this);
 
@@ -364,7 +361,7 @@ public class PlayerObject : MonoBehaviour {
 			}
 
 			if (!isSelf()) {
-				showTheCards(data.cards);
+				showTheCards(data.cards, true);
 				showCardType(data.maxFiveRank);
 			}
 
@@ -467,7 +464,7 @@ public class PlayerObject : MonoBehaviour {
 				} else if (num == -1) {
 					text.text = "全下";
 				} else if (num > 0) {
-					text.text = "跟注\n" + num;
+					text.text = String.Format("跟注\n<size=36>{0}</size>", num);
 				}
 
 				var flag = player.Trust.FlagString();
@@ -522,7 +519,7 @@ public class PlayerObject : MonoBehaviour {
 			}
 
 			var cards = e.Data.IL("cards");
-			showTheCards(cards);
+			showTheCards(cards, true);
 		}).AddTo(this);
 
 		// 思考延时
@@ -574,7 +571,7 @@ public class PlayerObject : MonoBehaviour {
         grp.ToPlayer(this);
 	}
 
-	private void showTheCards(List<int> cards) {
+	private void showTheCards(List<int> cards, bool anim) {
 		if (cards.Count < 2 || isSelf()) {
 			return ;
 		}
@@ -585,11 +582,11 @@ public class PlayerObject : MonoBehaviour {
 
 			// 显示手牌
 			if (cards[0] > 0) {
-				ShowCards[0].Show(cards[0], true);
+				ShowCards[0].Show(cards[0], anim);
 			} 
 
 			if (cards[1] > 0) {
-				ShowCards[1].Show(cards[1], true);
+				ShowCards[1].Show(cards[1], anim);
 			}
 
 			if (Cardfaces != null) {

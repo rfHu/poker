@@ -80,16 +80,12 @@ public class CircleMask : MonoBehaviour {
 		activated = false;
 	}
 
-
-
 	private void tickSound() {
-		if (!activated || int.Parse(numberText.text) > 8) {
+		if (!activated) {
 			return ;
 		}
 
-		MasterAudio.PlaySound("time");
-
-		Invoke("tickSound", 1f);
+		MasterAudio.PlaySound("half_time");
 	}
 
 	public void SetTextColor(Color color) {

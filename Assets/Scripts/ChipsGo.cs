@@ -79,9 +79,7 @@ public class ChipsGo : MonoBehaviour {
 				return ;
 			}
 
-			G.WaitSound(() => {
-				Hide();
-			});
+			Hide();
 		}).AddTo(this);
 
 		RxSubjects.Look.Subscribe((_) => {

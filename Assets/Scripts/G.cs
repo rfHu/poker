@@ -7,6 +7,11 @@ public class G {
 		get {
 			if (uiCanvas == null) {
 				var cvs = GameObject.FindGameObjectWithTag("UICanvas");
+
+				if (cvs == null) {
+					return null;
+				}
+
 				uiCanvas = cvs.GetComponent<Canvas>();
 			}
 
