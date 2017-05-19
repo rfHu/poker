@@ -5,6 +5,7 @@ using System;
 using DarkTonic.MasterAudio;
 using MaterialUI;
 using UniRx;
+using Extensions;
 
 //菜单弹出
 public class MenuPopup : MonoBehaviour {
@@ -115,7 +116,13 @@ public class MenuPopup : MonoBehaviour {
 	}
 
 	public void OnReserve() {
-		Connect.Shared.Emit("reserveseat");
+		Connect.Shared.Emit("reserveseat", success: (json) => {
+			var res = json.Dict("ret").Int("will_reserveseat");
+
+			if (res == 1) {
+				PokerUI.Toast("这手牌结束后进入留座离状态");
+			}
+		});
 		Close();
 	}
 

@@ -88,6 +88,14 @@ sealed public class Player {
 	public bool SeeCardAnim = false;
 
 	public ReactiveProperty<PlayerState> PlayerStat = new ReactiveProperty<PlayerState>();
+
+	public void SetState(int state) {
+		PlayerStat.Value = (PlayerState)state;
+
+		if (Uid == GameData.Shared.Uid) {
+			GameData.Shared.SelfState.Value = (PlayerState)state;
+		}
+	}
 	
 	public Player(Dictionary<string, object> json, int index) {
 		Name = json.String("name");
@@ -130,6 +138,9 @@ sealed public class Player {
 
 		var cards = json.IL("cards");
 		Cards.Value = cards;
+
+		var state = json.Int("gamer_state");
+		SetState(state);
 	}
 
 	public Player() {}
@@ -421,12 +432,7 @@ sealed public class GameData {
 
 		foreach (var player in Players) {
 			if (player.Value.Uid == uid) {
-				player.Value.PlayerStat.Value = (PlayerState)state;	
-
-				// 自己的状态保存一份
-				if (uid == Uid) {
-					SelfState.Value = (PlayerState)state;
-				}
+				player.Value.SetState(state);
 			}
 		}
 	}

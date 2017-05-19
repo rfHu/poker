@@ -86,11 +86,11 @@ public class PlayerObject : MonoBehaviour {
 
 		if (OPGo != null) {
 			Destroy(OPGo);
-			RxSubjects.TurnToMyAction.OnNext(false);
 			OPGo = null;
-			Circle.SetActive(true); // 显示头像
 		}
 
+		RxSubjects.TurnToMyAction.OnNext(false);
+		Circle.SetActive(true); // 显示头像
 		Avt.GetComponent<CircleMask>().Disable();
 	}
 
@@ -406,7 +406,7 @@ public class PlayerObject : MonoBehaviour {
 					MoveOut();
 
 					// 刚发了牌
-					if (dc == 1) {
+					if (dc == 1 || player.PlayerStat.Value == PlayerState.Hanging) {
 						setPlayerAct(false);
 					}
 				}
@@ -516,10 +516,12 @@ public class PlayerObject : MonoBehaviour {
 
 		RxSubjects.ShowAudio.Where(isSelf).Subscribe((jsonStr) => {
 			Volume.SetActive(true);
+			ScoreLabel.gameObject.SetActive(false);
 		}).AddTo(this);
 
 		RxSubjects.HideAudio.Where(isSelf).Subscribe((uid) => {
 			Volume.SetActive(false);
+			ScoreLabel.gameObject.SetActive(true);
 		}).AddTo(this);
 
 		RxSubjects.SendChat.Where(isSelf).Subscribe((jsonStr) => {
@@ -580,6 +582,9 @@ public class PlayerObject : MonoBehaviour {
 					HandGo.SetActive(true);
 					if (isSelf()) {
 						BackGameBtn.SetActive(true);
+						if (OPGo != null) {
+							Destroy(OPGo);
+						}
 					}
 					break;
 				case PlayerState.Reserve:
