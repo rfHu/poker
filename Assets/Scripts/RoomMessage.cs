@@ -12,6 +12,8 @@ public class RoomMessage : MonoBehaviour {
     public Text PauseText;
     private string pauseStr = "暂停牌局";
     private string continueStr = "继续牌局";
+    private string open = "开启";
+    private Color openColor = new Color(0.09375f, 1, 1);
 
     public Text OwnerName;
     public Text LeftTime;
@@ -65,34 +67,13 @@ public class RoomMessage : MonoBehaviour {
         Small.text = GameData.Shared.BankrollMul[0] * 100 + "BB";
         Large.text = GameData.Shared.BankrollMul[1] * 100 + "BB";
         ThinkTime.text = GameData.Shared.ThinkTime + "s";
-        if (GameData.Shared.NeedInsurance)
-        { 
-            Insurance.text = "开启";
-            Insurance.color = new Color(0.09375f, 1, 1);
-        }
-        if (GameData.Shared.Straddle.Value)
-        {
-            Straddle.text = "开启";
-            Straddle.color = new Color(0.09375f, 1, 1);
-        }
-        if (GameData.Shared.NeedAudit)
-        {
-            NeedAudit.text = "开启";
-            NeedAudit.color = new Color(0.09375f, 1, 1);
-        }
 
-        if (GameData.Shared.GPSLimit)
-        {
-            GPSMes.text = "开启";
-            GPSMes.color = new Color(0.09375f, 1, 1);
-        }
-
-        if (GameData.Shared.IPLimit)
-        {
-            IPMes.text = "开启";
-            IPMes.color = new Color(0.09375f, 1, 1);
-        }
-
+        setMesText(GameData.Shared.NeedInsurance, Insurance);
+        setMesText(GameData.Shared.Straddle.Value, Straddle);
+        setMesText(GameData.Shared.NeedAudit, NeedAudit);
+        setMesText(GameData.Shared.GPSLimit, GPSMes);
+        setMesText(GameData.Shared.IPLimit, IPMes);
+        
         if (GameData.Shared.Owner)
         {
             Buttons.SetActive(true);
@@ -100,6 +81,15 @@ public class RoomMessage : MonoBehaviour {
         }
 
 	}
+
+    private void setMesText(bool isOpen, Text text) 
+    {
+        if (isOpen)
+        {
+            text.text = open;
+            text.color = openColor;
+        }
+    }
 
     private void setText(Text go, String text)
     {
