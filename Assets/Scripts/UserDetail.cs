@@ -95,7 +95,7 @@ public class UserDetail : MonoBehaviour {
             }));
 
             // 金币数
-            Coins.text = achieve.coins;
+            Coins.text = _.Num2CnDigit<int>(int.Parse(achieve.coins));
             // 手数
             Hands.text = achieve.total_hand_count.ToString();
             // 入池率
