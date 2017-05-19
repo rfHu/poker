@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using System;
 using DarkTonic.MasterAudio;
 using MaterialUI;
+using UniRx;
 
 //菜单弹出
 public class MenuPopup : MonoBehaviour {
@@ -13,6 +14,7 @@ public class MenuPopup : MonoBehaviour {
 	public CanvasGroup SuppCG;
 	
 	private float originalVolume;
+	private float da = 0.4f;
 
 	public GameObject HangGo;
 	public GameObject ReserveGo;
@@ -43,6 +45,39 @@ public class MenuPopup : MonoBehaviour {
 			HangGo.SetActive(false);
 			ReserveGo.SetActive(false);
 		}
+
+		GameData.Shared.SelfState.Subscribe((state) => {
+			var hangCvg = HangGo.GetComponent<CanvasGroup>();
+			var reserveCvg = ReserveGo.GetComponent<CanvasGroup>();
+			var hangBtn = HangGo.GetComponent<Button>();
+			var reserveBtn = ReserveGo.GetComponent<Button>();
+			
+			hangCvg.alpha = 1;
+			reserveCvg.alpha = 1;
+			hangBtn.interactable = true;
+			reserveBtn.interactable = true;
+
+			switch(state) {
+				case PlayerState.Hanging: 	
+					hangCvg.alpha = da;
+					hangBtn.interactable = false;
+					break;
+				case PlayerState.Reserve: // 留座状态，托管可点
+					reserveCvg.alpha = da;
+					reserveBtn.interactable = false;
+					break;
+				case PlayerState.Normal: // 正常状态，已复原
+					break;
+				case PlayerState.Auditing: case PlayerState.Waiting: // 未带入记分牌，不可点
+					hangCvg.alpha = da;
+					hangBtn.interactable = false;
+					reserveCvg.alpha = da;
+					reserveBtn.interactable = false;
+					break;
+				default:
+					break;
+			}
+		}).AddTo(this);
 	}
 
 	public void Standup() {
