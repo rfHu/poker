@@ -67,29 +67,29 @@ public class RoomMessage : MonoBehaviour {
         ThinkTime.text = GameData.Shared.ThinkTime + "s";
         if (GameData.Shared.NeedInsurance)
         { 
-            Insurance.text = "启动";
+            Insurance.text = "开启";
             Insurance.color = new Color(0.09375f, 1, 1);
         }
         if (GameData.Shared.Straddle.Value)
         {
-            Straddle.text = "启动";
+            Straddle.text = "开启";
             Straddle.color = new Color(0.09375f, 1, 1);
         }
         if (GameData.Shared.NeedAudit)
         {
-            NeedAudit.text = "启动";
+            NeedAudit.text = "开启";
             NeedAudit.color = new Color(0.09375f, 1, 1);
         }
 
         if (GameData.Shared.GPSLimit)
         {
-            GPSMes.text = "启动";
+            GPSMes.text = "开启";
             GPSMes.color = new Color(0.09375f, 1, 1);
         }
 
         if (GameData.Shared.IPLimit)
         {
-            IPMes.text = "启动";
+            IPMes.text = "开启";
             IPMes.color = new Color(0.09375f, 1, 1);
         }
 
