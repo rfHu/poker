@@ -455,31 +455,34 @@ public class Controller : MonoBehaviour {
         }).AddTo(this);
 
         RxSubjects.Expression.Subscribe((e) => {
-            var seatIndex = e.Data.Int("seat");
             var expressionName = e.Data.String("expression");
-            var aimSeat = Seats[0];
-
-            foreach (var seat in Seats)
-            {
-                if (seat.GetComponent<Seat>().Index == seatIndex) 
-                {
-                    aimSeat = seat;
-                    break;
-                }
-            }
-
-            var player = aimSeat.transform.FindChild("Player(Clone)");
-            if (player.FindChild("Expression(Clone)") != null)
-                Destroy(player.FindChild("Expression(Clone)").gameObject);
+            var uid = e.Data.String("uid");
 
             var expression = (GameObject)GameObject.Instantiate(Resources.Load("Prefab/Expression"));
-            expression.transform.SetParent(player, false);
-            //expression.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
 
-            if (e.Data.String("uid") == GameData.Shared.Uid)
+            if (uid == GameData.Shared.Uid)
             {
-                expression.GetComponent<RectTransform>().anchoredPosition -= new Vector2(0,165);
+                var parent = ExpressionButton.transform;
+                SingleExpression(expression, parent);
             }
+            else
+            {
+                var seatIndex = e.Data.Int("seat");
+                var aimSeat = Seats[0];
+
+                foreach (var seat in Seats)
+                {
+                    if (seat.GetComponent<Seat>().Index == seatIndex)
+                    {
+                        aimSeat = seat;
+                        break;
+                    }
+                }
+
+                var player = aimSeat.transform.FindChild("Player(Clone)");
+                SingleExpression(expression, player);
+            }
+
             expression.transform.FindChild("Face").GetComponent<Animator>().SetTrigger(expressionName);
             Destroy(expression, 3f);
         }).AddTo(this);
@@ -641,6 +644,14 @@ public class Controller : MonoBehaviour {
              ExpressionButton.SetActive(action);
          }).AddTo(this);
 	}
+
+    private static void SingleExpression(GameObject expression, Transform parent)
+    {
+        if (parent.FindChild("Expression(Clone)") != null)
+            Destroy(parent.FindChild("Expression(Clone)").gameObject);
+
+        expression.transform.SetParent(parent, false);
+    }
 
 	private bool isGuest(string json) {
 		var N = JSON.Parse(json);
