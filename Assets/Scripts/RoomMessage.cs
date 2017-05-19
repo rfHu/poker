@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UniRx;
 using System;
 
+[RequireComponent(typeof(DOPopup))]
 public class RoomMessage : MonoBehaviour {
 
     public Text PauseText;
@@ -29,7 +30,7 @@ public class RoomMessage : MonoBehaviour {
 
     public GameObject Buttons;
 
-	void Awake () {
+	void Start () {
         GameData.Shared.Paused.Subscribe((pause) =>
         {
             if (pause && GameData.Shared.GameStarted)

@@ -116,10 +116,16 @@ public class MenuPopup : MonoBehaviour {
 
 	public void OnReserve() {
 		Connect.Shared.Emit("reserveseat");
+		Close();
 	}
 
 	public void OnHang() {
 		Connect.Shared.Emit("hang");
+		Close();
+	}
+
+	public void Close() {
+		GetComponent<DOPopup>().Close();
 	}
 
 	private void setVolumeImage(string icon) {
