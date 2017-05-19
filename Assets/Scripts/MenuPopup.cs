@@ -14,6 +14,9 @@ public class MenuPopup : MonoBehaviour {
 	
 	private float originalVolume;
 
+	public GameObject HangGo;
+	public GameObject ReserveGo;
+
 	public void Supplement() {
 		if (!GameData.MyCmd.Takecoin) {
 			return ;
@@ -21,7 +24,7 @@ public class MenuPopup : MonoBehaviour {
 		RxSubjects.TakeCoin.OnNext(new RxData());	
 	}
 
-	void Start()
+	void Awake()
 	{
 		if (GameData.MyCmd.Unseat) {
 			StandCG.alpha = 1;
@@ -33,6 +36,12 @@ public class MenuPopup : MonoBehaviour {
 
 		if (GameData.Shared.muted) {
 			setVolumeImage("volume_off");
+		}
+
+		// 还未坐下
+		if (!GameData.MyCmd.Unseat) {
+			HangGo.SetActive(false);
+			ReserveGo.SetActive(false);
 		}
 	}
 
@@ -68,6 +77,14 @@ public class MenuPopup : MonoBehaviour {
         var tip = (GameObject)Instantiate(Resources.Load("Prefab/Explain"));
 		tip.GetComponent<DOPopup>().Show();
 		gameObject.GetComponent<DOPopup>().ImmediateClose();
+	}
+
+	public void OnReserve() {
+		Connect.Shared.Emit("reserveseat");
+	}
+
+	public void OnHang() {
+		Connect.Shared.Emit("hang");
 	}
 
 	private void setVolumeImage(string icon) {

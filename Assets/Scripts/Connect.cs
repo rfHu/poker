@@ -112,6 +112,15 @@ public sealed class Connect  {
 		GameData.Shared.Pin = token.String("pin");
 	}
 
+	public void Emit(String rpc, Dictionary<string, object> args = null, Action<Dictionary<string, object>> success = null, Action error = null, int timeout = 5) {
+		var dict = new Dictionary<string, object>{
+			{"f", rpc},
+			{"args", args}
+		};
+
+		Emit(dict, success, error, timeout);
+	}
+
 	public void Emit(Dictionary<string, object> json, Action<Dictionary<string, object>> success = null, Action error = null, int timeout = 5) {
 		if (manager.State != BestHTTP.SocketIO.SocketManager.States.Open) {
 			return ;
@@ -386,7 +395,7 @@ public sealed class Connect  {
                     RxSubjects.Expression.OnNext(rxdata);
                     break;
 				case "gamer_hang":
-					RxSubjects.Hang.OnNext(rxdata);
+					RxSubjects.GamerState.OnNext(rxdata);
 					break;
 				default:
 					break;

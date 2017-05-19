@@ -15,12 +15,13 @@ public enum ActionState {
 	Raise = 5
 }
 
+// 1、带入中，2、审核中，3、游戏中，4、留座中，5、托管中
 public enum PlayerState {
-	Waiting,
+	Waiting = 1,
 	Auditing,
 	Normal,
-	Hanging,
-	Reserve
+	Reserve,
+	Hanging
 }
 
 public class AutoDeposit {
@@ -403,6 +404,31 @@ sealed public class GameData {
 			var value = Math.Max(0, LeftTime.Value - 1);
 			LeftTime.Value = value;
 		});
+
+		RxSubjects.GamerState.Subscribe((e) => {
+			var uid = e.Data.String("uid");
+			var state = e.Data.Int("state");
+
+			setState(uid, state);	
+		});
+	}
+
+	private void setState(string uid, int state) {
+		// 1、带入中，2、审核中，3、游戏中，4、留座中，5、托管中，0、已离座
+		if (state == 0) {
+			return ;
+		}
+
+		foreach (var player in Players) {
+			if (player.Value.Uid == uid) {
+				player.Value.PlayerStat.Value = (PlayerState)state;	
+
+				// 自己的状态保存一份
+				if (uid == Uid) {
+					SelfState.Value = (PlayerState)state;
+				}
+			}
+		}
 	}
    
 	private void setPbCards(List<int> list, int state) {
@@ -436,6 +462,8 @@ sealed public class GameData {
 
 	// 当前的思考时间
 	public int ThinkTime = 15;
+
+	public ReactiveProperty<PlayerState> SelfState = new ReactiveProperty<PlayerState>();  
 
 	public bool Owner = false;
     public string OwnerName;

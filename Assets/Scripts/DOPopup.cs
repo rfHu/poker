@@ -2,6 +2,8 @@
 using DG.Tweening;
 using System;
 using UnityEngine.UI;
+using UniRx;
+using System.Collections;
 
 public enum AnimType {
 	Up2Down,
@@ -27,21 +29,19 @@ public class DOPopup : MonoBehaviour {
 	public Vector2 StartPosition;
 	public Vector2 EndPosition;
 
-	void Awake()
-    {
-        var rectTrans = GetComponent<RectTransform>();
+	private static DOPopup instance;
+
+	void Awake() {
+		gameObject.SetActive(false);
+	}
+
+	public void AutoFit() {
+		 var rectTrans = GetComponent<RectTransform>();
 
 		switch(Animate) {
 			case AnimType.Up2Down:
-				var fitter = GetComponent<ContentSizeFitter>();
 				var height = rectTrans.rect.height;
-
-				if (fitter != null && fitter.verticalFit == ContentSizeFitter.FitMode.PreferredSize) {
-					height = GetComponent<VerticalLayoutGroup>().preferredHeight;
-				} 
-
-				startPosition = new Vector2(0, rectTrans.rect.height);
-
+				startPosition = new Vector2(0, height);
 				break;
 			case AnimType.Left2Right:
 				startPosition = new Vector2(-rectTrans.rect.width, 0);
@@ -65,19 +65,10 @@ public class DOPopup : MonoBehaviour {
 		rectTrans.anchoredPosition = startPosition;
 	}
 
-	private static DOPopup instance;
-	
-	public void Show(Action close = null, bool modal = true, bool singleton = true) {
-		if (hasShow) {
-			return ;
-		}
+	IEnumerator  startAnimation(Action close = null, bool modal = true, bool singleton = true) {
+		yield return new WaitForFixedUpdate();
 
-		if (instance != null && instance != this && singleton) {
-			instance.Close();
-		}
-
-		hasShow = true;
-
+		AutoFit();
 		transform.SetParent(G.DialogCvs.transform, false);
 
 		if (modal) {
@@ -102,12 +93,25 @@ public class DOPopup : MonoBehaviour {
 				break;
 		}
 
-		gameObject.SetActive(true);
-
 		// 保存起来，singleton只允许出现一个
 		if (singleton) {
 			instance = this;
 		}
+	}
+	
+	public void Show(Action close = null, bool modal = true, bool singleton = true) {
+		if (hasShow) {
+			return ;
+		}
+
+		if (instance != null && instance != this && singleton) {
+			instance.Close();
+		}
+
+		hasShow = true;
+
+		gameObject.SetActive(true);
+		StartCoroutine(startAnimation(close, modal, singleton));
 	}
 
 	public void ImmediateClose() {
