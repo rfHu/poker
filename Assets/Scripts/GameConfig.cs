@@ -89,11 +89,21 @@ sealed public class Player {
 
 	public ReactiveProperty<PlayerState> PlayerStat = new ReactiveProperty<PlayerState>();
 
-	public void SetState(int state) {
-		PlayerStat.Value = (PlayerState)state;
+	public ReactiveProperty<int> ReservedCD = new ReactiveProperty<int>(); 
+
+	public void SetState(int state, int cd = 0) {
+		var st = (PlayerState)state;
+		PlayerStat.Value = st;
 
 		if (Uid == GameData.Shared.Uid) {
-			GameData.Shared.SelfState.Value = (PlayerState)state;
+			GameData.Shared.SelfState.Value = st;
+		}
+
+		// 状态改变时，每次都先重置该值为0
+		ReservedCD.Value = 0;
+
+		if (st == PlayerState.Reserve) {
+			ReservedCD.Value = cd;
 		}
 	}
 	
@@ -140,7 +150,8 @@ sealed public class Player {
 		Cards.Value = cards;
 
 		var state = json.Int("gamer_state");
-		SetState(state);
+		var ucd = json.Int("unseat_countdown");
+		SetState(state, ucd);
 	}
 
 	public Player() {}
@@ -419,12 +430,12 @@ sealed public class GameData {
 		RxSubjects.GamerState.Subscribe((e) => {
 			var uid = e.Data.String("uid");
 			var state = e.Data.Int("state");
-
-			setState(uid, state);	
+			var ucd = e.Data.Int("unseat_countdown");
+			setState(uid, state, ucd);	
 		});
 	}
 
-	private void setState(string uid, int state) {
+	private void setState(string uid, int state, int cd) {
 		// 1、带入中，2、审核中，3、游戏中，4、留座中，5、托管中，0、已离座
 		if (state == 0) {
 			return ;
@@ -432,7 +443,7 @@ sealed public class GameData {
 
 		foreach (var player in Players) {
 			if (player.Value.Uid == uid) {
-				player.Value.SetState(state);
+				player.Value.SetState(state, cd);
 			}
 		}
 	}

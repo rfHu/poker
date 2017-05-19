@@ -572,7 +572,9 @@ public class PlayerObject : MonoBehaviour {
 		player.PlayerStat.Subscribe((state) => {
 			HandGo.SetActive(false);
 			BackGameBtn.SetActive(false);
-			StateLabel.transform.parent.gameObject.SetActive(false);
+
+			var stateGo = StateLabel.transform.parent.gameObject;
+			stateGo.SetActive(false);
 
 			switch(state) {
 				case PlayerState.Waiting: case PlayerState.Auditing:
@@ -588,8 +590,7 @@ public class PlayerObject : MonoBehaviour {
 					}
 					break;
 				case PlayerState.Reserve:
-					setStateLabel("留座\n<b>120s</b>");
-
+					stateGo.SetActive(true);	
 					if (isSelf()) {
 						BackGameBtn.SetActive(true);
 					}
@@ -598,10 +599,26 @@ public class PlayerObject : MonoBehaviour {
 					break;
 			}
 		}).AddTo(this);
+
+		IDisposable reserveCd = null; 
+		player.ReservedCD.Subscribe((value) => {
+			if (reserveCd != null) {
+				reserveCd.Dispose();
+			}
+
+			if (value > 0) {
+				setReserveCd(value);
+
+				reserveCd = Observable.Interval(TimeSpan.FromSeconds(1)).Subscribe((_) => {
+					value = Mathf.Max(value - 1, 1);
+					setReserveCd(value);
+				}).AddTo(this);
+			}
+		}).AddTo(this);
 	}
 
-	private void setStateLabel(string text) {
-		StateLabel.transform.parent.gameObject.SetActive(true);
+	private void setReserveCd(int number) {
+		var text = String.Format("留座<b>{0}s</b>", number);
 		StateLabel.text = text;
 	}
 
