@@ -36,12 +36,12 @@ public class DOPopup : MonoBehaviour {
 	}
 
 	public void AutoFit() {
-		 var rectTrans = GetComponent<RectTransform>();
+		var rectTrans = GetComponent<RectTransform>();
+        endPosition = new Vector2(0, 0);
 
 		switch(Animate) {
 			case AnimType.Up2Down:
-				var height = rectTrans.rect.height;
-				startPosition = new Vector2(0, height);
+				startPosition = new Vector2(0, rectTrans.rect.height);
 				break;
 			case AnimType.Left2Right:
 				startPosition = new Vector2(-rectTrans.rect.width, 0);
@@ -51,17 +51,12 @@ public class DOPopup : MonoBehaviour {
 				break; 
 			case AnimType.Custom:
 				startPosition = StartPosition;
+				endPosition = EndPosition;			
 				break; 
 			default:
 				return;
 		}
-
-		if (Animate == AnimType.Custom) {
-			endPosition = EndPosition;			
-		} else {
-			endPosition = new Vector2(0, 0);
-		}
-
+		
 		rectTrans.anchoredPosition = startPosition;
 	}
 
