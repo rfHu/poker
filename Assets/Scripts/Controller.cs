@@ -121,7 +121,7 @@ public class Controller : MonoBehaviour {
 		float height = G.UICvs.GetComponent<RectTransform>().rect.height;
 
 		float top = height - TopMargin;
-		float bottom = TopMargin; 
+		float bottom = TopMargin + 20; 
 		float right = width / 2 - 100;
 		float left = -width / 2 + 100; 
 
