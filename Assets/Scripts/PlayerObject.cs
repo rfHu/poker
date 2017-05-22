@@ -44,6 +44,7 @@ public class PlayerObject : MonoBehaviour {
     private float hideDuration = 0.3f; 
 	private ActionState lastState;
 	private bool gameover = false;
+	private int actCardsNumber = 0;
 
 	public Text CardDesc;
 	public Text OthersCardDesc;
@@ -89,7 +90,10 @@ public class PlayerObject : MonoBehaviour {
 			OPGo = null;
 		}
 
-		RxSubjects.TurnToMyAction.OnNext(false);
+		if (isSelf()) {
+			RxSubjects.TurnToMyAction.OnNext(false);
+		}
+
 		Circle.SetActive(true); // 显示头像
 		Avt.GetComponent<CircleMask>().Disable();
 	}
@@ -336,6 +340,8 @@ public class PlayerObject : MonoBehaviour {
 
 			lastState = e;
 			dealAct(e);
+
+			actCardsNumber = GameData.Shared.PublicCards.Count;	
 		}).AddTo(this);
 
 		player.Destroyed.AsObservable().Where((v) => v).Subscribe((_) => {
@@ -406,7 +412,7 @@ public class PlayerObject : MonoBehaviour {
 					MoveOut();
 
 					// 刚发了牌
-					if (dc == 1 || player.PlayerStat.Value == PlayerState.Hanging) {
+					if (dc == 1 || GameData.Shared.PublicCards.Count != actCardsNumber) {
 						setPlayerAct(false);
 					}
 				}
