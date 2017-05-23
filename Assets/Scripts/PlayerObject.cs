@@ -155,7 +155,7 @@ public class PlayerObject : MonoBehaviour {
 		}
 
 		NameLabel.text = player.Name;
-		ScoreLabel.text = player.Bankroll.ToString();
+		ScoreLabel.text = _.Num2CnDigit<int>(player.Bankroll.Value);
 		Avt.GetComponent<Avatar>().SetImage(player.Avatar);	
 
 		GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
@@ -307,7 +307,7 @@ public class PlayerObject : MonoBehaviour {
 		}).AddTo(this);
 
 		player.Bankroll.Subscribe((value) => {
-			ScoreLabel.text = value.ToString();
+			ScoreLabel.text = _.Num2CnDigit(value);
 		}).AddTo(this);
 
 		player.ActState.AsObservable().Subscribe((e) => {
@@ -498,7 +498,7 @@ public class PlayerObject : MonoBehaviour {
 				} else if (num == -1) {
 					text.text = "全下";
 				} else if (num > 0) {
-					text.text = String.Format("跟注\n<size=36>{0}</size>", num);
+					text.text = String.Format("跟注\n<size=40>{0}</size>", _.Num2CnDigit<int>(num));
 				}
 
 				var flag = player.Trust.FlagString();

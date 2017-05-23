@@ -78,7 +78,7 @@ public class OP : MonoBehaviour {
 			CallGo.GetComponent<Button>().onClick.AddListener(() => {
 				OPS.Call();
 			});
-			CallNumber.text = callNum.ToString();
+			CallNumber.text = _.Num2CnDigit(callNum);
 		} else { // 不能跟注、不能看牌，展示灰掉的看牌按钮
 			CallGo.SetActive(false);
 			CheckGo.SetActive(true);
@@ -221,7 +221,7 @@ public class OP : MonoBehaviour {
 
 	private void addProperty(GameObject go, string text, int value) {
 		go.transform.Find("Text").GetComponent<Text>().text = text;
-		go.transform.Find("Number").GetComponent<Text>().text = value.ToString();
+		go.transform.Find("Number").GetComponent<Text>().text = _.Num2CnDigit(value);
 		go.GetComponent<Button>().onClick.AddListener(() => {
 			OPS.raise(value);
 		});

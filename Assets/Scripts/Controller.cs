@@ -464,6 +464,9 @@ public class Controller : MonoBehaviour {
             {
                 var parent = ExpressionButton.transform;
                 SingleExpression(expression, parent);
+
+				// 隐藏按钮
+				findExpCvg().alpha = 0;
             }
             else
             {
@@ -484,7 +487,13 @@ public class Controller : MonoBehaviour {
             }
 
             expression.transform.FindChild("Face").GetComponent<Animator>().SetTrigger(expressionName);
-            Destroy(expression, 3f);
+           
+			Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe((_) => {
+				Destroy(expression);
+				if (uid == GameData.Shared.Uid) {
+					findExpCvg().alpha = 1; // 显示按钮
+				}
+			}).AddTo(this);
         }).AddTo(this);
 
 		RxSubjects.ShowAudio.Where(isGuest).Subscribe((json) => {
@@ -643,6 +652,10 @@ public class Controller : MonoBehaviour {
          {
              ExpressionButton.SetActive(action);
          }).AddTo(this);
+	}
+
+	private CanvasGroup findExpCvg() {
+		return ExpressionButton.transform.Find("Btn").GetComponent<CanvasGroup>();
 	}
 
     private static void SingleExpression(GameObject expression, Transform parent)
