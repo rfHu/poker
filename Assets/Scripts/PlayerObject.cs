@@ -323,6 +323,7 @@ public class PlayerObject : MonoBehaviour {
 				case ActionState.Allin:
 					if (player.ActStateTrigger) {
 						MasterAudio.PlaySound("allin_boy");
+						MasterAudio.PlaySound("allin");
 					}
 					break;
 				case ActionState.Raise:

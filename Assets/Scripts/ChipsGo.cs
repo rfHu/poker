@@ -67,7 +67,7 @@ public class ChipsGo : MonoBehaviour {
 		transform.SetParent(G.UICvs.transform, true);
 		
 		var rect = GetComponent<RectTransform>();
-		rect.DOAnchorPos(new Vector2(-80, 250), 0.4f)
+		rect.DOAnchorPos(new Vector2(-80, 350), 0.4f)
 		.OnComplete(() => {
 			Destroy(gameObject);
 		});
