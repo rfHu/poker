@@ -72,8 +72,19 @@ public class PlayerObject : MonoBehaviour {
 		MyCards.SetActive(true);
 
 		var state = player.SeeCardAnim;
+
 		first.GetComponent<Card>().Show(cards[0], state);
-		second.GetComponent<Card>().Show(cards[1], state);
+		if (state) {
+			MasterAudio.PlaySound("fapai_1");
+		}
+
+		Observable.Timer(TimeSpan.FromSeconds(0.3)).Subscribe((_) => {
+			second.GetComponent<Card>().Show(cards[1], state);
+
+			if (state) {
+				MasterAudio.PlaySound("fapai_1");
+			}
+		}).AddTo(this);
 	}
 
 	public void MoveOut() {
