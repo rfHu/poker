@@ -7,11 +7,11 @@ using System.Collections;
 
 public enum AnimType {
 	Up2Down,
-	Down2Up,
 	Left2Right,
 	Right2Left,
 	Popup,
-	Custom
+	Custom,
+	Down2Up,
 }
 
 [RequireComponent(typeof(CanvasGroup))]
