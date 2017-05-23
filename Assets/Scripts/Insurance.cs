@@ -158,6 +158,10 @@ public class Insurance : MonoBehaviour {
             myCoroutine = Timer(model.total);
             StartCoroutine(myCoroutine);
         }).AddTo(this);
+
+        RxSubjects.Look.Subscribe((e) => {
+            GetComponent<DOPopup>().Close();
+        }).AddTo(this);
     }
 
     private void SetCASlider()
