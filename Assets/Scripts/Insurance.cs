@@ -11,18 +11,19 @@ using UnityEngine.UI.ProceduralImage;
 public class Insurance : MonoBehaviour {
     public Text Pot;
     public Text CountDown;
+    public Text AllinTitle;
     public GameObject AllinPlayer;
     public List<Card> PublicCards;
     public Text Odds;
     public Text SelectNum;
-    public GameObject Card;
+    public GameObject OutsCard;
     public Text SumInsured;
     public Text ClaimAmount;
     public Text InputValue;
     public Text AutoPurchase;
     public Slider CASlider;
     public CButton BuyButton;
-    public CButton ExitButton;
+    public Button ExitButton;
     public CButton EqualButton;
     public CButton BreakEventButton;
     public Toggle CheckAllToggle;
@@ -30,7 +31,8 @@ public class Insurance : MonoBehaviour {
     public RectTransform PlayerList;
     public RectTransform MidPart;
     public Text TotalSupass;
-    public GameObject Countdown;
+    public List<Card> MyCards;
+    public Text CardDesc;
 
     int cost;
     List<int> scope;
@@ -81,10 +83,22 @@ public class Insurance : MonoBehaviour {
         setupPbCards();
         setupOutsCards();
 
-        addEvents();        
+        addEvents();
+
+        var myPlayer = GameData.Shared.GetMyPlayer();
+
+        for (int i = 0; i < MyCards.Count; i++)
+        {
+            MyCards[i].Show(myPlayer.Cards.Value[i]);
+        }
+
+        CardDesc.text = Card.GetCardDesc(GameData.Shared.MaxFiveRank.Value);
     }
 
     private void setupAllinPlayers() {
+
+        AllinTitle.text = "落后玩家(" + allinPlayers.Count + ")";
+
         foreach (var obj in allinPlayers)
         {
             var data = obj as Dictionary<string, object>;
@@ -113,9 +127,9 @@ public class Insurance : MonoBehaviour {
     private void setupOutsCards() {
         foreach (var cardNum in outsCardArray)
         {
-            var card = Instantiate(Card);
+            var card = Instantiate(OutsCard);
             card.SetActive(true);
-            card.transform.SetParent(Card.transform.parent,false);
+            card.transform.SetParent(OutsCard.transform.parent,false);
             card.GetComponent<Card>().Show(cardNum);
             OUTSCards.Add(card.GetComponent<Toggle>());
 
@@ -356,19 +370,12 @@ public class Insurance : MonoBehaviour {
 
     private IEnumerator Timer(float time) 
     {
-        
-        Countdown.GetComponent<Animator>().SetTrigger("1");
-        Countdown.GetComponent<Animator>().speed = 1 / time;
-
         float wholeTime = time;
-        var length = Countdown.GetComponent<Scrollbar>();
 
         while (time > 0)
         {
             time = time - Time.deltaTime;
-            CountDown.text = ((int)time).ToString();
-
-            length.size = time / wholeTime;
+            CountDown.text = ((int)time).ToString() + "s";
 
             yield return new WaitForFixedUpdate();
         }
