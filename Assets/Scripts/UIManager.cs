@@ -19,6 +19,10 @@ public class UIManager : MonoBehaviour {
 			return ;
 		}
 
+		if (gesture.swipeLength < 50) {
+			return ;
+		}
+
 		var cvs = go.GetComponentInParent<Canvas>();
 
 		if (cvs == null) {
@@ -39,6 +43,8 @@ public class UIManager : MonoBehaviour {
 			OnShowRecalls();
 		} else if (gesture.swipe == EasyTouch.SwipeDirection.Right) {
 			ScorePage();
+		} else if (gesture.swipe == EasyTouch.SwipeDirection.Up) {
+			OnClickExpressionPage();
 		}
 	}
 
