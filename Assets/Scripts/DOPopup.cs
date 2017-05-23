@@ -7,6 +7,7 @@ using System.Collections;
 
 public enum AnimType {
 	Up2Down,
+	Down2Up,
 	Left2Right,
 	Right2Left,
 	Popup,
@@ -43,6 +44,9 @@ public class DOPopup : MonoBehaviour {
 			case AnimType.Up2Down:
 				startPosition = new Vector2(0, rectTrans.rect.height);
 				break;
+			case AnimType.Down2Up:
+				startPosition = new Vector2(0, -rectTrans.rect.height);
+				break; 
 			case AnimType.Left2Right:
 				startPosition = new Vector2(-rectTrans.rect.width, 0);
 				break;
@@ -80,7 +84,7 @@ public class DOPopup : MonoBehaviour {
 		}
 
 		switch(Animate) {
-			case AnimType.Up2Down: case AnimType.Left2Right: case AnimType.Right2Left: case AnimType.Custom:
+			case AnimType.Up2Down: case AnimType.Left2Right: case AnimType.Right2Left: case AnimType.Custom: case AnimType.Down2Up:
 				GetComponent<RectTransform>().DOAnchorPos(endPosition, duration);
 				break;
 			case AnimType.Popup: 
@@ -126,7 +130,7 @@ public class DOPopup : MonoBehaviour {
         Tween tween = null;
 
 		switch(Animate) {
-			case AnimType.Up2Down: case AnimType.Left2Right: case AnimType.Right2Left: case AnimType.Custom:
+			case AnimType.Up2Down: case AnimType.Left2Right: case AnimType.Right2Left: case AnimType.Custom: case AnimType.Down2Up:
 				tween = GetComponent<RectTransform>().DOAnchorPos(startPosition, duration);
 				break;
 			case AnimType.Popup:
