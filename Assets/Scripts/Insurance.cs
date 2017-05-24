@@ -22,7 +22,7 @@ public class Insurance : MonoBehaviour {
     public Text InputValue;
     public Text AutoPurchase;
     public Slider CASlider;
-    public CButton BuyButton;
+    public Button BuyButton;
     public Button ExitButton;
     public CButton EqualButton;
     public CButton BreakEventButton;
@@ -33,6 +33,7 @@ public class Insurance : MonoBehaviour {
     public Text TotalSupass;
     public List<Card> MyCards;
     public Text CardDesc;
+    public Text BuyButtonNum;
 
     int cost;
     List<int> scope;
@@ -246,6 +247,7 @@ public class Insurance : MonoBehaviour {
     {
         SumInsured.text = (CASlider.value).ToString();
         ClaimAmount.text = claimAmountValue.ToString();
+        BuyButtonNum.text = CASlider.value.ToString();
     }
 
     private void DependOnClaimAmount() {
