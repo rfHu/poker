@@ -19,7 +19,7 @@ public class UIManager : MonoBehaviour {
 			return ;
 		}
 
-		if (gesture.swipeLength < 50) {
+		if (gesture.swipeLength < 200) {
 			return ;
 		}
 
