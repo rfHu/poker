@@ -129,6 +129,7 @@ public class PlayerObject : MonoBehaviour {
         if (isSelf() && GameData.Shared.MySeat == -1)
         {
             RxSubjects.Seating.OnNext(false);
+			RxSubjects.TurnToMyAction.OnNext(false);
         }
 	}
 
