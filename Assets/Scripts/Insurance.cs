@@ -300,23 +300,9 @@ public class Insurance : MonoBehaviour {
 
     public void Exit() 
     {
-        if (!mustBuy)
-        {
-            Connect.Shared.Emit(new Dictionary<string, object>() { 
-                {"f", "noinsurance"},
-            });
-        } else {
-            var data = new Dictionary<string, object>(){
-                {"outs", selectedCards},
-                {"amount", CASlider.minValue},
-            };
-
-            Connect.Shared.Emit(new Dictionary<string, object>() {
-				{"f", "insurance"},
-                {"args", data}
-			});
-        }
-
+        Connect.Shared.Emit(new Dictionary<string, object>() { 
+            {"f", "noinsurance"},
+        });
         GetComponent<DOPopup>().Close();
     }
 
@@ -383,6 +369,6 @@ public class Insurance : MonoBehaviour {
             yield return new WaitForFixedUpdate();
         }
 
-        Exit();
+        GetComponent<DOPopup>().Close();
     }
 }

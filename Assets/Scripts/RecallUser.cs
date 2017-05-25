@@ -5,6 +5,7 @@ using Extensions;
 using UnityEngine.UI.ProceduralImage;
 
 public class RecallUser : MonoBehaviour {
+    public Text PlayerName;
 	public RawImage Avatar;
 	public Text Score;
 	public GameObject[] Cards;
@@ -32,7 +33,8 @@ public class RecallUser : MonoBehaviour {
 		} else {
 			MaxFive.gameObject.SetActive(false);
 		}
-		
+
+        PlayerName.text = dict.String("name");
 		ShowAvatar(dict.String("avatar"));
 
 		var earn = dict.Int("coin") - dict.Int("chips");
@@ -61,6 +63,12 @@ public class RecallUser : MonoBehaviour {
             if (ActionsText[i].text != "" && actNum != 0)
             {
                 ActionsText[i].text += actNum;
+            }
+
+            var insuranceNum = actDict.Int("in_amount");
+            if (insuranceNum > 0)
+            {
+                ActionsText[i].transform.FindChild("InsuranceNum").GetComponent<Text>().text = "投保" + insuranceNum;
             }
         }
 	}

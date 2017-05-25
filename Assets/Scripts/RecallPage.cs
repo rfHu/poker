@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using Extensions;
 
 public class RecallPage : MonoBehaviour {
+    public Text SBBB;
 	public List<Card> Cards;
 	public GameObject Rect;
 	public GameObject LeftIndicator;
@@ -22,6 +23,9 @@ public class RecallPage : MonoBehaviour {
 
 	void Awake()
 	{
+        _.Log("1");
+        SBBB.text = GameData.Shared.SB + "/" + GameData.Shared.BB;
+
 		request();
 
         Collect.onValueChanged.AddListener(delegate(bool isOn) { 
@@ -65,17 +69,6 @@ public class RecallPage : MonoBehaviour {
 
 		var comCards = ret.Dict("community").IL("cards");
 		
-		// 公共牌
-		for (int i = 0; i < 5; i++) {
-
-            Cards[i].Turnback();
-
-            if (i < comCards.Count)
-            {
-
-            }
-		}
-		
 		var list = ret.List("list");
 		foreach(object entry in list) {
 			var dict = entry as Dictionary<string, object>;
@@ -89,7 +82,7 @@ public class RecallPage : MonoBehaviour {
 
             if (user.PublicCardNum >1)
             {
-                for (int i = 0; i < user.PublicCardNum + 1; i++)
+                for (int i = 0; i < user.PublicCardNum + 1 && i < comCards.Count; i++)
                 {
                     var card = Instantiate(Cards[i].gameObject);
                     card.GetComponent<Card>().Show(comCards[i]);
