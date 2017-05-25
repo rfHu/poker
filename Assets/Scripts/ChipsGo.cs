@@ -97,14 +97,14 @@ public class ChipsGo : MonoBehaviour {
 	}
 
 	private Vector2 getVector(SeatPosition pos) {
-		var vector = new Vector2(120, 20);
+		var vector = new Vector2(136, 20);
 
 		if (pos == SeatPosition.Right) {
-			vector = new Vector2(-120, 20);
+			vector = new Vector2(-136, 20);
 		} else if (pos == SeatPosition.Top || pos == SeatPosition.TopLeft || pos == SeatPosition.TopRight) {
 			vector = new Vector2(0, -180);
 		} else if (pos == SeatPosition.Bottom) {
-			vector = new Vector2(120, 0);
+			vector = new Vector2(136, 0);
 		}
 
 		return vector;

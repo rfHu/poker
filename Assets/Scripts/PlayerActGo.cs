@@ -34,10 +34,10 @@ public class PlayerActGo: MonoBehaviour {
 
         if (pos == SeatPosition.Left || pos == SeatPosition.TopRight) {
             tab.rotation = Quaternion.Euler(new Vector2(0, 180));
-            rect.anchoredPosition = new Vector2(80, -54);
+            rect.anchoredPosition = new Vector2(64, -48);
         } else {
             tab.rotation = Quaternion.Euler(new Vector2(0, 0));       
-            rect.anchoredPosition = new Vector2(-80, -54);        
+            rect.anchoredPosition = new Vector2(-64, -48);        
         }
     }
 
