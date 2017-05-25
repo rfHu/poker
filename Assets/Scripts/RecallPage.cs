@@ -4,8 +4,7 @@ using UnityEngine.UI;
 using Extensions;
 
 public class RecallPage : MonoBehaviour {
-	public Text Owner;
-	public GameObject Cards;
+	public List<Card> Cards;
 	public GameObject Rect;
 	public GameObject LeftIndicator;
 	public GameObject RightIndicator;
@@ -37,7 +36,7 @@ public class RecallPage : MonoBehaviour {
 
 		Connect.Shared.Emit(
 			new Dictionary<string, object>() {
-				{"f", "handresult"},
+				{"f", "playback"},
 				{"args", dict}
 			},
 			(json) => {
@@ -59,28 +58,22 @@ public class RecallPage : MonoBehaviour {
 		totalNumber = ret.Int("total_hand");
 		currentNumber = ret.Int("cur_hand");
 
-		Owner.text = "牌局回顾";
-		// Owner.text = string.Format("{0}（{1}）", GameData.Shared.RoomName, GameData.Shared.StartTime.ToString("yyyy-MM-dd")); 
 		Current.text = currentNumber.ToString();
 		Total.text =  string.Format("/ {0}", totalNumber);
 
-		Cards.transform.Clear();
 		Rect.transform.Clear();
 
 		var comCards = ret.Dict("community").IL("cards");
 		
 		// 公共牌
 		for (int i = 0; i < 5; i++) {
-			var go = (GameObject)Instantiate(Resources.Load("Prefab/Card"));
-			var card = go.GetComponent<Card>();
-			card.SetSize(new Vector2(87, 125));
 
-			if (i < comCards.Count) {
-				card.Show(comCards[i]);
-			}
- 			
-			go.transform.SetParent(Cards.transform, false);
+            Cards[i].Turnback();
 
+            if (i < comCards.Count)
+            {
+
+            }
 		}
 		
 		var list = ret.List("list");
@@ -93,6 +86,16 @@ public class RecallPage : MonoBehaviour {
 			var user = Instantiate(UserGo).GetComponent<RecallUser>();
 			user.gameObject.SetActive(true);
 			user.Show(dict);
+
+            if (user.PublicCardNum >1)
+            {
+                for (int i = 0; i < user.PublicCardNum + 1; i++)
+                {
+                    var card = Instantiate(Cards[i].gameObject);
+                    card.GetComponent<Card>().Show(comCards[i]);
+                    card.transform.SetParent(user.transform, false);
+                }
+            }
 			user.transform.SetParent(Rect.transform, false);
 		}
 

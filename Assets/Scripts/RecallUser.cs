@@ -6,11 +6,16 @@ using UnityEngine.UI.ProceduralImage;
 
 public class RecallUser : MonoBehaviour {
 	public RawImage Avatar;
-	public Text Name;
 	public Text Score;
 	public GameObject[] Cards;
-	public ProceduralImage ProceImage;
-	public GameObject MaxFive;
+	public Text MaxFive;
+    public Text[] ActionsText;
+    private int publicCardNum;
+
+    public int PublicCardNum
+    {
+        get { return publicCardNum; }
+    }
 	
 	public void Show(Dictionary<string, object> dict) {
 		var uid = dict.String("uid");
@@ -22,14 +27,13 @@ public class RecallUser : MonoBehaviour {
 
 		var cardDesc = Card.GetCardDesc(dict.Int("maxFiveRank"));
 		if (!string.IsNullOrEmpty(cardDesc)) {
-			MaxFive.SetActive(true);
-			MaxFive.transform.Find("Text").GetComponent<Text>().text = cardDesc;
+			MaxFive.gameObject.SetActive(true);
+			MaxFive.text = cardDesc;
 		} else {
-			MaxFive.SetActive(false);
+			MaxFive.gameObject.SetActive(false);
 		}
 		
 		ShowAvatar(dict.String("avatar"));
-		Name.text = dict.String("name");
 
 		var earn = dict.Int("coin") - dict.Int("chips");
 		Score.text = earnStr(earn);
@@ -42,6 +46,23 @@ public class RecallUser : MonoBehaviour {
 
 		Cards[0].GetComponent<Card>().Show(cards[0]);
 		Cards[1].GetComponent<Card>().Show(cards[1]);
+
+
+        var actions = dict.List("action");
+        publicCardNum = actions.Count;
+
+        for (int i = 0; i < actions.Count; i++)
+        {
+            ActionsText[i].gameObject.SetActive(true);
+
+            var actDict = actions[i] as Dictionary<string, object>;
+            ActionsText[i].text = actDict.String("act");
+            var actNum = actDict.Int("num");
+            if (ActionsText[i].text != "" && actNum != 0)
+            {
+                ActionsText[i].text += actNum;
+            }
+        }
 	}
 
 	private string earnStr(int earn) {
@@ -54,8 +75,8 @@ public class RecallUser : MonoBehaviour {
 
 
 	void setScoreColor(int num) {
-		var color = _.GetBgColor(num);
-		ProceImage.color = color;
+		var color = _.GetColor(num);
+		Score.color = color;
 	}
 
 	void ShowAvatar(string url) {
