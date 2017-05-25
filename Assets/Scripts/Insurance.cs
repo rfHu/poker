@@ -19,8 +19,6 @@ public class Insurance : MonoBehaviour {
     public GameObject OutsCard;
     public Text SumInsured;
     public Text ClaimAmount;
-    public Text InputValue;
-    public Text AutoPurchase;
     public Slider CASlider;
     public Button BuyButton;
     public Button ExitButton;
@@ -28,8 +26,6 @@ public class Insurance : MonoBehaviour {
     public CButton BreakEventButton;
     public Toggle CheckAllToggle;
     public GameObject BuyTime;
-    public RectTransform PlayerList;
-    public RectTransform MidPart;
     public Text TotalSupass;
     public List<Card> MyCards;
     public Text CardDesc;
