@@ -20,7 +20,7 @@ public class Dealer : MonoBehaviour {
 	} 
 
 	private void subs(int value) {
-		if (value < 0) {
+		if (value < 0 || value > seats.Count - 1) {
 			gameObject.SetActive(false);
 			return ;
 		}
