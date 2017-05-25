@@ -204,6 +204,12 @@ public class GameOverJson {
 
 sealed public class GameData {
 	private GameData() {
+		SceneManager.sceneLoaded += (s, mode) => {
+			if (s.name == "PokerGame") {
+				byJson(jsonData);
+			}
+		};
+
 		RxSubjects.TakeSeat.AsObservable().Subscribe((e) => {
 			var index = e.Data.Int("where");
 			var playerInfo = e.Data.Dict("who");
@@ -230,27 +236,31 @@ sealed public class GameData {
 		RxSubjects.GameStart.AsObservable().Subscribe((e) => {
 			var json = e.Data.Dict("room");
 			PublicCardAnimState = true;
+
+			// 保存最新游戏数据
+			jsonData = json;
+
 			byJson(json);
 		});
 	
 		RxSubjects.Look.Subscribe((e) => {
 			PublicCardAnimState = false;
-			byJson(e.Data);
-
-			// 重连的用户，reload scene
 			var loginStatus = e.Data.Int("is_enter_look");
+
+			// 保存最新游戏数据
+			jsonData = e.Data;
 
 			if (loginStatus == 1) {
 				AuditList.Value = new List<object>();
+			}
 
-				var scene = SceneManager.GetActiveScene();
+			var scene = SceneManager.GetActiveScene();
 
-				if (scene.name == "PokerGame") {
-					return ;
-				}
-
+			if (scene.name == "PokerGame") {
+				// skip
+			} else {
 				SceneManager.LoadScene("PokerGame");
-            } 	
+			}
 		});
 
 		RxSubjects.Deal.Subscribe((e) => {
@@ -485,7 +495,8 @@ sealed public class GameData {
 	public bool Owner = false;
     public string OwnerName;
 	public List<int> BankrollMul;
-	public int PlayerCount;
+	public ReactiveProperty<int> PlayerCount = new ReactiveProperty<int>();
+	public ReactiveProperty<bool> GameInfoReady = new ReactiveProperty<bool>(false);
 	public string Sid; 
 	public string Uid = "";
 	public string Pin = "";
@@ -503,11 +514,13 @@ sealed public class GameData {
 		}
 	}
 
-	//public int Ante = 0;
 	public int Coins = 0;
-	public int SB = 0;
+	public int SB {
+		get {
+			return BB / 2;
+		}
+	}
 	public int BB = 0;
-	//public bool Straddle = false;
 	public string RoomName = "";
 
 	// 游戏是否已经开始，跟暂停状态无关
@@ -519,7 +532,7 @@ sealed public class GameData {
 	public bool GPSLimit = false;
     public bool NeedInsurance = false;
 	public ReactiveProperty<long> LeftTime = new ReactiveProperty<long>(0);
-    public ReactiveProperty<int> Ante = new ReactiveProperty<int>(0);
+    public ReactiveProperty<int> Ante = new ReactiveProperty<int>(-1);
     public ReactiveProperty<bool> Straddle = new ReactiveProperty<bool>(false);
 
 	public ReactiveProperty<int> Pot = new ReactiveProperty<int>();
@@ -538,23 +551,16 @@ sealed public class GameData {
 
 	private Dictionary<string, object> jsonData;
 
-	public void Reload() {
-		if (jsonData != null) {
-			byJson(jsonData);
-		}
-	}
-
 	private void byJson(Dictionary<string, object> json) {
-		jsonData = json;
-
 		var options = json.Dict("options");
 		var gamers = json.Dict("gamers");
 
+		BB = options.Int("limit") ;
         OwnerName = json.Dict("owner").String("name");
 		Owner = options.String("ownerid") == GameData.Shared.Uid;
 		BankrollMul = options.IL("bankroll_multiple"); 
 		Ante.Value = options.Int("ante");
-		PlayerCount = options.Int("max_seats");
+		PlayerCount.Value = options.Int("max_seats");
 		Rake = options.Float("rake_percent");
 		Duration = options.Long("time_limit");
 		NeedAudit = options.Int("need_audit") == 1;
@@ -563,9 +569,7 @@ sealed public class GameData {
 		GameCode = options.String("code");
 		Straddle.Value = options.Int("straddle") != 0;
         SettingThinkTime = ThinkTime = options.Int("turn_countdown");
-		var bb = options.Int("limit");
-		BB = bb ;
-		SB = bb / 2;
+		
         NeedInsurance = options.Int("need_insurance") == 1;
 		DealerSeat.Value = json.Int("dealer_seat");
 		RoomName = json.String("name");
@@ -620,6 +624,8 @@ sealed public class GameData {
 		} else {
 			AuditCD.Value = 0;
 		}
+
+		GameInfoReady.Value = true;
 	}
 
 	public static GameData Shared = new GameData();

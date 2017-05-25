@@ -44,20 +44,28 @@ public class Controller : MonoBehaviour {
 
 	private bool hasShowEnding = false;
 
+	public static Controller Instance; 
+
 	void Awake () {
-		setupSeats();
+		if (Instance != null) {
+			Destroy(Instance);
+		}
+
+		Instance = this;
+
+		load();
+    }
+
+	public void load() {
 		registerRxEvents();
 
-		// 数据驱动开发，在这里重新reload数据，触发事件
-		GameData.Shared.Reload();
-		showGameInfo();
 		setupDealer();
 		setMuteState();
-#if UNITY_EDITOR
-#else
-        Commander.Shared.VoiceIconToggle(true);
-#endif
-    }
+		#if UNITY_EDITOR
+		#else
+				Commander.Shared.VoiceIconToggle(true);
+		#endif
+	}
 
 	public void OnStartClick() {
 		Connect.Shared.Emit(new Dictionary<string, object>(){
@@ -105,7 +113,7 @@ public class Controller : MonoBehaviour {
     }
 
 	void changePositions(int index, bool anim = true) {
-		var count = GameData.Shared.PlayerCount;
+		var count = GameData.Shared.PlayerCount.Value;
 		var left = anchorPositions.Skip(count - index).Take(index);
 		var right = anchorPositions.Take(count - index);
 		var newVectors = left.Concat(right).ToList(); 
@@ -271,9 +279,7 @@ public class Controller : MonoBehaviour {
 		label.transform.SetParent(gameInfoWrapper.transform, false);
 	}
 
-	private void setupSeats() {
-		var numberOfPlayers = GameData.Shared.PlayerCount;
-
+	private void setupSeats(int numberOfPlayers) {
 		anchorPositions = getVectors (numberOfPlayers);
 
 		for (int i = 0; i < numberOfPlayers; i++) {
@@ -331,6 +337,15 @@ public class Controller : MonoBehaviour {
 	}
 
 	void registerRxEvents() {
+		// 玩家数是不能改变的，所以在这里认为数据准备好了
+		GameData.Shared.PlayerCount.Where((value) => value > 0).Subscribe((value) => {
+			setupSeats(value);
+		}).AddTo(this);
+
+		GameData.Shared.GameInfoReady.Where((ready) => ready).Subscribe((_) => {
+			showGameInfo();
+		}).AddTo(this);
+
 		GameData.Shared.LeftTime.Subscribe((value) => {
 			if (!GameData.Shared.GameStarted) {
 				setText(TimeLeftGo, "暂未开始");
@@ -350,7 +365,7 @@ public class Controller : MonoBehaviour {
 			setText(TimeLeftGo, secToStr(value));
 		}).AddTo(this);
 
-        GameData.Shared.Ante.Subscribe((value) => {
+        GameData.Shared.Ante.Where((value) => value >= 0).Subscribe((value) => {
             setBBGoText();
         }).AddTo(this);
 
