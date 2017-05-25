@@ -45,7 +45,7 @@ public class SpkTextGo: MonoBehaviour {
 
         // 当玩家参与游戏时，调整特殊的位置
         if (Uid == GameData.Shared.Uid)  {
-            rt.anchoredPosition = new Vector2(0, -220);
+            rt.anchoredPosition = new Vector2(0, -210);
             // rt.anchoredPosition = new Vector2(-270, -110);
             trt.anchoredPosition = new Vector2(0, 0);
             Arrow.SetActive(false);

@@ -40,7 +40,7 @@ public class PlayerObject : MonoBehaviour {
 	private ChipsGo cgo; 
 	private Player player;
 	private float foldOpacity = 0.6f;
-	private float animDuration = 0.7f;
+	private float animDuration = 0.5f;
     private float hideDuration = 0.3f; 
 	private ActionState lastState;
 	private bool gameover = false;
@@ -147,6 +147,7 @@ public class PlayerObject : MonoBehaviour {
             RxSubjects.Seating.OnNext(true);
 		} else if(player.InGame) { 
 			Cardfaces.SetActive(true);
+			NameLabel.gameObject.SetActive(true);
 		}
 
 		if (GameData.Shared.InGame && !player.InGame) {
@@ -581,6 +582,8 @@ public class PlayerObject : MonoBehaviour {
 
 			var stateGo = StateLabel.transform.parent.gameObject;
 			stateGo.SetActive(false);
+
+			
 
 			switch(state) {
 				case PlayerState.Waiting: case PlayerState.Auditing:
