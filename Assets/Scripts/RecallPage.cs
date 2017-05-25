@@ -116,7 +116,7 @@ public class RecallPage : MonoBehaviour {
 		
 		insuranceGo.SetActive(true);
 		InsuranceText.text = _.Number2Text(insuValue);	
-		InsuranceText.color = _.GetColor(insuValue);
+		InsuranceText.color = _.GetTextColor(insuValue);
 	}
 
 	public void Up() {

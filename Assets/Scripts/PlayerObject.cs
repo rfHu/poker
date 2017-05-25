@@ -73,18 +73,18 @@ public class PlayerObject : MonoBehaviour {
 
 		var state = player.SeeCardAnim;
 
-		first.GetComponent<Card>().Show(cards[0], state);
 		if (state) {
+			first.GetComponent<Card>().Show(cards[0], state);
 			MasterAudio.PlaySound("fapai_1");
-		}
 
-		Observable.Timer(TimeSpan.FromSeconds(0.3)).Subscribe((_) => {
-			second.GetComponent<Card>().Show(cards[1], state);
-
-			if (state) {
+			Observable.Timer(TimeSpan.FromSeconds(0.3)).Subscribe((_) => {
+				second.GetComponent<Card>().Show(cards[1], state);
 				MasterAudio.PlaySound("fapai_1");
-			}
-		}).AddTo(this);
+			}).AddTo(this);
+		} else {
+			first.GetComponent<Card>().Show(cards[0], state);
+			second.GetComponent<Card>().Show(cards[1], state);
+		}
 	}
 
 	public void MoveOut() {
@@ -272,17 +272,11 @@ public class PlayerObject : MonoBehaviour {
 		var cvg = PlayerAct.GetComponent<CanvasGroup>();
 		var targetValue = active ? 1 : 0;
 		var duration = 0.1f;
-		var reverse = 1 ^ targetValue;
 
 		if (anim) {
 			cvg.DOFade(targetValue, duration);
 		} else {
 			cvg.alpha = targetValue;
-		}
-
-		if (!isSelf()) {
-			var nameCvg = NameLabel.GetComponent<CanvasGroup>();
-			nameCvg.DOFade(reverse, duration);
 		}
 	}
 
@@ -452,6 +446,7 @@ public class PlayerObject : MonoBehaviour {
 		
 		theSeat.SeatPos.Subscribe((pos) => {
 			fixChatPos(pos);
+			PlayerAct.ChangePos(pos);
 		}).AddTo(this);
 
 		// fixChatPos(SeatPosition.Right);

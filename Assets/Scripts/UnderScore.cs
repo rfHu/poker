@@ -101,18 +101,28 @@ public class _ {
 		return int.TryParse(number, out n);
     }
 
-    static public Color GetColor(int num, bool background = true) {
+    static public Color GetBgColor(int num) {
         string[] colors = new string[]{
 		    "#ff1744",
 		    "#646464",
 		    "#00c853"
 	    };
+        
+        return getColor(colors, num);
+    }
 
-        if (!background) {
-            colors[2] = "#ffffff";
-        }
+    static public Color GetTextColor(int num) {
+        string[] colors = new string[]{
+		    "#ff1744",
+		    "#ffffff",
+		    "#00c853"
+	    };
 
-		var color = new Color();
+        return getColor(colors, num);
+    }
+
+    static private Color getColor(string[] colors, int num) {
+        var color = new Color();
 		string c;
 
 		if (num > 0) {

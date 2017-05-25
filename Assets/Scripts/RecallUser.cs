@@ -54,7 +54,7 @@ public class RecallUser : MonoBehaviour {
 
 
 	void setScoreColor(int num) {
-		var color = _.GetColor(num);
+		var color = _.GetBgColor(num);
 		ProceImage.color = color;
 	}
 

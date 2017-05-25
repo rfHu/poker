@@ -5,16 +5,15 @@ using UnityEngine.UI.ProceduralImage;
 using System.Collections.Generic;
 
 public class PlayerActGo: MonoBehaviour {
-    public  VectorImage Arrow;
     public Text ActText;
 
     public void SetAct(ActionState act) {
-       var color = GetColor(act); 
+        var color = GetColor(act); 
     
-    //    gameObject.GetComponent<ProceduralImage>().color = color;
-    //    Arrow.color = color;
-       ActText.color = color;
-       ActText.text = GetText(act);
+        var tab = transform.Find("Tab").GetComponent<RectTransform>();
+        tab.GetComponent<VectorImage>().color = color;
+
+        ActText.text = GetText(act);
     }
 
     public Color GetColor(ActionState act) {
@@ -27,6 +26,19 @@ public class PlayerActGo: MonoBehaviour {
         };
 
         return map[act];
+    }
+
+    public void ChangePos(SeatPosition pos) {
+        var rect = GetComponent<RectTransform>();
+        var tab = rect.transform.Find("Tab").GetComponent<RectTransform>();
+
+        if (pos == SeatPosition.Left || pos == SeatPosition.TopRight) {
+            tab.rotation = Quaternion.Euler(new Vector2(0, 180));
+            rect.anchoredPosition = new Vector2(80, -54);
+        } else {
+            tab.rotation = Quaternion.Euler(new Vector2(0, 0));       
+            rect.anchoredPosition = new Vector2(-80, -54);        
+        }
     }
 
     public string GetText(ActionState act) {
