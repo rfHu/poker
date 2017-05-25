@@ -75,7 +75,7 @@ public class RecallUser : MonoBehaviour {
 
 
 	void setScoreColor(int num) {
-		var color = _.GetColor(num);
+		var color = _.GetTextColor(num);
 		Score.color = color;
 	}
 
