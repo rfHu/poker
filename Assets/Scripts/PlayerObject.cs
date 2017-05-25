@@ -40,7 +40,7 @@ public class PlayerObject : MonoBehaviour {
 	private ChipsGo cgo; 
 	private Player player;
 	private float foldOpacity = 0.6f;
-	private float animDuration = 0.4f;
+	private float animDuration = 0.7f;
     private float hideDuration = 0.3f; 
 	private ActionState lastState;
 	private bool gameover = false;
@@ -229,18 +229,12 @@ public class PlayerObject : MonoBehaviour {
 		var canvas = G.UICvs;
 
 		if (isSelf()) {
-			var copy = Instantiate(MyCards, canvas.transform, true);
+			// var copy = Instantiate(MyCards, canvas.transform, true);
 			
 			// 图片灰掉
-			// darkenCards();
+			darkenCards();
 
-			MyCards.SetActive(false);
-
-			foldCards(copy, () => {
-				if (MyCards != null) {
-					MyCards.SetActive(true);
-				}
-			});
+			// foldCards(copy);
 		} else {
 			Cardfaces.transform.SetParent(canvas.transform, true);
 			foldCards(Cardfaces);			
@@ -834,26 +828,24 @@ public class PlayerObject : MonoBehaviour {
 		return op;
 	}
 
-	private void foldCards(GameObject go, Action callback = null) {
+	private void foldCards(GameObject go) {
+		Ease ease = Ease.Flash;
+
 		var rectTrans = go.GetComponent<RectTransform>();
-		rectTrans.DOAnchorPos(new Vector2(0, 200), animDuration);
-		rectTrans.DOScale(new Vector2(0.9f, 0.9f), animDuration);
+		rectTrans.DOAnchorPos(new Vector2(0, 200), animDuration).SetEase(ease);
 
 		var image = go.GetComponent<Image>();
 		Tween tween; 
 
 		if (image != null) {
-			tween = image.DOFade(0, animDuration);
+			tween = image.DOFade(0.2f, animDuration).SetEase(ease);
 		} else {
 			var canvasGrp = go.GetComponent<CanvasGroup>();
-			tween = canvasGrp.DOFade(0, animDuration);
+			tween = canvasGrp.DOFade(0.2f, animDuration).SetEase(ease);
 		}
 
 		tween.OnComplete(() => {
 			Destroy(go);
-			if (callback != null) {
-				callback();
-			}
 		});
 	}
 }

@@ -18,7 +18,8 @@ public class WaitForAudit : MonoBehaviour {
 		}).AddTo(this);
 
 		RxSubjects.UnPass.Subscribe((e) => {
-			hideWithMsg("拒绝带入");			
+			Hide();
+			PokerUI.Toast("您的带入请求被房主拒绝");
 		}).AddTo(this);
 
 		GameData.Shared.AuditCD.Subscribe((secs) => {
@@ -30,24 +31,17 @@ public class WaitForAudit : MonoBehaviour {
 			}
 		}).AddTo(this);
 	}
-
-	private void hideWithMsg(string msg) {
-		if (disposable != null) {
-			disposable.Dispose();
-		}
-		CountDown.text = msg;
-		
-		disposable = Observable.Timer(TimeSpan.FromSeconds(2)).AsObservable().Subscribe((_) => {
-			Hide();
-		});
-	}
-
+	
 	public void Show(int secs) {
 		GetComponent<DOPopup>().Show(null, false, false);
 		enableCD(secs);
 	}
 
 	public void Hide() {
+		if (disposable != null) {
+			disposable.Dispose();
+		}
+
 		GetComponent<DOPopup>().Hide();
 	}
 

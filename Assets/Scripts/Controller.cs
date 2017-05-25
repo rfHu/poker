@@ -42,6 +42,8 @@ public class Controller : MonoBehaviour {
 
     public GameObject ExpressionButton;
 
+	private bool hasShowEnding = false;
+
 	void Awake () {
 		setupSeats();
 		registerRxEvents();
@@ -334,6 +336,16 @@ public class Controller : MonoBehaviour {
 				setText(TimeLeftGo, "暂未开始");
                 return;
 			} 
+
+			if (value > 5 * 600) {
+				hasShowEnding = false;
+			} else {
+				if (!hasShowEnding) {
+					PokerUI.Toast("牌局将在5分钟内结束");
+				}
+
+				hasShowEnding = true;
+			}
 
 			setText(TimeLeftGo, secToStr(value));
 		}).AddTo(this);
