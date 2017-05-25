@@ -720,7 +720,7 @@ public class PlayerObject : MonoBehaviour {
 	private void setPrChips(int value) {
 		var chips = (GameObject)Instantiate(Resources.Load("Prefab/UpChip"));
 		chips.transform.SetParent(transform, false);
-		chips.transform.SetAsFirstSibling();
+		chips.transform.SetAsLastSibling();
 
 		if (cgo == null) {
 			cgo = chips.GetComponent<ChipsGo>();
