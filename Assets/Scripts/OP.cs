@@ -246,7 +246,7 @@ public class OP : MonoBehaviour {
 		Slid.value = Slid.minValue = range[0];
 		Slid.maxValue = range[1];
 		Slid.wholeNumbers = true;
-		MaxText.text = range[1].ToString();
+		MaxText.text = _.Num2CnDigit(range[1]);
 
 		// 未按下时，隐藏加注提示
 		RoundTipsGo.SetActive(false);
@@ -276,8 +276,8 @@ public class OP : MonoBehaviour {
 				RoundTipsGo.SetActive(false);
 			}
 			
-			RaiseNumber.text = newValue.ToString();
-			TipsText.text = newValue.ToString();
+			RaiseNumber.text = _.Num2CnDigit(newValue);
+			TipsText.text = _.Num2CnDigit(newValue);
 		}).AddTo(this);
 
 		Slid.OnPointerDownAsObservable().Subscribe((pointerEvt) => {
