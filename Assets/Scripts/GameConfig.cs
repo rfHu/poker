@@ -257,7 +257,7 @@ sealed public class GameData {
 			var scene = SceneManager.GetActiveScene();
 
 			if (scene.name == "PokerGame") {
-				// skip
+				byJson(e.Data);
 			} else {
 				SceneManager.LoadScene("PokerGame");
 			}
@@ -579,6 +579,11 @@ sealed public class GameData {
 		MaxFiveRank.Value = json.Int("maxFiveRank");
 		LeftTime.Value = json.Long("left_time");
 
+		var startTs = json.Int("begin_time");
+		StartTime = _.DateTimeFromTimeStamp(startTs);
+		// 游戏是否已开始
+		GameStarted = startTs != 0;
+
 		// ReactiveProperty 对同样的值不会触发onNext，所以这里强制执行一次
 		var pause = json.Int("is_pause") != 0;
 		if (pause == Paused.Value) {
@@ -592,12 +597,6 @@ sealed public class GameData {
 		foreach(int value in cards) {
 			PublicCards.Add(value);
 		}
-		
-		var startTs = json.Int("begin_time");
-		StartTime = _.DateTimeFromTimeStamp(startTs);
-
-		// 游戏是否已开始
-		GameStarted = startTs != 0;
 
 		// 逐个删除，才能触发Remove事件
 		foreach(var key in Players.Keys.ToList()) {

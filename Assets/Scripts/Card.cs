@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using DarkTonic.MasterAudio;
 
 public class Card : MonoBehaviour {
 	public Sprite[] Faces;
@@ -53,6 +54,15 @@ public class Card : MonoBehaviour {
 		HasShow = true;
 		var realIndex = Card.CardIndex(index);
 		show(realIndex, anim, complete);
+	}
+
+	public void ShowWithSound(int index, bool anim = false) {
+		if (index == 0 || HasShow) {
+			return ;
+		}
+
+		Show(index, anim);
+		MasterAudio.PlaySound("fapai_1");
 	}
 
 	IEnumerator flipCard(int index, Action complete = null) {

@@ -74,12 +74,10 @@ public class PlayerObject : MonoBehaviour {
 		var state = player.SeeCardAnim;
 
 		if (state) {
-			first.GetComponent<Card>().Show(cards[0], state);
-			MasterAudio.PlaySound("fapai_1");
+			first.GetComponent<Card>().ShowWithSound(cards[0], state);
 
 			Observable.Timer(TimeSpan.FromSeconds(0.3)).Subscribe((_) => {
-				second.GetComponent<Card>().Show(cards[1], state);
-				MasterAudio.PlaySound("fapai_1");
+				second.GetComponent<Card>().ShowWithSound(cards[1], state);
 			}).AddTo(this);
 		} else {
 			first.GetComponent<Card>().Show(cards[0], state);
