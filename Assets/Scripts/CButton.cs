@@ -7,6 +7,7 @@ public class CButton : MonoBehaviour {
 	private Button button;
 	private ProceduralImage image;
 	public Text text;
+    public Text textTag;
 
 	public Color NormalColor = MaterialUI.MaterialColor.cyanA200;
 	public Color DisableColor = MaterialUI.MaterialColor.grey400;
@@ -28,11 +29,19 @@ public class CButton : MonoBehaviour {
 				if (text != null) {
 					text.color = NormalColor;
 				}
+                if (textTag != null)
+                {
+                    textTag.color = NormalColor;
+                }
 				image.color = NormalColor;
 			} else {
 				if (text != null) {
-					text.color = DisableColor;
+                    text.color = DisableColor;
 				}
+                if (textTag != null)
+                {
+                    textTag.color = DisableColor;
+                }
 				image.color = DisableColor;
 			}
 		}

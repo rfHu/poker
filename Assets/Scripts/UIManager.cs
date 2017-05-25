@@ -43,7 +43,7 @@ public class UIManager : MonoBehaviour {
 			OnShowRecalls();
 		} else if (gesture.swipe == EasyTouch.SwipeDirection.Right) {
 			ScorePage();
-		} else if (gesture.swipe == EasyTouch.SwipeDirection.Up) {
+		} else if (gesture.swipe == EasyTouch.SwipeDirection.Up && GameData.Shared.MySeat != -1) {
 			OnClickExpressionPage();
 		}
 	}
