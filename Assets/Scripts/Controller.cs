@@ -350,9 +350,10 @@ public class Controller : MonoBehaviour {
 			if (!GameData.Shared.GameStarted) {
 				setText(TimeLeftGo, "暂未开始");
                 return;
-			} 
+			}
 
-			if (value > 5 * 600) {
+            _.Log(value.ToString());
+			if (value > 5 * 60) {
 				hasShowEnding = false;
 			} else {
 				if (!hasShowEnding) {
