@@ -22,7 +22,7 @@ public class RecallPage : MonoBehaviour {
 	private int currentNumber;
     private string favhand_id;
     private bool isCollected;
-    private Color bClolor = new Color(5 / 255, 150 / 255, 213 / 255);
+    private Color bClolor = new Color(5 / 255f, 150 / 255f, 213 / 255f);
 
 	void Awake()
 	{
