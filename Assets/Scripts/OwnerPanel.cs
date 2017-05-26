@@ -25,7 +25,7 @@ public class OwnerPanel : MonoBehaviour {
     public Text ASliderNum;
     public Text T_cNum;
 
-    public Button SaveButton;
+    public CButton SaveButton;
     
     private List<int> AnteSuperScriptNums;
     private List<int> bankroll_multiple;
@@ -283,29 +283,13 @@ public class OwnerPanel : MonoBehaviour {
         {
             if (item)
             {
-                setSaveButton(true);
+
+                SaveButton.interactable = true;
                 return;
             }
         }
 
-        setSaveButton(false);
-    }
-
-    private void setSaveButton(bool interactable) {
-        SaveButton.interactable = interactable;
-
-        var image = SaveButton.GetComponent<ProceduralImage>();
-        var text = SaveButton.transform.Find("Text").GetComponent<Text>();
-        Color color;
-
-        if (interactable) {
-            color = MaterialUI.MaterialColor.cyanA200;
-        } else {
-            color = MaterialUI.MaterialColor.grey400;
-        }
-
-         image.color = color;
-         //text.color = color;
+        SaveButton.interactable = false;
     }
 
     public void SendRequest()

@@ -7,6 +7,7 @@ using Extensions;
 using UniRx;
 using System;
 using UnityEngine.UI.ProceduralImage;
+using MaterialUI;
 
 public class Insurance : MonoBehaviour {
     public Text Pot;
@@ -20,7 +21,7 @@ public class Insurance : MonoBehaviour {
     public Text SumInsured;
     public Text ClaimAmount;
     public Slider CASlider;
-    public Button BuyButton;
+    public VButton BuyButton;
     public Button ExitButton;
     public CButton EqualButton;
     public CButton BreakEventButton;
@@ -64,7 +65,7 @@ public class Insurance : MonoBehaviour {
 
         if (mustBuy)
         {
-            ExitButton.interactable = false;
+            ExitButton.gameObject.SetActive(false);
             CheckAllToggle.gameObject.SetActive(false);
         } else {
             // CheckAllToggle.OnPointerClick
@@ -208,8 +209,8 @@ public class Insurance : MonoBehaviour {
 
         OddsNum = OddsNums[num];
         Odds.text = OddsNum.ToString();
-        BreakEventButton.gameObject.transform.FindChild("Text").GetComponent<Text>().text = beValue.ToString();
-        EqualButton.gameObject.transform.FindChild("Text").GetComponent<Text>().text = eqValue.ToString();
+        BreakEventButton.transform.FindChild("Text").GetComponent<Text>().text = beValue.ToString();
+        EqualButton.transform.FindChild("Text").GetComponent<Text>().text = eqValue.ToString();
         SetCASlider();
     }
 

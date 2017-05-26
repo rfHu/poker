@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using MaterialUI;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UI.ProceduralImage;
 
@@ -6,8 +8,7 @@ using UnityEngine.UI.ProceduralImage;
 public class CButton : MonoBehaviour {
 	private Button button;
 	private ProceduralImage image;
-	public Text text;
-    public Text textTag;
+    public List<Text> Texts;
 
 	public Color NormalColor = MaterialUI.MaterialColor.cyanA200;
 	public Color DisableColor = MaterialUI.MaterialColor.grey400;
@@ -26,21 +27,17 @@ public class CButton : MonoBehaviour {
 			button.interactable = value;
 
 			if (value) {
-				if (text != null) {
-					text.color = NormalColor;
-				}
-                if (textTag != null)
+                foreach (var text in Texts)
                 {
-                    textTag.color = NormalColor;
+                    text.color = NormalColor;
                 }
 				image.color = NormalColor;
-			} else {
-				if (text != null) {
-                    text.color = DisableColor;
-				}
-                if (textTag != null)
+            }
+            else
+            {
+                foreach (var text in Texts)
                 {
-                    textTag.color = DisableColor;
+                    text.color = DisableColor;
                 }
 				image.color = DisableColor;
 			}
