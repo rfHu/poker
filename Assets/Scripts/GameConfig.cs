@@ -219,13 +219,13 @@ sealed public class GameData {
 		});
 
 		RxSubjects.Paused.AsObservable().Subscribe((e) => {
-			Paused.Value = true; 	
+			Paused.OnNext(true); 	
 		});
 
 		RxSubjects.Started.AsObservable().Subscribe((e) => {
 			GameStarted = true;
 			LeftTime.Value = e.Data.Int("left_time");
-			Paused.Value = false; 
+			Paused.OnNext(false); 
 		});
 
 		RxSubjects.UnSeat.AsObservable().Subscribe((e) => {
@@ -496,7 +496,7 @@ sealed public class GameData {
     public string OwnerName;
 	public List<int> BankrollMul;
 	public ReactiveProperty<int> PlayerCount = new ReactiveProperty<int>();
-	public ReactiveProperty<bool> GameInfoReady = new ReactiveProperty<bool>(false);
+	public BehaviorSubject<bool> GameInfoReady = new BehaviorSubject<bool>(false);
 	public string Sid; 
 	public string Uid = "";
 	public string Pin = "";
@@ -538,7 +538,7 @@ sealed public class GameData {
 	public ReactiveProperty<int> Pot = new ReactiveProperty<int>();
 	public ReactiveProperty<int> PrPot = new ReactiveProperty<int>();
 
-	public ReactiveProperty<bool> Paused = new ReactiveProperty<bool>();
+	public BehaviorSubject<bool> Paused = new BehaviorSubject<bool>(false);
 	public string GameCode = "";
 	public ReactiveProperty<int> MaxFiveRank = new ReactiveProperty<int>();
 
@@ -586,10 +586,7 @@ sealed public class GameData {
 
 		// ReactiveProperty 对同样的值不会触发onNext，所以这里强制执行一次
 		var pause = json.Int("is_pause") != 0;
-		if (pause == Paused.Value) {
-			Paused.Value = !pause;
-		}
-		Paused.Value = pause;
+		Paused.OnNext(pause);
 		
 		// 删除公共牌重新添加
 		var cards = json.IL("shared_cards");
@@ -624,7 +621,7 @@ sealed public class GameData {
 			AuditCD.Value = 0;
 		}
 
-		GameInfoReady.Value = true;
+		GameInfoReady.OnNext(true);
 	}
 
 	public static GameData Shared = new GameData();
