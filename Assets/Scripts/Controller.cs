@@ -297,6 +297,7 @@ public class Controller : MonoBehaviour {
 	private void setNotStarted() {
 		if (GameData.Shared.Owner) {
 			startButton.SetActive(true);
+            PauseGame.SetActive(false);
 		} else {
 			PauseGame.SetActive(true);
 			PauseGame.transform.Find("Text").GetComponent<Text>().text = "等待房主开始游戏";
