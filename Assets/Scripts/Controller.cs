@@ -352,7 +352,6 @@ public class Controller : MonoBehaviour {
                 return;
 			}
 
-            _.Log(value.ToString());
 			if (value > 5 * 60) {
 				hasShowEnding = false;
 			} else {
