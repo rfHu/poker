@@ -16,6 +16,8 @@ public class RecallPage : MonoBehaviour {
 	public GameObject UserGo;
     public Toggle Collect;
 
+    public RectTransform PlayerList;
+    public GameObject InsuranceGo;
 	public Text InsuranceText;
 
 	private int totalNumber;
@@ -56,9 +58,9 @@ public class RecallPage : MonoBehaviour {
 	}
 
 	void reload(Dictionary<string, object> data) {
-		var insuranceGo = InsuranceText.transform.parent.gameObject;
-		insuranceGo.SetActive(false);
-		
+        InsuranceGo.SetActive(false);
+
+
 		var ret = data.Dict("ret");
 
 		totalNumber = ret.Int("total_hand");
@@ -127,7 +129,8 @@ public class RecallPage : MonoBehaviour {
 			return ;
 		}
 		
-		insuranceGo.SetActive(true);
+		InsuranceGo.SetActive(true);
+        PlayerList.sizeDelta -= new Vector2(0, 64);
 		InsuranceText.text = _.Number2Text(insuValue);	
 		InsuranceText.color = _.GetTextColor(insuValue);
 	}
