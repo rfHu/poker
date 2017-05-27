@@ -17,6 +17,7 @@ public class RecallPage : MonoBehaviour {
     public Toggle Collect;
 
 	public Text InsuranceText;
+    public GameObject PlayerList;
 
 	private int totalNumber;
 	private int currentNumber;
@@ -130,6 +131,7 @@ public class RecallPage : MonoBehaviour {
 		insuranceGo.SetActive(true);
 		InsuranceText.text = _.Number2Text(insuValue);	
 		InsuranceText.color = _.GetTextColor(insuValue);
+        PlayerList.GetComponent<RectTransform>().sizeDelta -= new Vector2(0, 64);
 	}
 
     private void SetBTag(RecallUser user, string str)
