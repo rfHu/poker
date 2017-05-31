@@ -348,30 +348,30 @@ public class Controller : MonoBehaviour {
 		GameData.Shared.GameInfoReady.Where((ready) => ready && !infoShow).Subscribe((_) => {
 			showGameInfo();
 			infoShow = true;
+
+			GameData.Shared.LeftTime.Subscribe((value) => {
+				if (!GameData.Shared.GameStarted) {
+					setText(TimeLeftGo, "暂未开始");
+					return;
+				}
+
+				if (value > 5 * 60) {
+					hasShowEnding = false;
+				} else {
+					if (!hasShowEnding) {
+						PokerUI.Toast("牌局将在5分钟内结束");
+					}
+
+					hasShowEnding = true;
+				}
+
+				setText(TimeLeftGo, secToStr(value));
+			}).AddTo(this);
 		}).AddTo(this);
 
 		RxSubjects.Connecting.Subscribe((stat) => {
 			LoadingModal.transform.SetAsLastSibling();
 			LoadingModal.SetActive(stat); 
-		}).AddTo(this);
-
-		GameData.Shared.LeftTime.Subscribe((value) => {
-			if (!GameData.Shared.GameStarted) {
-				setText(TimeLeftGo, "暂未开始");
-                return;
-			}
-
-			if (value > 5 * 60) {
-				hasShowEnding = false;
-			} else {
-				if (!hasShowEnding) {
-					PokerUI.Toast("牌局将在5分钟内结束");
-				}
-
-				hasShowEnding = true;
-			}
-
-			setText(TimeLeftGo, secToStr(value));
 		}).AddTo(this);
 
         GameData.Shared.Ante.Where((value) => value >= 0).Subscribe((value) => {
