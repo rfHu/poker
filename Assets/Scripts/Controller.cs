@@ -361,7 +361,7 @@ public class Controller : MonoBehaviour {
                 return;
 			}
 
-			if (value > 5 * 60) {
+			if (value > 300) {
 				hasShowEnding = false;
 			} else {
 				if (!hasShowEnding) {

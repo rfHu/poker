@@ -69,9 +69,9 @@ public class RecallUser : MonoBehaviour {
 
             if (insuranceNum > 0)
             {
+                ActionsText[i].transform.FindChild("InsuranceNum").gameObject.SetActive(true);
                 ActionsText[i].transform.FindChild("InsuranceNum").GetComponent<Text>().text = "投保" + _.Number2Text(insuranceNum);
             } else {
-				ActionsText[i].gameObject.SetActive(false);
 			}
         }
 	}
