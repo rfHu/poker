@@ -302,7 +302,10 @@ sealed public class GameData {
 			} 
 
 			Observable.Timer(TimeSpan.FromSeconds(delay)).AsObservable().Subscribe((_) => {
-				MaxFiveRank.Value = e.Data.Int("maxFiveRank");	
+                if (e.Data.Int("maxFiveRank") != 0)
+                {
+				    MaxFiveRank.Value = e.Data.Int("maxFiveRank");	           
+                }
 			});
 		});
 
