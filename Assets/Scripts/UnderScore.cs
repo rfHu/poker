@@ -60,7 +60,7 @@ public class _ {
         }
     }
 
-    static public string Num2CnDigit<T>(T num) {
+    static public string Num2CnDigit<T>(T num, bool symbol = false) {
         var value = Convert.ToDouble(num);
 
         if (Double.IsInfinity(value)) {
@@ -87,7 +87,11 @@ public class _ {
             return Math.Round(v, digits).ToString() + "万";
         }
 
-        return value.ToString();
+        if (symbol && value > 0) {
+            return "+" + value.ToString();
+        } else {
+            return value.ToString();
+        }
     }
 
     static public Color HexColor(string hex) {
@@ -138,11 +142,7 @@ public class _ {
     }
 
     static public string Number2Text(int num) {
-		if (num <= 0) {
-			return num.ToString();
-		}
-
-		return "+" + num.ToString();
+        return Num2CnDigit(num, true);
 	}
 
     static public string PercentStr(float number) {

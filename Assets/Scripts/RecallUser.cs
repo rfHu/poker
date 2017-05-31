@@ -38,7 +38,7 @@ public class RecallUser : MonoBehaviour {
 		ShowAvatar(dict.String("avatar"));
 
 		var earn = dict.Int("coin") - dict.Int("chips");
-		Score.text = earnStr(earn);
+		Score.text = _.Number2Text(earn);
 		setScoreColor(earn);	
 
 		var cards = dict.IL("cards");
@@ -62,25 +62,19 @@ public class RecallUser : MonoBehaviour {
             var actNum = actDict.Int("num");
             if (ActionsText[i].text != "" && actNum != 0)
             {
-                ActionsText[i].text += actNum;
+                ActionsText[i].text += _.Number2Text(actNum);
             }
 
             var insuranceNum = actDict.Int("in_amount");
+
             if (insuranceNum > 0)
             {
-                ActionsText[i].transform.FindChild("InsuranceNum").GetComponent<Text>().text = "投保" + insuranceNum;
-            }
+                ActionsText[i].transform.FindChild("InsuranceNum").GetComponent<Text>().text = "投保" + _.Number2Text(insuranceNum);
+            } else {
+				ActionsText[i].gameObject.SetActive(false);
+			}
         }
 	}
-
-	private string earnStr(int earn) {
-		if (earn > 0) {
-			return "+" + earn.ToString();
-		}
-
-		return earn.ToString();
-	}
-
 
 	void setScoreColor(int num) {
 		var color = _.GetTextColor(num);
