@@ -34,8 +34,6 @@ public class Controller : MonoBehaviour {
 	public GameObject SeeCardTable;
 	public GameObject SeeCardTips;
 
-	private bool gameinfoShow = false;
-
 	// public GameObject Cutoff;
 
 	List<Vector2> anchorPositions = new List<Vector2>();
@@ -345,9 +343,10 @@ public class Controller : MonoBehaviour {
 			setupSeats(value);
 		}).AddTo(this);
 
-		GameData.Shared.GameInfoReady.Where((ready) => ready && !gameinfoShow).Subscribe((_) => {
+		var infoShow = false;
+		GameData.Shared.GameInfoReady.Where((ready) => ready && !infoShow).Subscribe((_) => {
 			showGameInfo();
-			gameinfoShow = true;
+			infoShow = true;
 		}).AddTo(this);
 
 		GameData.Shared.LeftTime.Subscribe((value) => {

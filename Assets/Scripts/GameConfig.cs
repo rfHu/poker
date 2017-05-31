@@ -489,7 +489,7 @@ sealed public class GameData {
     public string OwnerName;
 	public List<int> BankrollMul;
 	public ReactiveProperty<int> PlayerCount = new ReactiveProperty<int>();
-	public BehaviorSubject<bool> GameInfoReady = new BehaviorSubject<bool>(false);
+	public Subject<bool> GameInfoReady = new Subject<bool>();
 	public string Sid; 
 	public string Uid = "";
 	public string Pin = "";
