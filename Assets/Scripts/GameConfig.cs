@@ -87,24 +87,19 @@ sealed public class Player {
 
 	public bool SeeCardAnim = false;
 
-	public ReactiveProperty<PlayerState> PlayerStat = new ReactiveProperty<PlayerState>();
+	public BehaviorSubject<PlayerState> PlayerStat = new BehaviorSubject<PlayerState>(PlayerState.Normal);
 
-	public ReactiveProperty<int> ReservedCD = new ReactiveProperty<int>(); 
+	public BehaviorSubject<int> ReservedCD = new BehaviorSubject<int>(0); 
 
 	public void SetState(int state, int cd = 0) {
 		var st = (PlayerState)state;
-		PlayerStat.Value = st;
+		PlayerStat.OnNext(st);
 
 		if (Uid == GameData.Shared.Uid) {
 			GameData.Shared.SelfState.Value = st;
 		}
 
-		// 状态改变时，每次都先重置该值为0
-		ReservedCD.Value = 0;
-
-		if (st == PlayerState.Reserve) {
-			ReservedCD.Value = cd;
-		}
+		ReservedCD.OnNext(cd);
 	}
 	
 	public Player(Dictionary<string, object> json, int index) {
@@ -415,9 +410,7 @@ sealed public class GameData {
 					return ;
 				}
 
-				// 每次修改时，先重置，防止不触发
-				AuditCD.Value = 0;
-				AuditCD.Value = sec;
+				AuditCD.OnNext(sec);
 			}
 		);
 
@@ -547,7 +540,7 @@ sealed public class GameData {
 	public DateTime StartTime;
 	public bool InGame = false;  
 
-	public ReactiveProperty<int> AuditCD = new ReactiveProperty<int>(); 
+	public BehaviorSubject<int> AuditCD = new BehaviorSubject<int>(0); 
 
 	private Dictionary<string, object> jsonData;
 
@@ -615,10 +608,10 @@ sealed public class GameData {
 		var mySeat = MySeat;
 
 		if (mySeat != -1 && Players.ContainsKey(mySeat)) {
-			AuditCD.Value = Players[mySeat].AuditCD;
+			AuditCD.OnNext(Players[mySeat].AuditCD);
 			Coins = Players[mySeat].Coins;
 		} else {
-			AuditCD.Value = 0;
+			AuditCD.OnNext(0);
 		}
 
 		GameInfoReady.OnNext(true);
