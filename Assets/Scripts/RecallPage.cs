@@ -37,7 +37,13 @@ public class RecallPage : MonoBehaviour {
         });
 	}
 
+    private bool requesting = false;
+
 	void request(int num = 0) {
+        if (requesting) {
+            return ;
+        } 
+
 		var dict = new Dictionary<string, object>() {
 			{"handid", num}
 		};
@@ -53,8 +59,14 @@ public class RecallPage : MonoBehaviour {
 				}
 
 				reload(json);
-			}
+                requesting = false;
+			},
+            () => {
+                requesting = false;
+            }
 		);
+
+        requesting = true;
 	}
 
 	void reload(Dictionary<string, object> data) {
@@ -148,17 +160,15 @@ public class RecallPage : MonoBehaviour {
 			return ;
 		}
 
-		currentNumber++;
-		request(currentNumber);
+		request(currentNumber + 1);
 	}
 
 	public void Down() {
-		if (currentNumber <= 0) {
+		if (currentNumber <= 1) {
 			return ;
 		}
 
-		currentNumber--;
-		request(currentNumber);
+		request(currentNumber - 1);
 	}
 
     public void CollectOrCancel() 

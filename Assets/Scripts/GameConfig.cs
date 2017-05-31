@@ -245,9 +245,9 @@ sealed public class GameData {
 			// 保存最新游戏数据
 			jsonData = e.Data;
 
-			if (loginStatus == 1) {
-				AuditList.Value = new List<object>();
-			}
+			// if (loginStatus == 1) {
+			// 	AuditList.Value = new List<object>();
+			// }
 
 			var scene = SceneManager.GetActiveScene();
 
@@ -416,7 +416,7 @@ sealed public class GameData {
 
 		RxSubjects.Audit.Subscribe((e) => {
 			var array = e.Data.List("ids");
-			AuditList.Value = array;
+			AuditList.OnNext(array);
 		});
 
 		// 倒计时
@@ -474,7 +474,7 @@ sealed public class GameData {
 	}
 
 	public int DealState = -1;
-	public ReactiveProperty<List<object>> AuditList = new ReactiveProperty<List<object>>();
+	public BehaviorSubject<List<object>> AuditList = new BehaviorSubject<List<object>>(new List<object>());
 	public bool PublicCardAnimState = false;
 
 	// 已设置的思考时间（下一手生效）
