@@ -58,8 +58,6 @@ public class RecallPage : MonoBehaviour {
 	}
 
 	void reload(Dictionary<string, object> data) {
-        InsuranceGo.SetActive(false);
-
 
 		var ret = data.Dict("ret");
 
@@ -71,8 +69,19 @@ public class RecallPage : MonoBehaviour {
 
 		Rect.transform.Clear();
 
+        var insuValue = ret.Dict("insurance").Int("score");
+
+        if (insuValue != 0)
+        {
+            InsuranceGo.SetActive(true);
+            InsuranceText.text = _.Number2Text(insuValue);
+            InsuranceText.color = _.GetTextColor(insuValue);
+            var insurance = Instantiate(InsuranceGo, Rect.transform, false);
+            InsuranceGo.SetActive(false);
+        }
+
 		var comCards = ret.Dict("community").IL("cards");
-		
+
 		var list = ret.List("list");
         for (int num = 0; num < list.Count; num++)
         {
@@ -121,18 +130,7 @@ public class RecallPage : MonoBehaviour {
         {
             isCollected = false;
             Collect.isOn = false;
-        }
-
-		var insuValue = ret.Dict("insurance").Int("score");
-
-		if (insuValue == 0) {
-			return ;
-		}
-		
-		InsuranceGo.SetActive(true);
-        PlayerList.sizeDelta -= new Vector2(0, 64);
-		InsuranceText.text = _.Number2Text(insuValue);	
-		InsuranceText.color = _.GetTextColor(insuValue);
+        }		
 	}
 
     private void SetBTag(RecallUser user, string str)
