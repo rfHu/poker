@@ -261,7 +261,6 @@ public class PlayerObject : MonoBehaviour {
 			return ;
 		}
 
-		// PlayerAct.gameObject.SetActive(active);
 		var cvg = PlayerAct.GetComponent<CanvasGroup>();
 		var targetValue = active ? 1 : 0;
 		var duration = 0.1f;
@@ -654,6 +653,8 @@ public class PlayerObject : MonoBehaviour {
 		if (cards.Count < 2 || isSelf()) {
 			return ;
 		}
+
+		PlayerAct.gameObject.SetActive(false);		
 	
 		if (cards[0] > 0 || cards[1] > 0) {
 			// 显示GameObject

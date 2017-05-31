@@ -17,6 +17,8 @@ public sealed class Connect  {
 
 	private int seq = 0;
 
+	private static IDisposable connectDisposa;
+
 	private Connect() {
 		// Charles Proxy
 		if (!string.IsNullOrEmpty(Connect.Proxy)) {
@@ -37,8 +39,8 @@ public sealed class Connect  {
 		manager.Socket.On("reconnecting", onDisconnect);
 		manager.Socket.On("reconnect_attempt", onDisconnect);
 
-		manager.Socket.On("reconnect_failed", onReconnectFail);
-		manager.Socket.On("error", onError);
+		manager.Socket.On("reconnect_failed", onDisconnect);
+		manager.Socket.On("error", onDisconnect);
 
 		manager.Open();	
 	}
@@ -70,7 +72,14 @@ public sealed class Connect  {
 	}
 
 	private void onDisconnect(Socket socket, Packet packet, params object[] args) {
-		
+		if (connectDisposa != null) {
+			connectDisposa.Dispose();
+		}
+
+		// 2s没有连接上，显示loading
+		connectDisposa = Observable.Timer(TimeSpan.FromSeconds(2)).Subscribe((_) => {
+			RxSubjects.Connecting.OnNext(true);	
+		});
 	}
 
 	private void onReconnectFail(Socket socket, Packet packet, params object[] args) {
@@ -93,9 +102,17 @@ public sealed class Connect  {
 
 			if (error == 400) {				
 				PokerUI.DisAlert("房间不存在！");
+				return ;
 			}
 
 			_.Log("Unity: 进入房间逻辑执行完毕");
+
+			// 取消2s内的loading提示
+			if (connectDisposa != null) {
+				connectDisposa.Dispose();
+			}
+
+			RxSubjects.Connecting.OnNext(false);
 		}, () => {
 			PokerUI.DisAlert("连接服务器超时");
 		});

@@ -63,19 +63,19 @@ public class InsureToast: MonoBehaviour {
                 case 20:
                     text = String.Format(
                         "已购买<color=#18FFFFFF>{0}</color>张OUTS\n保费<color=#FFAB40FF>{1}</color>，预计赔付<color=#FFAB40FF>{2}</color>", 
-                     ct, amount, pay);
+                     ct, _.Num2CnDigit(amount), _.Num2CnDigit(pay));
                     break;
                 case 3:
                     text = cdText(time);
                     break;
                 case 11:
                     if (amount == 0) {
-                        text = String.Format("获得保险赔付：<color=#FFAB40FF>{0}</color>", pay);
+                        text = String.Format("获得保险赔付：<color=#FFAB40FF>{0}</color>", _.Num2CnDigit(pay));
                     } else {
                         text = String.Format(
                             "获得保险赔付：<color=#FFAB40FF>{0}</color>\n扣除保费：<color=#FFAB40FF>{1}</color>",
-                            pay,
-                            amount
+                            _.Num2CnDigit(pay),
+                            _.Num2CnDigit(amount)
                         );
                     }
                     

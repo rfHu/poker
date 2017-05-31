@@ -11,6 +11,7 @@ using DG.Tweening;
 
 public class Controller : MonoBehaviour {
 	public GameObject seat;
+	public GameObject LoadingModal;
 
 	public GameObject gameInfo;
 	public GameObject gameInfoWrapper;
@@ -347,6 +348,11 @@ public class Controller : MonoBehaviour {
 		GameData.Shared.GameInfoReady.Where((ready) => ready && !infoShow).Subscribe((_) => {
 			showGameInfo();
 			infoShow = true;
+		}).AddTo(this);
+
+		RxSubjects.Connecting.Subscribe((stat) => {
+			LoadingModal.transform.SetAsLastSibling();
+			LoadingModal.SetActive(stat); 
 		}).AddTo(this);
 
 		GameData.Shared.LeftTime.Subscribe((value) => {

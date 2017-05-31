@@ -18,7 +18,7 @@ public class AllInPlayer : MonoBehaviour {
             Cards[0].Show(cards[0]);
             Cards[1].Show(cards[1]);
 
-            Kind.text = outsNumber.ToString() + "个OUTS";
+            Kind.text = outsNumber.ToString() + "张";
         }
 
 }

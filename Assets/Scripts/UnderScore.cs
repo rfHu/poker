@@ -73,14 +73,14 @@ public class _ {
 
         if (value > y) {
             var v = value / y;
-            if (v > 100) {
+            if (v >= 100) {
                digits = 0;
             } 
 
             return Math.Round(v, digits).ToString() + "亿";   
         } else if (value > w) {
             var v = value / w;
-            if (v > 100) {
+            if (v >= 100) {
                 digits = 0;
             }
 
