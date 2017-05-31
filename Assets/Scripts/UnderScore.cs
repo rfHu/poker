@@ -61,37 +61,40 @@ public class _ {
     }
 
     static public string Num2CnDigit<T>(T num, bool symbol = false) {
-        var value = Convert.ToDouble(num);
+        var value = (float)Convert.ToDouble(num);
 
-        if (Double.IsInfinity(value)) {
+        if (float.IsInfinity(value)) {
             return "";
         }
 
-        double w = 100 * 100;
-        double y = w * w; 
+        float w = 100 * 100;
+        float y = w * w; 
         var digits = 2;
+        var text = "";
 
-        if (value > y) {
+        if (Mathf.Abs(value) >= y) {
             var v = value / y;
-            if (v >= 100) {
+            if (Mathf.Abs(v) >= 100) {
                digits = 0;
             } 
 
-            return Math.Round(v, digits).ToString() + "亿";   
-        } else if (value > w) {
+            text = Math.Round(v, digits).ToString() + "亿";   
+        } else if (Mathf.Abs(value) >= w) {
             var v = value / w;
-            if (v >= 100) {
+            if (Mathf.Abs(v) >= 100) {
                 digits = 0;
             }
 
-            return Math.Round(v, digits).ToString() + "万";
+            text = Math.Round(v, digits).ToString() + "万";
+        } else {
+            text = value.ToString();
         }
 
         if (symbol && value > 0) {
-            return "+" + value.ToString();
-        } else {
-            return value.ToString();
+            return "+" + text;
         }
+
+        return text;
     }
 
     static public Color HexColor(string hex) {
