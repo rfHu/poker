@@ -35,7 +35,7 @@ public sealed class Connect  {
 		manager.Socket.On("reconnect", onConnect);
 
 		manager.Socket.On("connecting", onDisconnect);
-		manager.Socket.On("disconnect", onDisconnect);
+		// manager.Socket.On("disconnect", onDisconnect);
 		manager.Socket.On("reconnecting", onDisconnect);
 		manager.Socket.On("reconnect_attempt", onDisconnect);
 
