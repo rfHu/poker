@@ -62,17 +62,17 @@ public class RecallUser : MonoBehaviour {
             var actNum = actDict.Int("num");
             if (ActionsText[i].text != "" && actNum != 0)
             {
-                ActionsText[i].text += _.Number2Text(actNum);
+                ActionsText[i].text += _.Num2CnDigit(actNum);
             }
 
             var insuranceNum = actDict.Int("in_amount");
 
             if (insuranceNum > 0)
             {
-                ActionsText[i].transform.FindChild("InsuranceNum").GetComponent<Text>().text = "投保" + _.Number2Text(insuranceNum);
-            } else {
-				ActionsText[i].gameObject.SetActive(false);
-			}
+				var go = ActionsText[i].transform.FindChild("InsuranceNum").gameObject;
+				go.SetActive(true);
+                go.GetComponent<Text>().text = "投保" + _.Num2CnDigit(insuranceNum);
+            } 
         }
 	}
 
