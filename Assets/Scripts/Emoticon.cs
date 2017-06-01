@@ -32,11 +32,11 @@ public class Emoticon : MonoBehaviour {
             transform.localScale = new Vector3(-1, 1, 0);
 
 
-        Vector2 aimSeat = toSeat.transform.localPosition + new Vector3(0, 60, 0);
+        Vector2 aimSeat = toSeat.transform.localPosition + new Vector3(0, 65, 0);
 
         if (isToMe) 
         {
-            aimSeat -= new Vector2(0,165);
+            aimSeat -= new Vector2(0,230);
         }
 
         Tween tween = _rectTransform.DOLocalMove(aimSeat, 0.6f).SetEase(Ease.OutQuad);
