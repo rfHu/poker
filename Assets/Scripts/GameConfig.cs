@@ -302,7 +302,7 @@ sealed public class GameData {
 			} 
 
 			Observable.Timer(TimeSpan.FromSeconds(delay)).AsObservable().Subscribe((_) => {
-                if (e.Data.Int("maxFiveRank") != 0)
+                if (e.Data.ContainsKey("maxFiveRank"))
                 {
 				    MaxFiveRank.Value = e.Data.Int("maxFiveRank");	           
                 }

@@ -36,7 +36,7 @@ public class Emoticon : MonoBehaviour {
 
         if (isToMe) 
         {
-            aimSeat -= new Vector2(0,230);
+            aimSeat += new Vector2(195,-230);
         }
 
         Tween tween = _rectTransform.DOLocalMove(aimSeat, 0.6f).SetEase(Ease.OutQuad);
