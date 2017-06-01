@@ -9,6 +9,8 @@ using Extensions;
 
 public class CircleMask : MonoBehaviour {
 	bool activated = false;
+	private float time = 0;
+	private int tickTime = 8; 
 	ProceduralImage proImage;
 	public Text numberText;
 
@@ -59,8 +61,8 @@ public class CircleMask : MonoBehaviour {
 
 	IEnumerator run(float left) {
 		activated = true;
+		time = left;
 
-		float time = left;
 		float total = left.GetThinkTime();
 		var flag = false;
 
@@ -69,9 +71,10 @@ public class CircleMask : MonoBehaviour {
 			SetFillAmount(time / total, time);
 
 			// 最后8秒出倒计时的声音
-			if (!flag && time <= 8 && EnableTick) {
+			if (!flag && time <= tickTime && EnableTick) {
 				flag = true;
 				tickSound();
+				clickSound();
 			}
 			
 			yield return new WaitForFixedUpdate(); 
@@ -86,6 +89,15 @@ public class CircleMask : MonoBehaviour {
 		}
 
 		G.PlaySound("half_time");
+	}
+
+	private void clickSound() {
+		if (!activated || time > tickTime) {
+			return ;
+		}
+
+		G.PlaySound("time");
+		Invoke("clickSound", 1f);
 	}
 
 	public void SetTextColor(Color color) {
