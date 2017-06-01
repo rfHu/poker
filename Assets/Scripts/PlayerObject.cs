@@ -309,23 +309,23 @@ public class PlayerObject : MonoBehaviour {
 
 			switch(e) {
 				case ActionState.Check:
-					MasterAudio.PlaySound("check");
+					G.PlaySound("check");
 					break;
 				case ActionState.Fold:
-					MasterAudio.PlaySound("fold_boy");
-					MasterAudio.PlaySound("foldpai");
+					G.PlaySound("fold_boy");
+					G.PlaySound("foldpai");
 					break;
 				case ActionState.Call:
-					MasterAudio.PlaySound("call_boy");
+					G.PlaySound("call_boy");
 					break;
 				case ActionState.Allin:
 					if (player.ActStateTrigger) {
-						MasterAudio.PlaySound("allin_boy");
-						MasterAudio.PlaySound("allin");
+						G.PlaySound("allin_boy");
+						G.PlaySound("allin");
 					}
 					break;
 				case ActionState.Raise:
-					MasterAudio.PlaySound("raise_boy");
+					G.PlaySound("raise_boy");
 					break;
 				default:
 					break;
@@ -766,13 +766,13 @@ public class PlayerObject : MonoBehaviour {
 					}
 				} else {
 					if (!restore) {
-						MasterAudio.PlaySound("on_turn");
+						G.PlaySound("on_turn");
 					}
 					RxSubjects.TurnToMyAction.OnNext(true);
 				}
 			} else {
 				if (!restore) {
-					MasterAudio.PlaySound("on_turn");
+					G.PlaySound("on_turn");
 				}
 				RxSubjects.TurnToMyAction.OnNext(true);
 			}

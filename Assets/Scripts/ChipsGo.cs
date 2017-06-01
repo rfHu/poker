@@ -34,7 +34,7 @@ public class ChipsGo : MonoBehaviour {
 		};
 
 		if (player.ChipsChange) {
-			MasterAudio.PlaySound("chip");
+			G.PlaySound("chip");
 			doTween().OnComplete(cb);
 		} else {
 			GetComponent<RectTransform>().anchoredPosition = getVector();
@@ -47,7 +47,7 @@ public class ChipsGo : MonoBehaviour {
 		this.player = player;
 		addEvents();
 
-		MasterAudio.PlaySound("chip");
+		G.PlaySound("chip");
 		doTween().OnComplete(() => {
 			Destroy(gameObject);	
 			callback();
@@ -59,7 +59,7 @@ public class ChipsGo : MonoBehaviour {
 			return ;
 		}
 
-		MasterAudio.PlaySound("hechip");
+		G.PlaySound("hechip");
 
 		hided = true;
 

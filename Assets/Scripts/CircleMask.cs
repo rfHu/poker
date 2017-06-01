@@ -69,7 +69,7 @@ public class CircleMask : MonoBehaviour {
 			SetFillAmount(time / total, time);
 
 			// 最后8秒出倒计时的声音
-			if (!flag && time <= 8) {
+			if (!flag && time <= 8 && EnableTick) {
 				flag = true;
 				tickSound();
 			}
@@ -85,7 +85,7 @@ public class CircleMask : MonoBehaviour {
 			return ;
 		}
 
-		MasterAudio.PlaySound("half_time");
+		G.PlaySound("half_time");
 	}
 
 	public void SetTextColor(Color color) {

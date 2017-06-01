@@ -62,7 +62,7 @@ public class Card : MonoBehaviour {
 		}
 
 		Show(index, anim);
-		MasterAudio.PlaySound("fapai_1");
+		G.PlaySound("fapai_1");
 	}
 
 	IEnumerator flipCard(int index, Action complete = null) {
