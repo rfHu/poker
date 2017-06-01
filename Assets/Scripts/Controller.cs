@@ -298,6 +298,7 @@ public class Controller : MonoBehaviour {
 			startButton.SetActive(true);
             PauseGame.SetActive(false);
 		} else {
+			startButton.SetActive(false);
 			PauseGame.SetActive(true);
 			PauseGame.transform.Find("Text").GetComponent<Text>().text = "等待房主开始游戏";
 		}
@@ -348,25 +349,7 @@ public class Controller : MonoBehaviour {
 		GameData.Shared.GameInfoReady.Where((ready) => ready && !infoShow).Subscribe((_) => {
 			showGameInfo();
 			infoShow = true;
-
-			GameData.Shared.LeftTime.Subscribe((value) => {
-				if (!GameData.Shared.GameStarted) {
-					setText(TimeLeftGo, "暂未开始");
-					return;
-				}
-
-				if (value > 5 * 60) {
-					hasShowEnding = false;
-				} else {
-					if (!hasShowEnding) {
-						PokerUI.Toast("牌局将在5分钟内结束");
-					}
-
-					hasShowEnding = true;
-				}
-
-				setText(TimeLeftGo, secToStr(value));
-			}).AddTo(this);
+			addReadyEvents();	
 		}).AddTo(this);
 
 		RxSubjects.Connecting.Subscribe((stat) => {
@@ -381,21 +364,6 @@ public class Controller : MonoBehaviour {
         GameData.Shared.Straddle.Subscribe((value) => {
             setBBGoText();
         }).AddTo(this);
-
-		GameData.Shared.Paused.Subscribe((pause) => {
-			if (!GameData.Shared.GameStarted) {
-				setNotStarted();
-				return ;
-			}
-
-			PauseGame.transform.Find("Text").GetComponent<Text>().text = "房主已暂停游戏";
-
-			if (pause && !GameData.Shared.InGame) {
-				PauseGame.SetActive(true);
-			} else {
-				PauseGame.SetActive(false);
-			}
-		}).AddTo(this);
 
 		Action<Player> showPlayer = (obj) => {
 			var parent = Seats[obj.Index].transform;
@@ -688,6 +656,42 @@ public class Controller : MonoBehaviour {
          {
              ExpressionButton.SetActive(action);
          }).AddTo(this);
+	}
+
+	private void addReadyEvents() {
+		GameData.Shared.LeftTime.Subscribe((value) => {
+			if (!GameData.Shared.GameStarted) {
+				setText(TimeLeftGo, "暂未开始");
+				return;
+			}
+
+			if (value > 5 * 60) {
+				hasShowEnding = false;
+			} else {
+				if (!hasShowEnding) {
+					PokerUI.Toast("牌局将在5分钟内结束");
+				}
+
+				hasShowEnding = true;
+			}
+
+			setText(TimeLeftGo, secToStr(value));
+		}).AddTo(this);
+
+		GameData.Shared.Paused.Subscribe((pause) => {
+			if (!GameData.Shared.GameStarted) {
+				setNotStarted();
+				return ;
+			}
+
+			PauseGame.transform.Find("Text").GetComponent<Text>().text = "房主已暂停游戏";
+
+			if (pause && !GameData.Shared.InGame) {
+				PauseGame.SetActive(true);
+			} else {
+				PauseGame.SetActive(false);
+			}
+		}).AddTo(this);
 	}
 
 	private CanvasGroup findExpCvg() {
