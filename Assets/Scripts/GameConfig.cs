@@ -226,6 +226,9 @@ sealed public class GameData {
 		RxSubjects.UnSeat.AsObservable().Subscribe((e) => {
 			var index = e.Data.Int("where");
 			GameData.Shared.Players.Remove(index);
+
+			// 清空数据
+			GameData.Shared.MaxFiveRank.Value = 0;
 		});
 
 		RxSubjects.GameStart.AsObservable().Subscribe((e) => {

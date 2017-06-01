@@ -17,7 +17,7 @@ public class ChipsGrp : MonoBehaviour {
 		doAnim(Chips[3], 0.15f);	
 		doAnim(Chips[4], 0.2f);	
 
-		MasterAudio.PlaySound("chipfly");
+		G.PlaySound("chipfly");
 
 		Destroy(gameObject);
 	} 

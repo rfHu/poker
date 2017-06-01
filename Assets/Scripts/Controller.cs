@@ -400,7 +400,7 @@ public class Controller : MonoBehaviour {
 
 		GameData.Shared.PublicCards.ObserveAdd().Subscribe((e) => {
 			if (GameData.Shared.PublicCardAnimState) {
-				MasterAudio.PlaySound("fapai");
+				G.PlaySound("fapai");
 				cardAnimQueue.Enqueue(new KeyValuePair<int, int>(e.Index, e.Value));
 				startQueue();
 			} else {

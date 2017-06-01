@@ -41,4 +41,12 @@ public class G {
 			cb();
 		}		
 	}
+
+	public static void PlaySound(string name) {
+		if (GameData.Shared.muted) {
+			return ;
+		}
+
+		MasterAudio.PlaySound(name);		
+	}
 }

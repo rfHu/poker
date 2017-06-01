@@ -38,26 +38,26 @@ public class EmoticonEvemt : MonoBehaviour {
 
     public void LabberSound() 
     {
-        MasterAudio.PlaySound("mf_lengjing");
+        G.PlaySound("mf_lengjing");
     }
 
     public void TomatoSound()
     {
-        MasterAudio.PlaySound("mf_xihongshi");
+        G.PlaySound("mf_xihongshi");
     }
 
     public void FlowerSound()
     {
-        MasterAudio.PlaySound("mf_meigui");
+        G.PlaySound("mf_meigui");
     }
 
     public void CatchSound()
     {
-        MasterAudio.PlaySound("mf_zhuoji");
+        G.PlaySound("mf_zhuoji");
     }
 
     public void BoomSound()
     {
-        MasterAudio.PlaySound("mf_zhadan");
+        G.PlaySound("mf_zhadan");
     }
 }
