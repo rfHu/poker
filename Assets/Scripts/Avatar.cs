@@ -2,11 +2,13 @@
 using UnityEngine.UI;
 using System;
 
-[RequireComponent(typeof(Button)), RequireComponent(typeof(RawImage))]
+[RequireComponent(typeof(RawImage))]
 public class Avatar : MonoBehaviour {
 	public string Uid;
 
 	public Action BeforeClick;
+
+	public GameObject ClickObject;
 
 	void onClick() {
 		if (Uid == null || string.IsNullOrEmpty(Uid)) {
@@ -24,13 +26,21 @@ public class Avatar : MonoBehaviour {
 	}
 
 	public void SetImage(string url) {
-		var img = GetComponent<RawImage>();
 		StartCoroutine(_.LoadImage(url, (texture) => {
-			img.texture = _.Circular(texture);
+			if (this == null) {
+				return ;
+			}
+			
+			GetComponent<RawImage>().texture = _.Circular(texture);
 		}));
 	}
 	
 	void Awake() {
-		GetComponent<Button>().onClick.AddListener(onClick);
+		if (ClickObject == null) {
+			ClickObject = gameObject;
+		}
+
+		var btn = ClickObject.AddComponent<Button>();
+		btn.onClick.AddListener(onClick);
 	} 
 }

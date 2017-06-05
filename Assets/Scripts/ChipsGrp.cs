@@ -2,6 +2,7 @@
 using UnityEngine;
 using DG.Tweening;
 using DarkTonic.MasterAudio;
+using UnityEngine.UI;
 
 public class ChipsGrp : MonoBehaviour {
 	public List<GameObject> Chips;
@@ -24,6 +25,7 @@ public class ChipsGrp : MonoBehaviour {
 
 	private void doAnim(GameObject go, float delay) {
 		go.transform.SetParent(player.transform, true);
+		go.GetComponent<Image>().DOFade(0.3f, 0.3f).SetDelay(delay);
 		go.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0, 0), 0.3f).SetDelay(delay).OnComplete(() => {
 			Destroy(go);
 		});	
