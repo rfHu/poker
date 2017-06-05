@@ -227,8 +227,11 @@ sealed public class GameData {
 			var index = e.Data.Int("where");
 			GameData.Shared.Players.Remove(index);
 
+			var uid = e.Data.String("uid");
 			// 清空数据
-			GameData.Shared.MaxFiveRank.Value = 0;
+			if (uid == Uid) {
+				GameData.Shared.MaxFiveRank.Value = 0;
+			}
 		});
 
 		RxSubjects.GameStart.AsObservable().Subscribe((e) => {
