@@ -8,6 +8,10 @@ public class GamerList : MonoBehaviour {
 
     public GameObject ListObj;
 
+    public GameObject NoneText;
+
+    public Transform Content;
+
 	// Use this for initialization
 	void Awake () {
             var data = new Dictionary<string, object>(){
@@ -22,10 +26,15 @@ public class GamerList : MonoBehaviour {
 			var ret = json.Dict("ret");
             var list = ret.List("list");
 
+            if (list.Count > 0)
+            {
+                NoneText.SetActive(false);
+            }
+
             foreach (var item in list)
             {
                 var dict = item as Dictionary<string, object>;
-                var go = Instantiate(ListObj);
+                var go = Instantiate(ListObj, Content);
                 go.GetComponent<GamerListObj>().Init(dict);
             }
         });
