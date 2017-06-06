@@ -112,9 +112,9 @@ public class ScoreCtrl : MonoBehaviour {
                 }
         	}
 
-            if (InGameViewport.transform.childCount == 0)
+            if (OutGameViewport.transform.childCount < 2)
             {
-                InGameViewport.SetActive(false);
+                OutGameViewport.SetActive(false);
             }
 
 			// 游客
