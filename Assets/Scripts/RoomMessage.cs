@@ -77,7 +77,6 @@ public class RoomMessage : MonoBehaviour {
         if (GameData.Shared.Owner)
         {
             Buttons.SetActive(true);
-            GetComponent<RectTransform>().sizeDelta += new Vector2(0, 128);
         }
 
 	}
