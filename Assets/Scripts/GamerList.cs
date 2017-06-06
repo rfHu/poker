@@ -35,6 +35,7 @@ public class GamerList : MonoBehaviour {
             {
                 var dict = item as Dictionary<string, object>;
                 var go = Instantiate(ListObj, Content);
+                go.SetActive(true);
                 go.GetComponent<GamerListObj>().Init(dict);
             }
         });

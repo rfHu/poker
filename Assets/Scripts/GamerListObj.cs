@@ -49,4 +49,11 @@ public class GamerListObj : MonoBehaviour {
         TalkLimitImg.color = talkLimit ? Color.white : unlimitCol;
     }
 
+
+    public void OnGamerOptionClick()
+    {
+        var go = (GameObject)Instantiate(Resources.Load("Prefab/GamerOption"));
+        go.GetComponent<DOPopup>().Show();
+        go.GetComponent<GamerOption>().Init(enterLimit, seatLimit, talkLimit, uid, true);
+    }
 }

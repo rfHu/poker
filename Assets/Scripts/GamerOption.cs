@@ -56,13 +56,18 @@ public class GamerOption : MonoBehaviour {
 
     public void Back() 
     {
-        GetComponent<DOPopup>().Hide();
+        GetComponent<DOPopup>().Close();
 
-        if (fromList) { }
+        if (fromList) 
+        {
+            var go = (GameObject)Instantiate(Resources.Load("Prefab/GamerList"));
+            go.GetComponent<DOPopup>().Show();
+        }
         else 
         {
-            GetComponent<DOPopup>().Hide();
-
+            var userPopup = (GameObject)Instantiate(Resources.Load("Prefab/User"));
+            userPopup.GetComponent<DOPopup>().Show();
+            userPopup.GetComponent<UserDetail>().Init(uid);
         }
     }
 }
