@@ -12,6 +12,12 @@ public class ScoreCtrl : MonoBehaviour {
 
 	public Text Hands;
 
+    public Text Pot;
+
+    public Text Time;
+
+    public Text Buy;
+
 	public GameObject PlayerScore;
 
 	public GameObject GuestHeader;
@@ -34,7 +40,10 @@ public class ScoreCtrl : MonoBehaviour {
         {
 			var ret = json.Dict("ret");
             var insurance = ret.Dict("insurance");
-			Hands.text = string.Format("第{0}手", ret.Int("handid"));
+			Hands.text = ret.Int("handid").ToString();
+            Pot.text = ret.Int("avg_pot").ToString();
+            Time.text = ret.Int("hand_time").ToString();
+            Buy.text = ret.Int("avg_buy").ToString();
 
             if (GameData.Shared.NeedInsurance)
             {

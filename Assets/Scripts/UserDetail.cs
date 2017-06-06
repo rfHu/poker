@@ -26,33 +26,17 @@ public class UserDetail : MonoBehaviour {
     public Button StandUpButton;
     public Text[] EmoticonPrice;
 
-    RectTransform rectTransform;
     string Uid;
 
     public void Init(string Uid)
     {
-        rectTransform = gameObject.GetComponent<RectTransform>();
-
         this.Uid = Uid;
 
         if (GameData.Shared.Owner && Uid != GameData.Shared.Uid)
-        {
             ButtonTeam.SetActive(true);
-            rectTransform.sizeDelta = new Vector2(825, 892.5f);
-
-            if (GameData.Shared.FindPlayerIndex(Uid) == -1)
-            {
-                setStandUpButton(false);
-            }
-        }
-
+        
         if (Uid == GameData.Shared.Uid || GameData.Shared.MySeat == -1 || GameData.Shared.FindPlayerIndex(Uid) == -1)
-        {
             EmoticonsTeam.SetActive(false);
-            rectTransform.sizeDelta -= new Vector2(0, 216);
-            R1.GetComponent<RectTransform>().localPosition -=  new Vector3(0, 216, 0);
-            R2.GetComponent<RectTransform>().localPosition -= new Vector3(0, 216, 0);
-        }
 
         foreach (var button in EmoticonButtons)
         {
@@ -123,6 +107,11 @@ public class UserDetail : MonoBehaviour {
             }
         });
 	}
+
+    public void OnGamerOptionClick() 
+    {
+
+    }
 
     public void OnKickOut() 
     {
