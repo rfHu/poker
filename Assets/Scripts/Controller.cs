@@ -57,6 +57,12 @@ public class Controller : MonoBehaviour {
 		load();
     }
 
+	void OnDestroy()
+	{
+		// 在这里重置相关数据
+		GameData.Shared.PlayerCount.Value = 0;
+	}
+
 	public void load() {
 		registerRxEvents();
 
@@ -281,6 +287,12 @@ public class Controller : MonoBehaviour {
 	}
 
 	private void setupSeats(int numberOfPlayers) {
+		// 删除已有座位
+		var seats = FindObjectsOfType<Seat>();
+		foreach(var seat in seats) {
+			Destroy(seat.gameObject);
+		}
+		
 		anchorPositions = getVectors (numberOfPlayers);
 
 		for (int i = 0; i < numberOfPlayers; i++) {
@@ -340,7 +352,6 @@ public class Controller : MonoBehaviour {
 	}
 
 	void registerRxEvents() {
-		// 玩家数是不能改变的，所以在这里认为数据准备好了
 		GameData.Shared.PlayerCount.Where((value) => value > 0).Subscribe((value) => {
 			setupSeats(value);
 		}).AddTo(this);
