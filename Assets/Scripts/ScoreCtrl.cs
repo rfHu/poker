@@ -136,7 +136,6 @@ public class ScoreCtrl : MonoBehaviour {
 				guestObj.SetActive(true);
 				Avatar avatar = guestObj.transform.Find("Avatar").GetComponent<Avatar>();
 				avatar.Uid = guest.String("uid");
-                avatar.AddClickEvent();
 				avatar.SetImage(guest.String("avatar"));
 				avatar.BeforeClick = () => {
 					GetComponent<DOPopup>().Close();
