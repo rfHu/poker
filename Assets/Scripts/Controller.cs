@@ -43,6 +43,10 @@ public class Controller : MonoBehaviour {
 
     public GameObject ExpressionButton;
 
+    public GameObject ChatButton;
+
+    public GameObject TalkButton;
+
 	private bool hasShowEnding = false;
 
 	public static Controller Instance; 
@@ -423,6 +427,11 @@ public class Controller : MonoBehaviour {
 			resetAllCards();
 		}).AddTo(this);
 
+        GameData.Shared.TalkLimit.Subscribe((limit) => 
+        {
+            TalkLimit(limit);
+        }).AddTo(this);
+
 		RxSubjects.GameEnd.Subscribe((e) => {
 			// 关闭连接
 			Connect.Shared.CloseImmediate();
@@ -642,26 +651,35 @@ public class Controller : MonoBehaviour {
         }).AddTo(this);
 
 		 RxSubjects.KickOut.Subscribe((e) =>{
-            string Uid = e.Data.String("uid");
-            string name = GameData.Shared.FindPlayer(Uid).Name;
-            string str = name + "被房主请出房间";
+            string str = e.Data.String("name") + "被房主请出房间";
             PokerUI.Toast(str);
         }).AddTo(this);
 
         RxSubjects.StandUp.Subscribe((e) =>
         {
-            string Uid = e.Data.String("uid");
-            string name = GameData.Shared.FindPlayer(Uid).Name;
-            string str = name + "被房主强制站起";
-            PokerUI.Toast(str);
+            int seat = e.Data.Int("where");
+            if (seat >-1)
+            {
+                string str = e.Data.String("name") + "被房主强制站起";
+                PokerUI.Toast(str);
+            }
         }).AddTo(this);
 
         RxSubjects.NoTalking.Subscribe((e) => 
         {
             string Uid = e.Data.String("uid");
-            string name = GameData.Shared.FindPlayer(Uid).Name;
-            string str = name + "被房主禁言";
+            bool type = e.Data.Int("type") == 1;
+            string str = e.Data.String("name");
+
+            str += type ? "被房主禁言" : "被解除禁言";
+
+            if (Uid == GameData.Shared.Uid)
+            {
+                TalkLimit(type);
+            }
+
             PokerUI.Toast(str);
+
         }).AddTo(this);
 
 		 RxSubjects.ToInsurance.Subscribe((e) =>
@@ -676,6 +694,16 @@ public class Controller : MonoBehaviour {
              ExpressionButton.SetActive(action);
          }).AddTo(this);
 	}
+
+    private void TalkLimit(bool limit)
+    {
+        ChatButton.SetActive(!limit);
+        TalkButton.SetActive(!limit);
+#if UNITY_EDITOR
+#else
+				Commander.Shared.VoiceIconToggle(!limit);
+#endif
+    }
 
 	private void addReadyEvents() {
 		GameData.Shared.LeftTime.Subscribe((value) => {

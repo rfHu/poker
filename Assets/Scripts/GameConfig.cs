@@ -549,7 +549,9 @@ sealed public class GameData {
 	public DateTime StartTime;
 	public bool InGame = false;  
 
-	public BehaviorSubject<int> AuditCD = new BehaviorSubject<int>(0); 
+	public BehaviorSubject<int> AuditCD = new BehaviorSubject<int>(0);
+
+    public BehaviorSubject<bool> TalkLimit = new BehaviorSubject<bool>(false);
 
 	private Dictionary<string, object> jsonData;
 
@@ -580,6 +582,8 @@ sealed public class GameData {
 		InGame = json.Bool("is_ingame");
 		MaxFiveRank.Value = json.Int("maxFiveRank");
 		LeftTime.Value = json.Long("left_time");
+
+        TalkLimit.OnNext(json.Int("talk_limit") == 1);
 
 		var startTs = json.Int("begin_time");
 		StartTime = _.DateTimeFromTimeStamp(startTs);
