@@ -22,7 +22,6 @@ public class Avatar : MonoBehaviour {
 		var userPopup = (GameObject)Instantiate(Resources.Load("Prefab/User"));
         userPopup.GetComponent<DOPopup>().Show();
         userPopup.GetComponent<UserDetail>().Init(Uid);
-		userPopup.GetComponent<UserDetail>().RequestById(Uid);
 	}
 
 	public void SetImage(string url) {
@@ -40,7 +39,12 @@ public class Avatar : MonoBehaviour {
 			ClickObject = gameObject;
 		}
 
-		var btn = ClickObject.AddComponent<Button>();
-		btn.onClick.AddListener(onClick);
-	} 
+	}
+
+    public void AddClickEvent()
+    {
+        var btn = ClickObject.AddComponent<Button>();
+        btn.onClick.AddListener(onClick);
+
+    }
 }

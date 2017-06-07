@@ -414,6 +414,9 @@ public sealed class Connect  {
 				case "gamer_state":
 					RxSubjects.GamerState.OnNext(rxdata);
 					break;
+                case "notalking":
+                    RxSubjects.NoTalking.OnNext(rxdata);
+                    break;
 				default:
 					break;
 			}

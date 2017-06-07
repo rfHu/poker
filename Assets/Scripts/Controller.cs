@@ -656,6 +656,14 @@ public class Controller : MonoBehaviour {
             PokerUI.Toast(str);
         }).AddTo(this);
 
+        RxSubjects.NoTalking.Subscribe((e) => 
+        {
+            string Uid = e.Data.String("uid");
+            string name = GameData.Shared.FindPlayer(Uid).Name;
+            string str = name + "被房主禁言";
+            PokerUI.Toast(str);
+        }).AddTo(this);
+
 		 RxSubjects.ToInsurance.Subscribe((e) =>
         {
             var InsurancePopup = (GameObject)GameObject.Instantiate(Resources.Load("Prefab/Insurance"));

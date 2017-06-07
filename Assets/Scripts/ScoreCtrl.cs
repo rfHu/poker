@@ -5,7 +5,18 @@ using Extensions;
 
 public class ScoreCtrl : MonoBehaviour {
 	public GameObject viewport;
+
+    public GameObject InGameViewport;
+
+    public GameObject OutGameViewport;
+
 	public Text Hands;
+
+    public Text Pot;
+
+    public Text Time;
+
+    public Text Buy;
 
 	public GameObject PlayerScore;
 
@@ -29,7 +40,10 @@ public class ScoreCtrl : MonoBehaviour {
         {
 			var ret = json.Dict("ret");
             var insurance = ret.Dict("insurance");
-			Hands.text = string.Format("第{0}手", ret.Int("handid"));
+			Hands.text = ret.Int("handid").ToString();
+            Pot.text = ret.Int("avg_pot").ToString();
+            Time.text = ret.Int("hand_time").ToString();
+            Buy.text = ret.Int("avg_buy").ToString();
 
             if (GameData.Shared.NeedInsurance)
             {
@@ -53,6 +67,10 @@ public class ScoreCtrl : MonoBehaviour {
 
 				if (dict.Int("takecoin") > 0) {
 					playerList.Add(dict);
+                    if (dict.Int("seat") < 0)
+                    {
+                        guestList.Add(dict);
+                    }
 				} else {
 					guestList.Add(dict);
 				}
@@ -78,17 +96,26 @@ public class ScoreCtrl : MonoBehaviour {
 				total.text = all.ToString();
 
 				var profit = player.Int("bankroll") - all; 
-				score.text = _.Number2Text(profit);
-				score.color = _.GetTextColor(profit);
-				entry.transform.SetParent(viewport.transform, false);
 
-                if (!player.Bool("in_room"))
+                if (player.Int("seat") < 0)
                 {
                     name.color = offlineColor;
                     total.color = offlineColor;
                     score.color = offlineColor;
+                    entry.transform.SetParent(OutGameViewport.transform, false);
+                }
+                else 
+                {
+				    score.text = _.Number2Text(profit);
+				    score.color = _.GetTextColor(profit);
+				    entry.transform.SetParent(InGameViewport.transform, false);
                 }
         	}
+
+            if (OutGameViewport.transform.childCount < 2)
+            {
+                OutGameViewport.SetActive(false);
+            }
 
 			// 游客
 			var header = (GameObject)Instantiate(GuestHeader);
@@ -109,6 +136,7 @@ public class ScoreCtrl : MonoBehaviour {
 				guestObj.SetActive(true);
 				Avatar avatar = guestObj.transform.Find("Avatar").GetComponent<Avatar>();
 				avatar.Uid = guest.String("uid");
+                avatar.AddClickEvent();
 				avatar.SetImage(guest.String("avatar"));
 				avatar.BeforeClick = () => {
 					GetComponent<DOPopup>().Close();

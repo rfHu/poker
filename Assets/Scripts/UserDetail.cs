@@ -26,33 +26,20 @@ public class UserDetail : MonoBehaviour {
     public Button StandUpButton;
     public Text[] EmoticonPrice;
 
-    RectTransform rectTransform;
     string Uid;
+    bool enterLimit;
+    bool seatLimit;
+    bool talkLimit;
 
     public void Init(string Uid)
     {
-        rectTransform = gameObject.GetComponent<RectTransform>();
-
         this.Uid = Uid;
 
         if (GameData.Shared.Owner && Uid != GameData.Shared.Uid)
-        {
             ButtonTeam.SetActive(true);
-            rectTransform.sizeDelta = new Vector2(825, 892.5f);
-
-            if (GameData.Shared.FindPlayerIndex(Uid) == -1)
-            {
-                setStandUpButton(false);
-            }
-        }
-
+        
         if (Uid == GameData.Shared.Uid || GameData.Shared.MySeat == -1 || GameData.Shared.FindPlayerIndex(Uid) == -1)
-        {
             EmoticonsTeam.SetActive(false);
-            rectTransform.sizeDelta -= new Vector2(0, 216);
-            R1.GetComponent<RectTransform>().localPosition -=  new Vector3(0, 216, 0);
-            R2.GetComponent<RectTransform>().localPosition -= new Vector3(0, 216, 0);
-        }
 
         foreach (var button in EmoticonButtons)
         {
@@ -68,9 +55,12 @@ public class UserDetail : MonoBehaviour {
                 }
             });
         }
+
+        RequestById(Uid);
     }
 
-	public void RequestById(string id) {
+	
+    void RequestById(string id) {
 		var d = new Dictionary<string, object>(){
 			{"uid", id}
 		};
@@ -121,35 +111,18 @@ public class UserDetail : MonoBehaviour {
                 var dict = emotion[i] as Dictionary<string, object>;
                 EmoticonPrice[i].text = "" + dict.Int("coin");
             }
+
+            enterLimit = data.Int("enter_limit") == 1;
+            seatLimit = data.Int("seat_limit") == 1;
+            talkLimit = data.Int("talk_limit") == 1;
         });
 	}
 
-    public void OnKickOut() 
+    public void OnGamerOptionClick() 
     {
-        var data = new Dictionary<string, object>(){
-			{"uid", Uid}
-		};
-
-        Connect.Shared.Emit(new Dictionary<string, object>() {
-			{"f", "kickout"},
-			{"args", data}
-		});
-
-        gameObject.GetComponent<DOPopup>().Close();
-    }
-
-    public void OnStandUp() 
-    {
-       var data = new Dictionary<string, object>(){
-			{"uid", Uid}
-		};
-
-        Connect.Shared.Emit(new Dictionary<string, object>() {
-			{"f", "standup"},
-			{"args", data}
-		});
-
-        gameObject.GetComponent<DOPopup>().Close();
+        var go = (GameObject)Instantiate(Resources.Load("Prefab/GamerOption"));
+        go.GetComponent<DOPopup>().Show();
+        go.GetComponent<GamerOption>().Init(enterLimit, seatLimit, talkLimit, Uid);
     }
 
     public void OnEmoticonClick(int Pid) 

@@ -9,9 +9,6 @@ using System;
 [RequireComponent(typeof(DOPopup))]
 public class RoomMessage : MonoBehaviour {
 
-    public Text PauseText;
-    private string pauseStr = "暂停牌局";
-    private string continueStr = "继续牌局";
     private string open = "开启";
     private Color openColor = new Color(0.09375f, 1, 1);
 
@@ -30,21 +27,9 @@ public class RoomMessage : MonoBehaviour {
     public Text GPSMes;
     public Text IPMes;
 
-    public GameObject Buttons;
+    public GameObject[] Buttons;
 
 	void Start () {
-        GameData.Shared.Paused.Subscribe((pause) =>
-        {
-            if (pause && GameData.Shared.GameStarted)
-            {
-                PauseText.text = continueStr;
-            }
-            else
-            {
-                PauseText.text = pauseStr;
-            }
-        }).AddTo(this);
-
         OwnerName.text = GameData.Shared.OwnerName;
 
         GameData.Shared.LeftTime.Subscribe((value) =>
@@ -76,8 +61,10 @@ public class RoomMessage : MonoBehaviour {
         
         if (GameData.Shared.Owner)
         {
-            Buttons.SetActive(true);
-            GetComponent<RectTransform>().sizeDelta += new Vector2(0, 128);
+            foreach (var item in Buttons)
+            {
+                item.SetActive(true);
+            }
         }
 
 	}
@@ -152,18 +139,7 @@ public class RoomMessage : MonoBehaviour {
         {
             var err = data.Int("err");
 
-            if (err == 0)
-            {
-                if (f == "start")
-                {
-                    PauseText.text = pauseStr;
-                }
-                else
-                {
-                    PauseText.text = continueStr;
-                }
-            }
-            else
+            if (err != 0)
             {
                 var msg = data.String("ret");
                 PokerUI.Alert(msg);
@@ -176,6 +152,13 @@ public class RoomMessage : MonoBehaviour {
     {
         GetComponent<DOPopup>().Close();
         var go = (GameObject)Instantiate(Resources.Load("Prefab/OwnerPanel"));
+        go.GetComponent<DOPopup>().Show();
+    }
+
+    public void GamerListPage() 
+    {
+        GetComponent<DOPopup>().Close();
+        var go = (GameObject)Instantiate(Resources.Load("Prefab/GamerList"));
         go.GetComponent<DOPopup>().Show();
     }
 }
