@@ -101,6 +101,7 @@ public class ScoreCtrl : MonoBehaviour {
                 {
                     name.color = offlineColor;
                     total.color = offlineColor;
+                    score.text = _.Number2Text(profit);
                     score.color = offlineColor;
                     entry.transform.SetParent(OutGameViewport.transform, false);
                 }
