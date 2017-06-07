@@ -651,40 +651,34 @@ public class Controller : MonoBehaviour {
         }).AddTo(this);
 
 		 RxSubjects.KickOut.Subscribe((e) =>{
-            string Uid = e.Data.String("uid");
-            string name = GameData.Shared.FindPlayer(Uid).Name;
-            string str = name + "被房主请出房间";
+            string str = e.Data.String("name") + "被房主请出房间";
             PokerUI.Toast(str);
         }).AddTo(this);
 
         RxSubjects.StandUp.Subscribe((e) =>
         {
-            string Uid = e.Data.String("uid");
-            string name = GameData.Shared.FindPlayer(Uid).Name;
-            string str = name + "被房主强制站起";
-            PokerUI.Toast(str);
+            int seat = e.Data.Int("where");
+            if (seat >-1)
+            {
+                string str = e.Data.String("name") + "被房主强制站起";
+                PokerUI.Toast(str);
+            }
         }).AddTo(this);
 
         RxSubjects.NoTalking.Subscribe((e) => 
         {
             string Uid = e.Data.String("uid");
-            string name = GameData.Shared.FindPlayer(Uid).Name;
-            int type = e.Data.Int("type");
-            string str = "";
+            bool type = e.Data.Int("type") == 1;
+            string str = e.Data.String("name");
 
-            if (type == 1)
+            str = type ? "被房主禁言" : "被解除禁言";
+
+            if (Uid == GameData.Shared.Uid)
             {
-                str = name + "被房主禁言";
-                TalkLimit(true);
-            }
-            else 
-            {
-                str = name + "被解除禁言";
-                TalkLimit(false);
+                TalkLimit(type);
             }
 
             PokerUI.Toast(str);
-
 
         }).AddTo(this);
 
