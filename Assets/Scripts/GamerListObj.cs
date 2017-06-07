@@ -17,6 +17,8 @@ public class GamerListObj : MonoBehaviour {
 
     public VectorImage TalkLimitImg;
 
+    public GameObject GamerAvatar;
+
     string uid;
     bool enterLimit;
     bool seatLimit;
@@ -47,6 +49,8 @@ public class GamerListObj : MonoBehaviour {
         EnterLimitImg.color = enterLimit ? Color.white : unlimitCol;
         SeatLimitImg.color = seatLimit ? Color.white : unlimitCol;
         TalkLimitImg.color = talkLimit ? Color.white : unlimitCol;
+
+        GamerAvatar.GetComponent<Avatar>().SetImage(gamerMes.String("avatar"));
     }
 
 
