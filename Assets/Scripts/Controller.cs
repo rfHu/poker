@@ -431,7 +431,10 @@ public class Controller : MonoBehaviour {
         {
             ChatButton.SetActive(!limit);
             TalkButton.SetActive(!limit);
-            Commander.Shared.VoiceIconToggle(!limit);
+#if UNITY_EDITOR
+		#else
+				Commander.Shared.VoiceIconToggle(!limit);
+		#endif
         }).AddTo(this);
 
 		RxSubjects.GameEnd.Subscribe((e) => {
