@@ -43,6 +43,10 @@ public class Controller : MonoBehaviour {
 
     public GameObject ExpressionButton;
 
+    public GameObject ChatButton;
+
+    public GameObject TalkButton;
+
 	private bool hasShowEnding = false;
 
 	public static Controller Instance; 
@@ -422,6 +426,13 @@ public class Controller : MonoBehaviour {
 		GameData.Shared.PublicCards.ObserveReset().Subscribe((_) => {
 			resetAllCards();
 		}).AddTo(this);
+
+        GameData.Shared.TalkLimit.Subscribe((limit) => 
+        {
+            ChatButton.SetActive(!limit);
+            TalkButton.SetActive(!limit);
+            Commander.Shared.VoiceIconToggle(!limit);
+        }).AddTo(this);
 
 		RxSubjects.GameEnd.Subscribe((e) => {
 			// 关闭连接
