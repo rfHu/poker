@@ -69,10 +69,16 @@ public class ScoreCtrl : MonoBehaviour {
 					playerList.Add(dict);
                     if (dict.Int("seat") < 0)
                     {
-                        guestList.Add(dict);
+                        if (dict.Bool("in_room"))
+                            guestList.Insert(0, dict);
+                        else
+                            guestList.Add(dict);
                     }
 				} else {
-					guestList.Add(dict);
+                    if (dict.Bool("in_room"))
+                        guestList.Insert(0, dict);
+                    else
+                        guestList.Add(dict);
 				}
 			}
 
