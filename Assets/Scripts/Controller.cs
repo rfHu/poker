@@ -429,12 +429,7 @@ public class Controller : MonoBehaviour {
 
         GameData.Shared.TalkLimit.Subscribe((limit) => 
         {
-            ChatButton.SetActive(!limit);
-            TalkButton.SetActive(!limit);
-#if UNITY_EDITOR
-		#else
-				Commander.Shared.VoiceIconToggle(!limit);
-		#endif
+            TalkLimit(limit);
         }).AddTo(this);
 
 		RxSubjects.GameEnd.Subscribe((e) => {
@@ -674,8 +669,23 @@ public class Controller : MonoBehaviour {
         {
             string Uid = e.Data.String("uid");
             string name = GameData.Shared.FindPlayer(Uid).Name;
-            string str = name + "被房主禁言";
+            int type = e.Data.Int("type");
+            string str = "";
+
+            if (type == 1)
+            {
+                str = name + "被房主禁言";
+                TalkLimit(true);
+            }
+            else 
+            {
+                str = name + "被解除禁言";
+                TalkLimit(false);
+            }
+
             PokerUI.Toast(str);
+
+
         }).AddTo(this);
 
 		 RxSubjects.ToInsurance.Subscribe((e) =>
@@ -690,6 +700,16 @@ public class Controller : MonoBehaviour {
              ExpressionButton.SetActive(action);
          }).AddTo(this);
 	}
+
+    private void TalkLimit(bool limit)
+    {
+        ChatButton.SetActive(!limit);
+        TalkButton.SetActive(!limit);
+#if UNITY_EDITOR
+#else
+				Commander.Shared.VoiceIconToggle(!limit);
+#endif
+    }
 
 	private void addReadyEvents() {
 		GameData.Shared.LeftTime.Subscribe((value) => {
