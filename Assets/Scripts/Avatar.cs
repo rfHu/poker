@@ -11,7 +11,6 @@ public class Avatar : MonoBehaviour {
 	public GameObject ClickObject;
 
 	void onClick() {
-        _.Log("1");
 		if (Uid == null || string.IsNullOrEmpty(Uid)) {
 			return ;
 		}
@@ -40,7 +39,12 @@ public class Avatar : MonoBehaviour {
 			ClickObject = gameObject;
 		}
 
-		var btn = ClickObject.AddComponent<Button>();
-		btn.onClick.AddListener(onClick);
-	} 
+	}
+
+    public void AddClickEvent()
+    {
+        var btn = ClickObject.AddComponent<Button>();
+        btn.onClick.AddListener(onClick);
+
+    }
 }
