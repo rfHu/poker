@@ -671,7 +671,7 @@ public class Controller : MonoBehaviour {
             bool type = e.Data.Int("type") == 1;
             string str = e.Data.String("name");
 
-            str = type ? "被房主禁言" : "被解除禁言";
+            str += type ? "被房主禁言" : "被解除禁言";
 
             if (Uid == GameData.Shared.Uid)
             {
