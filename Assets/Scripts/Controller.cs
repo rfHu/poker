@@ -355,6 +355,12 @@ public class Controller : MonoBehaviour {
 		});
 	}
 
+	private void gameReload() {
+		SeeLeftCard.SetActive(false);
+		cardAnimQueue.Clear();
+		queueIsActive = false;
+	}
+
 	void registerRxEvents() {
 		GameData.Shared.PlayerCount.Where((value) => value > 0).Subscribe((value) => {
 			setupSeats(value);
@@ -542,11 +548,11 @@ public class Controller : MonoBehaviour {
         }).AddTo(this);
 
         RxSubjects.GameStart.Subscribe((e) => {
-            SeeLeftCard.SetActive(false);
+			gameReload();
         }).AddTo(this);
 
 		RxSubjects.Look.Subscribe((e) => {
-			SeeLeftCard.SetActive(false);
+			gameReload();
         }).AddTo(this);
 
         RxSubjects.TurnToMyAction.Subscribe((action) => {
