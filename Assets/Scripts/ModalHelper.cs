@@ -49,7 +49,7 @@ public class ModalHelper: MonoBehaviour {
 		#else
             var modal = GameObject.FindObjectOfType<ModalHelper>();
 
-            if (modal == null) {
+            if (modal == null && !GameData.Shared.TalkLimit.Value) {
 				Commander.Shared.VoiceIconToggle(true);
             }
 		#endif	
