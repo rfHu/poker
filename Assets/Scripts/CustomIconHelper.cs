@@ -21,7 +21,7 @@ using MaterialUI;
 			
 			if (m_IconSet == null)
 			{
-				m_IconSet = VectorImageManager.GetIconSet(fontName);
+			m_IconSet = VectorImageManager.GetIconSet(fontName);
 			}
 		}
 

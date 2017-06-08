@@ -170,9 +170,9 @@ public class _ {
 		rect.anchoredPosition = new Vector2(0, 0);
     }
 
-    static public void Log(object text) {
+    static public void Log(object obj) {
         if (Debug.isDebugBuild) {
-            Debug.Log(String.Format("Unity3D: {0}", text));
+            Debug.Log(String.Format("Unity3D: {0}", obj));
         }
     }
 }

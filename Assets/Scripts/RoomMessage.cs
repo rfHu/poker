@@ -5,6 +5,7 @@ using Extensions;
 using UnityEngine.UI;
 using UniRx;
 using System;
+using MaterialUI;
 
 [RequireComponent(typeof(DOPopup))]
 public class RoomMessage : MonoBehaviour {
@@ -28,6 +29,8 @@ public class RoomMessage : MonoBehaviour {
     public Text IPMes;
 
     public GameObject[] Buttons;
+
+    public VectorImage PauseIcon; 
 
 	void Start () {
         OwnerName.text = GameData.Shared.OwnerName;
@@ -66,6 +69,18 @@ public class RoomMessage : MonoBehaviour {
                 item.SetActive(true);
             }
         }
+
+        GameData.Shared.Paused.Subscribe((pause) => {
+            String ico;
+
+            if (pause) {
+                ico = "zanting";
+            } else {
+                ico = "kaishi";
+            }
+
+            PauseIcon.vectorImageData = CustomIconHelper.GetIcon(ico).vectorImageData;
+        }).AddTo(this);
 
 	}
 
@@ -122,15 +137,20 @@ public class RoomMessage : MonoBehaviour {
     public void Pause()
     {
         string f;
+        bool paused;
 
         if (GameData.Shared.Paused.Value && GameData.Shared.GameStarted)
         {
             f = "start";
+            paused = false;
         }
         else
         {
             f = "pause";
+            paused = true;
         }
+
+        GameData.Shared.Paused.OnNext(paused);
 
         Connect.Shared.Emit(new Dictionary<string, object>() {
 			{"f", f},
