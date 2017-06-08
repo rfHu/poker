@@ -15,6 +15,24 @@ public enum ActionState {
 	Raise = 5
 }
 
+public static class ActionStateExt {
+	public static ActionState ToActionEnum(this String str) {
+		var map = new Dictionary<string, ActionState>() {
+			{"call", ActionState.Call},
+			{"check", ActionState.Check},
+			{"all_in", ActionState.Allin},
+			{"raise", ActionState.Raise},
+			{"fold", ActionState.Fold}
+		};
+
+		if (map.ContainsKey(str)) {
+			return map[str];			
+		}
+
+		return ActionState.None;
+	}
+}
+
 // 1、带入中，2、审核中，3、游戏中，4、留座中，5、托管中
 public enum PlayerState {
 	Waiting = 1,
@@ -91,6 +109,8 @@ sealed public class Player {
 
 	public BehaviorSubject<int> ReservedCD = new BehaviorSubject<int>(0); 
 
+	public ReactiveProperty<String> LastAct = new ReactiveProperty<String>();
+
 	public void SetState(int state, int cd = 0) {
 		var st = (PlayerState)state;
 		PlayerStat.OnNext(st);
@@ -118,6 +138,7 @@ sealed public class Player {
 		AuditCD = json.Int("unaudit_countdown");
 		Coins = json.Int("coins");
 		Allin.Value = json.Bool("is_allin");
+		LastAct.Value = json.String("last_act");
 
 		var showValue = Convert.ToString(json.Int("showcard"), 2);
 
@@ -355,13 +376,6 @@ sealed public class GameData {
 
 		Action<RxData> act = (e) => {
 			var userAction = e.Data.ToObject<UserActionModel>();
-			var map = new Dictionary<string, ActionState>() {
-				{"call", ActionState.Call},
-				{"check", ActionState.Check},
-				{"all_in", ActionState.Allin},
-				{"raise", ActionState.Raise}
-			};
-
 			Pot.Value = userAction.pot;
 
 			var index = userAction.seat;
@@ -374,7 +388,7 @@ sealed public class GameData {
 			player.PrChips.Value = userAction.pr_chips;
 			player.Bankroll.Value = userAction.bankroll;
 
-			player.ActState.OnNext(map[e.E]);
+			player.ActState.OnNext(e.E.ToActionEnum());
 		};
 
 		RxSubjects.Call.Subscribe(act);

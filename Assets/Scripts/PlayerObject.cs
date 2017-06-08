@@ -248,6 +248,8 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	private void dealAct(ActionState state) {
+		lastState = state;
+
 		setPlayerAct(true);
 		PlayerAct.SetAct(state);
 
@@ -337,9 +339,7 @@ public class PlayerObject : MonoBehaviour {
 				MoveOut();
 			}
 
-			lastState = e;
 			dealAct(e);
-
 			actCardsNumber = GameData.Shared.PublicCards.Count;	
 		}).AddTo(this);
 
@@ -622,6 +622,10 @@ public class PlayerObject : MonoBehaviour {
 					setReserveCd(value);
 				}).AddTo(this);
 			}
+		}).AddTo(this);
+
+		player.LastAct.Where((act) => !String.IsNullOrEmpty(act)).Subscribe((act) => {
+			dealAct(act.ToActionEnum());	
 		}).AddTo(this);
 	}
 
