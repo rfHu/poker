@@ -31,6 +31,7 @@ public class RoomMessage : MonoBehaviour {
     public GameObject[] Buttons;
 
     public VectorImage PauseIcon; 
+    public VectorImage ContinueIcon;
 
 	void Start () {
         OwnerName.text = GameData.Shared.OwnerName;
@@ -62,26 +63,20 @@ public class RoomMessage : MonoBehaviour {
         setMesText(GameData.Shared.GPSLimit, GPSMes);
         setMesText(GameData.Shared.IPLimit, IPMes);
         
-        if (GameData.Shared.Owner)
+        foreach (var item in Buttons)
         {
-            foreach (var item in Buttons)
-            {
-                item.SetActive(true);
-            }
+            item.SetActive(GameData.Shared.Owner);
         }
 
         GameData.Shared.Paused.Subscribe((pause) => {
-            String ico;
-
             if (pause) {
-                ico = "zanting";
+                PauseIcon.gameObject.SetActive(false);
+                ContinueIcon.gameObject.SetActive(true);
             } else {
-                ico = "kaishi";
+                PauseIcon.gameObject.SetActive(true);
+                ContinueIcon.gameObject.SetActive(false);
             }
-
-            PauseIcon.vectorImageData = CustomIconHelper.GetIcon(ico).vectorImageData;
         }).AddTo(this);
-
 	}
 
     private void setMesText(bool isOpen, Text text) 
