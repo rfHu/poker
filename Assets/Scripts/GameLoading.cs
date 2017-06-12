@@ -11,7 +11,7 @@ public class GameLoading : MonoBehaviour {
         external.SetSid("s%3A8b2dUD6ONK1kPi8WGC1ecyxsncWIKzxW.dOlYVe8sCXZjlx91fnNtFhQ0GWlHskWURr114GbqKeI");
         
 			external.SetProxy("http://localhost:8888");
-            external.SetRoomID("593e3c8b21533f707ec27bd9");
+            external.SetRoomID("593e7dbd9bb13c2d82fd2922");
 
 
 		#endif

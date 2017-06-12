@@ -604,7 +604,6 @@ sealed public class GameData {
 		// 游戏是否已开始
 		GameStarted = startTs != 0;
 
-		// ReactiveProperty 对同样的值不会触发onNext，所以这里强制执行一次
 		var pause = json.Int("is_pause") != 0;
 		Paused.OnNext(pause);
 		
