@@ -30,7 +30,7 @@ public class ScoreCtrl : MonoBehaviour {
 
     public Text InsuranceData;
 
-	private Color offlineColor = new Color(1, 1, 1, 0.4f);
+	private Color offlineColor = new Color(1, 1, 1, 0.6f);
 	
 	void Awake()
 	{
