@@ -28,7 +28,6 @@ public class Controller : MonoBehaviour {
 	public GameObject TimeLeftGo;
 
     public GameObject SeeLeftCard;
-    public GameObject BuyTurnTime;
 
 	public SpkTextGo SpkText;
 
@@ -87,23 +86,6 @@ public class Controller : MonoBehaviour {
 				startButton.SetActive(false);
 			}
 		});
-	}
-
-	public void OnClickBuyTime() {
-		var data = new Dictionary<string, object>(){
-			{"type",112}
-		};
-
-        Connect.Shared.Emit(new Dictionary<string, object>() { 
-			{"f", "moretime"},
-			{"args", data}
-        },(redata) => {
-			var display = redata.Dict("ret").Int("display");
-			if (display == 0)
-			{
-				BuyTurnTime.SetActive(false);
-			}
-        });
 	}
 
 	public void OnClickSeeCard() 
@@ -553,16 +535,6 @@ public class Controller : MonoBehaviour {
 
 		RxSubjects.Look.Subscribe((e) => {
 			gameReload();
-        }).AddTo(this);
-
-        RxSubjects.TurnToMyAction.Subscribe((action) => {
-            if (action){
-                BuyTurnTime.SetActive(true);
-            }
-            else 
-            {
-                BuyTurnTime.SetActive(false);
-            }
         }).AddTo(this);
 
 		RxSubjects.Pass.Subscribe((_) => {

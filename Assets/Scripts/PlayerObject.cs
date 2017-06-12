@@ -99,10 +99,6 @@ public class PlayerObject : MonoBehaviour {
 			OPGo = null;
 		}
 
-		if (isSelf()) {
-			RxSubjects.TurnToMyAction.OnNext(false);
-		}
-
 		Circle.SetActive(true); // 显示头像
 		Avt.GetComponent<CircleMask>().Disable();
 	}
@@ -127,7 +123,6 @@ public class PlayerObject : MonoBehaviour {
         if (isSelf() && GameData.Shared.MySeat == -1)
         {
             RxSubjects.Seating.OnNext(false);
-			RxSubjects.TurnToMyAction.OnNext(false);
         }
 	}
 
@@ -772,13 +767,11 @@ public class PlayerObject : MonoBehaviour {
 					if (!restore) {
 						G.PlaySound("on_turn");
 					}
-					RxSubjects.TurnToMyAction.OnNext(true);
 				}
 			} else {
 				if (!restore) {
 					G.PlaySound("on_turn");
 				}
-				RxSubjects.TurnToMyAction.OnNext(true);
 			}
 			
 			player.Trust.SelectedFlag.Value = "00";
