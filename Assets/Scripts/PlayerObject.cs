@@ -525,7 +525,7 @@ public class PlayerObject : MonoBehaviour {
 			ScoreLabel.gameObject.SetActive(false);
 		}).AddTo(this);
 
-		RxSubjects.HideAudio.Where(isSelf).Subscribe((uid) => {
+		RxSubjects.HideAudio.Where(isSelf).Subscribe((_) => {
 			Volume.SetActive(false);
 			ScoreLabel.gameObject.SetActive(true);
 		}).AddTo(this);
