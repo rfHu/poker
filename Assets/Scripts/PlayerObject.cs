@@ -391,31 +391,25 @@ public class PlayerObject : MonoBehaviour {
 		}).AddTo(this);
 
 		RxSubjects.MoveTurn.Subscribe((e) => {
-			G.WaitSound(() => {
-				if (this == null) {
-					return ;
-				}
-				
-				var index = e.Data.Int("seat");
-				var dc = e.Data.Int("deal_card");
-			
-				if (index == Index) {
-					turnTo(e.Data, GameData.Shared.ThinkTime);
-					setPlayerAct(false, false);
-				} else {
-					MoveOut();
+			var index = e.Data.Int("seat");
+			var dc = e.Data.Int("deal_card");
+		
+			if (index == Index) {
+				turnTo(e.Data, GameData.Shared.ThinkTime);
+				setPlayerAct(false, false);
+			} else {
+				MoveOut();
 
-					// 刚发了牌
-					if (dc == 1 || GameData.Shared.PublicCards.Count != actCardsNumber) {
-						setPlayerAct(false);
-					}
+				// 刚发了牌
+				if (dc == 1 || GameData.Shared.PublicCards.Count != actCardsNumber) {
+					setPlayerAct(false);
 				}
+			}
 
-				// 自动托管
-				if (isSelf()) {
-					player.SetTrust(e.Data.Dict("trust"));
-				}
-			});
+			// 自动托管
+			if (isSelf()) {
+				player.SetTrust(e.Data.Dict("trust"));
+			}
 		}).AddTo(this);
 
 		// Gameover 应该清掉所有状态
