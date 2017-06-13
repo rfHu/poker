@@ -277,6 +277,7 @@ sealed public class GameData {
 			if (scene.name == "PokerGame") {
 				byJson(e.Data);
 			} else {
+                Players.Clear();
 				SceneManager.LoadScene("PokerGame");
 			}
 		});
