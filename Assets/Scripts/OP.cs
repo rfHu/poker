@@ -18,6 +18,7 @@ public class OP : MonoBehaviour {
 	public GameObject R3;
 	public Button AccurateCacel;
 	public Button AccurateYes;
+    public GameObject BuyTurnTime;
 
 	public Text CallNumber;
 	public Text CallText;
@@ -305,6 +306,25 @@ public class OP : MonoBehaviour {
 
 		setToggle(false);
 	}
+
+    public void OnClickBuyTime()
+    {
+        var data = new Dictionary<string, object>(){
+			{"type",112}
+		};
+
+        Connect.Shared.Emit(new Dictionary<string, object>() { 
+			{"f", "moretime"},
+			{"args", data}
+        }, (redata) =>
+        {
+            var display = redata.Dict("ret").Int("display");
+            if (display == 0)
+            {
+                BuyTurnTime.SetActive(false);
+            }
+        });
+    }
 
 	public void OnFoldClick() {
 		OPS.Fold();

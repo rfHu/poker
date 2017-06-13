@@ -58,7 +58,6 @@ public class RxSubjects {
 	public static Subject<string> SendChat = new Subject<string>();
 	public static Subject<string> ShowAudio = new Subject<string>();
 	public static Subject<string> HideAudio = new Subject<string>();
-	public static Subject<bool> TurnToMyAction = new Subject<bool>();
     public static Subject<bool> Seating = new Subject<bool>();
 	public static Subject<bool> Connecting = new Subject<bool>();
 }

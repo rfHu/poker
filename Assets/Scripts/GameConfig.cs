@@ -272,10 +272,6 @@ sealed public class GameData {
 			// 保存最新游戏数据
 			jsonData = e.Data;
 
-			// if (loginStatus == 1) {
-			// 	AuditList.Value = new List<object>();
-			// }
-
 			var scene = SceneManager.GetActiveScene();
 
 			if (scene.name == "PokerGame") {
@@ -599,12 +595,13 @@ sealed public class GameData {
 
         TalkLimit.Value = json.Int("talk_limit") == 1;
 
+        AuditList.OnNext(json.List("un_audit"));
+
 		var startTs = json.Int("begin_time");
 		StartTime = _.DateTimeFromTimeStamp(startTs);
 		// 游戏是否已开始
 		GameStarted = startTs != 0;
 
-		// ReactiveProperty 对同样的值不会触发onNext，所以这里强制执行一次
 		var pause = json.Int("is_pause") != 0;
 		Paused.OnNext(pause);
 		
