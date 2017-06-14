@@ -616,9 +616,7 @@ public class PlayerObject : MonoBehaviour {
 		}).AddTo(this);
 
 		RxSubjects.GainChip.Where((gainChip) => gainChip.Uid == Uid).Subscribe((gainChip) => {
-			Observable.Timer(TimeSpan.FromSeconds(1)).Subscribe((_) => {
-				gainChip.Grp.ToPlayer(this);
-			}).AddTo(this);
+			gainChip.Grp.ToPlayer(this);
 		}).AddTo(this);
 	}
 

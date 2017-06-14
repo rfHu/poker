@@ -402,6 +402,8 @@ sealed public class GameData {
 		});
 
 		RxSubjects.GameOver.Subscribe((e) => {
+			InGame = false;
+
 			var data = e.Data.Dict("scorelist");
 
 			foreach(KeyValuePair<string, object> item in data) {

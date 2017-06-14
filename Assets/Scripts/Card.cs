@@ -46,12 +46,18 @@ public class Card : MonoBehaviour {
 		GetComponent<Image>().color = new Color(150 / 255f ,150 / 255f, 150 / 255f, 1);
 	}
 
+	public void ReColor() {
+		GetComponent<Image>().color = new Color(1, 1, 1, 1);
+	}
+
 	public void Show(int index, bool anim = false, Action complete = null) {
 		if (index == 0 || HasShow) {
 			return ;
 		}
 
 		HasShow = true;
+		ReColor();
+
 		var realIndex = Card.CardIndex(index);
 		show(realIndex, anim, complete);
 	}

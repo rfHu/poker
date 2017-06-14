@@ -4,6 +4,7 @@ using UniRx;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using System;
 
 public class Pots : MonoBehaviour {
 	public Text TotalPot;
@@ -11,21 +12,17 @@ public class Pots : MonoBehaviour {
 	public GameObject PotList;
 
 	// public GameObject Grp;
+	private CompositeDisposable disposables = new CompositeDisposable();
 
 	void Awake()
 	{
 		registerRx();	
 	}
 
-	// public static ChipsGrp CloneChipsHideSource() {
-		// var go = Instantiate(pots.Grp, pots.transform, true);
-		// go.SetActive(true);
-
-		// pots.PrPotGo.SetActive(false);
-		// pots.DC.gameObject.SetActive(false);
-
-		// return go.GetComponent<ChipsGrp>();
-	// }
+	void OnDestroy()
+	{
+		disposables.Clear();
+	}
 
 	private void registerRx() {
 		GameData.Shared.Pot.AsObservable().Subscribe((value) => {
@@ -41,6 +38,8 @@ public class Pots : MonoBehaviour {
 		}).AddTo(this);
 
 		GameData.Shared.Pots.AsObservable().Subscribe((list) => {
+			disposables.Clear();
+
 			if (list == null) {
 				list = new List<Dictionary<string, object>>();
 			}
@@ -83,20 +82,27 @@ public class Pots : MonoBehaviour {
 				var winners = list[i].SL("win_uids");
 
 				foreach(var winner in winners) {
-					var child = transform.GetChild(i).gameObject;
-					child.SetActive(false);
-					
-					var go = Instantiate(child, G.UICvs.transform, true);
-					go.SetActive(true);
-					
-					var grp = child.GetComponent<ChipsGrp>();
-					grp.OnlyChips();
+					Observable.Timer(TimeSpan.FromSeconds(1)).Subscribe((_) => {
+						if (GameData.Shared.FindPlayerIndex(winner) == -1) {
+							return ;
+						}
 
-					var gainChip = new GainChip(grp, winner);
-					RxSubjects.GainChip.OnNext(gainChip);
+						var child = transform.GetChild(i).gameObject;
+						child.GetComponent<CanvasGroup>().DOFade(0, 0.3f).OnComplete(() => {
+							Destroy(child);
+						});
+
+						var go = Instantiate(child, G.UICvs.transform, true);
+						go.SetActive(true);
+						
+						var grp = go.GetComponent<ChipsGrp>();
+						grp.OnlyChips();
+
+						var gainChip = new GainChip(grp, winner);
+						RxSubjects.GainChip.OnNext(gainChip);
+					}).AddTo(disposables);	
 				}
 			}
-
 		}).AddTo(this);
 	}
 

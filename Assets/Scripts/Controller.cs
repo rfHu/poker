@@ -330,10 +330,16 @@ public class Controller : MonoBehaviour {
 		queueIsActive = true;
 
 		var pair = cardAnimQueue.Dequeue();
-		getCardFrom(pair.Key).Show(pair.Value, true, () => {
+		var card = getCardFrom(pair.Key);
+
+		card.Show(pair.Value, true, () => {
 			queueIsActive = false;
 			startQueue();
 		});
+
+		if (!GameData.Shared.InGame) {
+			card.Darken();
+		}
 	}
 
 	private void gameReload() {
