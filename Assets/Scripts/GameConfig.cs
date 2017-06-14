@@ -283,7 +283,10 @@ sealed public class GameData {
 
 		RxSubjects.Deal.Subscribe((e) => {
 			Pot.Value = e.Data.Int("pot");
-			Pots.Value = e.Data.DL("pots");
+
+			if (e.Data.ContainsKey("pots")) {
+				Pots.Value = e.Data.DL("pots");
+			}
 
 			PublicCardAnimState = true;
 
