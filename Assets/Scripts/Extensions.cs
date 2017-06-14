@@ -6,8 +6,6 @@ using System.Reflection;
 using BestHTTP.JSON;
 using SimpleJSON;
 
-namespace Extensions
-{
     public static class CShapeExtensions
     {
         public static int Int<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key)
@@ -75,6 +73,14 @@ namespace Extensions
             return result;
         }
 
+         public static List<string> SL<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key)
+        {
+            TValue value;
+            dictionary.TryGetValue(key, out value);
+            var result = value as List<object> ?? new List<object>();
+            return result.Select(o => Convert.ToString(o)).ToList();
+        }
+
         public static List<int> IL<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key)
         {
             TValue value;
@@ -95,6 +101,13 @@ namespace Extensions
             dictionary.TryGetValue(key, out value);
             var result = value as List<object> ?? new List<object>();
             return result;
+        }
+
+        public static List<Dictionary<string, object>> DL<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key) {
+            TValue value;
+            dictionary.TryGetValue(key, out value);
+            var result = value as List<object> ?? new List<object>();
+            return result.Select(o => o as Dictionary<string, object> ?? new Dictionary<string, object>()).ToList();
         }
 
         public static Transform Clear(this Transform transform)
@@ -136,4 +149,3 @@ namespace Extensions
 
         }
     }
-}

@@ -5,7 +5,6 @@ using UnityEngine.UI;
 using System;
 using DarkTonic.MasterAudio;
 using UniRx;
-using Extensions;
 
 public class CircleMask : MonoBehaviour {
 	bool activated = false;

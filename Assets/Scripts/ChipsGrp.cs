@@ -3,11 +3,22 @@ using UnityEngine;
 using DG.Tweening;
 using DarkTonic.MasterAudio;
 using UnityEngine.UI;
+using UnityEngine.UI.ProceduralImage;
 
 public class ChipsGrp : MonoBehaviour {
 	public List<GameObject> Chips;
+	public Text PotText;
 
 	private PlayerObject player;
+
+	void Awake()
+	{
+	}
+
+	public void OnlyChips() {
+		GetComponent<ProceduralImage>().enabled = false;
+		PotText.enabled = false;
+	}
 
 	public void ToPlayer(PlayerObject player) {
 		this.player = player;

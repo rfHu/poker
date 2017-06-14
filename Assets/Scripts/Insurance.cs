@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
-using Extensions;
 using UniRx;
 using System;
 using UnityEngine.UI.ProceduralImage;

@@ -5,7 +5,6 @@ using UniRx;
 using System;
 using DarkTonic.MasterAudio;
 using System.Linq;
-using Extensions;
 
 public class ChipsGo : MonoBehaviour {
 	public Text TextNumber;
@@ -59,15 +58,17 @@ public class ChipsGo : MonoBehaviour {
 			return ;
 		}
 
-		G.PlaySound("hechip");
-
 		hided = true;
+
+		G.PlaySound("hechip");
 
 		TextNumber.gameObject.SetActive(false);
 		transform.SetParent(G.UICvs.transform, true);
 		
-		var rect = GetComponent<RectTransform>();
-		rect.DOAnchorPos(new Vector2(-80, 350), 0.4f)
+		var duration = 0.4f;
+
+		GetComponent<Image>().DOFade(0.3f, duration);
+		GetComponent<RectTransform>().DOAnchorPos(new Vector2(0, 350), duration)
 		.OnComplete(() => {
 			Destroy(gameObject);
 		});

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UniRx;
+using UnityEngine;
 
 public class RxData: EventArgs {
 	public Dictionary<string, object> Data;
@@ -60,6 +61,18 @@ public class RxSubjects {
 	public static Subject<string> HideAudio = new Subject<string>();
     public static Subject<bool> Seating = new Subject<bool>();
 	public static Subject<bool> Connecting = new Subject<bool>();
+	public static Subject<GainChip> GainChip = new Subject<GainChip>();
+}
+
+public struct GainChip {
+	public ChipsGrp Grp;
+	public string Uid;
+
+	public GainChip(ChipsGrp chipsGrp, string uid) 
+   {
+      this.Grp = chipsGrp;
+      this.Uid = uid;
+   }
 }
 
 

@@ -6,7 +6,6 @@ using UnityEngine.UI.ProceduralImage;
 using System;
 using DG.Tweening;
 using UniRx;
-using Extensions;
 using DarkTonic.MasterAudio;
 using System.Linq;
 using SimpleJSON;
@@ -309,20 +308,20 @@ public class PlayerObject : MonoBehaviour {
 					G.PlaySound("check");
 					break;
 				case ActionState.Fold:
-					G.PlaySound("fold_boy");
+					// G.PlaySound("fold_boy");
 					G.PlaySound("foldpai");
 					break;
 				case ActionState.Call:
-					G.PlaySound("call_boy");
+					// G.PlaySound("call_boy");
 					break;
 				case ActionState.Allin:
 					if (player.ActStateTrigger) {
-						G.PlaySound("allin_boy");
+						// G.PlaySound("allin_boy");
 						G.PlaySound("allin");
 					}
 					break;
 				case ActionState.Raise:
-					G.PlaySound("raise_boy");
+					// G.PlaySound("raise_boy");
 					break;
 				default:
 					break;
@@ -368,9 +367,8 @@ public class PlayerObject : MonoBehaviour {
 				}
 			}
 
-			// 收回大于0，要做筹码动画，同时展示盈亏
+			// 收回大于0，展示盈亏
 			if (data.prize > 0) {
-				Invoke("doChipsAnim", 1f);
 				WinNumber.transform.parent.gameObject.SetActive(true); 
 				WinNumber.text = _.Number2Text(gain);
 				ScoreLabel.transform.parent.gameObject.SetActive(false);
@@ -391,31 +389,25 @@ public class PlayerObject : MonoBehaviour {
 		}).AddTo(this);
 
 		RxSubjects.MoveTurn.Subscribe((e) => {
-			G.WaitSound(() => {
-				if (this == null) {
-					return ;
-				}
-				
-				var index = e.Data.Int("seat");
-				var dc = e.Data.Int("deal_card");
-			
-				if (index == Index) {
-					turnTo(e.Data, GameData.Shared.ThinkTime);
-					setPlayerAct(false, false);
-				} else {
-					MoveOut();
+			var index = e.Data.Int("seat");
+			var dc = e.Data.Int("deal_card");
+		
+			if (index == Index) {
+				turnTo(e.Data, GameData.Shared.ThinkTime);
+				setPlayerAct(false, false);
+			} else {
+				MoveOut();
 
-					// 刚发了牌
-					if (dc == 1 || GameData.Shared.PublicCards.Count != actCardsNumber) {
-						setPlayerAct(false);
-					}
+				// 刚发了牌
+				if (dc == 1 || GameData.Shared.PublicCards.Count != actCardsNumber) {
+					setPlayerAct(false);
 				}
+			}
 
-				// 自动托管
-				if (isSelf()) {
-					player.SetTrust(e.Data.Dict("trust"));
-				}
-			});
+			// 自动托管
+			if (isSelf()) {
+				player.SetTrust(e.Data.Dict("trust"));
+			}
 		}).AddTo(this);
 
 		// Gameover 应该清掉所有状态
@@ -622,6 +614,10 @@ public class PlayerObject : MonoBehaviour {
 		player.LastAct.Where((act) => !String.IsNullOrEmpty(act)).Subscribe((act) => {
 			dealAct(act.ToActionEnum());	
 		}).AddTo(this);
+
+		RxSubjects.GainChip.Where((gainChip) => gainChip.Uid == Uid).Subscribe((gainChip) => {
+			gainChip.Grp.ToPlayer(this);
+		}).AddTo(this);
 	}
 
 	private void setReserveCd(int number) {
@@ -641,11 +637,6 @@ public class PlayerObject : MonoBehaviour {
 
 	private bool isPersisState() {
 		return lastState == ActionState.Allin || lastState == ActionState.Fold;
-	}
-
-	private void doChipsAnim() {
-		var grp = Pots.CloneChipsHideSource();
-        grp.ToPlayer(this);
 	}
 
 	private void showTheCards(List<int> cards, bool anim) {
