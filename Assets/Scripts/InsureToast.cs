@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using DG.Tweening;
 using System.Collections.Generic;
 using UniRx;
-using Extensions;
 using System;
 
 public class InsureToast: MonoBehaviour {

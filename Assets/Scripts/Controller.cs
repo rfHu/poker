@@ -4,7 +4,6 @@ using UnityEngine.UI;
 using System;
 using System.Linq;
 using UniRx;
-using Extensions;
 using DarkTonic.MasterAudio;
 using SimpleJSON;
 using DG.Tweening;

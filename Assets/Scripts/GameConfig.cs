@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System;
-using Extensions;
 using UniRx;
 using System.Linq;
 using UnityEngine.SceneManagement;
@@ -283,7 +282,7 @@ sealed public class GameData {
 
 		RxSubjects.Deal.Subscribe((e) => {
 			Pot.Value = e.Data.Int("pot");
-			PrPot.Value = Pot.Value - e.Data.Int("pr_pot");
+			Pots.Value = e.Data.DL("pots");
 
 			PublicCardAnimState = true;
 
@@ -318,7 +317,7 @@ sealed public class GameData {
 			}
 
 			var pbList = data.IL("-1");
-			float delay = 1f;
+			var delay = 0.5f;
 			
 			if (pbList.Count >= 3) { // 等待亮牌动画
 				delay += pbList.Count * Card.TurnCardDuration;	
@@ -417,7 +416,7 @@ sealed public class GameData {
 
 			var room = e.Data.Dict("room");
 			Pot.Value = room.Int("pot");
-			PrPot.Value = Pot.Value - room.Int("pr_pot");
+			Pots.Value = room.DL("pots");
 		});
 
 		RxSubjects.UnAuditCD.AsObservable().Where((e) => {
@@ -548,7 +547,7 @@ sealed public class GameData {
     public ReactiveProperty<bool> Straddle = new ReactiveProperty<bool>(false);
 
 	public ReactiveProperty<int> Pot = new ReactiveProperty<int>();
-	public ReactiveProperty<int> PrPot = new ReactiveProperty<int>();
+	public ReactiveProperty<List<Dictionary<string, object>>> Pots = new ReactiveProperty<List<Dictionary<string, object>>>(); 
 
 	public BehaviorSubject<bool> Paused = new BehaviorSubject<bool>(false);
 	public string GameCode = "";
@@ -588,7 +587,8 @@ sealed public class GameData {
 		DealerSeat.Value = json.Int("dealer_seat");
 		RoomName = json.String("name");
 		Pot.Value = json.Int("pot");
-		PrPot.Value = Pot.Value - json.Int("pr_pot");
+		Pots.Value = json.DL("pots");
+		
 		InGame = json.Bool("is_ingame");
 		MaxFiveRank.Value = json.Int("maxFiveRank");
 		LeftTime.Value = json.Long("left_time");

@@ -1,7 +1,6 @@
 ﻿using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine;
-using Extensions;
 
 public class ScoreCtrl : MonoBehaviour {
 	public GameObject viewport;

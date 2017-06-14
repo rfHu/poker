@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using DG.Tweening;
 using UniRx;
-using Extensions;
 
 public enum SeatPosition {
 	Top,

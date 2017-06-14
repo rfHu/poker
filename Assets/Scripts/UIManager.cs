@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Extensions;
 using UniRx;
 using System.Collections.Generic;
 using HedgehogTeam.EasyTouch;

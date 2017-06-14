@@ -5,7 +5,6 @@ using UniRx;
 using System;
 using DarkTonic.MasterAudio;
 using System.Linq;
-using Extensions;
 
 public class ChipsGo : MonoBehaviour {
 	public Text TextNumber;
@@ -69,7 +68,7 @@ public class ChipsGo : MonoBehaviour {
 		var duration = 0.4f;
 
 		GetComponent<Image>().DOFade(0.3f, duration);
-		GetComponent<RectTransform>().DOAnchorPos(new Vector2(-80, 350), duration)
+		GetComponent<RectTransform>().DOAnchorPos(new Vector2(0, 350), duration)
 		.OnComplete(() => {
 			Destroy(gameObject);
 		});

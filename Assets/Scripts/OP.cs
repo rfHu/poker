@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using Extensions;
 using UnityEngine.UI;
 using UniRx;
 using UniRx.Triggers;

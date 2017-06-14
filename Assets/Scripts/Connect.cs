@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using BestHTTP.SocketIO.Transports;
-using Extensions;
 using UnityEngine;
 using BestHTTP;
 using UniRx;
