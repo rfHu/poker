@@ -8,7 +8,7 @@ using System;
 
 public class Pots : MonoBehaviour {
 	public Text TotalPot;
-	public ChipsGrp OnePot;
+	public GameObject OnePot;
 	public GameObject PotList;
 
 	// public GameObject Grp;
@@ -66,8 +66,8 @@ public class Pots : MonoBehaviour {
 				
 				if (transform.childCount <= i) {
 					var go = Instantiate(OnePot, transform, false);
-					setPot(go.gameObject, chips);
-					go.gameObject.SetActive(true);
+					setPot(go, chips);
+					go.SetActive(true);
 
 					var cvg = go.GetComponent<CanvasGroup>();
 					cvg.alpha = 0;
