@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DarkTonic.MasterAudio;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,5 +30,29 @@ public class ExpressionPage : MonoBehaviour {
                 transform.GetComponent<DOPopup>().Close();
             });
         }
+    }
+
+    public void ToggleMute()
+    {
+        if (GameData.Shared.muted)
+        {
+            MasterAudio.UnmuteEverything();
+        }
+        else
+        {
+            MasterAudio.MuteEverything();
+        }
+
+        GameData.Shared.muted = !GameData.Shared.muted;
+    }
+
+    public void ToggleTalkSound() 
+    {
+
+    }
+
+    public void ToggleChatBubble() 
+    {
+
     }
 }
