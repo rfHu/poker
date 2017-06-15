@@ -80,19 +80,22 @@ public class Pots : MonoBehaviour {
 
 			for(var i = 0; i < list.Count; i++) {
 				var winners = list[i].SL("win_uids");
-				var child = transform.GetChild(i).gameObject;
 
-				foreach(var winner in winners) {
-					// 延时一秒再做回收筹码动画
-					var uid = winner;
-					Observable.Timer(TimeSpan.FromSeconds(1)).Subscribe((_) => {
+				if (winners.Count <= 0) {
+					continue;
+				}
+
+				var child = transform.GetChild(i).gameObject;
+				
+				Observable.Timer(TimeSpan.FromSeconds(1)).Subscribe((_) => {
+					if (child == null) {
+						return ;
+					}
+					
+					foreach(var uid in winners) {
 						if (GameData.Shared.FindPlayerIndex(uid) == -1) {
 							return ;
 						}
-
-						child.GetComponent<CanvasGroup>().DOFade(0, 0.3f).OnComplete(() => {
-							Destroy(child);
-						});
 
 						var go = Instantiate(child, G.UICvs.transform, true);
 						go.SetActive(true);
@@ -102,8 +105,13 @@ public class Pots : MonoBehaviour {
 
 						var gainChip = new GainChip(grp, uid);
 						RxSubjects.GainChip.OnNext(gainChip);
-					}).AddTo(disposables);	
-				}
+					}
+
+					child.GetComponent<CanvasGroup>().DOFade(0, 0.3f).OnComplete(() => {
+						Destroy(child);
+						TotalPot.gameObject.SetActive(false);
+					});
+				}).AddTo(disposables);	
 			}
 		}).AddTo(this);
 	}
