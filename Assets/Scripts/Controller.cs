@@ -67,9 +67,8 @@ public class Controller : MonoBehaviour {
 
 	public void load() {
 		registerRxEvents();
-
 		setupDealer();
-		setMuteState();
+		setOptions();
 		#if UNITY_EDITOR
 		#else
 				Commander.Shared.VoiceIconToggle(true);
@@ -258,10 +257,12 @@ public class Controller : MonoBehaviour {
 		dealer.GetComponent<Dealer>().Init(Seats);
 	}
 
-	private void setMuteState() {
+	private void setOptions() {
 		if (GameData.Shared.muted) {
 			MasterAudio.MuteEverything();
 		}
+        Commander.Shared.OptionToggle(!GameData.Shared.talkSoundClose, 2);
+        Commander.Shared.OptionToggle(!GameData.Shared.chatBubbleClose, 1);
 	}
 
 	private void addGameInfo(string text) {
@@ -445,6 +446,9 @@ public class Controller : MonoBehaviour {
 
         RxSubjects.Emoticon.Subscribe((e) =>
         {
+            if (GameData.Shared.emoticonClose)
+                return;
+
             int fromSeatIndex = e.Data.Int("seat");
             int toSeatIndex = e.Data.Int("toseat");
             int pid = e.Data.Int("pid");

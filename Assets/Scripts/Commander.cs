@@ -85,6 +85,11 @@ public class Commander {
         ic.VoiceIconToggle(isShowing);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="isOpen"></param>
+    /// <param name="type">1.文字；2.语音</param>
     public void OptionToggle(bool isOpen, int type) 
     {
         ic.OptionToggle(isOpen,type);

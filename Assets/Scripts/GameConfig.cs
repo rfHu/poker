@@ -685,43 +685,70 @@ sealed public class GameData {
 	
 	public ReactiveCollection<int> PublicCards = new ReactiveCollection<int>();
 
-	// 静音设置
-	private static string muteTag = "persist.txt?tag=mute";
+	// 设置
+	private static string tagStr = "persist.txt?tag=";
+
+    // 语音设置
+    public bool talkSoundClose {
+        get {
+            if (ES2.Exists(tagStr + "talkSound"))
+            {
+                return ES2.Load<bool>(tagStr + "talkSound");
+            }
+            return false;
+        }
+
+        set {
+            ES2.Save(value, tagStr + "talkSound");
+        }
+    }
+
+    //游戏声音
 	public bool muted {
 		get {
-			if (ES2.Exists(muteTag)) {
-				return ES2.Load<bool>(muteTag);
+			if (ES2.Exists(tagStr + "mute")) {
+				return ES2.Load<bool>(tagStr + "mute");
 			}
 
 			return false;
 		}
 
 		set {
-			ES2.Save(value, muteTag);
+			ES2.Save(value, tagStr + "mute");
 		}
 	}
 
-    // 语音设置
-    public bool TalkSound {
-        get {
-            return PlayerPrefs.GetInt("talkSound", 1) == 1;
+    // 文字气泡
+    public bool chatBubbleClose {
+        get
+        {
+            if (ES2.Exists(tagStr + "chatBubble"))
+            {
+                return ES2.Load<bool>(tagStr + "chatBubble");
+            }
+            return false;
         }
 
-        set {
-            PlayerPrefs.SetInt("talkSound", value ? 1 : 0);
-            Commander.Shared.OptionToggle(value, 2);
+        set
+        {
+            ES2.Save(value, tagStr + "chatBubble");
         }
     }
 
-    // 文字气泡
-    public bool ChatBubble {
-        get {
-            return PlayerPrefs.GetInt("chatBubble", 1) == 1;
+    //动态表情
+    public bool emoticonClose{
+        get
+        {
+            if (ES2.Exists(tagStr + "emoticonClose"))
+            {
+                return ES2.Load<bool>(tagStr + "emoticonClose");
+            }
+            return false;
         }
 
-        set {
-            PlayerPrefs.SetInt("chatBubble", value ? 1 : 0);
-            Commander.Shared.OptionToggle(value, 1);
+        set
+        {
+            ES2.Save(value, tagStr + "emoticonClose");
         }
     }
 
