@@ -701,6 +701,30 @@ sealed public class GameData {
 		}
 	}
 
+    // 语音设置
+    public bool TalkSound {
+        get {
+            return PlayerPrefs.GetInt("talkSound", 1) == 1;
+        }
+
+        set {
+            PlayerPrefs.SetInt("talkSound", value ? 1 : 0);
+            Commander.Shared.OptionToggle(value, 2);
+        }
+    }
+
+    // 文字气泡
+    public bool ChatBubble {
+        get {
+            return PlayerPrefs.GetInt("chatBubble", 1) == 1;
+        }
+
+        set {
+            PlayerPrefs.SetInt("chatBubble", value ? 1 : 0);
+            Commander.Shared.OptionToggle(value, 1);
+        }
+    }
+
 	public class MyCmd {
 		public static bool Takecoin = false;
 		public static bool Unseat = false;

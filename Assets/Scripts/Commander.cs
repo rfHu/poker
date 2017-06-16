@@ -84,6 +84,11 @@ public class Commander {
     public void VoiceIconToggle(bool isShowing) {
         ic.VoiceIconToggle(isShowing);
     }
+
+    public void OptionToggle(bool isOpen, int type) 
+    {
+        ic.OptionToggle(isOpen,type);
+    }
 }
 
 public interface ICommander {
@@ -96,6 +101,7 @@ public interface ICommander {
     void ShareRecord(int handID);
     void ShareGameRoom(string shareText);
     void VoiceIconToggle(bool isShowing);
+    void OptionToggle(bool isOpen, int type);
 }
 
 #if UNITY_ANDROID
@@ -146,6 +152,10 @@ public class AndroidCommander: ICommander {
     public void VoiceIconToggle(bool isShowing) {
         getJo().Call("voiceIconToggle", isShowing);
     }
+
+    public void OptionToggle(bool isOpen, int type) {
+        getJo().Call("gameMessageIsShowToggle", isOpen, type);
+    }
 }
 #endif
 
@@ -177,6 +187,9 @@ public class iOSCommander: ICommander {
 
 	[DllImport("__Internal")]
 	private static extern  void _ex_callVoiceIconState(bool isShow);
+
+    [DllImport("__Internal")]
+    private static extern void _ex_callOptionToggle(bool isOpen, int type);
 
 	public void Exit() {
 		_ex_callExitGame();
@@ -216,6 +229,10 @@ public class iOSCommander: ICommander {
 
     public void VoiceIconToggle(bool isShowing) {
         _ex_callVoiceIconState(isShowing);
+    }
+
+    public void OptionToggle(bool isOpen, int type) {
+        _ex_callOptionToggle(isOpen, type);
     }
 }
 #endif

@@ -104,6 +104,13 @@ public class MenuPopup : MonoBehaviour {
 		GameData.Shared.muted = !GameData.Shared.muted;
 	}
 
+    public void Option() 
+    {
+        var tip = (GameObject)Instantiate(Resources.Load("Prefab/Option"));
+        tip.GetComponent<DOPopup>().Show();
+        gameObject.GetComponent<DOPopup>().ImmediateClose();
+    }
+
 	public void Exit() {
 		External.Instance.Exit();
 	}
