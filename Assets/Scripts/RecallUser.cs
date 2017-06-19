@@ -5,7 +5,7 @@ using UnityEngine.UI.ProceduralImage;
 
 public class RecallUser : MonoBehaviour {
     public Text PlayerName;
-	public RawImage Avatar;
+	public CircleImage Avatar;
 	public Text Score;
 	public GameObject[] Cards;
 	public Text MaxFive;
@@ -81,8 +81,12 @@ public class RecallUser : MonoBehaviour {
 	}
 
 	void ShowAvatar(string url) {
-		StartCoroutine(_.LoadImage(url, (texture) => {
-			Avatar.texture = _.Circular(texture);
-		}));
+		this.LoadImage(url, (texture) => {
+			if (this == null) {
+				return ;
+			}
+
+			Avatar.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+		});
 	}
 }

@@ -46,20 +46,6 @@ public class _ {
         return t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Dictionary<,>);
     }
 
-    static public IEnumerator<WWW> LoadImage(string url, Action<Texture2D> cb) {
-        var uri = new Uri(url);
-        var filename = "images/" + Path.GetFileName(uri.LocalPath);
-
-        if (ES2.Exists(filename)) {
-            cb(ES2.Load<Texture2D>(filename));
-        } else {
-            var www  = new WWW(url);
-            yield return www;
-            cb(www.texture);
-            ES2.Save(www.texture, filename);
-        }
-    }
-
     static public string Num2CnDigit<T>(T num, bool symbol = false) {
         var value = (float)Convert.ToDouble(num);
 

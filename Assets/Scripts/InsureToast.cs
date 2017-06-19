@@ -98,9 +98,10 @@ public class InsureToast: MonoBehaviour {
 
             MsgText.text = text;
             NameText.text = name;
-            StartCoroutine(_.LoadImage(url, (texture) => {
-                Avatar.texture = _.Circular(texture);
-            }));
+
+            this.LoadImage(url, (texture) => {
+                Avatar.texture = texture;
+            });
 
             Show();
         }).AddTo(this);

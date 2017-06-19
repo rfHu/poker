@@ -41,7 +41,7 @@ public class ScoreCtrl : MonoBehaviour {
             var insurance = ret.Dict("insurance");
 			Hands.text = ret.Int("handid").ToString();
             Pot.text = ret.Int("avg_pot").ToString();
-            Time.text = ret.Int("hand_time").ToString();
+            Time.text = ret.Int("hand_time").ToString() + "s";
             Buy.text = ret.Int("avg_buy").ToString();
 
             if (GameData.Shared.NeedInsurance)
@@ -140,6 +140,7 @@ public class ScoreCtrl : MonoBehaviour {
 			foreach(Dictionary<string, object> guest in guestList) {
 				var guestObj = Instantiate(Guest);
 				guestObj.SetActive(true);
+
 				Avatar avatar = guestObj.transform.Find("Avatar").GetComponent<Avatar>();
 				avatar.Uid = guest.String("uid");
 				avatar.SetImage(guest.String("avatar"));
@@ -153,8 +154,7 @@ public class ScoreCtrl : MonoBehaviour {
 
                 if (!guest.Bool("in_room"))
                 {
-                    name.color = offlineColor;
-                    avatar.GetComponent<RawImage>().color = offlineColor;
+                    guestObj.GetComponent<CanvasGroup>().alpha = 0.6f;
                 }
 			} 
         });
