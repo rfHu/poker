@@ -53,6 +53,8 @@ public class RxSubjects {
     public static Subject<RxData> Expression = new Subject<RxData>();
 	public static Subject<RxData> GamerState = new Subject<RxData>();
     public static Subject<RxData> NoTalking = new Subject<RxData>();
+    public static Subject<RxData> ShowInsurance = new Subject<RxData>();
+    public static Subject<RxData> RsyncInsurance = new Subject<RxData>();
 
 	// 跟网络无关事件
 	public static Subject<int> ChangeVectorsByIndex = new Subject<int>();

@@ -9,6 +9,7 @@ public class InsureToast: MonoBehaviour {
     public Text MsgText;
     public RawImage Avatar;
     public Text NameText;
+    public GameObject SeePage;
 
     private CanvasGroup cvg;
     private float duration = 0.2f;
@@ -140,6 +141,7 @@ public class InsureToast: MonoBehaviour {
     }
 
     private string cdText(int time) {
+        SeePage.SetActive(true);
         return String.Format("玩家购买保险中<color=#18FFFFFF>{0}s</color>", time);
     }
 
@@ -176,6 +178,10 @@ public class InsureToast: MonoBehaviour {
 
         if (disposable != null) {
             disposable.Dispose();
+        }
+
+        if (SeePage.activeInHierarchy){
+            SeePage.SetActive(false);
         }
 
         tween = cvg.DOFade(0, duration).OnComplete(complete);

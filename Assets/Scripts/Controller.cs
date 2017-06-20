@@ -669,17 +669,24 @@ public class Controller : MonoBehaviour {
 
         }).AddTo(this);
 
-		 RxSubjects.ToInsurance.Subscribe((e) =>
+		RxSubjects.ToInsurance.Subscribe((e) =>
         {
             var InsurancePopup = (GameObject)GameObject.Instantiate(Resources.Load("Prefab/Insurance"));
             InsurancePopup.GetComponent<DOPopup>().Show(modal: false);
-            InsurancePopup.GetComponent<Insurance>().Init(e.Data);
+            InsurancePopup.GetComponent<Insurance>().Init(e.Data, true);
         }).AddTo(this);
 
-         RxSubjects.Seating.Subscribe((action) => 
-         {
+        RxSubjects.ShowInsurance.Subscribe((e) => 
+        {
+            var InsurancePopup = (GameObject)GameObject.Instantiate(Resources.Load("Prefab/Insurance"));
+            InsurancePopup.GetComponent<DOPopup>().Show(modal: false);
+            InsurancePopup.GetComponent<Insurance>().Init(e.Data, false);
+        });
+
+        RxSubjects.Seating.Subscribe((action) => 
+        {
              ExpressionButton.SetActive(action);
-         }).AddTo(this);
+        }).AddTo(this);
 	}
 
     private void TalkLimit(bool limit)

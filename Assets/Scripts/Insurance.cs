@@ -7,6 +7,7 @@ using UniRx;
 using System;
 using UnityEngine.UI.ProceduralImage;
 using MaterialUI;
+using UnityEngine.EventSystems;
 
 public class Insurance : MonoBehaviour {
     public Text Pot;
@@ -30,6 +31,8 @@ public class Insurance : MonoBehaviour {
     public List<Card> MyCards;
     public Text CardDesc;
     public Text BuyButtonNum;
+    public GameObject BuyerButtons;
+    public GameObject WatcherText;
 
     int cost;
     List<int> scope;
@@ -47,7 +50,7 @@ public class Insurance : MonoBehaviour {
     private bool isFlop = false;
     IEnumerator myCoroutine;
 
-    public void Init(Dictionary<string, object> data) 
+    public void Init(Dictionary<string, object> data, bool isBuyer = false) 
     {
         outsCardArray = data.IL("outs");
         potValue = data.Int("pot");
@@ -70,6 +73,16 @@ public class Insurance : MonoBehaviour {
             // CheckAllToggle.OnPointerClick
         }
 
+        if (!isBuyer)
+        {
+            BuyerButtons.SetActive(false);
+            WatcherText.SetActive(true);
+            ExitButton.gameObject.SetActive(true);
+            CheckAllToggle.interactable = false;
+            Destroy(CheckAllToggle.transform.GetComponent<EventTrigger>());
+            CASlider.interactable = false;
+        }
+
         SetOdds();
         CASlider.value = CASlider.minValue;
 
@@ -78,9 +91,9 @@ public class Insurance : MonoBehaviour {
 
         setupAllinPlayers(); 
         setupPbCards();
-        setupOutsCards();
+        setupOutsCards(isBuyer);
 
-        addEvents();
+        addEvents(isBuyer);
 
         var myPlayer = GameData.Shared.GetMyPlayer();
 
@@ -90,6 +103,9 @@ public class Insurance : MonoBehaviour {
         }
 
         CardDesc.text = Card.GetCardDesc(GameData.Shared.MaxFiveRank.Value);
+
+
+
     }
 
     private void setupAllinPlayers() {
@@ -120,7 +136,7 @@ public class Insurance : MonoBehaviour {
 		}
     }
 
-    private void setupOutsCards() {
+    private void setupOutsCards(bool isBuyer) {
         foreach (var cardNum in outsCardArray)
         {
             var card = Instantiate(OutsCard);
@@ -135,13 +151,13 @@ public class Insurance : MonoBehaviour {
             {
                 SelectedChanged(value, cardNum, toggle);
             });
-            if (mustBuy){
+            if (mustBuy || !isBuyer){
                 card.GetComponent<Toggle>().interactable = false;
             }
         }
     }
 
-    private void addEvents() {
+    private void addEvents(bool isBuyer) {
         RxSubjects.Moretime.Subscribe((e) =>{
             var model = e.Data.ToObject<MoreTimeModel>();
 
@@ -158,6 +174,17 @@ public class Insurance : MonoBehaviour {
         RxSubjects.Look.Subscribe((e) => {
             GetComponent<DOPopup>().Close();
         }).AddTo(this);
+
+        ExitButton.onClick.AddListener(() => {
+
+            if (isBuyer)
+            {
+                Connect.Shared.Emit(new Dictionary<string, object>() { 
+                    {"f", "noinsurance"},
+                });
+            }
+            GetComponent<DOPopup>().Close();
+        });
     }
 
     private void SetCASlider()

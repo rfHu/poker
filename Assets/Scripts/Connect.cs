@@ -416,6 +416,12 @@ public sealed class Connect  {
                 case "notalking":
                     RxSubjects.NoTalking.OnNext(rxdata);
                     break;
+                case "show_insurance":
+                    RxSubjects.ShowInsurance.OnNext(rxdata);
+                    break;
+                case "rsync_insurance":
+                    RxSubjects.RsyncInsurance.OnNext(rxdata);
+                    break;
 				default:
 					break;
 			}
