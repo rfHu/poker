@@ -8,11 +8,9 @@ public class G {
 			if (uiCanvas == null) {
 				var cvs = GameObject.FindGameObjectWithTag("UICanvas");
 
-				if (cvs == null) {
-					return null;
+				if (cvs != null) {
+					uiCanvas = cvs.GetComponent<Canvas>();
 				}
-
-				uiCanvas = cvs.GetComponent<Canvas>();
 			}
 
 			return uiCanvas;
@@ -49,4 +47,6 @@ public class G {
 
 		MasterAudio.PlaySound(name);		
 	}
+
+	public static Color Black = new Color(0, 0, 0, 0.9f);
 }

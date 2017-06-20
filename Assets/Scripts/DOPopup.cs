@@ -23,9 +23,12 @@ public class DOPopup : MonoBehaviour {
 	private Vector2 startPosition; 
 	private Vector2 endPosition;
 
-	private ModalHelper modal;   
+	private ModalHelper modalHelper;   
 
-	bool hasShow = false;
+	private bool destroyOnClose = true;
+	private Action close = null;
+	private bool modal = true;
+	private bool singleton = true;  
 
 	public Vector2 StartPosition;
 	public Vector2 EndPosition;
@@ -36,7 +39,7 @@ public class DOPopup : MonoBehaviour {
 		gameObject.SetActive(false);
 	}
 
-	public void AutoFit() {
+	private void autoFit() {
 		var rectTrans = GetComponent<RectTransform>();
         endPosition = new Vector2(0, 0);
 
@@ -64,16 +67,16 @@ public class DOPopup : MonoBehaviour {
 		rectTrans.anchoredPosition = startPosition;
 	}
 
-	IEnumerator  startAnimation(Action close = null, bool modal = true, bool singleton = true) {
+	IEnumerator  startAnimation() {
 		yield return new WaitForFixedUpdate();
 
-		AutoFit();
+		autoFit();
 		transform.SetParent(G.DialogCvs.transform, false);
 
 		if (modal) {
-			this.modal = ModalHelper.Create();
+			modalHelper = ModalHelper.Create();
 
-			this.modal.Show(G.DialogCvs, () => {
+			modalHelper.Show(G.DialogCvs, () => {
 				if (close != null) {
 					close();
 				}
@@ -98,33 +101,25 @@ public class DOPopup : MonoBehaviour {
 		}
 	}
 	
-	public void Show(Action close = null, bool modal = true, bool singleton = true) {
-		if (hasShow) {
-			return ;
-		}
+	public void Show(Action close = null, bool modal = true, bool singleton = true, bool destroyOnClose = true) {
+		this.close = close;
+		this.modal = modal;
+		this.singleton = singleton;
+		this.destroyOnClose = destroyOnClose;
 
 		if (instance != null && instance != this && singleton) {
 			instance.Close();
 		}
 
-		hasShow = true;
-
 		gameObject.SetActive(true);
-		StartCoroutine(startAnimation(close, modal, singleton));
+		StartCoroutine(startAnimation());
 	}
 
-	public void ImmediateClose() {
-		hideModal();
-		Destroy(gameObject);
+	public void Show() {
+		this.Show(close, modal, singleton, destroyOnClose);
 	}
 
 	public Tween Hide() {
-		if (!hasShow) {
-			return null;
-		}
-
-		hasShow = false;
-
 		hideModal();
 
         Tween tween = null;
@@ -146,6 +141,10 @@ public class DOPopup : MonoBehaviour {
 	public void Close() {
 		var tween = Hide();	
 
+		if (!destroyOnClose) {
+			return ;
+		}
+
 		if (tween == null) {
 			Destroy(gameObject);
 		} else {
@@ -156,8 +155,8 @@ public class DOPopup : MonoBehaviour {
 	}
 
 	private void hideModal() {
-		if (modal != null) {
-			modal.Hide();
+		if (modalHelper != null) {
+			modalHelper.Destroy();
 		}
 	}
 }
