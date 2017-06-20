@@ -33,6 +33,7 @@ public class Insurance : MonoBehaviour {
     public Text BuyButtonNum;
     public GameObject BuyerButtons;
     public GameObject WatcherText;
+    public EventTrigger CASliderUp;
 
     int cost;
     List<int> scope;
@@ -44,21 +45,26 @@ public class Insurance : MonoBehaviour {
     List<Toggle> OUTSCards = new List<Toggle>();
     HashSet<int> selectedCards; 
     private List<int> outsCardArray;
-    private List<object> allinPlayers;
+    List<int> isoffToggles = new List<int>();
 
+    int closeFlag = 0;
     bool mustBuy = false;
+    bool isBuyer;
     private bool isFlop = false;
     IEnumerator myCoroutine;
 
+
     public void Init(Dictionary<string, object> data, bool isBuyer = false) 
     {
+        this.isBuyer = isBuyer;
+
         outsCardArray = data.IL("outs");
         potValue = data.Int("pot");
         cost = data.Int("cost");
         scope = data.IL("scope");
         mustBuy = data.Int("must_buy") == 2;
         isFlop = (data.Int("room_state") == 4);
-        allinPlayers = data.List("outs_count");
+        List<object> allinPlayers = data.List("outs_count");
         selectedCards = new HashSet<int>(outsCardArray.ToList());
 
         var time = data.Int("time");
@@ -81,6 +87,7 @@ public class Insurance : MonoBehaviour {
             CheckAllToggle.interactable = false;
             Destroy(CheckAllToggle.transform.GetComponent<EventTrigger>());
             CASlider.interactable = false;
+            Destroy(CASliderUp);
         }
 
         SetOdds();
@@ -89,11 +96,11 @@ public class Insurance : MonoBehaviour {
         Pot.text = potValue.ToString();
         TotalSupass.text = "/ " + outsCardArray.Count.ToString();
 
-        setupAllinPlayers(); 
+        setupAllinPlayers(allinPlayers); 
         setupPbCards();
-        setupOutsCards(isBuyer);
+        setupOutsCards();
 
-        addEvents(isBuyer);
+        addEvents();
 
         var myPlayer = GameData.Shared.GetMyPlayer();
 
@@ -103,12 +110,10 @@ public class Insurance : MonoBehaviour {
         }
 
         CardDesc.text = Card.GetCardDesc(GameData.Shared.MaxFiveRank.Value);
-
-
-
     }
 
-    private void setupAllinPlayers() {
+    private void setupAllinPlayers(List<object> allinPlayers)
+    {
 
         AllinTitle.text = "落后玩家(" + allinPlayers.Count + ")";
 
@@ -136,7 +141,7 @@ public class Insurance : MonoBehaviour {
 		}
     }
 
-    private void setupOutsCards(bool isBuyer) {
+    private void setupOutsCards() {
         foreach (var cardNum in outsCardArray)
         {
             var card = Instantiate(OutsCard);
@@ -150,6 +155,18 @@ public class Insurance : MonoBehaviour {
             toggle.onValueChanged.AddListener((bool value) => 
             {
                 SelectedChanged(value, cardNum, toggle);
+                if (isBuyer)
+                {
+                    if (!value)
+                    {
+                        isoffToggles.Add(outsCardArray.IndexOf(cardNum));
+                    }
+                    else 
+                    {
+                        isoffToggles.Remove(outsCardArray.IndexOf(cardNum));
+                    }
+                    RPCRsyncInsurance();
+                }
             });
             if (mustBuy || !isBuyer){
                 card.GetComponent<Toggle>().interactable = false;
@@ -157,7 +174,7 @@ public class Insurance : MonoBehaviour {
         }
     }
 
-    private void addEvents(bool isBuyer) {
+    private void addEvents() {
         RxSubjects.Moretime.Subscribe((e) =>{
             var model = e.Data.ToObject<MoreTimeModel>();
 
@@ -175,6 +192,33 @@ public class Insurance : MonoBehaviour {
             GetComponent<DOPopup>().Close();
         }).AddTo(this);
 
+        RxSubjects.RsyncInsurance.Subscribe((e) => {
+            if (e.Data.Int("closeflag") == 1)
+            {
+                _.Log("1");
+                Exit();
+                return;
+            }
+            int CASlidernum = e.Data.Int("CASlidernum");
+            List<int> isoff = e.Data.IL("isoff");
+
+            for (int i = 0; i < OUTSCards.Count; i++)
+            {
+                if (isoff.Contains(i) && isoff.Count != 0)
+                {
+                    OUTSCards[i].isOn = false;
+                    isoff.Remove(i);
+                }
+                else 
+                {
+                    OUTSCards[i].isOn = true;
+                }
+            }
+
+            CASlider.value = CASlidernum;
+
+        }).AddTo(this);
+
         ExitButton.onClick.AddListener(() => {
 
             if (isBuyer)
@@ -185,6 +229,12 @@ public class Insurance : MonoBehaviour {
             }
             GetComponent<DOPopup>().Close();
         });
+
+    }
+
+    public void ClickUp() 
+    {
+        RPCRsyncInsurance();
     }
 
     private void SetCASlider()
@@ -316,20 +366,31 @@ public class Insurance : MonoBehaviour {
 		        };
 
         Connect.Shared.Emit(new Dictionary<string, object>() {
-				{"f", "insurance"},
+				{"f", "rsyncinsurance"},
 				{"args", data}
 
 			});
 
+        closeFlag = 1;
+        RPCRsyncInsurance();
         GetComponent<DOPopup>().Close();
     }
 
     public void Exit() 
     {
-        Connect.Shared.Emit(new Dictionary<string, object>() { 
-            {"f", "noinsurance"},
-        });
+        if (isBuyer)
+        {
+            Connect.Shared.Emit(new Dictionary<string, object>() { 
+                {"f", "noinsurance"},
+            });
+
+            closeFlag = 1;
+            RPCRsyncInsurance();
+        }
+
         GetComponent<DOPopup>().Close();
+
+
     }
 
     public void OnBTButton() 
@@ -396,5 +457,21 @@ public class Insurance : MonoBehaviour {
         }
 
         GetComponent<DOPopup>().Close();
+    }
+
+    void RPCRsyncInsurance() 
+    {
+        var data = new Dictionary<string, object>(){
+			        {"isoff", isoffToggles},
+                    {"CASlidernum", int.Parse(SumInsured.text)},
+                    {"closeflag", closeFlag}
+		        };
+
+        Connect.Shared.Emit(new Dictionary<string, object>() {
+				{"f", "rsyncinsurance"},
+				{"args", data}
+
+			});
+
     }
 }
