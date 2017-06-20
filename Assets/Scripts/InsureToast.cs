@@ -4,10 +4,11 @@ using DG.Tweening;
 using System.Collections.Generic;
 using UniRx;
 using System;
+using UnityEngine.UI.Extensions;
 
 public class InsureToast: MonoBehaviour {
     public Text MsgText;
-    public RawImage Avatar;
+    public UICircle  Avatar;
     public Text NameText;
 
     private CanvasGroup cvg;
@@ -100,7 +101,7 @@ public class InsureToast: MonoBehaviour {
             NameText.text = name;
 
             this.LoadImage(url, (texture) => {
-                Avatar.texture = texture;
+                Avatar.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
             });
 
             Show();

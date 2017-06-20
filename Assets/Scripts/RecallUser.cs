@@ -2,10 +2,11 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UI.ProceduralImage;
+using UnityEngine.UI.Extensions;
 
 public class RecallUser : MonoBehaviour {
     public Text PlayerName;
-	public CircleImage Avatar;
+	public UICircle Avatar;
 	public Text Score;
 	public GameObject[] Cards;
 	public Text MaxFive;

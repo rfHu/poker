@@ -8,7 +8,7 @@ using UniRx;
 
 public sealed class Connect  {
 	public static string Proxy;
-	public static string Domain = "https://socket.dev.poker.top";
+	public static string Domain = "https://socket.poker.top";
 
 	private SocketManager manager;
 
@@ -242,9 +242,6 @@ public sealed class Connect  {
 			_.Log("Unity: 尝试建立新连接，强制断开");
 			instance.close();
 		}
-
-		// 开始游戏（退出时会被暂停）
-		Time.timeScale = 1;
 
 		instance = new Connect();
 

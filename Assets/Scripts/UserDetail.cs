@@ -3,10 +3,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UI.ProceduralImage;
 using MaterialUI;
+using UnityEngine.UI.Extensions;
 
 [RequireComponent(typeof(DOPopup))]
 public class UserDetail : MonoBehaviour {
-	public CircleImage Avatar;
+	public UICircle Avatar;
 	public Text Name;
 	public Text Coins;
 	public Text Hands;

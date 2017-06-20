@@ -25,6 +25,10 @@ public class Commander {
 		ic.Exit();
 	}
 
+	public void PauseUnity() {
+		ic.PauseUnity();
+	}
+
 	public IEnumerator Location(Action<float[]> success, Action fail) {
 		if (!Input.location.isEnabledByUser) {
 			fail();
@@ -96,6 +100,7 @@ public interface ICommander {
     void ShareRecord(int handID);
     void ShareGameRoom(string shareText);
     void VoiceIconToggle(bool isShowing);
+	void PauseUnity();
 }
 
 #if UNITY_ANDROID
@@ -146,6 +151,8 @@ public class AndroidCommander: ICommander {
     public void VoiceIconToggle(bool isShowing) {
         getJo().Call("voiceIconToggle", isShowing);
     }
+
+	public void PauseUnity(){}
 }
 #endif
 
@@ -178,6 +185,9 @@ public class iOSCommander: ICommander {
 	[DllImport("__Internal")]
 	private static extern  void _ex_callVoiceIconState(bool isShow);
 
+	[DllImport("__Internal")]
+	private static extern void _ex_pauseUnity();
+
 	public void Exit() {
 		_ex_callExitGame();
 	}
@@ -188,6 +198,13 @@ public class iOSCommander: ICommander {
 
 	public void GameEnd(string roomID) {
 		_ex_callGameOver(roomID);
+	}
+
+	public void PauseUnity() {
+		#if UNITY_EDITOR 
+		#else
+		_ex_pauseUnity();
+		#endif
 	}
 
 	public int Power() {

@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System;
 using UnityEngine.UI.ProceduralImage;
 using System.Text.RegularExpressions;
+using UnityEngine.UI.Extensions;
 
 // [RequireComponent(typeof(RawImage))]
 public class Avatar : MonoBehaviour {
@@ -38,7 +39,7 @@ public class Avatar : MonoBehaviour {
 				return ;
 			}
 
-			var image = GetComponent<CircleImage>();
+			var image = GetComponent<UICircle>();
 			image.sprite = Sprite.Create(texture, new Rect (0, 0, texture.width, texture.height), new Vector2 (0.5f, 0.5f));
 		});		
 	}

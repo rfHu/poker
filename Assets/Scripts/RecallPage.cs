@@ -39,6 +39,8 @@ public class RecallPage : MonoBehaviour {
     private bool requesting = false;
 
 	void request(int num = 0) {
+        return ;
+
         if (requesting) {
             return ;
         } 
