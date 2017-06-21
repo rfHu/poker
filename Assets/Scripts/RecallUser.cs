@@ -153,12 +153,8 @@ public class RecallUser : MonoBehaviour {
 	}
 
 	void ShowAvatar(string url) {
-		// this.LoadImage(url, (texture) => {
-		// 	if (this == null) {
-		// 		return ;
-		// 	}
-
-		// 	Avatar.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-		// });
+		this.LoadImage(url, (texture) => {
+			Avatar.texture = texture;
+		});
 	}
 }
