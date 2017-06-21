@@ -2,6 +2,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UI.ProceduralImage;
+using System.Collections;
+using UniRx;
 
 public class RecallPage : MonoBehaviour {
     public Text SBBB;
@@ -58,7 +60,7 @@ public class RecallPage : MonoBehaviour {
 					return ;
 				}
 
-				reload(json);
+				MainThreadDispatcher.StartUpdateMicroCoroutine(reload(json));
                 requesting = false;
 			},
             () => {
@@ -69,7 +71,7 @@ public class RecallPage : MonoBehaviour {
         requesting = true;
 	}
 
-	void reload(Dictionary<string, object> data) {
+	private IEnumerator reload(Dictionary<string, object> data) {
         foreach(var user in Users) {
             user.gameObject.SetActive(false);
         }
@@ -93,6 +95,8 @@ public class RecallPage : MonoBehaviour {
         } else {
             InsuranceGo.SetActive(false);
         }
+
+        yield return null;
 
 		var comCards = ret.Dict("community").IL("cards");
 
@@ -124,6 +128,8 @@ public class RecallPage : MonoBehaviour {
             {
                 user.SetTag(RecallUser.UserTag.Dealer); 
             }
+
+            yield return null;
         }
 
         if (!string.IsNullOrEmpty(ret.String("favhand_id")))

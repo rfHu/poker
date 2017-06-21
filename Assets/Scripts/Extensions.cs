@@ -158,7 +158,7 @@ using System.IO;
                 var texture = ES2.Load<Texture2D>(filename);
                 cb(texture);
                 texture = null;
-                Resources.UnloadUnusedAssets();
+                // Resources.UnloadUnusedAssets();
             } else {
                 mono.StartCoroutine(mono.LoadImageTexture(url, cb: (texture) => {
                     cb(texture);

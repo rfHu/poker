@@ -6,7 +6,7 @@ using UnityEngine.UI.Extensions;
 
 public class RecallUser : MonoBehaviour {
     public Text PlayerName;
-	public UICircle Avatar;
+	public RawImage Avatar;
 	public Text Score;
 	public GameObject[] Cards;
 	public Text MaxFive;
@@ -153,12 +153,12 @@ public class RecallUser : MonoBehaviour {
 	}
 
 	void ShowAvatar(string url) {
-		this.LoadImage(url, (texture) => {
-			if (this == null) {
-				return ;
-			}
+		// this.LoadImage(url, (texture) => {
+		// 	if (this == null) {
+		// 		return ;
+		// 	}
 
-			Avatar.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-		});
+		// 	Avatar.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+		// });
 	}
 }

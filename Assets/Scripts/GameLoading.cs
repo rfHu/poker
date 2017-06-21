@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class GameLoading : MonoBehaviour {
 	// Use this for initialization
@@ -7,9 +8,9 @@ public class GameLoading : MonoBehaviour {
 
 		#if UNITY_EDITOR  
         	// external.SetSid("s%3AdOlm2w5hGhqahgt--HMRhxyXjTCSmOLf.3IXxXmGw1R3E0Swr10JEcqYcGvn7AUZT4%2F0d99jOuT8");
-        	external.SetSid("s%3Aupurq6_6pnPu4vBkDtVorwO0B7cckne9.CzjLFjsyylkUD9HAPU8E9FMZ6P%2Bks93TAFvhLlhCARc");
+        	external.SetSid("s%3A4gHJE4AJbNY5j6XT2OuoeO4-nqn6bl7t.5f5shYMZ2sFNrz0CKTpO5b2cUJujPknpA5OU7lThbJI");
 			external.SetProxy("http://localhost:8888");
-            external.SetRoomID("5948e2c3e5905f118abab4cc");
+            external.SetRoomID("59495822587313156ab19232");
 		#endif
 	}
 	
