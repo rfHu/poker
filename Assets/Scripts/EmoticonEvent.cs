@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using DarkTonic.MasterAudio;
 using DG.Tweening;
 
-public class EmoticonEvemt : MonoBehaviour {
+public class EmoticonEvent : MonoBehaviour {
 
 
     public GameObject laberPart2;
