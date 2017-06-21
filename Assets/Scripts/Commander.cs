@@ -250,7 +250,10 @@ public class iOSCommander: ICommander {
     }
 
     public void OptionToggle(bool isOpen, int type) {
-        _ex_callOptionToggle(isOpen, type);
+		#if UNITY_EDITOR 
+		#else
+        	_ex_callOptionToggle(isOpen, type);
+		#endif
     }
 }
 #endif
