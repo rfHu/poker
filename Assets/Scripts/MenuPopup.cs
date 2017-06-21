@@ -8,7 +8,6 @@ using UniRx;
 
 //菜单弹出
 public class MenuPopup : MonoBehaviour {
-    public VectorImage  MuteIcon;
 
 	public CanvasGroup StandCG;
 	public CanvasGroup SuppCG;
@@ -35,10 +34,6 @@ public class MenuPopup : MonoBehaviour {
 		if (GameData.MyCmd.Takecoin) {
 			SuppCG.alpha = 1;
 		}	
-
-		if (GameData.Shared.muted) {
-			setVolumeImage("volume_off");
-		}
 
 		// 还未坐下
 		if (!GameData.MyCmd.Unseat) {
@@ -92,17 +87,12 @@ public class MenuPopup : MonoBehaviour {
 		gameObject.GetComponent<DOPopup>().Close();
 	}
 
-	public void ToggleMute() {
-		if (GameData.Shared.muted) {
-			MasterAudio.UnmuteEverything();
-			setVolumeImage("volume_up");	
-		} else {
-			MasterAudio.MuteEverything();
-			setVolumeImage("volume_off");
-		}
-
-		GameData.Shared.muted = !GameData.Shared.muted;
-	}
+    public void Option() 
+    {
+        var tip = (GameObject)Instantiate(Resources.Load("Prefab/Option"));
+        tip.GetComponent<DOPopup>().Show();
+        gameObject.GetComponent<DOPopup>().Close();
+    }
 
 	public void Exit() {
 		External.Instance.Exit();
@@ -132,9 +122,5 @@ public class MenuPopup : MonoBehaviour {
 
 	public void Close() {
 		GetComponent<DOPopup>().Close();
-	}
-
-	private void setVolumeImage(string icon) {
-		MuteIcon.vectorImageData = MaterialIconHelper.GetIcon(icon).vectorImageData;
 	}
 }

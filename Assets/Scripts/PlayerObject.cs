@@ -19,6 +19,8 @@ public class PlayerObject : MonoBehaviour {
 	public GameObject Cardfaces;
 	public GameObject MyCards;
 	public GameObject Stars;
+    public GameObject WinNormal;
+    public GameObject Win27;
 	public Text WinNumber;
 	public List<Card> ShowCards;
 	public GameObject AvatarMask;
@@ -359,8 +361,11 @@ public class PlayerObject : MonoBehaviour {
 
 		player.OverData.AsObservable().Where((data) => data != null).Subscribe((data) => {
 			var gain = data.Gain();
+            var normalStar = data.award27 == -1;
 			if (gain > 0) {
-				Stars.SetActive(true);
+                Stars.SetActive(true);
+                WinNormal.SetActive(normalStar);
+                Win27.SetActive(!normalStar);
 
 				if (isSelf()) {
 					WinImageGo.SetActive(true);

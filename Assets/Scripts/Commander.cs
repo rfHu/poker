@@ -88,6 +88,11 @@ public class Commander {
     public void VoiceIconToggle(bool isShowing) {
         ic.VoiceIconToggle(isShowing);
     }
+
+    public void OptionToggle(bool isOpen, int type) 
+    {
+        ic.OptionToggle(isOpen, type);
+    }
 }
 
 public interface ICommander {
@@ -101,6 +106,7 @@ public interface ICommander {
     void ShareGameRoom(string shareText);
     void VoiceIconToggle(bool isShowing);
 	void PauseUnity();
+    void OptionToggle(bool isOpen, int type);
 }
 
 #if UNITY_ANDROID
@@ -153,6 +159,11 @@ public class AndroidCommander: ICommander {
     }
 
 	public void PauseUnity(){}
+
+    public void OptionToggle(bool isOpen, int type) 
+    {
+        getJo().Call("gameMessageIsShowToggle", isOpen, type);
+    }
 }
 #endif
 
@@ -188,6 +199,9 @@ public class iOSCommander: ICommander {
 	[DllImport("__Internal")]
 	private static extern void _ex_pauseUnity();
 
+	[DllImport("__Internal")]
+	private static extern void _ex_callOptionToggle(bool isOpen, int type);
+
 	public void Exit() {
 		_ex_callExitGame();
 	}
@@ -201,10 +215,10 @@ public class iOSCommander: ICommander {
 	}
 
 	public void PauseUnity() {
-		#if UNITY_EDITOR 
-		#else
+#if UNITY_EDITOR
+#else
 		_ex_pauseUnity();
-		#endif
+#endif
 	}
 
 	public int Power() {
@@ -233,6 +247,10 @@ public class iOSCommander: ICommander {
 
     public void VoiceIconToggle(bool isShowing) {
         _ex_callVoiceIconState(isShowing);
+    }
+
+    public void OptionToggle(bool isOpen, int type) {
+        _ex_callOptionToggle(isOpen, type);
     }
 }
 #endif

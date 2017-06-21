@@ -201,6 +201,7 @@ public class GameOverJson {
 	public int chips {get; set;}
 	public string uid { get; set; }
 	public int seat { get; set; }
+    public int award27 { get; set; }
 	public int maxFiveRank = 0;
 
 	public int Gain() {
@@ -212,6 +213,7 @@ public class GameOverJson {
 		chips = dict.Int("chips");
 		uid = dict.String("uid");
 		seat = dict.Int("seat");
+        award27 = dict.Int("award_27");
 		cards = dict.IL("cards");
 		maxFiveRank = dict.Int("maxFiveRank");	
 	}
@@ -407,6 +409,8 @@ sealed public class GameData {
 
 		RxSubjects.GameOver.Subscribe((e) => {
 			InGame = false;
+            bool showWin27Emo = false;
+
 
 			var data = e.Data.Dict("scorelist");
 
@@ -418,6 +422,12 @@ sealed public class GameData {
 				if (Players.ContainsKey(index))  {
 					Players[index].OverData.Value = json;
 				}
+
+                if (json.award27 > 0 && !showWin27Emo)
+                {
+                    showWin27Emo = true;
+                    RxSubjects.Win27Emo.OnNext(showWin27Emo);
+                }
 			}
 
 			var room = e.Data.Dict("room");
@@ -685,21 +695,72 @@ sealed public class GameData {
 	
 	public ReactiveCollection<int> PublicCards = new ReactiveCollection<int>();
 
-	// 静音设置
-	private static string muteTag = "persist.txt?tag=mute";
+	// 设置
+	private static string tagStr = "persist.txt?tag=";
+
+    // 语音设置
+    public bool talkSoundClose {
+        get {
+            if (ES2.Exists(tagStr + "talkSound"))
+            {
+                return ES2.Load<bool>(tagStr + "talkSound");
+            }
+            return false;
+        }
+
+        set {
+            ES2.Save(value, tagStr + "talkSound");
+        }
+    }
+
+    //游戏声音
 	public bool muted {
 		get {
-			if (ES2.Exists(muteTag)) {
-				return ES2.Load<bool>(muteTag);
+			if (ES2.Exists(tagStr + "mute")) {
+				return ES2.Load<bool>(tagStr + "mute");
 			}
 
 			return false;
 		}
 
 		set {
-			ES2.Save(value, muteTag);
+			ES2.Save(value, tagStr + "mute");
 		}
 	}
+
+    // 文字气泡
+    public bool chatBubbleClose {
+        get
+        {
+            if (ES2.Exists(tagStr + "chatBubble"))
+            {
+                return ES2.Load<bool>(tagStr + "chatBubble");
+            }
+            return false;
+        }
+
+        set
+        {
+            ES2.Save(value, tagStr + "chatBubble");
+        }
+    }
+
+    //动态表情
+    public bool emoticonClose{
+        get
+        {
+            if (ES2.Exists(tagStr + "emoticonClose"))
+            {
+                return ES2.Load<bool>(tagStr + "emoticonClose");
+            }
+            return false;
+        }
+
+        set
+        {
+            ES2.Save(value, tagStr + "emoticonClose");
+        }
+    }
 
 	public class MyCmd {
 		public static bool Takecoin = false;

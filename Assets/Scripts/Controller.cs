@@ -67,9 +67,8 @@ public class Controller : MonoBehaviour {
 
 	public void load() {
 		registerRxEvents();
-
 		setupDealer();
-		setMuteState();
+		setOptions();
 		#if UNITY_EDITOR
 		#else
 				Commander.Shared.VoiceIconToggle(true);
@@ -258,10 +257,12 @@ public class Controller : MonoBehaviour {
 		dealer.GetComponent<Dealer>().Init(Seats);
 	}
 
-	private void setMuteState() {
+	private void setOptions() {
 		if (GameData.Shared.muted) {
 			MasterAudio.MuteEverything();
 		}
+        Commander.Shared.OptionToggle(!GameData.Shared.talkSoundClose, 2);
+        Commander.Shared.OptionToggle(!GameData.Shared.chatBubbleClose, 1);
 	}
 
 	private void addGameInfo(string text) {
@@ -445,6 +446,9 @@ public class Controller : MonoBehaviour {
 
         RxSubjects.Emoticon.Subscribe((e) =>
         {
+            if (GameData.Shared.emoticonClose)
+                return;
+
             int fromSeatIndex = e.Data.Int("seat");
             int toSeatIndex = e.Data.Int("toseat");
             int pid = e.Data.Int("pid");
@@ -527,6 +531,9 @@ public class Controller : MonoBehaviour {
 			SpkText.ShowMessage(String.Format("{0}: {1}", name, text));
 		}).AddTo(this);
 
+        RxSubjects.Win27Emo.Subscribe((e) => {
+            Instantiate(Resources.Load("Prefab/Win27Emo"), G.DialogCvs.transform);
+        }).AddTo(this);
 
         RxSubjects.GameOver.Subscribe((e) =>{
 			if (GameData.Shared.PublicCards.Count < 5) {
@@ -665,17 +672,24 @@ public class Controller : MonoBehaviour {
 
         }).AddTo(this);
 
-		 RxSubjects.ToInsurance.Subscribe((e) =>
+		RxSubjects.ToInsurance.Subscribe((e) =>
         {
             var InsurancePopup = (GameObject)GameObject.Instantiate(Resources.Load("Prefab/Insurance"));
             InsurancePopup.GetComponent<DOPopup>().Show(modal: false);
-            InsurancePopup.GetComponent<Insurance>().Init(e.Data);
+            InsurancePopup.GetComponent<Insurance>().Init(e.Data, true);
         }).AddTo(this);
 
-         RxSubjects.Seating.Subscribe((action) => 
-         {
+        RxSubjects.ShowInsurance.Subscribe((e) => 
+        {
+            var InsurancePopup = (GameObject)GameObject.Instantiate(Resources.Load("Prefab/Insurance"));
+            InsurancePopup.GetComponent<DOPopup>().Show(modal: false);
+            InsurancePopup.GetComponent<Insurance>().Init(e.Data, false);
+        });
+
+        RxSubjects.Seating.Subscribe((action) => 
+        {
              ExpressionButton.SetActive(action);
-         }).AddTo(this);
+        }).AddTo(this);
 	}
 
     private void TalkLimit(bool limit)

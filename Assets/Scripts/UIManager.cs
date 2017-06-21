@@ -76,6 +76,13 @@ public class UIManager : MonoBehaviour {
         expressionPage.GetComponent<DOPopup>().Show();
     }
 
+    public void OnClickShowInsurance()
+    {
+        Connect.Shared.Emit(new Dictionary<string, object>(){
+        	{"f", "showinsurance"}
+        });
+    }
+
 	void Awake()
 	{
 		GameData.Shared.AuditList.AsObservable().Where((list) => list != null).Subscribe((list) => {
