@@ -6,6 +6,44 @@ using System.Reflection;
 using BestHTTP.JSON;
 using SimpleJSON;
 using System.IO;
+using System.Collections;
+using UniRx;
+using BestHTTP;
+
+internal class GCManager {
+    private int callCounts = 0;
+    private IDisposable disposable;
+
+    internal static GCManager shared = new GCManager();
+
+    internal void release() {
+        // 20次强制做一次GC
+        if (callCounts >= 20) {
+            unloadMemory();
+        } else {
+            callCounts++;
+
+            if (disposable != null) {
+                disposable.Dispose();
+            }
+
+            // 5s后执行GC
+            disposable = Observable.Timer(TimeSpan.FromSeconds(5)).Subscribe((_) => {
+                unloadMemory();
+            });
+        }
+    }
+
+    private void unloadMemory() {
+        Debug.Log("release");
+        Resources.UnloadUnusedAssets();
+        callCounts = 0;
+
+        if (disposable != null) {
+            disposable.Dispose();
+        }
+    }
+}
 
     public static class CShapeExtensions
     {
@@ -147,41 +185,33 @@ using System.IO;
                 propInfo => propInfo.Name,
                 propInfo => propInfo.GetValue(source, null)
             );
-
         }
 
         static public void LoadImage(this MonoBehaviour mono, string url, Action<Texture2D> cb) {
-            var uri = new Uri(url);
-            var filename = "images/" + Path.GetFileName(uri.LocalPath);
+            // var uri = new Uri(url);
+            // var filename = "images/" + Path.GetFileName(uri.LocalPath);
 
             // if (ES2.Exists(filename)) {
-            //     var texture = ES2.Load<Texture2D>(filename);
-            //     cb(texture);
-            //     texture = null;
-            //     // Resources.UnloadUnusedAssets();
+            //    MainThreadDispatcher.StartUpdateMicroCoroutine(LoadLocal(filename, cb)); 
             // } else {
-                mono.StartCoroutine(mono.LoadImageTexture(url, cb: (texture) => {
-                    cb(texture);
-                    ES2.Save(texture, filename);
-                }));
+                // MainThreadDispatcher.StartUpdateMicroCoroutine(mono.LoadImageTexture(url, (texture) => {
+                    // cb(texture);
+                    // ES2.Save(texture, filename);
+                // }));
             // }
+
+            new HTTPRequest(new Uri(url), (request, response) => {
+                var texture = new Texture2D(0, 0);
+                texture.LoadImage(response.Data);
+                cb(texture);
+            }).Send();
         }
 
-        static public IEnumerator<WWW> LoadImageTexture(this MonoBehaviour mono, string url, Action<Texture2D> cb) {
-            var www  = new WWW(url);
-            yield return www;
-
-            if (!string.IsNullOrEmpty(www.error)) {
-                yield return null;
-            }
-
-            var texture = new Texture2D (1, 1);
-            www.LoadImageIntoTexture(texture as Texture2D);
+        static public IEnumerator LoadLocal(string filename, Action<Texture2D> cb) {
+            var texture = ES2.Load<Texture2D>(filename);
             cb(texture);
-
-            MonoBehaviour.DestroyImmediate(www.texture);
-            www.Dispose();
-            www = null;
+            texture = null;
+            yield return null;
             Resources.UnloadUnusedAssets();
         }
     }

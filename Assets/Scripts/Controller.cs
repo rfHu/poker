@@ -499,11 +499,11 @@ public class Controller : MonoBehaviour {
                     }
                 }
 
-                var player = aimSeat.transform.FindChild("Player(Clone)");
+                var player = aimSeat.transform.Find("Player(Clone)");
                 SingleExpression(expression, player);
             }
 
-            expression.transform.FindChild("Face").GetComponent<Animator>().SetTrigger(expressionName);
+            expression.transform.Find("Face").GetComponent<Animator>().SetTrigger(expressionName);
            
 			Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe((_) => {
 				Destroy(expression);
@@ -730,8 +730,8 @@ public class Controller : MonoBehaviour {
 
     private static void SingleExpression(GameObject expression, Transform parent)
     {
-        if (parent.FindChild("Expression(Clone)") != null)
-            Destroy(parent.FindChild("Expression(Clone)").gameObject);
+        if (parent.Find("Expression(Clone)") != null)
+            Destroy(parent.Find("Expression(Clone)").gameObject);
 
         expression.transform.SetParent(parent, false);
     }

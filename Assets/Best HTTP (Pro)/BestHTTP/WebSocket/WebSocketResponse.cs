@@ -204,7 +204,7 @@ namespace BestHTTP.WebSocket
             lock (SendLock)
             {
                 this.unsentFrames.Add(frame);
-                Interlocked.Add(ref this._bufferedAmount, frame.Data.Length);
+                Interlocked.Add(ref this._bufferedAmount, frame.Data != null ? frame.Data.Length : 0);
 
                 if (!sendThreadCreated)
                 {
@@ -264,7 +264,8 @@ namespace BestHTTP.WebSocket
             {
                 while (!closed && !closeSent)
                 {
-                    HTTPManager.Logger.Information("WebSocketResponse", "SendThread - Waiting...");
+                    if (HTTPManager.Logger.Level <= Logger.Loglevels.Information)
+                        HTTPManager.Logger.Information("WebSocketResponse", "SendThread - Waiting...");
                     newFrameSignal.WaitOne();
 
                     try

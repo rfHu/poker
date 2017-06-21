@@ -828,7 +828,7 @@ public class MasterAudioEventBackend : MinimalBackend<object, string> {
 
     // returns the names of all groups that the given group links to
     static IEnumerable<string> GetLinkedGroups(string groupName) {
-        var grpTrans = MasterAudio.Instance.Trans.FindChild(groupName);
+        var grpTrans = MasterAudio.Instance.Trans.Find(groupName);
         if (grpTrans == null) {
             return Enumerable.Empty<string>();
         }

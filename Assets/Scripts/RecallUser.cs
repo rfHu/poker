@@ -84,7 +84,7 @@ public class RecallUser : MonoBehaviour {
             ActionsText[i].text = text;
 
             var insuranceNum = actDict.Int("in_amount");
-			var insu = ActionsText[i].transform.FindChild("InsuranceNum");
+			var insu = ActionsText[i].transform.Find("InsuranceNum");
 
             if (insuranceNum > 0 && insu != null)
             {
@@ -122,7 +122,7 @@ public class RecallUser : MonoBehaviour {
 
 		Tag.SetActive(true);
         Tag.GetComponent<ProceduralImage>().color = bClolor;
-        var UText = Tag.transform.FindChild("Text").GetComponent<Text>();
+        var UText = Tag.transform.Find("Text").GetComponent<Text>();
         UText.text = text;
         UText.color = Color.white;
 	}
