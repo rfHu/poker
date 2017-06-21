@@ -574,8 +574,6 @@ public class PlayerObject : MonoBehaviour {
 			var stateGo = StateLabel.transform.parent.gameObject;
 			stateGo.SetActive(false);
 
-			
-
 			switch(state) {
 				case PlayerState.Waiting: case PlayerState.Auditing:
 					ScoreLabel.text = "<size=28>等待</size>";

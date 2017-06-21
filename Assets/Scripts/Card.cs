@@ -8,8 +8,8 @@ using DarkTonic.MasterAudio;
 public class Card : MonoBehaviour {
 	public Sprite[] Faces;
 	public Sprite CardBack;
+	public int Index = -1;
 
-	public bool HasShow = false;
 
 	public AnimationCurve scaleCurve;
 
@@ -26,6 +26,8 @@ public class Card : MonoBehaviour {
 	}
 
 	private void show(int index, bool anim = false, Action complete = null) {	
+		Index = index;
+
 		gameObject.SetActive(true);
 		GetComponent<Image>().enabled = true;
 		var image = GetComponent<Image>();
@@ -51,11 +53,10 @@ public class Card : MonoBehaviour {
 	}
 
 	public void Show(int index, bool anim = false, Action complete = null) {
-		if (index == 0 || HasShow) {
+		if (index == 0) {
 			return ;
 		}
 
-		HasShow = true;
 		ReColor();
 
 		var realIndex = Card.CardIndex(index);
@@ -63,7 +64,7 @@ public class Card : MonoBehaviour {
 	}
 
 	public void ShowWithSound(int index, bool anim = false) {
-		if (index == 0 || HasShow) {
+		if (index == 0) {
 			return ;
 		}
 
@@ -100,7 +101,6 @@ public class Card : MonoBehaviour {
 
 	public void Turnback() {
 		GetComponent<Image>().sprite = CardBack;
-		HasShow = false;
 	}
 
 	public void Hide() {

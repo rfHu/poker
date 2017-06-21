@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using BestHTTP.JSON;
 using SimpleJSON;
+using System.IO;
 
     public static class CShapeExtensions
     {
@@ -147,5 +148,40 @@ using SimpleJSON;
                 propInfo => propInfo.GetValue(source, null)
             );
 
+        }
+
+        static public void LoadImage(this MonoBehaviour mono, string url, Action<Texture2D> cb) {
+            var uri = new Uri(url);
+            var filename = "images/" + Path.GetFileName(uri.LocalPath);
+
+            if (ES2.Exists(filename)) {
+                var texture = ES2.Load<Texture2D>(filename);
+                cb(texture);
+                texture = null;
+                // Resources.UnloadUnusedAssets();
+            } else {
+                mono.StartCoroutine(mono.LoadImageTexture(url, cb: (texture) => {
+                    cb(texture);
+                    ES2.Save(texture, filename);
+                }));
+            }
+        }
+
+        static public IEnumerator<WWW> LoadImageTexture(this MonoBehaviour mono, string url, Action<Texture2D> cb) {
+            var www  = new WWW(url);
+            yield return www;
+
+            if (!string.IsNullOrEmpty(www.error)) {
+                yield return null;
+            }
+
+            var texture = new Texture2D (1, 1);
+            www.LoadImageIntoTexture(texture as Texture2D);
+            cb(texture);
+
+            MonoBehaviour.DestroyImmediate(www.texture);
+            www.Dispose();
+            www = null;
+            Resources.UnloadUnusedAssets();
         }
     }

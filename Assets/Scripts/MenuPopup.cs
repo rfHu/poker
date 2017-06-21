@@ -101,7 +101,7 @@ public class MenuPopup : MonoBehaviour {
 	public void Tips() {
         var tip = (GameObject)Instantiate(Resources.Load("Prefab/Explain"));
 		tip.GetComponent<DOPopup>().Show();
-		gameObject.GetComponent<DOPopup>().ImmediateClose();
+		gameObject.GetComponent<DOPopup>().Close();
 	}
 
 	public void OnReserve() {

@@ -21,7 +21,7 @@ public class ModalHelper: MonoBehaviour {
 			if (onClick != null) {
 				onClick();
 			}
-			Hide();	
+			Destroy();	
 		}).AddTo(this);
 		transform.SetAsLastSibling();
 
@@ -35,7 +35,7 @@ public class ModalHelper: MonoBehaviour {
 #endif
     }
 
-	public void Hide() {
+	public void Destroy() {
 		if (gameObject == null) {
 			return ;
         }

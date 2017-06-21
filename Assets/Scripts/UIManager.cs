@@ -6,6 +6,8 @@ using HedgehogTeam.EasyTouch;
 public class UIManager : MonoBehaviour {
 	private GameObject auditMsg;
 
+	public RecallPage RCPage;
+
 	public void ShowMenu() {
 		var popup = (GameObject)Instantiate(Resources.Load("Prefab/MenuPopup"));
 		popup.GetComponent<DOPopup>().Show();
@@ -53,8 +55,8 @@ public class UIManager : MonoBehaviour {
 	}
 	
 	public void OnShowRecalls() {
-		var recall = (GameObject)Instantiate(Resources.Load("Prefab/RecallPage"));		
-		recall.GetComponent<DOPopup>().Show();
+		RCPage.gameObject.SetActive(true);
+		RCPage.Show();
 	}
 
 	public void OnClickChat() {

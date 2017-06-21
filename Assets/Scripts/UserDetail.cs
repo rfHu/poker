@@ -3,10 +3,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UI.ProceduralImage;
 using MaterialUI;
+using UnityEngine.UI.Extensions;
 
 [RequireComponent(typeof(DOPopup))]
 public class UserDetail : MonoBehaviour {
-	public RawImage Avatar;
+	public UICircle Avatar;
 	public Text Name;
 	public Text Coins;
 	public Text Hands;
@@ -83,9 +84,13 @@ public class UserDetail : MonoBehaviour {
 			var achieve = data.Dict("achieve").ToObject<AchieveModel>();
 
             Name.text = profile.name;
-            StartCoroutine(_.LoadImage(profile.avatar, (texture) => {
-                Avatar.texture = _.Circular(texture);
-            }));
+
+            this.LoadImage(profile.avatar, (texture) => {
+                if (this == null) {
+                    return ;
+                }
+                Avatar.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            });
 
             // 金币数
             Coins.text = _.Num2CnDigit<int>(int.Parse(achieve.coins));

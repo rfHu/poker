@@ -20,8 +20,9 @@ public class External : MonoBehaviour{
 		}
 	}
 
-	void Awake() {
+	void Start() {
 		this.name = "External";
+		Commander.Shared.PauseUnity();
 	}
 
 	// 内部的退出接口都直接调用，外部只有当登陆互斥时才调用
@@ -89,7 +90,6 @@ public class External : MonoBehaviour{
 			// 延时执行突出逻辑
 			Observable.Timer(TimeSpan.FromMilliseconds(90)).AsObservable().Subscribe((_) => {
 				callback();
-				Time.timeScale = 0;
 			});
 		#endif
 	}

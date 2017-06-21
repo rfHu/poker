@@ -2,11 +2,11 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UI.ProceduralImage;
+using System.Collections;
+using UniRx;
 
 public class RecallPage : MonoBehaviour {
     public Text SBBB;
-	public List<Card> Cards;
-    public GameObject playerTag;
 	public GameObject Rect;
 	public GameObject LeftIndicator;
 	public GameObject RightIndicator;
@@ -14,6 +14,7 @@ public class RecallPage : MonoBehaviour {
 	public Text Total;
 	public GameObject UserGo;
     public Toggle Collect;
+    public RecallUser[] Users;
 
     public RectTransform PlayerList;
     public GameObject InsuranceGo;
@@ -23,14 +24,10 @@ public class RecallPage : MonoBehaviour {
 	private int currentNumber;
     private string favhand_id;
     private bool isCollected;
-    private Color bClolor = new Color(5 / 255f, 150 / 255f, 213 / 255f);
 
 	void Awake()
 	{
         SBBB.text = GameData.Shared.SB + "/" + GameData.Shared.BB;
-
-		request();
-
         Collect.onValueChanged.AddListener(delegate(bool isOn) { 
             CollectOrCancel(); 
         });
@@ -38,7 +35,13 @@ public class RecallPage : MonoBehaviour {
 
     private bool requesting = false;
 
-	void request(int num = 0) {
+    public void Show() {
+        gameObject.SetActive(true);
+        GetComponent<DOPopup>().Show(destroyOnClose: false);
+        request();
+    }
+
+	public void request(int num = 0) {
         if (requesting) {
             return ;
         } 
@@ -57,7 +60,7 @@ public class RecallPage : MonoBehaviour {
 					return ;
 				}
 
-				reload(json);
+				MainThreadDispatcher.StartUpdateMicroCoroutine(reload(json));
                 requesting = false;
 			},
             () => {
@@ -68,7 +71,10 @@ public class RecallPage : MonoBehaviour {
         requesting = true;
 	}
 
-	void reload(Dictionary<string, object> data) {
+	private IEnumerator reload(Dictionary<string, object> data) {
+        foreach(var user in Users) {
+            user.gameObject.SetActive(false);
+        }
 
 		var ret = data.Dict("ret");
 
@@ -78,8 +84,6 @@ public class RecallPage : MonoBehaviour {
 		Current.text = currentNumber.ToString();
 		Total.text =  string.Format("/ {0}", totalNumber);
 
-		Rect.transform.Clear();
-
         var insuValue = ret.Dict("insurance").Int("score");
 
         if (insuValue != 0)
@@ -87,9 +91,12 @@ public class RecallPage : MonoBehaviour {
             InsuranceGo.SetActive(true);
             InsuranceText.text = _.Number2Text(insuValue);
             InsuranceText.color = _.GetTextColor(insuValue);
-            var insurance = Instantiate(InsuranceGo, Rect.transform, false);
+            InsuranceGo.SetActive(false);
+        } else {
             InsuranceGo.SetActive(false);
         }
+
+        yield return null;
 
 		var comCards = ret.Dict("community").IL("cards");
 
@@ -102,33 +109,27 @@ public class RecallPage : MonoBehaviour {
                 continue;
             }
 
-            var user = Instantiate(UserGo).GetComponent<RecallUser>();
+            var user = Users[num];
             user.gameObject.SetActive(true);
             user.Show(dict);
 
-            if (user.PublicCardNum > 1)
-            {
-                for (int i = 0; i < user.PublicCardNum + 1 && i < comCards.Count; i++)
-                {
-                    var card = Instantiate(Cards[i].gameObject);
-                    card.GetComponent<Card>().Show(comCards[i]);
-                    card.transform.SetParent(user.transform, false);
-                }
-            }
+            user.SetComCard(comCards);
+
             user.transform.SetParent(Rect.transform, false);
 
-            if (num == list.Count - 1)
-	        {
-                 Instantiate(playerTag, user.transform, false);
-            }
-            else if (num == 0)
+            if (num == 0)
             {
-                SetBTag(user, "小盲");
+                user.SetTag(RecallUser.UserTag.SmallBlind);
             }
             else if (num == 1)
             {
-                SetBTag(user, "大盲");
+                user.SetTag(RecallUser.UserTag.BigBlind);
+            } else if (num == list.Count - 1)
+            {
+                user.SetTag(RecallUser.UserTag.Dealer); 
             }
+
+            yield return null;
         }
 
         if (!string.IsNullOrEmpty(ret.String("favhand_id")))
@@ -143,16 +144,6 @@ public class RecallPage : MonoBehaviour {
             Collect.isOn = false;
         }		
 	}
-
-    private void SetBTag(RecallUser user, string str)
-    {
-
-        GameObject pTag = Instantiate(playerTag, user.transform, false);
-        pTag.GetComponent<ProceduralImage>().color = bClolor;
-        var text = pTag.transform.FindChild("Text").GetComponent<Text>();
-        text.text = str;
-        text.color = Color.white;
-    }
 
 	public void Up() {
 		if (currentNumber >= totalNumber) {
@@ -204,12 +195,8 @@ public class RecallPage : MonoBehaviour {
 			},
             (json) =>
             {
-                if (json.Int("err") == 0) {
-                    if (f == "fav")
-                    {
-                        var ret = json.Dict("ret");
-                        favhand_id = ret.String("favhand_id");
-                    }
+                if (json.Int("err") == 0 && f == "fav") {
+                    favhand_id = json.Dict("ret").String("favhand_id");
                 } 
             }
         );

@@ -348,7 +348,7 @@ public class OP : MonoBehaviour {
 
 	private void hideModal() {
 		if (modal != null) {
-			modal.Hide();
+			modal.Destroy();
 		}
 	}
 
