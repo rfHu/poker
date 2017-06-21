@@ -153,7 +153,11 @@ public class RecallUser : MonoBehaviour {
 	}
 
 	void ShowAvatar(string url) {
-		this.LoadImage(url, (texture) => {
+		TexturePool.Shared.FetchTexture(url, (texture) => {
+			if (this == null) {
+				return ;
+			}
+			
 			Avatar.texture = texture;
 		});
 	}

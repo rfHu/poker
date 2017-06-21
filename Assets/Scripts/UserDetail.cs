@@ -85,7 +85,7 @@ public class UserDetail : MonoBehaviour {
 
             Name.text = profile.name;
 
-            this.LoadImage(profile.avatar, (texture) => {
+            TexturePool.Shared.FetchTexture(profile.avatar, (texture) => {
                 if (this == null) {
                     return ;
                 }

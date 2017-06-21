@@ -100,7 +100,10 @@ public class InsureToast: MonoBehaviour {
             MsgText.text = text;
             NameText.text = name;
 
-            this.LoadImage(url, (texture) => {
+            TexturePool.Shared.FetchTexture(url, (texture) => {
+                if (this == null) {
+                    return ;
+                }
                 Avatar.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
             });
 

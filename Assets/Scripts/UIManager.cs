@@ -8,6 +8,8 @@ public class UIManager : MonoBehaviour {
 
 	public RecallPage RCPage;
 
+	public MenuPopup Menu;
+
 	public void ShowMenu() {
 		var popup = (GameObject)Instantiate(Resources.Load("Prefab/MenuPopup"));
 		popup.GetComponent<DOPopup>().Show();

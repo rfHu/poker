@@ -4,6 +4,7 @@ using System;
 using UnityEngine.UI;
 using System.Collections;
 using System.IO;
+using BestHTTP;
 
 public class _ {
     static public Texture2D Circular(Texture2D sourceTex)
@@ -159,6 +160,28 @@ public class _ {
     static public void Log(object obj) {
         if (Debug.isDebugBuild) {
             Debug.Log(String.Format("Unity3D: {0}", obj));
+        }
+    }
+
+    static public string url2Filename(string url) {
+         var uri = new Uri(url);
+         var filename = "images/" + Path.GetFileName(uri.LocalPath);
+         return filename;
+    }
+
+    static public void LoadTexture(string url, Action<Texture2D> cb) {
+        var filename = url2Filename(url);
+
+        if (ES2.Exists(filename)) {
+            var texture = ES2.Load<Texture2D>(filename);
+            cb(texture);
+        } else {
+            new HTTPRequest(new Uri(url), (request, response) => {
+                var texture = new Texture2D(0, 0);
+                texture.LoadImage(response.Data);
+                cb(texture);
+                ES2.Save(texture, filename);
+            }).Send();                
         }
     }
 }

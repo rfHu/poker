@@ -9,38 +9,48 @@ using System.IO;
 using System.Collections;
 using UniRx;
 using BestHTTP;
+using System.Text.RegularExpressions;
 
-internal class GCManager {
-    private int callCounts = 0;
-    private IDisposable disposable;
+public class TexturePool {
+    private Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
+    private int max = 150;
 
-    internal static GCManager shared = new GCManager();
+    private TexturePool() {}
 
-    internal void release() {
-        // 20次强制做一次GC
-        if (callCounts >= 20) {
-            unloadMemory();
-        } else {
-            callCounts++;
+    static public TexturePool Shared = new TexturePool();
 
-            if (disposable != null) {
-                disposable.Dispose();
-            }
-
-            // 5s后执行GC
-            disposable = Observable.Timer(TimeSpan.FromSeconds(5)).Subscribe((_) => {
-                unloadMemory();
-            });
-        }
+   public bool Exists(string url) {
+        return textures.ContainsKey(url);
     }
 
-    private void unloadMemory() {
-        Debug.Log("release");
-        Resources.UnloadUnusedAssets();
-        callCounts = 0;
+    public void Store(string url, Texture2D texture) {
+        textures[url] = texture;
+    }
 
-        if (disposable != null) {
-            disposable.Dispose();
+    public void Despawn(string url) {
+        if (textures.Count > max && Exists(url)) {
+            var tex = textures[url];
+            textures.Remove(url);
+            GameObject.Destroy(tex); 
+
+            _.Log("回收Texture");
+        }
+    } 
+
+    public void FetchTexture(string url, Action<Texture2D> cb) {
+        string pattern = @"/w/(\d)+/h/(\d)+/format/jpg";
+		Regex rgx = new Regex(pattern);
+		url = rgx.Replace(url, "/w/124/h/124/format/png");
+
+        Despawn(url);
+
+        if (Exists(url)) {
+            cb(textures[url]);
+        } else {
+            _.LoadTexture(url, (texture) => {
+                Store(url, texture);
+                cb(texture);
+            });
         }
     }
 }
@@ -185,33 +195,5 @@ internal class GCManager {
                 propInfo => propInfo.Name,
                 propInfo => propInfo.GetValue(source, null)
             );
-        }
-
-        static public void LoadImage(this MonoBehaviour mono, string url, Action<Texture2D> cb) {
-            // var uri = new Uri(url);
-            // var filename = "images/" + Path.GetFileName(uri.LocalPath);
-
-            // if (ES2.Exists(filename)) {
-            //    MainThreadDispatcher.StartUpdateMicroCoroutine(LoadLocal(filename, cb)); 
-            // } else {
-                // MainThreadDispatcher.StartUpdateMicroCoroutine(mono.LoadImageTexture(url, (texture) => {
-                    // cb(texture);
-                    // ES2.Save(texture, filename);
-                // }));
-            // }
-
-            new HTTPRequest(new Uri(url), (request, response) => {
-                var texture = new Texture2D(0, 0);
-                texture.LoadImage(response.Data);
-                cb(texture);
-            }).Send();
-        }
-
-        static public IEnumerator LoadLocal(string filename, Action<Texture2D> cb) {
-            var texture = ES2.Load<Texture2D>(filename);
-            cb(texture);
-            texture = null;
-            yield return null;
-            Resources.UnloadUnusedAssets();
         }
     }

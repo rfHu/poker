@@ -28,13 +28,7 @@ public class Avatar : MonoBehaviour {
 	}
 
 	public void SetImage(string url) {
-		string pattern = @"/w/(\d)+/h/(\d)+/format/jpg";
-		Regex rgx = new Regex(pattern);
-
-
-		url = rgx.Replace(url, "/w/120/h/120/format/png");
-
-		this.LoadImage(url, (texture) => {
+		TexturePool.Shared.FetchTexture(url, (texture) => {
 			if (this == null) {
 				return ;
 			}
