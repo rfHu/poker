@@ -195,7 +195,6 @@ public class Insurance : MonoBehaviour {
         RxSubjects.RsyncInsurance.Subscribe((e) => {
             if (e.Data.Int("closeflag") == 1)
             {
-                _.Log("1");
                 Exit();
                 return;
             }
