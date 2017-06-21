@@ -60,6 +60,12 @@ public class RecallPage : MonoBehaviour {
 					return ;
 				}
 
+                var curHand = json.Dict("ret").Int("cur_hand");
+                if (curHand == currentNumber) {
+                    requesting = false;
+                    return ;
+                }
+
 				MainThreadDispatcher.StartUpdateMicroCoroutine(reload(json));
                 requesting = false;
 			},
@@ -72,14 +78,14 @@ public class RecallPage : MonoBehaviour {
 	}
 
 	private IEnumerator reload(Dictionary<string, object> data) {
-        foreach(var user in Users) {
-            user.gameObject.SetActive(false);
-        }
-
 		var ret = data.Dict("ret");
 
 		totalNumber = ret.Int("total_hand");
 		currentNumber = ret.Int("cur_hand");
+
+        foreach(var user in Users) {
+            user.gameObject.SetActive(false);
+        }
 
 		Current.text = currentNumber.ToString();
 		Total.text =  string.Format("/ {0}", totalNumber);

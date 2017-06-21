@@ -53,7 +53,8 @@ public class Card : MonoBehaviour {
 	}
 
 	public void Show(int index, bool anim = false, Action complete = null) {
-		if (index == 0) {
+		if (index <= 0) {
+			Turnback();
 			return ;
 		}
 
