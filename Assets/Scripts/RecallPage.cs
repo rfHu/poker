@@ -5,6 +5,7 @@ using UnityEngine.UI.ProceduralImage;
 using System.Collections;
 using UniRx;
 
+[RequireComponent(typeof(DOPopup))]
 public class RecallPage : MonoBehaviour {
     public Text SBBB;
 	public GameObject Rect;
@@ -12,9 +13,7 @@ public class RecallPage : MonoBehaviour {
 	public GameObject RightIndicator;
 	public Text Current;
 	public Text Total;
-	public GameObject UserGo;
     public Toggle Collect;
-    public RecallUser[] Users;
 
     public RectTransform PlayerList;
     public GameObject InsuranceGo;
@@ -24,6 +23,8 @@ public class RecallPage : MonoBehaviour {
 	private int currentNumber;
     private string favhand_id;
     private bool isCollected;
+
+    private List<RecallUser> Users = new List<RecallUser>();
 
 	void Awake()
 	{
@@ -35,10 +36,18 @@ public class RecallPage : MonoBehaviour {
 
     private bool requesting = false;
 
-    public void Show() {
-        gameObject.SetActive(true);
-        GetComponent<DOPopup>().Show(destroyOnClose: false);
+    public void OnSpawned() {
+        // gameObject.SetActive(true);
+        GetComponent<DOPopup>().Show(despawn: true);
         request();
+    }
+
+    public void OnDespawned() {
+        foreach(var user in Users) {
+            G.Despawn(user.transform);
+        }
+
+        Users = new List<RecallUser>();
     }
 
 	public void request(int num = 0) {
@@ -83,10 +92,6 @@ public class RecallPage : MonoBehaviour {
 		totalNumber = ret.Int("total_hand");
 		currentNumber = ret.Int("cur_hand");
 
-        foreach(var user in Users) {
-            user.gameObject.SetActive(false);
-        }
-
 		Current.text = currentNumber.ToString();
 		Total.text =  string.Format("/ {0}", totalNumber);
 
@@ -97,7 +102,6 @@ public class RecallPage : MonoBehaviour {
             InsuranceGo.SetActive(true);
             InsuranceText.text = _.Number2Text(insuValue);
             InsuranceText.color = _.GetTextColor(insuValue);
-            InsuranceGo.SetActive(false);
         } else {
             InsuranceGo.SetActive(false);
         }
@@ -115,8 +119,7 @@ public class RecallPage : MonoBehaviour {
                 continue;
             }
 
-            var user = Users[num];
-            user.gameObject.SetActive(true);
+            var user = G.Spawn("RecallUser").GetComponent<RecallUser>();
             user.Show(dict);
 
             user.SetComCard(comCards);

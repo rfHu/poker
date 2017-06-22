@@ -5,12 +5,13 @@ public class GameLoading : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
 		var external = External.Instance;
+		ObjectsPool.Setup();
 
 		#if UNITY_EDITOR  
         	// external.SetSid("s%3AdOlm2w5hGhqahgt--HMRhxyXjTCSmOLf.3IXxXmGw1R3E0Swr10JEcqYcGvn7AUZT4%2F0d99jOuT8");
         	external.SetSid("s%3A4gHJE4AJbNY5j6XT2OuoeO4-nqn6bl7t.5f5shYMZ2sFNrz0CKTpO5b2cUJujPknpA5OU7lThbJI");
 			external.SetProxy("http://localhost:8888");
-            external.SetRoomID("594a971a532d99197166be2c");
+            external.SetRoomID("594b6cb7532d99197167f430");
 		#endif
 	}
 	
