@@ -350,11 +350,13 @@ public class Insurance : MonoBehaviour {
     public void OnBEButtonClick() 
     {
         CASlider.value = beValue;
+        RPCRsyncInsurance();
     }
 
     public void OnEPButtonClick() 
     {
         CASlider.value = eqValue;
+        RPCRsyncInsurance();
     }
 
     public void Buy() 
@@ -365,7 +367,7 @@ public class Insurance : MonoBehaviour {
 		        };
 
         Connect.Shared.Emit(new Dictionary<string, object>() {
-				{"f", "rsyncinsurance"},
+				{"f", "insurance"},
 				{"args", data}
 
 			});

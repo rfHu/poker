@@ -55,6 +55,7 @@ public class RxSubjects {
     public static Subject<RxData> NoTalking = new Subject<RxData>();
     public static Subject<RxData> ShowInsurance = new Subject<RxData>();
     public static Subject<RxData> RsyncInsurance = new Subject<RxData>();
+    public static Subject<RxData> Award27 = new Subject<RxData>();
 
 	// 跟网络无关事件
 	public static Subject<int> ChangeVectorsByIndex = new Subject<int>();
@@ -64,7 +65,6 @@ public class RxSubjects {
     public static Subject<bool> Seating = new Subject<bool>();
 	public static Subject<bool> Connecting = new Subject<bool>();
 	public static Subject<GainChip> GainChip = new Subject<GainChip>();
-    public static Subject<bool> Win27Emo = new Subject<bool>();
 }
 
 public struct GainChip {

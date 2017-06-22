@@ -201,7 +201,6 @@ public class GameOverJson {
 	public int chips {get; set;}
 	public string uid { get; set; }
 	public int seat { get; set; }
-    public int award27 { get; set; }
 	public int maxFiveRank = 0;
 
 	public int Gain() {
@@ -213,7 +212,6 @@ public class GameOverJson {
 		chips = dict.Int("chips");
 		uid = dict.String("uid");
 		seat = dict.Int("seat");
-        award27 = dict.Int("award_27");
 		cards = dict.IL("cards");
 		maxFiveRank = dict.Int("maxFiveRank");	
 	}
@@ -409,7 +407,6 @@ sealed public class GameData {
 
 		RxSubjects.GameOver.Subscribe((e) => {
 			InGame = false;
-            bool showWin27Emo = false;
 
 
 			var data = e.Data.Dict("scorelist");
@@ -422,12 +419,6 @@ sealed public class GameData {
 				if (Players.ContainsKey(index))  {
 					Players[index].OverData.Value = json;
 				}
-
-                if (json.award27 > 0 && !showWin27Emo)
-                {
-                    showWin27Emo = true;
-                    RxSubjects.Win27Emo.OnNext(showWin27Emo);
-                }
 			}
 
 			var room = e.Data.Dict("room");

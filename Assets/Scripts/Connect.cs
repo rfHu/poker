@@ -419,6 +419,9 @@ public sealed class Connect  {
                 case "rsync_insurance":
                     RxSubjects.RsyncInsurance.OnNext(rxdata);
                     break;
+                case "award_27":
+                    RxSubjects.Award27.OnNext(rxdata);
+                    break;
 				default:
 					break;
 			}
