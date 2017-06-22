@@ -1564,7 +1564,7 @@ public class MasterAudioGroupInspector : Editor {
 
         var clipName = clip.name;
 
-        if (group.transform.FindChild(clipName) != null) {
+        if (group.transform.Find(clipName) != null) {
             DTGUIHelper.ShowAlert("You already have a Variation for this Group named '" + clipName + "'. \n\nPlease rename these Variations when finished to be unique, or you may not be able to play them by name if you have a need to.");
         }
 

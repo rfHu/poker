@@ -51,7 +51,7 @@ namespace DarkTonic.MasterAudio {
             var triggerRadius = grp.groupVariations[0].VarAudio.maxDistance;
 
             var follower = new GameObject(followerName);
-            var existingDupe = FollowerHolder.FindChild(followerName);
+            var existingDupe = FollowerHolder.Find(followerName);
             if (existingDupe != null) {
                 GameObject.Destroy(existingDupe.gameObject);
             }
@@ -73,7 +73,7 @@ namespace DarkTonic.MasterAudio {
                     return null;
                 }
 
-                var follower = FollowerHolder.FindChild(ListenerFollowerName);
+                var follower = FollowerHolder.Find(ListenerFollowerName);
                 if (follower == null) {
                     follower = new GameObject(ListenerFollowerName).transform;
                     follower.parent = FollowerHolder;
@@ -102,7 +102,7 @@ namespace DarkTonic.MasterAudio {
                 }
 
                 var ma = MasterAudio.SafeInstance.Trans;
-                _followerHolder = ma.FindChild(FollowerHolderName);
+                _followerHolder = ma.Find(FollowerHolderName);
 
                 if (_followerHolder != null) {
                     return _followerHolder;

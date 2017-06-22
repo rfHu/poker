@@ -155,7 +155,7 @@ public class UserDetail : MonoBehaviour {
 
         var image = StandUpButton.GetComponent<ProceduralImage>();
         var text = StandUpButton.transform.Find("Text").GetComponent<Text>();
-        var icon = StandUpButton.transform.FindChild("Image").GetComponent<VectorImage>();
+        var icon = StandUpButton.transform.Find("Image").GetComponent<VectorImage>();
         Color color;
 
         if (interactable)

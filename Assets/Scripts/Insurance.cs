@@ -283,8 +283,8 @@ public class Insurance : MonoBehaviour {
 
         OddsNum = OddsNums[num];
         Odds.text = OddsNum.ToString();
-        BreakEventButton.transform.FindChild("Text").GetComponent<Text>().text = beValue.ToString();
-        EqualButton.transform.FindChild("Text").GetComponent<Text>().text = eqValue.ToString();
+        BreakEventButton.transform.Find("Text").GetComponent<Text>().text = beValue.ToString();
+        EqualButton.transform.Find("Text").GetComponent<Text>().text = eqValue.ToString();
         SetCASlider();
     }
 

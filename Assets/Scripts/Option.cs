@@ -18,7 +18,7 @@ public class Option : MonoBehaviour {
         {
             toggle.onValueChanged.AddListener((isOn) => 
             {
-                Text text = toggle.transform.parent.FindChild("Text (1)").GetComponent<Text>();
+                Text text = toggle.transform.parent.Find("Text (1)").GetComponent<Text>();
                 OnToggleChange(text, isOn);
             });
         }

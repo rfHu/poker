@@ -3634,7 +3634,7 @@ public class MasterAudioInspector : Editor {
             return null;
         }
 
-        if (_sounds.transform.FindChild(groupName) != null) {
+        if (_sounds.transform.Find(groupName) != null) {
             DTGUIHelper.ShowAlert("You already have a Sound Group named '" + groupName + "'. Please rename one of them when finished.");
         }
 
@@ -3692,7 +3692,7 @@ public class MasterAudioInspector : Editor {
     private static MasterAudioGroup CreateSoundGroupFromTemplate(AudioClip aClip, int groupTemplateIndex) {
         var groupName = aClip.name;
 
-        if (_sounds.transform.FindChild(groupName) != null) {
+        if (_sounds.transform.Find(groupName) != null) {
             DTGUIHelper.ShowAlert("You already have a Sound Group named '" + groupName + "'. Please rename one of them when finished.");
         }
 

@@ -8,7 +8,7 @@ using UniRx;
 
 public sealed class Connect  {
 	public static string Proxy;
-	public static string Domain = "https://socket.poker.top";
+	public static string Domain = "https://socket.dev.poker.top";
 
 	private SocketManager manager;
 

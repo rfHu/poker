@@ -217,7 +217,7 @@ namespace DarkTonic.MasterAudio {
                     yield break;
                 }
 
-                internetClip = fileRequest.audioClip;
+                internetClip = fileRequest.GetAudioClip();
 
 				// assign clip name
 				string[] urlParts = new Uri(fileUrl).Segments;

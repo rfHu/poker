@@ -2996,7 +2996,7 @@ namespace DarkTonic.MasterAudio {
 
             var ma = Instance;
 
-            if (Instance.Trans.FindChild(groupName) != null) {
+            if (Instance.Trans.Find(groupName) != null) {
                 if (errorOnExisting) {
                     Debug.LogError("Cannot add a new Sound Group named '" + groupName +
                                    "' because there is already a Sound Group of that name.");
@@ -3567,7 +3567,7 @@ namespace DarkTonic.MasterAudio {
             var group = AudioSourcesBySoundType[sType];
 
             if (group.Group == null) {
-                var grpTrans = Instance.Trans.FindChild(sType);
+                var grpTrans = Instance.Trans.Find(sType);
                 if (grpTrans != null) {
                     var missingGroup = grpTrans.GetComponent<MasterAudioGroup>();
                     group.Group = missingGroup; // when deleted and undeleted.
@@ -3605,7 +3605,7 @@ namespace DarkTonic.MasterAudio {
         /// <param name="sType">Name of Sound Group</param>
         /// <returns>Transform</returns>
         public static Transform FindGroupTransform(string sType) {
-            var grp = Instance.Trans.FindChild(sType);
+            var grp = Instance.Trans.Find(sType);
             if (grp != null) {
                 return grp;
             }
@@ -3613,7 +3613,7 @@ namespace DarkTonic.MasterAudio {
             var dgscs = FindObjectsOfType<DynamicSoundGroupCreator>();
             for (var i = 0; i < dgscs.Count(); i++) {
                 var d = dgscs[i];
-                grp = d.transform.FindChild(sType);
+                grp = d.transform.Find(sType);
 
                 if (grp != null) {
                     return grp;
