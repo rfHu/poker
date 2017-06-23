@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UI.ProceduralImage;
 using MaterialUI;
+using UniRx;
 
 [RequireComponent(typeof(DOPopup))]
 public class UserDetail : MonoBehaviour {
@@ -37,26 +38,22 @@ public class UserDetail : MonoBehaviour {
         if (GameData.Shared.Owner && Uid != GameData.Shared.Uid)
             ButtonTeam.SetActive(true);
 
-        if (Uid == GameData.Shared.Uid || GameData.Shared.MySeat == -1 || GameData.Shared.FindPlayerIndex(Uid) == -1 || GameData.Shared.emoticonClose)
+        if (Uid == GameData.Shared.Uid || GameData.Shared.FindPlayerIndex(Uid) == -1 || GameData.Shared.emoticonClose)
         {
             EmoticonsTeam.SetActive(false);
             GetComponent<VerticalLayoutGroup>().padding.bottom = 40;
         }
 
 
-        foreach (var button in EmoticonButtons)
+        for (var i = 0; i < EmoticonButtons.Length; i++)
         {
-            button.onClick.AddListener(delegate()
+            var local = i;
+            var button = EmoticonButtons[i];
+
+            button.OnClickAsObservable().Subscribe((_) =>
             {
-                for (int i = 0; i < EmoticonButtons.Length; i++)
-                {
-                    if (button == EmoticonButtons[i])
-                    {
-                        OnEmoticonClick(i + 1);
-                        break;
-                    }
-                }
-            });
+                OnEmoticonClick(local + 1);
+            }).AddTo(this);
         }
 
         RequestById(Uid);

@@ -17,13 +17,13 @@ public class EmoticonEvent : MonoBehaviour {
 
     public void Destroy()
     {
-        GameObject.Destroy(transform.parent.gameObject);
+        PoolMan.Despawn(transform.parent);
     }
 
 
 
     public void Destroythis() {
-        GameObject.Destroy(gameObject);
+        PoolMan.Despawn(transform);
     }
 
     public void LabberPart2() 
