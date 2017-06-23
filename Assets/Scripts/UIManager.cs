@@ -7,7 +7,7 @@ public class UIManager : MonoBehaviour {
 	private AuditMsg auditMsg;
 
 	public void ShowMenu() {
-		var popup = G.Spawn("MenuPopup");
+		var popup = PoolMan.Spawn("MenuPopup");
 		popup.GetComponent<DOPopup>().Show();
 	}
 
@@ -48,12 +48,12 @@ public class UIManager : MonoBehaviour {
 	}
 
 	public void ScorePage() {
-		var score = G.Spawn("Prefab/ScorePage");
+		var score = PoolMan.Spawn("Prefab/ScorePage");
 		score.GetComponent<DOPopup>().Show();	
 	}
 
 	public void OnShowRecalls() {
-		G.Spawn("RecallPage");
+		PoolMan.Spawn("RecallPage");
 	}
 
 	public void OnClickChat() {
@@ -67,7 +67,7 @@ public class UIManager : MonoBehaviour {
 
     public void OnClickExpressionPage() 
     {
-        var expressionPage = G.Spawn("ExpressionPage");
+        var expressionPage = PoolMan.Spawn("ExpressionPage");
         expressionPage.GetComponent<DOPopup>().Show();
     }
 
@@ -90,7 +90,7 @@ public class UIManager : MonoBehaviour {
 				return;
 			}
 			
-            auditMsg = G.Spawn("AuditMsg").GetComponent<AuditMsg>();
+            auditMsg = PoolMan.Spawn("AuditMsg").GetComponent<AuditMsg>();
 			auditMsg.GetComponent<AuditMsg>().Click = () => {
 				Commander.Shared.Audit();
 			};
@@ -103,7 +103,7 @@ public class UIManager : MonoBehaviour {
 				GameData.Shared.Coins = e.Data.Int("coins");
             }
 			
-            Transform transform = G.Spawn("Supplement");
+            Transform transform = PoolMan.Spawn("Supplement");
             transform.GetComponent<DOPopup>().Show(() => {
 				var player = GameData.Shared.GetMyPlayer();
 

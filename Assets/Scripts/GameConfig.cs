@@ -266,7 +266,6 @@ sealed public class GameData {
 	
 		RxSubjects.Look.Subscribe((e) => {
 			PublicCardAnimState = false;
-			var loginStatus = e.Data.Int("is_enter_look");
 
 			// 保存最新游戏数据
 			jsonData = e.Data;

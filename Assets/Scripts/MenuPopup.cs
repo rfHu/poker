@@ -92,7 +92,7 @@ public class MenuPopup : MonoBehaviour {
 
     public void Option() 
     {
-        var tip = G.Spawn("Option");
+        var tip = PoolMan.Spawn("Option");
         tip.GetComponent<DOPopup>().Show();
     }
 
@@ -101,7 +101,7 @@ public class MenuPopup : MonoBehaviour {
 	}
 
 	public void Tips() {
-        var tip = G.Spawn("Explain");
+        var tip = PoolMan.Spawn("Explain");
 		tip.GetComponent<DOPopup>().Show();
 	}
 

@@ -447,8 +447,6 @@ public class Insurance : MonoBehaviour {
 
     private IEnumerator Timer(float time) 
     {
-        float wholeTime = time;
-
         while (time > 0)
         {
             time = time - Time.deltaTime;

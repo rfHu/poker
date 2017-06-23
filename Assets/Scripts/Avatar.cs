@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using System;
 using UnityEngine.UI.ProceduralImage;
 using System.Text.RegularExpressions;
-using UnityEngine.UI.Extensions;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -20,7 +19,7 @@ public class Avatar : MonoBehaviour {
 			return ;
 		}
 
-		var userPopup = G.Spawn("User");
+		var userPopup = PoolMan.Spawn("User");
         userPopup.GetComponent<DOPopup>().Show();
         userPopup.GetComponent<UserDetail>().Init(Uid);
 	}

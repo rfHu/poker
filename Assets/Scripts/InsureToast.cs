@@ -4,7 +4,6 @@ using DG.Tweening;
 using System.Collections.Generic;
 using UniRx;
 using System;
-using UnityEngine.UI.Extensions;
 
 public class InsureToast: MonoBehaviour {
     public Text MsgText;
@@ -88,7 +87,7 @@ public class InsureToast: MonoBehaviour {
                     text = "<color=#FFAB40FF>继续领先</color>\n结算时将扣除保费";
                     break;
                 case 13:
-                    text = string.Format("获得底池：<color=#FFAB40FF>{0}</color>\n扣除保费：<color=#FFAB40FF>{1}</color>", pot, amount);
+                    text = string.Format("获得底池：<color=#FFAB40FF>{0}</color>\n扣除保费：<color=#FFAB40FF>{1}</color>", _.Num2CnDigit(pot), _.Num2CnDigit(amount));
                     break;
                 case 14:
                     text = string.Format("未买中保险\n被<color=#4FC3F7FF>{0}</color>反超", toName);

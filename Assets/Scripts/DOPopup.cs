@@ -158,7 +158,7 @@ public class DOPopup : MonoBehaviour {
 	}
 
 	private void release() {
-		G.Despawn(transform);
+		PoolMan.Despawn(transform);
 	}
 
 	private void hideModal() {

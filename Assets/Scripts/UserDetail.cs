@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UI.ProceduralImage;
 using MaterialUI;
-using UnityEngine.UI.Extensions;
 
 [RequireComponent(typeof(DOPopup))]
 public class UserDetail : MonoBehaviour {
@@ -122,7 +121,7 @@ public class UserDetail : MonoBehaviour {
 
     public void OnGamerOptionClick() 
     {
-        var transform = G.Spawn("GamerOption");
+        var transform = PoolMan.Spawn("GamerOption");
         transform.GetComponent<DOPopup>().Show();
         transform.GetComponent<GamerOption>().Init(enterLimit, seatLimit, talkLimit, Uid);
     }

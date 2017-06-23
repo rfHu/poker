@@ -65,7 +65,7 @@ public class GamerOption : MonoBehaviour {
         }
         else 
         {
-            var userPopup = (GameObject)Instantiate(Resources.Load("Prefab/User"));
+            var userPopup = PoolMan.Spawn("User");
             userPopup.GetComponent<DOPopup>().Show();
             userPopup.GetComponent<UserDetail>().Init(uid);
         }

@@ -2,8 +2,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UI.ProceduralImage;
-using UnityEngine.UI.Extensions;
-
 public class RecallUser : MonoBehaviour {
     public Text PlayerName;
 	public RawImage Avatar;

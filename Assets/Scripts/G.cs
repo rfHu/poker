@@ -40,7 +40,10 @@ public class G {
 	}
 
 	public static Color Black = new Color(0, 0, 0, 0.9f);
+}
 
+
+public class PoolMan {
 	public static Transform Spawn(string name) {
 		return Spawn(name, null);	
 	}

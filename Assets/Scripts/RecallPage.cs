@@ -35,7 +35,7 @@ public class RecallPage : MonoBehaviour {
 
     // void DepawnedChildren() {
     //     foreach(var user in Users) {
-    //         G.Despawn(user.transform);
+    //         PoolMan.Despawn(user.transform);
     //     }
 
     //     Users = new List<RecallUser>();
@@ -113,7 +113,7 @@ public class RecallPage : MonoBehaviour {
                 if (num < Users.Count) {
                     user = Users[num];
                 } else {
-                    user = G.Spawn("RecallUser", Rect.transform).GetComponent<RecallUser>();
+                    user = PoolMan.Spawn("RecallUser", Rect.transform).GetComponent<RecallUser>();
                     user.transform.SetParent(Rect.transform, false);
                     Users.Add(user);
                 }

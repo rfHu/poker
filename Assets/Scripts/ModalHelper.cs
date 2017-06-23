@@ -57,12 +57,12 @@ public class ModalHelper: MonoBehaviour {
 
 	public void Despawn() {
 		if (!despawned) {
-			G.Despawn(transform);
+			PoolMan.Despawn(transform);
 		}
 	}
 
 	public static ModalHelper Create() {
-		var transform = G.Spawn("Modal");
+		var transform = PoolMan.Spawn("Modal");
 		return transform.GetComponent<ModalHelper>();
 	}
 }

@@ -253,7 +253,7 @@ public class Controller : MonoBehaviour {
     }
 
 	private void setupDealer() {
-		var dealer = G.Spawn("Dealer");
+		var dealer = PoolMan.Spawn("Dealer");
 		dealer.GetComponent<Dealer>().Init(Seats);
 	}
 
@@ -471,7 +471,7 @@ public class Controller : MonoBehaviour {
                 }
             }
 
-            var em = (GameObject)GameObject.Instantiate(Resources.Load("Prefab/Emoticon"));
+            var em = PoolMan.Spawn("Emoticon");
             em.GetComponent<Emoticon>().Init(fromSeat, toSeat, pid, isToMe);
         }).AddTo(this);
 
@@ -479,7 +479,7 @@ public class Controller : MonoBehaviour {
             var expressionName = e.Data.String("expression");
             var uid = e.Data.String("uid");
 
-            var expression = G.Spawn("Expression").gameObject;
+            var expression = PoolMan.Spawn("Expression").gameObject;
 
             if (uid == GameData.Shared.Uid)
             {
@@ -510,7 +510,7 @@ public class Controller : MonoBehaviour {
             expression.transform.Find("Face").GetComponent<Animator>().SetTrigger(expressionName);
            
 			Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe((_) => {
-				G.Despawn(expression.transform);
+				PoolMan.Despawn(expression.transform);
 
 				if (uid == GameData.Shared.Uid) {
 					findExpCvg().alpha = 1; // 显示按钮
@@ -675,14 +675,14 @@ public class Controller : MonoBehaviour {
 
 		RxSubjects.ToInsurance.Subscribe((e) =>
         {
-            var InsurancePopup = (GameObject)GameObject.Instantiate(Resources.Load("Prefab/Insurance"));
+            var InsurancePopup = PoolMan.Spawn("Insurance");
             InsurancePopup.GetComponent<DOPopup>().Show(modal: false);
             InsurancePopup.GetComponent<Insurance>().Init(e.Data, true);
         }).AddTo(this);
 
         RxSubjects.ShowInsurance.Subscribe((e) => 
         {
-            var InsurancePopup = (GameObject)GameObject.Instantiate(Resources.Load("Prefab/Insurance"));
+            var InsurancePopup = PoolMan.Spawn("Insurance");
             InsurancePopup.GetComponent<DOPopup>().Show(modal: false);
             InsurancePopup.GetComponent<Insurance>().Init(e.Data, false);
         });

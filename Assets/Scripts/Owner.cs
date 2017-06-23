@@ -2,7 +2,7 @@
 
 public class Owner : MonoBehaviour {
 	public void OnClick() {
-		var transform = G.Spawn("RoomMessage");
+		var transform = PoolMan.Spawn("RoomMessage");
 		transform.GetComponent<DOPopup>().Show();
 	}
 }

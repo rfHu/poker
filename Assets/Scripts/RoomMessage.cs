@@ -165,14 +165,14 @@ public class RoomMessage : MonoBehaviour {
     public void OwnerPage() 
     {
         GetComponent<DOPopup>().Close();
-        var go = G.Spawn("OwnerPanel");
+        var go = PoolMan.Spawn("OwnerPanel");
         go.GetComponent<DOPopup>().Show();
     }
 
     public void GamerListPage() 
     {
         GetComponent<DOPopup>().Close();
-        var go = G.Spawn("GamerList");
+        var go = PoolMan.Spawn("GamerList");
         go.GetComponent<DOPopup>().Show();
     }
 }
