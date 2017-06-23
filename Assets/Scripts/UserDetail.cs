@@ -42,6 +42,8 @@ public class UserDetail : MonoBehaviour {
         {
             EmoticonsTeam.SetActive(false);
             GetComponent<VerticalLayoutGroup>().padding.bottom = 40;
+        } else {
+            EmoticonsTeam.SetActive(true);
         }
 
 
