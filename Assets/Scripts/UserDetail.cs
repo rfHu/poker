@@ -37,12 +37,13 @@ public class UserDetail : MonoBehaviour {
         if (GameData.Shared.Owner && Uid != GameData.Shared.Uid)
             ButtonTeam.SetActive(true);
 
-        if (Uid == GameData.Shared.Uid || GameData.Shared.MySeat == -1 || GameData.Shared.FindPlayerIndex(Uid) == -1 || GameData.Shared.emoticonClose)
+        if (Uid == GameData.Shared.Uid || GameData.Shared.FindPlayerIndex(Uid) == -1 || GameData.Shared.emoticonClose)
         {
             EmoticonsTeam.SetActive(false);
             GetComponent<VerticalLayoutGroup>().padding.bottom = 40;
+        } else {
+            EmoticonsTeam.SetActive(true);
         }
-
 
         foreach (var button in EmoticonButtons)
         {
