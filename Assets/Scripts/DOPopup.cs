@@ -70,12 +70,11 @@ public class DOPopup : MonoBehaviour {
 		// yield return new WaitForFixedUpdate();
 
 		autoFit();
-		transform.SetParent(G.DialogCvs.transform, false);
 
 		if (modal) {
 			modalHelper = ModalHelper.Create();
 
-			modalHelper.Show(G.DialogCvs, () => {
+			modalHelper.Show(transform, () => {
 				if (close != null) {
 					close();
 				}
@@ -118,6 +117,10 @@ public class DOPopup : MonoBehaviour {
 	}
 
 	public Tween Hide() {
+		if (!hasShow) {
+			return null;
+		}
+
 		hideModal();
 
         Tween tween = null;

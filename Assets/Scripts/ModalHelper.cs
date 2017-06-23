@@ -6,10 +6,10 @@ using UniRx;
 public class ModalHelper: MonoBehaviour {
 	private Action onClick;
 
-	public void Show(Canvas canvas, Action onClick = null, bool modalColor = false) {
+	public void Show(Transform transform, Action onClick = null, bool modalColor = false) {
 		this.onClick = onClick;
 		
-		transform.SetParent(canvas.transform);
+		transform.SetParent(transform);
 		_.FillParent(gameObject);
 		
 		transform.SetAsLastSibling();

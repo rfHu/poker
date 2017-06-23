@@ -300,7 +300,7 @@ public class OP : MonoBehaviour {
 
 		// 展示遮罩
 		modal = ModalHelper.Create();
-		modal.Show(G.UICvs, close, true);
+		modal.Show(transform, close, true);
 		transform.SetAsLastSibling();
 
 		setToggle(false);
