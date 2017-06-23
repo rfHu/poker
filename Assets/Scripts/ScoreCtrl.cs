@@ -32,6 +32,8 @@ public class ScoreCtrl : MonoBehaviour {
 	private Color offlineColor = new Color(1, 1, 1, 0.6f);
 
 	void OnSpawned() {
+		return ;
+
 		Connect.Shared.Emit(new Dictionary<string, object>(){
         	{"f", "gamerlist"}
         }, (json) =>
