@@ -48,7 +48,7 @@ public class UIManager : MonoBehaviour {
 	}
 
 	public void ScorePage() {
-		var score = PoolMan.Spawn("Prefab/ScorePage");
+		var score = PoolMan.Spawn("ScorePage");
 		score.GetComponent<DOPopup>().Show();	
 	}
 

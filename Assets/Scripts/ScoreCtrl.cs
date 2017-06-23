@@ -30,9 +30,8 @@ public class ScoreCtrl : MonoBehaviour {
     public Text InsuranceData;
 
 	private Color offlineColor = new Color(1, 1, 1, 0.6f);
-	
-	void Awake()
-	{
+
+	void OnSpawned() {
 		Connect.Shared.Emit(new Dictionary<string, object>(){
         	{"f", "gamerlist"}
         }, (json) =>
@@ -155,5 +154,5 @@ public class ScoreCtrl : MonoBehaviour {
                 }
 			} 
         });
-    }
+	}	
 }
