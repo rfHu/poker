@@ -532,7 +532,7 @@ public class Controller : MonoBehaviour {
 			SpkText.ShowMessage(String.Format("{0}: {1}", name, text));
 		}).AddTo(this);
 
-        RxSubjects.Win27Emo.Subscribe((e) => {
+        RxSubjects.Award27.Subscribe((e) => {
             Instantiate(Resources.Load("Prefab/Win27Emo"), G.DialogCvs.transform);
         }).AddTo(this);
 
