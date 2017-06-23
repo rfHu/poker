@@ -22,7 +22,8 @@ public class RecallUser : MonoBehaviour {
 	public enum UserTag: int {
 		SmallBlind = 0,
 		BigBlind,
-		Dealer
+		Dealer,
+		None
 	}
 	
 	public void Show(Dictionary<string, object> dict) {
@@ -108,6 +109,10 @@ public class RecallUser : MonoBehaviour {
 	}
 
 	public void SetTag(UserTag tag) {
+		if (tag == UserTag.None) {
+			return ;
+		}
+
 		string text;
 		Color color = bClolor;
 
