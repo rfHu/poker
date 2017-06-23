@@ -55,7 +55,15 @@ public class PoolMan {
 	}
 
 	public static void Despawn(Transform transform) {
+		if (IsSpawned(transform)) {
+			return ;
+		}
+
 		PoolManager.Pools["Shared"].Despawn(transform);
+	}
+
+	public static void Despawn(GameObject go) {
+		Despawn(go.transform);
 	}
 
 	public static bool IsSpawned(Transform transform) 

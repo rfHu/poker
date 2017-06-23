@@ -39,23 +39,19 @@ public class OP : MonoBehaviour {
 	private int accurateValue;
 	private float disableAlpha = 0.4f;
 
-	void Awake()
+	void OnSpawned()
 	{
-		if (instance != null) {
-			Destroy(instance.gameObject);
+		if (instance != this) {
+			PoolMan.Despawn(instance.transform);
 		}
 
 		instance = this;
 
-		if (G.UICvs == null) {
-			return ;
-		}
-
-		// 设置位置等信息
-		transform.SetParent(G.UICvs.transform, false);
+		var transform = GetComponent<RectTransform>();
+		transform.anchoredPosition = new Vector2(0, 360);
 	}
 
-	void OnDestroy()
+	void OnDespawned()
 	{
 		hideModal();
 	}

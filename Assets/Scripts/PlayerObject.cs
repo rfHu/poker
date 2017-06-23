@@ -96,8 +96,7 @@ public class PlayerObject : MonoBehaviour {
 		AvatarMask.SetActive(false);
 
 		if (OPGo != null) {
-			Destroy(OPGo);
-			OPGo = null;
+			PoolMan.Despawn(OPGo);
 		}
 
 		Circle.SetActive(true); // 显示头像
@@ -113,7 +112,7 @@ public class PlayerObject : MonoBehaviour {
 	void OnDestroy()
 	{
 		if (OPGo != null) {
-			Destroy(OPGo);
+			PoolMan.Despawn(OPGo);
 		}
 
 		if (SpkText != null) {
@@ -589,7 +588,7 @@ public class PlayerObject : MonoBehaviour {
 					if (isSelf()) {
 						BackGameBtn.SetActive(true);
 						if (OPGo != null) {
-							Destroy(OPGo);
+							PoolMan.Despawn(OPGo);
 						}
 					}
 					break;
@@ -734,12 +733,13 @@ public class PlayerObject : MonoBehaviour {
 
 	private void turnTo(Dictionary<string, object> dict, int left, bool restore = false) {
 		if (isSelf()) {
-			var op = showOP(dict, left);
+			showOP(dict, left);
+
 			var flag = player.Trust.FlagString();
 			var callNum = player.Trust.CallNumber.Value;
 
 			if (flag == "10") { // 选中左边
-				op.gameObject.SetActive(false);
+				PoolMan.Despawn(OPGo);	
 				var check = dict.Dict("cmds").Bool("check");
 
 				if (check) {
@@ -753,7 +753,7 @@ public class PlayerObject : MonoBehaviour {
 				var check = data.Bool("check");
 
 				if (callNum == -1 || (callNum == 0 && check) || (callNum == call && call != 0)) {
-					op.gameObject.SetActive(false);
+					PoolMan.Despawn(OPGo);
 
 					if (callNum == 0) {
 						OP.OPS.Check();
@@ -819,7 +819,7 @@ public class PlayerObject : MonoBehaviour {
 		// 隐藏头像
 		Circle.SetActive(false);
 
-		OPGo = PoolMan.Spawn("OP").gameObject;
+		OPGo = PoolMan.Spawn("OP", G.UICvs.transform).gameObject;
 		var op = OPGo.GetComponent<OP>();
 		op.StartWithCmds(data, left);
 
