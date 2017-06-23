@@ -533,7 +533,8 @@ public class Controller : MonoBehaviour {
 		}).AddTo(this);
 
         RxSubjects.Award27.Subscribe((e) => {
-            Instantiate(Resources.Load("Prefab/Win27Emo"), G.DialogCvs.transform);
+            var win27Emo = PoolMan.Spawn("Win27Emo");
+            win27Emo.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
         }).AddTo(this);
 
         RxSubjects.GameOver.Subscribe((e) =>{

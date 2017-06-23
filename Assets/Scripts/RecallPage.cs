@@ -17,7 +17,7 @@ public class RecallPage : MonoBehaviour {
 
     public RectTransform PlayerList;
     public GameObject InsuranceGo;
-	public Text InsuranceText;
+    public GameObject Win27Go;
 
 	private int totalNumber;
 	private int currentNumber;
@@ -87,15 +87,10 @@ public class RecallPage : MonoBehaviour {
 		Total.text =  string.Format("/ {0}", totalNumber);
 
         var insuValue = ret.Dict("insurance").Int("score");
+        var win27Value = ret.Int("award_27");
 
-        if (insuValue != 0)
-        {
-            InsuranceGo.SetActive(true);
-            InsuranceText.text = _.Number2Text(insuValue);
-            InsuranceText.color = _.GetTextColor(insuValue);
-        } else {
-            InsuranceGo.SetActive(false);
-        }
+        SetPublicValue(insuValue, InsuranceGo);
+        SetPublicValue(win27Value, Win27Go);
 
         yield return null;
 
@@ -136,6 +131,21 @@ public class RecallPage : MonoBehaviour {
             Collect.isOn = false;
         }		
 	}
+
+    private void SetPublicValue(int value, GameObject go)
+    {
+        if (value != 0)
+        {
+            go.SetActive(true);
+            var valueText = go.transform.Find("Text").GetComponent<Text>();
+            valueText.text = _.Number2Text(value);
+            valueText.color = _.GetTextColor(value);
+        }
+        else
+        {
+            InsuranceGo.SetActive(false);
+        }
+    }
 
     private RecallUser.UserTag findTag(List<object> list, int index) {
         if (index == 0)

@@ -13,7 +13,6 @@ public class EmoticonEvent : MonoBehaviour {
 
     int times = 0;
 
-    float[] posX = { -120, 29, 132 };
 
     public void Destroy()
     {
@@ -28,12 +27,22 @@ public class EmoticonEvent : MonoBehaviour {
 
     public void LabberPart2() 
     {
-        laberPart2.SetActive(true);
+        float[] posX = { -120, 29, 132 };
         for (int i = 0; i < ice.Length; i++)
 		{
             ice[i].DOLocalMoveX(posX[i], 0.3f).SetEase(Ease.Linear);
             ice[i].DOLocalMoveY(-95, 0.3f).SetEase(Ease.OutBounce);
 	    }
+    }
+
+    public void ResetLabberP2()
+    {
+        float[] posXR = { -20, -5, 30 };
+        for (int i = 0; i < ice.Length; i++)
+        {
+            ice[i].GetComponent<RectTransform>().localPosition = new Vector2(posXR[i], 100);
+        }
+        laberPart2.SetActive(false);
     }
 
     public void LabberSound() 

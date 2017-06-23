@@ -31,6 +31,20 @@ public class UserDetail : MonoBehaviour {
     bool seatLimit;
     bool talkLimit;
 
+    void Awake() 
+    {
+        for (var i = 0; i < EmoticonButtons.Length; i++)
+        {
+            var local = i;
+            var button = EmoticonButtons[i];
+
+            button.OnClickAsObservable().Subscribe((_) =>
+            {
+                OnEmoticonClick(local + 1);
+            }).AddTo(this);
+        }
+    }
+
     public void Init(string Uid)
     {
         this.Uid = Uid;
@@ -44,18 +58,7 @@ public class UserDetail : MonoBehaviour {
             GetComponent<VerticalLayoutGroup>().padding.bottom = 40;
         } else {
             EmoticonsTeam.SetActive(true);
-        }
-
-
-        for (var i = 0; i < EmoticonButtons.Length; i++)
-        {
-            var local = i;
-            var button = EmoticonButtons[i];
-
-            button.OnClickAsObservable().Subscribe((_) =>
-            {
-                OnEmoticonClick(local + 1);
-            }).AddTo(this);
+            GetComponent<VerticalLayoutGroup>().padding.bottom = 0;
         }
 
         RequestById(Uid);
