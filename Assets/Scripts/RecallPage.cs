@@ -22,29 +22,24 @@ public class RecallPage : MonoBehaviour {
 	private int totalNumber;
 	private int currentNumber;
     private string favhand_id;
-    private bool isCollected;
 
     private List<RecallUser> Users = new List<RecallUser>();
 
     private bool requesting = false;
 
-    public void OnSpawned() {
+    void OnSpawned() {
         SBBB.text = GameData.Shared.SB + "/" + GameData.Shared.BB;
-        Collect.onValueChanged.AddListener(delegate(bool isOn) { 
-            CollectOrCancel(); 
-        });
-
         GetComponent<DOPopup>().Show();
         request();
     }
 
-    public void OnDespawned() {
-        foreach(var user in Users) {
-            G.Despawn(user.transform);
-        }
+    // void DepawnedChildren() {
+    //     foreach(var user in Users) {
+    //         G.Despawn(user.transform);
+    //     }
 
-        Users = new List<RecallUser>();
-    }
+    //     Users = new List<RecallUser>();
+    // }
 
 	public void request(int num = 0) {
         if (requesting) {
@@ -107,46 +102,56 @@ public class RecallPage : MonoBehaviour {
 		var comCards = ret.Dict("community").IL("cards");
 
 		var list = ret.List("list");
-        for (int num = 0; num < list.Count; num++)
-        {
-            var dict = list[num] as Dictionary<string, object>;
-            if (dict == null)
-            {
-                continue;
-            }
+        for (int num = 0; num < 9; num++)
+        {   
+            if (list.Count > num) {
+                var dt = list[num] as Dictionary<string, object>;
+                var tag = findTag(list, num);
 
-            var user = G.Spawn("RecallUser", Rect.transform).GetComponent<RecallUser>();
-            user.Show(dict);
+                RecallUser user;
 
-            user.SetComCard(comCards);
+                if (num < Users.Count) {
+                    user = Users[num];
+                } else {
+                    user = G.Spawn("RecallUser", Rect.transform).GetComponent<RecallUser>();
+                    user.transform.SetParent(Rect.transform, false);
+                    Users.Add(user);
+                }
 
-            user.transform.SetParent(Rect.transform, false);
-
-            if (num == 0)
-            {
-                user.SetTag(RecallUser.UserTag.SmallBlind);
-            }
-            else if (num == 1)
-            {
-                user.SetTag(RecallUser.UserTag.BigBlind);
-            } else if (num == list.Count - 1)
-            {
-                user.SetTag(RecallUser.UserTag.Dealer); 
+                user.Show(dt);
+                user.SetComCard(comCards);
+                user.SetTag(tag);
+            } else if (Users.Count > num) {
+                Users[num].gameObject.SetActive(false);
             }
         }
 
         if (!string.IsNullOrEmpty(ret.String("favhand_id")))
         {
-            isCollected = true;
             Collect.isOn = true;
             this.favhand_id = ret.String("favhand_id");
         }
         else 
         {
-            isCollected = false;
             Collect.isOn = false;
         }		
 	}
+
+    private RecallUser.UserTag findTag(List<object> list, int index) {
+        if (index == 0)
+        {
+            return RecallUser.UserTag.SmallBlind;
+        }
+        else if (index == 1)
+        {
+            return RecallUser.UserTag.BigBlind;
+        } else if (index == list.Count - 1)
+        {
+            return RecallUser.UserTag.Dealer; 
+        }
+
+        return RecallUser.UserTag.None;
+    }
 
 	public void Up() {
 		if (currentNumber >= totalNumber) {
@@ -166,11 +171,7 @@ public class RecallPage : MonoBehaviour {
 
     public void CollectOrCancel() 
     {
-        if (isCollected == Collect.isOn)
-            return;
-        else
-            isCollected = Collect.isOn;
-       
+       Collect.isOn = !Collect.isOn;
 
         var dict = new Dictionary<string, object>() { };
         string f = "";
