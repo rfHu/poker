@@ -73,10 +73,7 @@ namespace BestHTTP
                         go = new GameObject("HTTP Update Delegator");
                         go.hideFlags = HideFlags.HideAndDontSave;
 
-#if UNITY_EDITOR
-                        if (UnityEditor.EditorApplication.isPlaying)
-                            GameObject.DontDestroyOnLoad(go);
-#endif
+                        GameObject.DontDestroyOnLoad(go);
 
                         Instance = go.AddComponent<HTTPUpdateDelegator>();
                     }

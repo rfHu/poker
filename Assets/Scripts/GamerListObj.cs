@@ -55,7 +55,7 @@ public class GamerListObj : MonoBehaviour {
 
     public void OnGamerOptionClick()
     {
-        var go = (GameObject)Instantiate(Resources.Load("Prefab/GamerOption"));
+        var go = G.Spawn("GamerOption");
         go.GetComponent<DOPopup>().Show();
         go.GetComponent<GamerOption>().Init(enterLimit, seatLimit, talkLimit, uid, true);
     }

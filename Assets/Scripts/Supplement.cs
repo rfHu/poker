@@ -19,6 +19,15 @@ public class Supplement : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake() {
+		RxSubjects.UnSeat.AsObservable().Where((e) => {
+			var uid = e.Data.String("uid");
+			return GameData.Shared.Uid == uid;
+		}).Subscribe((e) => {
+			GetComponent<DOPopup>().Close();
+		}).AddTo(this);
+	}
+
+	void OnSpawned() {
 		Connect.Shared.Emit(new Dictionary<string, object>() {
 			{"f", "gamerdetail"},
 			{"args",  new Dictionary<string, object> {
@@ -48,13 +57,6 @@ public class Supplement : MonoBehaviour {
 
 		Coins.text = GameData.Shared.Coins.ToString();
 		Blind.text = string.Format("{0}/{1}", GameData.Shared.BB / 2, GameData.Shared.BB);
-
-		RxSubjects.UnSeat.AsObservable().Where((e) => {
-			var uid = e.Data.String("uid");
-			return GameData.Shared.Uid == uid;
-		}).Subscribe((e) => {
-			GetComponent<DOPopup>().Close();
-		}).AddTo(this);
 	}
 
 	public void OnChange(float value) {

@@ -165,14 +165,14 @@ public class RoomMessage : MonoBehaviour {
     public void OwnerPage() 
     {
         GetComponent<DOPopup>().Close();
-        var go = (GameObject)Instantiate(Resources.Load("Prefab/OwnerPanel"));
+        var go = G.Spawn("OwnerPanel");
         go.GetComponent<DOPopup>().Show();
     }
 
     public void GamerListPage() 
     {
         GetComponent<DOPopup>().Close();
-        var go = (GameObject)Instantiate(Resources.Load("Prefab/GamerList"));
+        var go = G.Spawn("GamerList");
         go.GetComponent<DOPopup>().Show();
     }
 }

@@ -253,7 +253,7 @@ public class Controller : MonoBehaviour {
     }
 
 	private void setupDealer() {
-		var dealer = (GameObject)Instantiate(Resources.Load("Prefab/Dealer"));
+		var dealer = G.Spawn("Dealer");
 		dealer.GetComponent<Dealer>().Init(Seats);
 	}
 
@@ -479,7 +479,7 @@ public class Controller : MonoBehaviour {
             var expressionName = e.Data.String("expression");
             var uid = e.Data.String("uid");
 
-            var expression = (GameObject)GameObject.Instantiate(Resources.Load("Prefab/Expression"));
+            var expression = G.Spawn("Expression").gameObject;
 
             if (uid == GameData.Shared.Uid)
             {
@@ -510,7 +510,8 @@ public class Controller : MonoBehaviour {
             expression.transform.Find("Face").GetComponent<Animator>().SetTrigger(expressionName);
            
 			Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe((_) => {
-				Destroy(expression);
+				G.Despawn(expression.transform);
+
 				if (uid == GameData.Shared.Uid) {
 					findExpCvg().alpha = 1; // 显示按钮
 				}
@@ -531,7 +532,7 @@ public class Controller : MonoBehaviour {
 			SpkText.ShowMessage(String.Format("{0}: {1}", name, text));
 		}).AddTo(this);
 
-        RxSubjects.Award27.Subscribe((e) => {
+        RxSubjects.Win27Emo.Subscribe((e) => {
             Instantiate(Resources.Load("Prefab/Win27Emo"), G.DialogCvs.transform);
         }).AddTo(this);
 
@@ -744,6 +745,8 @@ public class Controller : MonoBehaviour {
 
     private static void SingleExpression(GameObject expression, Transform parent)
     {
+		expression.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
+
         if (parent.Find("Expression(Clone)") != null)
             Destroy(parent.Find("Expression(Clone)").gameObject);
 

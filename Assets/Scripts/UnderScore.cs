@@ -4,35 +4,9 @@ using System;
 using UnityEngine.UI;
 using System.Collections;
 using System.IO;
+using BestHTTP;
 
 public class _ {
-    static public Texture2D Circular(Texture2D sourceTex)
-    {
-        Color[] c = sourceTex.GetPixels(0, 0, sourceTex.width, sourceTex.height);
-		Texture2D b = new Texture2D(sourceTex.width, sourceTex.height);
-		float r = sourceTex.height / 2;
-		float h = sourceTex.height;
-		float w = sourceTex.width;
-		float cx = sourceTex.width / 2;
-		float cy = sourceTex.height / 2;
-
-        for (int i = 0; i < (h * w); i++)
-        {
-            int y = Mathf.FloorToInt(((float)i) / ((float)w));
-            int x = Mathf.FloorToInt(((float)i - ((float)(y * w))));
-            if (r * r >= (x - cx) * (x - cx) + (y - cy) * (y - cy))
-            {
-                b.SetPixel(x, y, c[i]);
-            }
-            else
-            {
-                b.SetPixel(x, y, Color.clear);
-            }
-        }
-        b.Apply();
-        return b;
-    }
-
     public static DateTime DateTimeFromTimeStamp(double timeStamp)
     {
         // Unix timestamp is seconds past epoch
@@ -159,6 +133,28 @@ public class _ {
     static public void Log(object obj) {
         if (Debug.isDebugBuild) {
             Debug.Log(String.Format("Unity3D: {0}", obj));
+        }
+    }
+
+    static public string url2Filename(string url) {
+         var uri = new Uri(url);
+         var filename = "images/" + Path.GetFileName(uri.LocalPath);
+         return filename;
+    }
+
+    static public void LoadTexture(string url, Action<Texture2D> cb) {
+        var filename = url2Filename(url);
+
+        if (ES2.Exists(filename)) {
+            var texture = ES2.Load<Texture2D>(filename);
+            cb(texture);
+        } else {
+            new HTTPRequest(new Uri(url), (request, response) => {
+                var texture = new Texture2D(0, 0);
+                texture.LoadImage(response.Data);
+                cb(texture);
+                ES2.Save(texture, filename);
+            }).Send();                
         }
     }
 }

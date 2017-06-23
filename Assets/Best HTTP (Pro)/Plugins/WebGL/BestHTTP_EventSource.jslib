@@ -106,10 +106,10 @@ var Lib_BEST_HTTP_WebGL_ES_Bridge =
 
 		try
 		{
-			event.close();
+			event.eventImpl.close();
 		}
 		catch(e) {
-			es._callOnError(event.onError, id, ' ' + e.name + ': ' + e.message);
+			es._callOnError(event.eventImpl.onError, id, ' ' + e.name + ': ' + e.message);
 		}
 	},
 
