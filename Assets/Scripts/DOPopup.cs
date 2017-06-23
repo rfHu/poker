@@ -34,6 +34,8 @@ public class DOPopup : MonoBehaviour {
 
 	private static DOPopup instance;
 
+	private bool hasShow = false;
+
 	void Awake() {}
 
 	private void autoFit() {
@@ -107,10 +109,7 @@ public class DOPopup : MonoBehaviour {
 			instance.Close();
 		}
 
-	}
-
-	void OnSpawned() {
-		despawned = false;
+		hasShow = true;
 		startAnimation();
 	}
 
@@ -137,14 +136,12 @@ public class DOPopup : MonoBehaviour {
 		return tween;
 	}
 
-	private bool despawned = false;
-
 	public void Close() {
-		if (despawned) {
+		if (!hasShow) {
 			return ;
 		}
 
-		despawned = true;
+		hasShow = false;
 
 		var tween = Hide();	
 
@@ -158,7 +155,11 @@ public class DOPopup : MonoBehaviour {
 	}
 
 	private void release() {
-		PoolMan.Despawn(transform);
+		if (PoolMan.IsSpawned(transform)) {
+			PoolMan.Despawn(transform);
+		} else {
+			Destroy(gameObject);
+		}
 	}
 
 	private void hideModal() {

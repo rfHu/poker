@@ -57,4 +57,10 @@ public class PoolMan {
 	public static void Despawn(Transform transform) {
 		PoolManager.Pools["Shared"].Despawn(transform);
 	}
+
+	public static bool IsSpawned(Transform transform) 
+	{
+		var pool = PoolManager.Pools["Shared"];
+		return pool.IsSpawned(transform);
+	}
 }
