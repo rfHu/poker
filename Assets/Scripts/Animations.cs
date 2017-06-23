@@ -11,6 +11,8 @@ public static class Animations {
 			return null;
 		}
 
+		rectTransform.anchoredPosition = new Vector2(0, 0);
+
 		Tween tween;
 
 		if (show) {

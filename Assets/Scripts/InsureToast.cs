@@ -8,7 +8,7 @@ using UnityEngine.UI.Extensions;
 
 public class InsureToast: MonoBehaviour {
     public Text MsgText;
-    public UICircle  Avatar;
+    public RawImage Avatar;
     public Text NameText;
     public GameObject SeePage;
 
@@ -100,14 +100,8 @@ public class InsureToast: MonoBehaviour {
 
             MsgText.text = text;
             NameText.text = name;
-
-            TexturePool.Shared.FetchTexture(url, (texture) => {
-                if (this == null) {
-                    return ;
-                }
-                Avatar.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-            });
-
+            Avatar.GetComponent<Avatar>().SetImage(url);
+           
             Show();
         }).AddTo(this);
 

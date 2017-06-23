@@ -4,25 +4,14 @@ using System;
 using UniRx;
 
 public class ModalHelper: MonoBehaviour {
-	private bool hasShow = false;
+	private Action onClick;
 
 	public void Show(Canvas canvas, Action onClick = null, bool modalColor = false) {
-		if (hasShow) {
-			return ;
-		}
-
-		hasShow = true;
+		this.onClick = onClick;
+		
 		transform.SetParent(canvas.transform);
-
 		_.FillParent(gameObject);
 		
-		// 设置点击事件
-		GetComponent<Button>().OnClickAsObservable().Subscribe((_) => {
-			if (onClick != null) {
-				onClick();
-			}
-			Destroy();	
-		}).AddTo(this);
 		transform.SetAsLastSibling();
 
 		if (modalColor) {
@@ -35,16 +24,23 @@ public class ModalHelper: MonoBehaviour {
 #endif
     }
 
-	public void Destroy() {
-		if (gameObject == null) {
-			return ;
-        }
-
-        Destroy(gameObject);
+	void Awake()
+	{
+		// 设置点击事件
+		GetComponent<Button>().OnClickAsObservable().Subscribe((_) => {
+			if (onClick != null) {
+				onClick();
+			}
+			
+			Despawn();	
+		}).AddTo(this);
 	}
 
-	void OnDestroy()
-	{
+	private bool despawned = false;
+
+	void OnDespawned() {
+		despawned = true;
+
 		#if UNITY_EDITOR
 		#else
             var modal = GameObject.FindObjectOfType<ModalHelper>();
@@ -55,8 +51,18 @@ public class ModalHelper: MonoBehaviour {
 		#endif	
 	}
 
+	void OnSpawned() {
+		despawned = false;
+	}
+
+	public void Despawn() {
+		if (!despawned) {
+			G.Despawn(transform);
+		}
+	}
+
 	public static ModalHelper Create() {
-		var go = Instantiate((GameObject)Resources.Load("Prefab/Modal"));
-		return go.GetComponent<ModalHelper>();
+		var transform = G.Spawn("Modal");
+		return transform.GetComponent<ModalHelper>();
 	}
 }

@@ -4,12 +4,10 @@ using System.Collections.Generic;
 using HedgehogTeam.EasyTouch;
 
 public class UIManager : MonoBehaviour {
-	private GameObject auditMsg;
-
-	public MenuPopup Menu;
+	private AuditMsg auditMsg;
 
 	public void ShowMenu() {
-		var popup = (GameObject)Instantiate(Resources.Load("Prefab/MenuPopup"));
+		var popup = G.Spawn("MenuPopup");
 		popup.GetComponent<DOPopup>().Show();
 	}
 
@@ -50,13 +48,12 @@ public class UIManager : MonoBehaviour {
 	}
 
 	public void ScorePage() {
-		var score = (GameObject)Instantiate(Resources.Load("Prefab/ScorePage"));
+		var score = G.Spawn("Prefab/ScorePage");
 		score.GetComponent<DOPopup>().Show();	
 	}
 
 	public void OnShowRecalls() {
-		var transform = G.Spawn("RecallPage");
-		transform.GetComponent<RecallPage>();
+		G.Spawn("RecallPage");
 	}
 
 	public void OnClickChat() {
@@ -70,7 +67,7 @@ public class UIManager : MonoBehaviour {
 
     public void OnClickExpressionPage() 
     {
-        var expressionPage = (GameObject)Instantiate(Resources.Load("Prefab/ExpressionPage"));
+        var expressionPage = G.Spawn("ExpressionPage");
         expressionPage.GetComponent<DOPopup>().Show();
     }
 
@@ -83,23 +80,22 @@ public class UIManager : MonoBehaviour {
 
 	void Awake()
 	{
-		GameData.Shared.AuditList.AsObservable().Where((list) => list != null).Subscribe((list) => {
-			if (!auditMsg)
-            {
-                auditMsg = (GameObject)Instantiate(Resources.Load("Prefab/AuditMsg"));
-				auditMsg.GetComponent<AuditMsg>().Click = () => {
-					Commander.Shared.Audit();
-				};
-            }
+		GameData.Shared.ShowAudit.Subscribe((show) => {
+			if (!show) {
+				if (auditMsg != null) {
+					auditMsg.GetComponent<DOPopup>().Close();
+					auditMsg = null;
+				}
 
-            if (list.Count == 0)
-            {
-                auditMsg.GetComponent<DOPopup>().Close();
-            }
-            else
-            {
-                auditMsg.GetComponent<DOPopup>().Show(null, false, false);
-            }
+				return;
+			}
+			
+            auditMsg = G.Spawn("AuditMsg").GetComponent<AuditMsg>();
+			auditMsg.GetComponent<AuditMsg>().Click = () => {
+				Commander.Shared.Audit();
+			};
+
+            auditMsg.GetComponent<DOPopup>().Show();
 		}).AddTo(this);	
 
 		RxSubjects.TakeCoin.Subscribe((e) => {
@@ -107,8 +103,8 @@ public class UIManager : MonoBehaviour {
 				GameData.Shared.Coins = e.Data.Int("coins");
             }
 			
-            GameObject obj = (GameObject)Instantiate(Resources.Load("Prefab/Supplement"));
-            obj.GetComponent<DOPopup>().Show(() => {
+            Transform transform = G.Spawn("Supplement");
+            transform.GetComponent<DOPopup>().Show(() => {
 				var player = GameData.Shared.GetMyPlayer();
 
 				if (player.Index == -1 || player.Bankroll.Value > 0) {

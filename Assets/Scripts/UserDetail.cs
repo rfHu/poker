@@ -7,7 +7,7 @@ using UnityEngine.UI.Extensions;
 
 [RequireComponent(typeof(DOPopup))]
 public class UserDetail : MonoBehaviour {
-	public UICircle Avatar;
+	public RawImage Avatar;
 	public Text Name;
 	public Text Coins;
 	public Text Hands;
@@ -84,13 +84,7 @@ public class UserDetail : MonoBehaviour {
 			var achieve = data.Dict("achieve").ToObject<AchieveModel>();
 
             Name.text = profile.name;
-
-            TexturePool.Shared.FetchTexture(profile.avatar, (texture) => {
-                if (this == null) {
-                    return ;
-                }
-                Avatar.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-            });
+            Avatar.GetComponent<Avatar>().SetImage(profile.avatar);
 
             // 金币数
             Coins.text = _.Num2CnDigit<int>(int.Parse(achieve.coins));
@@ -128,9 +122,9 @@ public class UserDetail : MonoBehaviour {
 
     public void OnGamerOptionClick() 
     {
-        var go = (GameObject)Instantiate(Resources.Load("Prefab/GamerOption"));
-        go.GetComponent<DOPopup>().Show();
-        go.GetComponent<GamerOption>().Init(enterLimit, seatLimit, talkLimit, Uid);
+        var transform = G.Spawn("GamerOption");
+        transform.GetComponent<DOPopup>().Show();
+        transform.GetComponent<GamerOption>().Init(enterLimit, seatLimit, talkLimit, Uid);
     }
 
     public void OnEmoticonClick(int Pid) 
@@ -146,7 +140,7 @@ public class UserDetail : MonoBehaviour {
 			        {"args", data}
 		        });
 
-        gameObject.GetComponent<DOPopup>().Close();
+        GetComponent<DOPopup>().Close();
     }
 
     private void setStandUpButton(bool interactable)

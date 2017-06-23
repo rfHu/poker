@@ -31,19 +31,13 @@ public class TexturePool {
         if (textures.Count > max && Exists(url)) {
             var tex = textures[url];
             textures.Remove(url);
-            GameObject.Destroy(tex); 
+            GameObject.Destroy(tex);
 
             _.Log("回收Texture");
         }
     } 
 
     public void FetchTexture(string url, Action<Texture2D> cb) {
-        string pattern = @"/w/(\d)+/h/(\d)+/format/jpg";
-		Regex rgx = new Regex(pattern);
-		url = rgx.Replace(url, "/w/124/h/124/format/png");
-
-        Despawn(url);
-
         if (Exists(url)) {
             cb(textures[url]);
         } else {

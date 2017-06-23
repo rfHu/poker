@@ -47,7 +47,7 @@ public class G {
 
 	public static Transform Spawn(string name, Transform parent) {
 		var pool = PoolManager.Pools["Shared"];
-		Transform prefab = pool.prefabs["RecallPage"];
+		Transform prefab = pool.prefabs[name];
 		return pool.Spawn(prefab, parent);
 	}
 

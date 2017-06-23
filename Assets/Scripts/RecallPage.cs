@@ -26,19 +26,15 @@ public class RecallPage : MonoBehaviour {
 
     private List<RecallUser> Users = new List<RecallUser>();
 
-	void Awake()
-	{
+    private bool requesting = false;
+
+    public void OnSpawned() {
         SBBB.text = GameData.Shared.SB + "/" + GameData.Shared.BB;
         Collect.onValueChanged.AddListener(delegate(bool isOn) { 
             CollectOrCancel(); 
         });
-	}
 
-    private bool requesting = false;
-
-    public void OnSpawned() {
-        // gameObject.SetActive(true);
-        GetComponent<DOPopup>().Show(despawn: true);
+        GetComponent<DOPopup>().Show();
         request();
     }
 
@@ -119,7 +115,7 @@ public class RecallPage : MonoBehaviour {
                 continue;
             }
 
-            var user = G.Spawn("RecallUser").GetComponent<RecallUser>();
+            var user = G.Spawn("RecallUser", Rect.transform).GetComponent<RecallUser>();
             user.Show(dict);
 
             user.SetComCard(comCards);
@@ -137,8 +133,6 @@ public class RecallPage : MonoBehaviour {
             {
                 user.SetTag(RecallUser.UserTag.Dealer); 
             }
-
-            yield return null;
         }
 
         if (!string.IsNullOrEmpty(ret.String("favhand_id")))

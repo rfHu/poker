@@ -47,7 +47,7 @@ public class RecallUser : MonoBehaviour {
 		}
 
         PlayerName.text = dict.String("name");
-		ShowAvatar(dict.String("avatar"));
+		ShowAvatar(uid, dict.String("avatar"));
 
 		var earn = dict.Int("coin") - dict.Int("chips");
 		Score.text = _.Number2Text(earn);
@@ -152,13 +152,9 @@ public class RecallUser : MonoBehaviour {
 		Score.color = color;
 	}
 
-	void ShowAvatar(string url) {
-		TexturePool.Shared.FetchTexture(url, (texture) => {
-			if (this == null) {
-				return ;
-			}
-			
-			Avatar.texture = texture;
-		});
+	void ShowAvatar(string uid, string url) {
+		var avt = Avatar.GetComponent<Avatar>();
+		avt.Uid = uid;
+		avt.SetImage(url);
 	}
 }

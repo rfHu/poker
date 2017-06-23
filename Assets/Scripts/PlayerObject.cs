@@ -224,12 +224,8 @@ public class PlayerObject : MonoBehaviour {
 		var canvas = G.UICvs;
 
 		if (isSelf()) {
-			// var copy = Instantiate(MyCards, canvas.transform, true);
-			
 			// 图片灰掉
 			darkenCards();
-
-			// foldCards(copy);
 		} else {
 			Cardfaces.transform.SetParent(canvas.transform, true);
 			foldCards(Cardfaces);			
@@ -814,7 +810,7 @@ public class PlayerObject : MonoBehaviour {
 		// 隐藏头像
 		Circle.SetActive(false);
 
-		OPGo = (GameObject)Instantiate(Resources.Load("Prefab/OP"));	
+		OPGo = G.Spawn("OP").gameObject;
 		var op = OPGo.GetComponent<OP>();
 		op.StartWithCmds(data, left);
 
