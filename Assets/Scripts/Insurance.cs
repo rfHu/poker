@@ -102,7 +102,7 @@ public class Insurance : MonoBehaviour {
 
         addEvents();
 
-        var myPlayer = GameData.Shared.GetMyPlayer();
+        var myPlayer = GameData.Shared.FindPlayer(data.String("uid"));
 
         for (int i = 0; i < MyCards.Count; i++)
         {
