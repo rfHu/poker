@@ -22,7 +22,8 @@ public class RecallUser : MonoBehaviour {
 	public enum UserTag: int {
 		SmallBlind = 0,
 		BigBlind,
-		Dealer
+		Dealer,
+		None
 	}
 	
 	public void Show(Dictionary<string, object> dict) {
@@ -47,7 +48,7 @@ public class RecallUser : MonoBehaviour {
 		}
 
         PlayerName.text = dict.String("name");
-		ShowAvatar(dict.String("avatar"));
+		ShowAvatar(uid, dict.String("avatar"));
 
 		var earn = dict.Int("coin") - dict.Int("chips");
 		Score.text = _.Number2Text(earn);
@@ -108,6 +109,10 @@ public class RecallUser : MonoBehaviour {
 	}
 
 	public void SetTag(UserTag tag) {
+		if (tag == UserTag.None) {
+			return ;
+		}
+
 		string text;
 		Color color = bClolor;
 
@@ -152,9 +157,9 @@ public class RecallUser : MonoBehaviour {
 		Score.color = color;
 	}
 
-	void ShowAvatar(string url) {
-		this.LoadImage(url, (texture) => {
-			Avatar.texture = texture;
-		});
+	void ShowAvatar(string uid, string url) {
+		var avt = Avatar.GetComponent<Avatar>();
+		avt.Uid = uid;
+		avt.SetImage(url);
 	}
 }

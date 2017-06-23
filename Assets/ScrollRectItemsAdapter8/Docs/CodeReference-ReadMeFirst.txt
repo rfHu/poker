@@ -1,0 +1,1 @@
+open the "frame8->Optimized ScrollView Adapter->Code reference" menu item in Unity Editor menu bar to browse the code reference

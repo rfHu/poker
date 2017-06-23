@@ -12,6 +12,19 @@ These defines are the following:
 Upgrading to 1.9.x:
 In v1.9.0 all DLL dependencies are removed, and some of the files from the source too. So a clean install is advised: Before you install v1.9.x you have to remove the /Assets/Best HTTP (Pro)/ folder and TcpClientImplementation.dll from the /Assets/Plugins/, /Assets/Plugins/Metro and /Assets/Plugins/WP8 folders.
 
+1.10.0 (2017.05.05)
+General
+-Removed support for Windows Phone 8
+-[New Feature] HTTPManager and HTTPRequest has a new property 'TryToMinimizeTCPLatency' to turn on/off TCP NoDelay
+-[New Feature] A new Form type 'RawJson' to send the fields added with AddField jon encoded
+-[Improvement] Added DefaultCertificationValidator to the HTTPManger
+-[Improvement] Improved compatibility with Unity 2017.1
+-[Improvement] Now the plugin capable to download files larger than 2 GB (Thanks goes to Daniel @ present4D)
+-[Bugfix] Accessing streaming assets now possible under WebGL builds
+-[Bugfix] Fixed a sneaky bug where the HTTPUpdateDelegator unloaded in builds
+Socket.IO
+-[Improvement] Sockets now have an Id property generated the same as in the JS Socket.IO lib.
+
 1.9.17 (2017.01.29)
 General
 -[New Feature] GZip content encoding is now supported when UseStreaming is on. The plugin now will automatically decompress downloaded chunks.

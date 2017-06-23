@@ -1,18 +1,17 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class GameLoading : MonoBehaviour {
 	// Use this for initialization
-	void Start () {
-		// Time.timeScale = 0;
-
+	void Awake () {
 		var external = External.Instance;
+		ObjectsPool.Setup();
 
 		#if UNITY_EDITOR  
-        external.SetSid("s%3AAN0aHRtcPLOAcsyLXRhv4ILXiVBkKYHt.DW9FrsSPSLXYPOxgUEYYJyYRdWGzgdKwLacaykHdbpM");
+        	// external.SetSid("s%3AdOlm2w5hGhqahgt--HMRhxyXjTCSmOLf.3IXxXmGw1R3E0Swr10JEcqYcGvn7AUZT4%2F0d99jOuT8");
+        	external.SetSid("s%3A4gHJE4AJbNY5j6XT2OuoeO4-nqn6bl7t.5f5shYMZ2sFNrz0CKTpO5b2cUJujPknpA5OU7lThbJI");
 			external.SetProxy("http://localhost:8888");
-            external.SetRoomID("594b666ef43b1501ec7f8129");
-
-
+            external.SetRoomID("594bad0a532d99197168a61a");
 		#endif
 	}
 	

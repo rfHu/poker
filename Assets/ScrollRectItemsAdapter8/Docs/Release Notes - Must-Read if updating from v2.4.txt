@@ -1,0 +1,51 @@
+Features:
+- Pull To Refresh utility w/ dedicated example scene & scripts
+- Much better support for multiple prefabs (using different view holder & models with the same adapter). Dedicated example scene & scripts
+- Creating & updating the view holder are now done in 2 different callbacks, to separate concerns
+
+[!IMPORTANT! if updating from a previous version to v2.5]
+You need to change a few things, although it's HIGLY recommended to just delete the previous package and import this instead, 
+because you may introduce hard-to-detect bugs that can make some nuclear reactors blow, somewhere over the rainbow.
+
+All classes that were in the global namespace were moved to an appropriately-named namespace to avoid conflicts.
+
+What to delete (because it was moved in another folder or it's not used anymore or it was renamed):
+- Prefabs/LiteExample folder
+- ScrollRectItemsAdapterExample.cs and SimpleTutorial.cs from the Scripts folder
+- Scripts/Util/ScrollToPanelUI.cs
+- Scripts/Util/UpdateModesPanelUI.cs
+- Scripts/Util/ObjectsVirtualParent.cs
+- Scripts/Util/GridView/CellGroupViewHolder.cs (was replaced with CellGroupViewsHolder.cs)
+- Scripts/Util/GridView/CellViewHolder.cs (was replaced with CellViewsHolder.cs)
+
+Important syntax changes & refactorings:
+- ScrollRectItemsAdapter8.InitOrUpdateViewHolder was renamed to UpdateViewsHolder and it guarantees (if you respect the adapter's lifecycle) that the newOrRecycled.root is not null. 
+Here you are not needed to instantiate the prefab anymore, only update its views.
+- ScrollRectItemsAdapter8.CreateViewsHolder was added. Here the view holder instance is created, the prefab is instantiated etc. (see the example scenes)
+- GridAdapter.UpdateCellViewHolder was renamed to GridAdapter.UpdateCellViewsHolder
+[END OF !IMPORTANT!]
+
+General, must-know code changes:
+- added 2 Init methods in AbstractViewHolder to ease the view holder creation & initialization in ScrollRectItemsAdapter8.CreateViewsHolder() callback. 
+These remove the need to manually instantiate the prefab, assign the viewholder's itemIndex, call CollectViews() on it etc.
+ScrollRectItemsAdapter8:
+- added ItemsRefreshed event that has 2 ints params: first is the old count, and the second is the new count
+- added VisibleItemsCount
+- removed VisibleItemsCopy property, because it's not efficient to create a list each time. Instead, GetItemViewsHolder(int viewHolderIndex) was added together with VisibleItemsCount to allow iterating through the visible items
+- Init(): calling Dispose here, if the previous value of _Params is not null (i.e. the adapter is re-used). 
+Although it wasn't intensively tested, since it's easier to just reload the entire scene or at least destroy the scroll view & re-instantiate it (a prefab can be used for it) 
+- Added Refresh() that just calls ChangeItemsCountTo(<current count>), which is equivalent to a refresh.
+- Added GetItemViewsHolder(int viewHolderIndex), which returns the viewholders by their index in the "Visible Items" list
+- Added 3rd parameter <normalizedPositionOfItemPivotToUse> to ScrollTo and SmoothScrollTo which gives maximum flexibility in terms of how far do you want the target item to be relative to the viewport's start edge
+- Removed GetItemNormalizedOffsetFromParentStart_NotAccurate()
+- Dispose(): actually releasing all the resources. Destroying all cached recyclable items & the visible ones, setting count to 0, setting _Params to null etc.
+- renamed InitOrUpdateItemViewHolder to UpdateViewsHolder, since now CreateViewsHolder() takes care of the creation.
+- added abstract CreateViewsHolder() which you must override to create the viewholder (which is no more done in InitOrUpdateItemViewHolder())
+- added ClearCachedRecyclableItems(), ClearVisibleItems(), which destroys the respective items & sets their count to 0
+- renamed InternalParams to InternalState & _InternalParams field to _InternalState.
+
+Bugfixes:
+- small issue with spacing in GridAdapter
+ScrollRectItemsAdapter8:
+- added _SmoothScrollCoroutine field to keep track of whether the ScrollTo is playing or not, in order to reject any new ScrollTo request during the execution of another
+- all the cached recyclable items & the visible ones are destroyed & their corresponding arrays are cleared when the items count changes to 0, thus most probably indicating that the user wants the scrollview to be cleared

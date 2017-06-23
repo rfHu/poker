@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Linq;
 using DarkTonic.MasterAudio;
+using PathologicalGames;
 
 public class G {
 	public static Canvas UICvs {
@@ -30,16 +31,6 @@ public class G {
 	private static Canvas uiCanvas;
 	private static Canvas dialogCanvas;
 
-	// public static void WaitSound(SoundGroupVariation.SoundFinishedEventHandler  cb) {
-	// 	var sounds = MasterAudio.GetAllPlayingVariationsInBus("Wait");
-
-	// 	if (sounds.Count > 0) {
-	// 		sounds.Last().SoundFinished += cb;	
-	// 	} else {
-	// 		cb();
-	// 	}		
-	// }
-
 	public static void PlaySound(string name) {
 		if (GameData.Shared.muted) {
 			return ;
@@ -49,4 +40,18 @@ public class G {
 	}
 
 	public static Color Black = new Color(0, 0, 0, 0.9f);
+
+	public static Transform Spawn(string name) {
+		return Spawn(name, null);	
+	}
+
+	public static Transform Spawn(string name, Transform parent) {
+		var pool = PoolManager.Pools["Shared"];
+		Transform prefab = pool.prefabs[name];
+		return pool.Spawn(prefab, parent);
+	}
+
+	public static void Despawn(Transform transform) {
+		PoolManager.Pools["Shared"].Despawn(transform);
+	}
 }

@@ -25,7 +25,7 @@ public class MenuPopup : MonoBehaviour {
 		RxSubjects.TakeCoin.OnNext(new RxData());	
 	}
 
-	void Awake()
+	void OnSpawned()
 	{
 		if (GameData.MyCmd.Unseat) {
 			StandCG.alpha = 1;
@@ -40,7 +40,10 @@ public class MenuPopup : MonoBehaviour {
 			HangGo.SetActive(false);
 			ReserveGo.SetActive(false);
 		}
+	}
 
+	void Awake()
+	{
 		GameData.Shared.SelfState.Subscribe((state) => {
 			var hangCvg = HangGo.GetComponent<CanvasGroup>();
 			var reserveCvg = ReserveGo.GetComponent<CanvasGroup>();
@@ -72,7 +75,7 @@ public class MenuPopup : MonoBehaviour {
 				default:
 					break;
 			}
-		}).AddTo(this);
+		}).AddTo(this);		
 	}
 
 	public void Standup() {
@@ -89,9 +92,8 @@ public class MenuPopup : MonoBehaviour {
 
     public void Option() 
     {
-        var tip = (GameObject)Instantiate(Resources.Load("Prefab/Option"));
+        var tip = G.Spawn("Option");
         tip.GetComponent<DOPopup>().Show();
-        gameObject.GetComponent<DOPopup>().Close();
     }
 
 	public void Exit() {
@@ -99,9 +101,8 @@ public class MenuPopup : MonoBehaviour {
 	}
 
 	public void Tips() {
-        var tip = (GameObject)Instantiate(Resources.Load("Prefab/Explain"));
+        var tip = G.Spawn("Explain");
 		tip.GetComponent<DOPopup>().Show();
-		gameObject.GetComponent<DOPopup>().Close();
 	}
 
 	public void OnReserve() {

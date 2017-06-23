@@ -5,6 +5,7 @@ using UnityEngine.UI.ProceduralImage;
 using System.Collections;
 using UniRx;
 
+[RequireComponent(typeof(DOPopup))]
 public class RecallPage : MonoBehaviour {
     public Text SBBB;
 	public GameObject Rect;
@@ -12,9 +13,7 @@ public class RecallPage : MonoBehaviour {
 	public GameObject RightIndicator;
 	public Text Current;
 	public Text Total;
-	public GameObject UserGo;
     public Toggle Collect;
-    public RecallUser[] Users;
 
     public RectTransform PlayerList;
     public GameObject InsuranceGo;
@@ -23,23 +22,24 @@ public class RecallPage : MonoBehaviour {
 	private int totalNumber;
 	private int currentNumber;
     private string favhand_id;
-    private bool isCollected;
 
-	void Awake()
-	{
-        SBBB.text = GameData.Shared.SB + "/" + GameData.Shared.BB;
-        Collect.onValueChanged.AddListener(delegate(bool isOn) { 
-            CollectOrCancel(); 
-        });
-	}
+    private List<RecallUser> Users = new List<RecallUser>();
 
     private bool requesting = false;
 
-    public void Show() {
-        gameObject.SetActive(true);
-        GetComponent<DOPopup>().Show(destroyOnClose: false);
+    void OnSpawned() {
+        SBBB.text = GameData.Shared.SB + "/" + GameData.Shared.BB;
+        GetComponent<DOPopup>().Show();
         request();
     }
+
+    // void DepawnedChildren() {
+    //     foreach(var user in Users) {
+    //         G.Despawn(user.transform);
+    //     }
+
+    //     Users = new List<RecallUser>();
+    // }
 
 	public void request(int num = 0) {
         if (requesting) {
@@ -83,10 +83,6 @@ public class RecallPage : MonoBehaviour {
 		totalNumber = ret.Int("total_hand");
 		currentNumber = ret.Int("cur_hand");
 
-        foreach(var user in Users) {
-            user.gameObject.SetActive(false);
-        }
-
 		Current.text = currentNumber.ToString();
 		Total.text =  string.Format("/ {0}", totalNumber);
 
@@ -97,7 +93,6 @@ public class RecallPage : MonoBehaviour {
             InsuranceGo.SetActive(true);
             InsuranceText.text = _.Number2Text(insuValue);
             InsuranceText.color = _.GetTextColor(insuValue);
-            InsuranceGo.SetActive(false);
         } else {
             InsuranceGo.SetActive(false);
         }
@@ -107,49 +102,56 @@ public class RecallPage : MonoBehaviour {
 		var comCards = ret.Dict("community").IL("cards");
 
 		var list = ret.List("list");
-        for (int num = 0; num < list.Count; num++)
-        {
-            var dict = list[num] as Dictionary<string, object>;
-            if (dict == null)
-            {
-                continue;
+        for (int num = 0; num < 9; num++)
+        {   
+            if (list.Count > num) {
+                var dt = list[num] as Dictionary<string, object>;
+                var tag = findTag(list, num);
+
+                RecallUser user;
+
+                if (num < Users.Count) {
+                    user = Users[num];
+                } else {
+                    user = G.Spawn("RecallUser", Rect.transform).GetComponent<RecallUser>();
+                    user.transform.SetParent(Rect.transform, false);
+                    Users.Add(user);
+                }
+
+                user.Show(dt);
+                user.SetComCard(comCards);
+                user.SetTag(tag);
+            } else if (Users.Count > num) {
+                Users[num].gameObject.SetActive(false);
             }
-
-            var user = Users[num];
-            user.gameObject.SetActive(true);
-            user.Show(dict);
-
-            user.SetComCard(comCards);
-
-            user.transform.SetParent(Rect.transform, false);
-
-            if (num == 0)
-            {
-                user.SetTag(RecallUser.UserTag.SmallBlind);
-            }
-            else if (num == 1)
-            {
-                user.SetTag(RecallUser.UserTag.BigBlind);
-            } else if (num == list.Count - 1)
-            {
-                user.SetTag(RecallUser.UserTag.Dealer); 
-            }
-
-            yield return null;
         }
 
         if (!string.IsNullOrEmpty(ret.String("favhand_id")))
         {
-            isCollected = true;
             Collect.isOn = true;
             this.favhand_id = ret.String("favhand_id");
         }
         else 
         {
-            isCollected = false;
             Collect.isOn = false;
         }		
 	}
+
+    private RecallUser.UserTag findTag(List<object> list, int index) {
+        if (index == 0)
+        {
+            return RecallUser.UserTag.SmallBlind;
+        }
+        else if (index == 1)
+        {
+            return RecallUser.UserTag.BigBlind;
+        } else if (index == list.Count - 1)
+        {
+            return RecallUser.UserTag.Dealer; 
+        }
+
+        return RecallUser.UserTag.None;
+    }
 
 	public void Up() {
 		if (currentNumber >= totalNumber) {
@@ -169,11 +171,7 @@ public class RecallPage : MonoBehaviour {
 
     public void CollectOrCancel() 
     {
-        if (isCollected == Collect.isOn)
-            return;
-        else
-            isCollected = Collect.isOn;
-       
+       Collect.isOn = !Collect.isOn;
 
         var dict = new Dictionary<string, object>() { };
         string f = "";

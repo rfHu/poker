@@ -441,7 +441,7 @@ sealed public class GameData {
 
 		RxSubjects.Audit.Subscribe((e) => {
 			var array = e.Data.List("ids");
-			AuditList.OnNext(array);
+			ShowAudit.Value = array.Count > 0;
 		});
 
 		// 倒计时
@@ -499,7 +499,7 @@ sealed public class GameData {
 	}
 
 	public int DealState = -1;
-	public BehaviorSubject<List<object>> AuditList = new BehaviorSubject<List<object>>(new List<object>());
+	public ReactiveProperty<bool> ShowAudit  = new ReactiveProperty<bool>(false);
 	public bool PublicCardAnimState = false;
 
 	// 已设置的思考时间（下一手生效）
@@ -601,8 +601,7 @@ sealed public class GameData {
 		LeftTime.Value = json.Long("left_time");
 
         TalkLimit.Value = json.Int("talk_limit") == 1;
-
-        AuditList.OnNext(json.List("un_audit"));
+        ShowAudit.Value = json.List("un_audit").Count > 0;
 
 		var startTs = json.Int("begin_time");
 		StartTime = _.DateTimeFromTimeStamp(startTs);

@@ -25,7 +25,6 @@ public class DOPopup : MonoBehaviour {
 
 	private ModalHelper modalHelper;   
 
-	private bool destroyOnClose = true;
 	private Action close = null;
 	private bool modal = true;
 	private bool singleton = true;  
@@ -35,9 +34,7 @@ public class DOPopup : MonoBehaviour {
 
 	private static DOPopup instance;
 
-	void Awake() {
-		gameObject.SetActive(false);
-	}
+	void Awake() {}
 
 	private void autoFit() {
 		var rectTrans = GetComponent<RectTransform>();
@@ -67,8 +64,8 @@ public class DOPopup : MonoBehaviour {
 		rectTrans.anchoredPosition = startPosition;
 	}
 
-	IEnumerator  startAnimation() {
-		yield return new WaitForFixedUpdate();
+	void startAnimation() {
+		// yield return new WaitForFixedUpdate();
 
 		autoFit();
 		transform.SetParent(G.DialogCvs.transform, false);
@@ -101,22 +98,24 @@ public class DOPopup : MonoBehaviour {
 		}
 	}
 	
-	public void Show(Action close = null, bool modal = true, bool singleton = true, bool destroyOnClose = true) {
+	public void Show(Action close = null, bool modal = true, bool singleton = true) {
 		this.close = close;
 		this.modal = modal;
 		this.singleton = singleton;
-		this.destroyOnClose = destroyOnClose;
 
 		if (instance != null && instance != this && singleton) {
 			instance.Close();
 		}
 
-		gameObject.SetActive(true);
-		StartCoroutine(startAnimation());
+	}
+
+	void OnSpawned() {
+		despawned = false;
+		startAnimation();
 	}
 
 	public void Show() {
-		this.Show(close, modal, singleton, destroyOnClose);
+		this.Show(close, modal, singleton);
 	}
 
 	public Tween Hide() {
@@ -138,25 +137,33 @@ public class DOPopup : MonoBehaviour {
 		return tween;
 	}
 
-	public void Close() {
-		var tween = Hide();	
+	private bool despawned = false;
 
-		if (!destroyOnClose) {
+	public void Close() {
+		if (despawned) {
 			return ;
 		}
 
+		despawned = true;
+
+		var tween = Hide();	
+
 		if (tween == null) {
-			Destroy(gameObject);
+			release();
 		} else {
 			tween.OnComplete(() => {
-				Destroy(gameObject);
+				release();
 			});
 		}
 	}
 
+	private void release() {
+		G.Despawn(transform);
+	}
+
 	private void hideModal() {
 		if (modalHelper != null) {
-			modalHelper.Destroy();
+			modalHelper.Despawn();
 		}
 	}
 }

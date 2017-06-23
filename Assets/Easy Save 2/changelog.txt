@@ -1,3 +1,8 @@
+v2.8.0
+- Easy Save 3 Beta Now Available.
+- Various bug fixes.
+- Added assorted PlayMaker actions.
+
 v2.7.1
 - Now supports Playmaker 1.8 Arrays.
 - Auto Save now has the option to not automatically convert prefabs to scene objects when dragging them into a scene in the Editor.
