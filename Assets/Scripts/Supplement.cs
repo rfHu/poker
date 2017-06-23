@@ -34,8 +34,7 @@ public class Supplement : MonoBehaviour {
 				{"uid", GameData.Shared.Uid},
 				{"bankroll_multiple", "1"}
 			}}
-		}, (data) => {
-			var ret = data.Dict("ret");
+		}, (ret) => {
 			var coins = ret.Dict("achieve").Int("coins");
 
 			GameData.Shared.Coins = coins; // 保存coins

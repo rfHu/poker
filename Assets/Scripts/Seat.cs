@@ -95,7 +95,7 @@ public class Seat : MonoBehaviour {
 					{"position_y", pos[1]} 
 				}}
 			}, (data) => {
-				var err = data.Dict("ret").Int("err");
+				var err = data.Int("err");
 				
 				if (err == 0) {
 					return ;
@@ -108,7 +108,7 @@ public class Seat : MonoBehaviour {
 				} else if(err == 1104) {
 					text = "您与某玩家距离过近，不能参与本牌局";
 				} else {
-					text = data.Dict("ret").String("msg");
+					text = data.String("msg");
 				}
 
 				PokerUI.Alert(text);

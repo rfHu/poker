@@ -117,8 +117,7 @@ public sealed class Connect  {
 		});
 	}
 
-	private void saveUserInfo(Dictionary<string, object> json) {
-		var ret = json.Dict("ret");
+	private void saveUserInfo(Dictionary<string, object> ret) {
 		var profile = ret.Dict("profile").ToObject<ProfileModel>();
 		var token = ret.Dict("token");
 
@@ -264,7 +263,7 @@ public sealed class Connect  {
 			int seq = json.Int("seq");
 
 			if (instance.successCallbacks.ContainsKey(seq)) {
-				instance.successCallbacks[seq](json);
+				instance.successCallbacks[seq](ret);
 			} 
 		});
 

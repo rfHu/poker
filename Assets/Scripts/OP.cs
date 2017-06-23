@@ -317,7 +317,7 @@ public class OP : MonoBehaviour {
 			{"args", data}
         }, (redata) =>
         {
-            var display = redata.Dict("ret").Int("display");
+            var display = redata.Int("display");
             if (display == 0)
             {
                 BuyTurnTime.SetActive(false);

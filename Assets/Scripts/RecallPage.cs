@@ -60,7 +60,7 @@ public class RecallPage : MonoBehaviour {
 					return ;
 				}
 
-                var curHand = json.Dict("ret").Int("cur_hand");
+                var curHand = json.Int("cur_hand");
                 if (curHand == currentNumber) {
                     requesting = false;
                     return ;
@@ -77,9 +77,7 @@ public class RecallPage : MonoBehaviour {
         requesting = true;
 	}
 
-	private IEnumerator reload(Dictionary<string, object> data) {
-		var ret = data.Dict("ret");
-
+	private IEnumerator reload(Dictionary<string, object> ret) {
 		totalNumber = ret.Int("total_hand");
 		currentNumber = ret.Int("cur_hand");
 
@@ -210,7 +208,7 @@ public class RecallPage : MonoBehaviour {
             (json) =>
             {
                 if (json.Int("err") == 0 && f == "fav") {
-                    favhand_id = json.Dict("ret").String("favhand_id");
+                    favhand_id = json.String("favhand_id");
                 } 
             }
         );

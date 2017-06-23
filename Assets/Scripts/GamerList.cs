@@ -22,8 +22,7 @@ public class GamerList : MonoBehaviour {
                 {"args",data},
         }, (json) => 
         {
-			var ret = json.Dict("ret");
-            var list = ret.List("list");
+            var list = json.List("list");
 
             if (list.Count > 0)
             {

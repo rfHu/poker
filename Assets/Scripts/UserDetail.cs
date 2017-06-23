@@ -73,14 +73,13 @@ public class UserDetail : MonoBehaviour {
         Connect.Shared.Emit(new Dictionary<string, object>() {
 			{"f", "gamerdetail"},
 			{"args", d}
-		}, (json) =>
+		}, (data) =>
         {
             if (gameObject == null)
             {
                 return;
             }
 
-            var data  = json.Dict("ret");
 			var profile = data.Dict("profile").ToObject<ProfileModel>();
 			var achieve = data.Dict("achieve").ToObject<AchieveModel>();
 
