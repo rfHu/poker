@@ -25,11 +25,11 @@ public class Emoticon : MonoBehaviour {
         this.pid = pid;
         this.toSeat = toSeat;
 
-        transform.SetParent(G.UICvs.transform, false);
+        //transform.SetParent(G.UICvs.transform, false);
         _rectTransform.anchoredPosition = fromSeat.GetComponent<RectTransform>().anchoredPosition;
 
         if (toSeat.GetComponent<Seat>().GetPos() == SeatPosition.Right)
-            transform.localScale = new Vector3(-1, 1, 0);
+            transform.localScale = new Vector3(-1, 1);
 
 
         Vector2 aimSeat = toSeat.transform.localPosition + new Vector3(0, 65, 0);

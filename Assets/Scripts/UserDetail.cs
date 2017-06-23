@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UI.ProceduralImage;
 using MaterialUI;
+using UniRx;
 
 [RequireComponent(typeof(DOPopup))]
 public class UserDetail : MonoBehaviour {
@@ -30,6 +31,20 @@ public class UserDetail : MonoBehaviour {
     bool seatLimit;
     bool talkLimit;
 
+    void Awake() 
+    {
+        for (var i = 0; i < EmoticonButtons.Length; i++)
+        {
+            var local = i;
+            var button = EmoticonButtons[i];
+
+            button.OnClickAsObservable().Subscribe((_) =>
+            {
+                OnEmoticonClick(local + 1);
+            }).AddTo(this);
+        }
+    }
+
     public void Init(string Uid)
     {
         this.Uid = Uid;
@@ -43,21 +58,7 @@ public class UserDetail : MonoBehaviour {
             GetComponent<VerticalLayoutGroup>().padding.bottom = 40;
         } else {
             EmoticonsTeam.SetActive(true);
-        }
-
-        foreach (var button in EmoticonButtons)
-        {
-            button.onClick.AddListener(delegate()
-            {
-                for (int i = 0; i < EmoticonButtons.Length; i++)
-                {
-                    if (button == EmoticonButtons[i])
-                    {
-                        OnEmoticonClick(i + 1);
-                        break;
-                    }
-                }
-            });
+            GetComponent<VerticalLayoutGroup>().padding.bottom = 0;
         }
 
         RequestById(Uid);
