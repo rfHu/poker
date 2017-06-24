@@ -1,4 +1,7 @@
-﻿Shader "Custom/Mask" {
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "ImageEffect/MaskIcon" 
+{  
     Properties 
     {  
         [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
@@ -91,5 +94,5 @@
             }
             ENDCG
         }  
-	}
+    }   
 }
