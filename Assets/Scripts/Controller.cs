@@ -676,14 +676,14 @@ public class Controller : MonoBehaviour {
 
 		RxSubjects.ToInsurance.Subscribe((e) =>
         {
-            var InsurancePopup = PoolMan.Spawn("Insurance");
+            var InsurancePopup = (GameObject)Instantiate(Resources.Load("Prefab/Insurance"));
             InsurancePopup.GetComponent<DOPopup>().Show(modal: false);
             InsurancePopup.GetComponent<Insurance>().Init(e.Data, true);
         }).AddTo(this);
 
-        RxSubjects.ShowInsurance.Subscribe((e) => 
+        RxSubjects.ShowInsurance.Subscribe((e) =>
         {
-            var InsurancePopup = PoolMan.Spawn("Insurance");
+            var InsurancePopup = (GameObject)Instantiate(Resources.Load("Prefab/Insurance"));
             InsurancePopup.GetComponent<DOPopup>().Show(modal: false);
             InsurancePopup.GetComponent<Insurance>().Init(e.Data, false);
         });

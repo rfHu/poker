@@ -41,7 +41,8 @@ public class OP : MonoBehaviour {
 
 	void OnSpawned()
 	{
-		if (instance != this) {
+		if (instance != this && instance != null) {
+            
 			PoolMan.Despawn(instance.transform);
 		}
 

@@ -33,7 +33,7 @@ public class OwnerPanel : MonoBehaviour {
     private bool[] isChanged = new bool[6]{ false, false, false, false, false ,false};
     private List<int> turn_countdownNum =new List<int>{ 10, 12, 15, 20 };
 
-	void Awake()
+	public void Init()
 	{
         MultipleSlider2.value = GameData.Shared.BankrollMul[0];
         MultipleSlider1.value = GameData.Shared.BankrollMul[1];
