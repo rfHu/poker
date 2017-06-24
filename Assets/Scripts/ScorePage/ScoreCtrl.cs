@@ -23,8 +23,10 @@ namespace ScorePage {
 
         public EnhancedScrollerCellView InsurancePrefab;
         public EnhancedScrollerCellView PlayerPrefab;
+        public EnhancedScrollerCellView GuestHeaderPrefab;
+        public EnhancedScrollerCellView GuestPrefab;
 
-        private List<Data> datas = new List<Data>();
+        private List<Data> rowData = new List<Data>();
 
         void OnSpawned()
         {
@@ -38,7 +40,7 @@ namespace ScorePage {
                 {"f", "gamerlist"}
             }, (json) =>
             {
-                datas.Clear();
+                rowData.Clear();
 
                 Hands.text = json.String("handid");
                 Pot.text = json.String("avg_pot");
@@ -46,13 +48,12 @@ namespace ScorePage {
                 Buy.text = json.String("avg_buy");
 
                 if (GameData.Shared.NeedInsurance) {
-                    datas.Add(
+                    rowData.Add(
                         new InsuranceRowData() {number = json.Dict("insurance").Int("Pay")}
                     );
                 }
 
-                var inPlayerList = new List<PlayerModel>();
-                var outPlayerList = new List<PlayerModel>();
+                var playerList = new List<Data>();
                 var guestList = new List<PlayerModel>();
 
                 foreach(object item in json.List("list")) {
@@ -64,11 +65,13 @@ namespace ScorePage {
                     var model = dict.ToObject<PlayerModel>();
 
                     if (model.takecoin > 0) {
-                        if (model.seat >= 0) {
-                            inPlayerList.Add(model);
-                        } else {
-                            outPlayerList.Add(model);
-                        }
+                        var data = new PlayerRowData() {
+                            TakeCoin = model.takecoin,
+                            Nick = model.name,
+                            Score = model.bankroll - model.takecoin,
+                            HasSeat = (model.seat >= 0)
+                        };
+                        playerList.Add(data);
                     }
 
                     if (model.seat < 0) {
@@ -76,16 +79,30 @@ namespace ScorePage {
                     }
                 }
 
-                inPlayerList.Sort((a, b) => {
-                    var bp = b.bankroll - b.takecoin;
-                    var ap = a.bankroll - a.takecoin;
-                    return bp - ap;
+                playerList.Sort((a, b) => {
+                    var aa = a as PlayerRowData;
+                    var bb = b as PlayerRowData;
+
+                    if (aa.HasSeat != bb.HasSeat) {
+                        return bb.HasSeat ? 1 : -1;
+                    }
+
+                    return bb.Score - bb.Score;
                 });
 
-                outPlayerList.Sort((a, b) => {
-                    var bp = b.bankroll - b.takecoin;
-                    var ap = a.bankroll - a.takecoin;
-                    return bp - ap;
+                // 离开座位且排在第一位的显示已离桌标志
+                var leaveUser = playerList.Find((dt) => {
+                    var data = dt as PlayerRowData;
+                    return !data.HasSeat; 
+                });
+
+                if (leaveUser != null) {
+                    (leaveUser as PlayerRowData).LeaveFlag = true;
+                }
+
+                rowData.AddRange(playerList);
+                rowData.Add(new GuestHeadData() {
+                    Number = guestList.Count
                 });
 
                 guestList.Sort((a, b) => {
@@ -93,6 +110,15 @@ namespace ScorePage {
                     var ain = a.in_room ? 1 : 0;
                     return bin - ain;
                 });
+
+
+                var chunkList = guestList.ChunkBy(4);
+
+                foreach(var list in chunkList) {
+                    rowData.Add(new GuestRowData() {
+                        PlayerList = list
+                    });
+                }
                 
                 LoadData();
             });
@@ -108,33 +134,37 @@ namespace ScorePage {
 
         public int GetNumberOfCells(EnhancedScroller scroller)
         {
-            return datas.Count;
+            return rowData.Count;
         }
 
         public float GetCellViewSize(EnhancedScroller scroller, int dataIndex)
         {
-            var data = datas[dataIndex];
+            var data = rowData[dataIndex];
 
             if (data is InsuranceRowData || data is PlayerRowData) {
-                return 96f;
+                return 76f;
+            } else if (data is GuestHeadData) {
+                return 60f;
             } else {
-                return 0f;
+                return 200f;
             }
         }
 
         public EnhancedScrollerCellView GetCellView(EnhancedScroller scroller, int dataIndex, int cellIndex)
         {
-            var data = datas[dataIndex];
+            var data = rowData[dataIndex];
             CellView cellView;
 
             if (data is InsuranceRowData) {
                 cellView = scroller.GetCellView(InsurancePrefab) as InsuranceRow;
             } else if (data is PlayerRowData) {
                 cellView = scroller.GetCellView(PlayerPrefab) as PlayerRow;
-            } 
-            else {
-                cellView = scroller.GetCellView(InsurancePrefab) as InsuranceRow;    
+            } else if (data is GuestHeadData) {
+                cellView = scroller.GetCellView(GuestHeaderPrefab) as GuestHeader;
             }
+            else  {
+                cellView = scroller.GetCellView(GuestPrefab) as GuestRow;    
+            } 
         
             cellView.SetData(data);
             return cellView; 
@@ -144,70 +174,4 @@ namespace ScorePage {
     }
 }
 
-// using UnityEngine.UI;
-// using System.Collections.Generic;
-// using UnityEngine;
 
-// public class ScoreCtrl : MonoBehaviour {
-// 	public GameObject viewport;
-
-// 	public GameObject PlayerScore;
-
-// 	public GameObject GuestHeader;
-
-// 	public GameObject GridLayout;
-
-// 	public GameObject Guest;
-
-
-// 	private Color offlineColor = new Color(1, 1, 1, 0.6f);
-
-// 	void OnSpawned() {
-// 		return ;
-
-// 		Connect.Shared.Emit(new Dictionary<string, object>(){
-//         	{"f", "gamerlist"}
-//         }, (json) =>
-//         {
-
-// 			foreach(Dictionary<string, object> player in playerList) {
-// 				GameObject  entry = Instantiate(PlayerScore);
-// 				entry.SetActive(true);
-
-//         	}
-
-
-// 			// 游客
-// 			var header = (GameObject)Instantiate(GuestHeader);
-// 			header.SetActive(true);
-// 			header.transform.Find("Text").GetComponent<Text>().text = string.Format("游客（{0}）", guestList.Count);
-//         	header.transform.SetParent(viewport.transform, false);
-
-// 			if (guestList.Count < 1) {
-// 				return ;
-// 			}
-
-// 			GameObject grid = Instantiate(GridLayout);
-// 			grid.SetActive(true);
-// 			grid.transform.SetParent(viewport.transform, false);
-
-// 			foreach(Dictionary<string, object> guest in guestList) {
-// 				var guestObj = Instantiate(Guest);
-// 				guestObj.SetActive(true);
-
-// 				Avatar avatar = guestObj.transform.Find("Avatar").GetComponent<Avatar>();
-// 				avatar.Uid = guest.String("uid");
-// 				avatar.SetImage(guest.String("avatar"));
-
-//                 Text name = guestObj.transform.Find("Text").GetComponent<Text>();
-// 				name.text = guest.String("name");
-// 				guestObj.transform.SetParent(grid.transform, false);
-
-//                 if (!guest.Bool("in_room"))
-//                 {
-//                     guestObj.GetComponent<CanvasGroup>().alpha = 0.6f;
-//                 }
-// 			} 
-//         });
-// 	}	
-// }

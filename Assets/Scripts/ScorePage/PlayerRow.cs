@@ -9,6 +9,8 @@ namespace ScorePage {
         public Text NickText;
         public Text TakeCoinText;
         public Text ScoreText;
+        public RawImage LeaveIcon;
+        public CanvasGroup Cvg;
 
         override public void SetData(Data data)
         {
@@ -19,11 +21,16 @@ namespace ScorePage {
             TakeCoinText.text = _.Num2CnDigit(dt.TakeCoin);
             ScoreText.text = _.Num2CnDigit(dt.Score); 
 
-            var cvg = GetComponent<CanvasGroup>();
             if (dt.HasSeat) {
-                cvg.alpha = 1;
+                Cvg.alpha = 1;
             } else {
-                cvg.alpha = 0.6f;  
+                Cvg.alpha = 0.6f;  
+            }
+
+            if (dt.LeaveFlag) {
+                LeaveIcon.enabled = true;
+            } else {
+                LeaveIcon.enabled = false;
             }
         }
     }

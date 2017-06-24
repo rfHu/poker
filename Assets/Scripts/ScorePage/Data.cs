@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace ScorePage
 {
@@ -17,5 +18,14 @@ namespace ScorePage
         public string Nick;
         public int Score;
         public bool HasSeat;
+        public bool LeaveFlag;
+    }
+
+    public class GuestHeadData: Data {
+        public int Number;
+    }
+
+    public class GuestRowData: Data {
+        public List<PlayerModel> PlayerList;
     }
 }
