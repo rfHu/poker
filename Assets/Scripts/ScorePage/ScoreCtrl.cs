@@ -48,12 +48,12 @@ namespace ScorePage {
 
                 Hands.text = json.String("handid");
                 Pot.text = json.String("avg_pot");
-                Time.text = json.String("hand_time") + "s";
+                Time.text = json.Int("hand_time").ToString() + "s";
                 Buy.text = json.String("avg_buy");
 
                 if (GameData.Shared.NeedInsurance) {
                     rowData.Add(
-                        new InsuranceRowData() {number = json.Dict("insurance").Int("Pay")}
+                        new InsuranceRowData() {Number = json.Dict("insurance").Int("pay")}
                     );
                 }
 

@@ -827,6 +827,9 @@ namespace PathologicalGames
         /// <param name="item">The transform of the gameobject to process</param>
         public void Despawn(Transform instance)
         {
+            // var worldPositionStays = !(instance is RectTransform);
+            // instance.SetParent(this.group, worldPositionStays);
+
             // Find the item and despawn it
             bool despawned = false;
             for (int i = 0; i < this._prefabPools.Count; i++)

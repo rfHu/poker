@@ -10,7 +10,7 @@ namespace ScorePage
 
     public class InsuranceRowData : Data
     {
-        public int number;
+        public int Number;
     }
 
     public class PlayerRowData: Data {

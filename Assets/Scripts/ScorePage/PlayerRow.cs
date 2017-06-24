@@ -22,6 +22,10 @@ namespace ScorePage {
             ScoreText.text = _.Num2CnDigit(dt.Score); 
 
             if (dt.HasSeat) {
+                ScoreText.color = _.GetTextColor(dt.Score);
+            }
+
+            if (dt.HasSeat) {
                 Cvg.alpha = 1;
             } else {
                 Cvg.alpha = 0.6f;  

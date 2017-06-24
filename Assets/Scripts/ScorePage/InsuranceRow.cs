@@ -13,8 +13,8 @@ namespace ScorePage {
             base.SetData(data);
             var dt = data as InsuranceRowData;
 
-            ScoreText.text = _.Number2Text(dt.number);
-            ScoreText.color = _.GetTextColor(dt.number);
+            ScoreText.text = _.Number2Text(dt.Number);
+            ScoreText.color = _.GetTextColor(dt.Number);
         }
     }
 }
