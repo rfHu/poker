@@ -33,21 +33,31 @@ public class OwnerPanel : MonoBehaviour {
     private bool[] isChanged = new bool[6]{ false, false, false, false, false ,false};
     private List<int> turn_countdownNum =new List<int>{ 10, 12, 15, 20 };
 
+    bool isFirstOpen = true;
+
 	public void Init()
 	{
-        MultipleSlider2.value = GameData.Shared.BankrollMul[0];
-        MultipleSlider1.value = GameData.Shared.BankrollMul[1];
+        if (isFirstOpen)
+        {
+            isFirstOpen = false;
+            AnteSliderInit();
+
+            MultipleSlider2.value = GameData.Shared.BankrollMul[0];
+            MultipleSlider1.value = GameData.Shared.BankrollMul[1];
+
+            Need_auditToggle.isOn = GameData.Shared.NeedAudit;
+            StraddleToggle.isOn = GameData.Shared.Straddle.Value;
+
+            Turn_countdownSlider.value = turn_countdownNum.IndexOf(GameData.Shared.SettingThinkTime);
+        }
 
         ExtendTimeSlider.value = 0;
-
-        AnteSliderInit();
-
         ETSliderNum.text = "0h";
 
-        Need_auditToggle.isOn = GameData.Shared.NeedAudit;
-        StraddleToggle.isOn = GameData.Shared.Straddle.Value;
-
-        Turn_countdownSlider.value = turn_countdownNum.IndexOf(GameData.Shared.SettingThinkTime);
+        for (int i = 0; i < isChanged.Length; i++)
+        {
+            isChanged[i] = false;
+        }
 	}
 
     private void AnteSliderInit()

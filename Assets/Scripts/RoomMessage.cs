@@ -175,5 +175,6 @@ public class RoomMessage : MonoBehaviour {
         GetComponent<DOPopup>().Close();
         var go = PoolMan.Spawn("GamerList");
         go.GetComponent<DOPopup>().Show();
+        go.GetComponent<GamerList>().Init();
     }
 }

@@ -98,6 +98,7 @@ public class MenuPopup : MonoBehaviour {
 
 	public void Exit() {
 		External.Instance.Exit();
+        Close();
 	}
 
 	public void Tips() {

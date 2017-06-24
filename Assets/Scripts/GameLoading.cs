@@ -12,7 +12,7 @@ public class GameLoading : MonoBehaviour {
 			external.SetSocket("https://socket.dev.poker.top");
             external.SetSid("s%3AAN0aHRtcPLOAcsyLXRhv4ILXiVBkKYHt.DW9FrsSPSLXYPOxgUEYYJyYRdWGzgdKwLacaykHdbpM");
 			external.SetProxy("http://localhost:8888");
-            external.SetRoomID("594dd822a697787ff4f72b07");
+            external.SetRoomID("594e14dea697787ff4f72dfc");
 		#endif
 	}
 	
