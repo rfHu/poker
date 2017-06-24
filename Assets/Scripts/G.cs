@@ -71,4 +71,8 @@ public class PoolMan {
 		var pool = PoolManager.Pools["Shared"];
 		return pool.IsSpawned(transform);
 	}
+
+	public static void SpawnAll() {
+		PoolMan.SpawnAll();
+	}
 }

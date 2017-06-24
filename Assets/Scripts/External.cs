@@ -82,6 +82,8 @@ public class External : MonoBehaviour{
 		GameData.Shared.Sid = "";
 		GameData.Shared.Room = "";
 
+		PoolMan.SpawnAll();
+
 		// 返回上级界面
 		#if UNITY_EDITOR
 			// Nothing to do
