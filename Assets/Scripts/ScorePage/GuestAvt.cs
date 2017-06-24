@@ -13,13 +13,8 @@ namespace ScorePage {
             Avt.Uid = player.uid;
             Avt.SetImage(player.avatar);            
 
-            var cvg = GetComponent<CanvasGroup>();
 
-            if (player.in_room) {
-                cvg.alpha = 1;
-            } else {
-                cvg.alpha = 0.6f;
-            }
+            Avt.SetAlpha(player.in_room);
         }
      }
 }

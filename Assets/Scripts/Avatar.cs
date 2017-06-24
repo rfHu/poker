@@ -8,6 +8,10 @@ using System.Collections.Generic;
 
 // [RequireComponent(typeof(RawImage))]
 public class Avatar : MonoBehaviour {
+
+    public Material Opaque;
+    public Material Crystal;
+
 	public string Uid;
 
 	public GameObject ClickObject;
@@ -49,4 +53,16 @@ public class Avatar : MonoBehaviour {
 		var btn = ClickObject.AddComponent<Button>();
         btn.onClick.AddListener(onClick);
 	}
+
+    public void SetAlpha(bool isInRoom) 
+    {
+        if (isInRoom)
+        {
+            gameObject.GetComponent<RawImage>().material = (Material)Resources.Load("Materials/Mask");
+        }
+        else
+        {
+            gameObject.GetComponent<RawImage>().material = (Material)Resources.Load("Materials/Mask.6");
+        }
+    }
 }
