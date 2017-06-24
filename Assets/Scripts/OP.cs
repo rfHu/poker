@@ -73,6 +73,10 @@ public class OP : MonoBehaviour {
 
 		range = cmds.IL("raise");
 
+		setAccurateBtns(AccurateType.Default); // 还原精确加注
+		hideRaiseSlider(); // 还原加注拉杆
+		BuyTurnTime.SetActive(true); // 还原加时按钮
+
 		if (check) { // 看牌
 			CallGo.SetActive(false);
 			CheckGo.SetActive(true);
@@ -104,9 +108,6 @@ public class OP : MonoBehaviour {
 			RaiseGo.SetActive(true);
 			RaiseGo.GetComponent<CanvasGroup>().alpha = disableAlpha;
 		}	
-
-		hideRaiseSlider();
-		setAccurateBtns(AccurateType.Default);
 	}
 
 	public void Reset(float left) {
@@ -139,6 +140,7 @@ public class OP : MonoBehaviour {
 
 	private void setAccurateBtns(AccurateType type) {
 		AccurateBtn.GetComponent<CanvasGroup>().alpha = 1;
+		AccurateBtn.GetComponent<Button>().interactable = true;
 
 		RaiseGo.SetActive(false);
 		AllinGo.SetActive(false);
@@ -210,10 +212,6 @@ public class OP : MonoBehaviour {
 		addProperty(R2, names[1], values[1]);	
 		addProperty(R3, names[2], values[2]);
 
-		enableBtn(R1);	
-		enableBtn(R2);	
-		enableBtn(R3);	
-
 		var max = range[1];
 		if (values[0] > max) {
 			disableAllBtns();
@@ -233,9 +231,14 @@ public class OP : MonoBehaviour {
 	private void addProperty(GameObject go, string text, int value) {
 		go.transform.Find("Text").GetComponent<Text>().text = text;
 		go.transform.Find("Number").GetComponent<Text>().text = _.Num2CnDigit(value);
-		go.GetComponent<Button>().onClick.AddListener(() => {
+		go.GetComponent<CanvasGroup>().alpha = 1;
+
+		var btn = go.GetComponent<Button>();
+		btn.onClick.RemoveAllListeners();
+		btn.onClick.AddListener(() => {
 			OPS.raise(value);
 		});
+		btn.interactable = true;
 	}
 
 	private void changeTipsPosition(RectTransform rect, Vector2 position, Camera camera) {
@@ -364,17 +367,8 @@ public class OP : MonoBehaviour {
 	}
 
 	private void setToggle(bool active = true) {
-		setAction(active);
-		RaiseGo.SetActive(active);
-	}
-	
-	private void setAction(bool active = true) {
 		R1.transform.parent.gameObject.SetActive(active);
-	}
-
-	private void enableBtn(GameObject go) {
-		go.GetComponent<CanvasGroup>().alpha = 1;		
-		go.GetComponent<CanvasGroup>().interactable = true;
+		RaiseGo.SetActive(active);
 	}
 
 	private void disableBtn(GameObject go) {
