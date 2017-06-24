@@ -109,7 +109,7 @@ public class Insurance : MonoBehaviour {
             MyCards[i].Show(buyPlayer.Cards.Value[i]);
         }
 
-        CardDesc.text = Card.GetCardDesc(GameData.Shared.MaxFiveRank.Value);
+        CardDesc.text = Card.GetCardDesc(data.Int("maxFiveRank"));
     }
 
     private void setupAllinPlayers(List<object> allinPlayers)

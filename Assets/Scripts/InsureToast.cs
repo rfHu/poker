@@ -44,7 +44,15 @@ public class InsureToast: MonoBehaviour {
             var toName = GameData.Shared.FindPlayer(touid).Name;
 
             cd.Value = time;
-            
+
+            if (type != 3)
+            {
+                if (SeePage.activeInHierarchy)
+                {
+                    SeePage.SetActive(false);
+                }
+            }
+
             switch (type)
             {
                 case 1: case 2: case 4:
@@ -178,9 +186,6 @@ public class InsureToast: MonoBehaviour {
             disposable.Dispose();
         }
 
-        if (SeePage.activeInHierarchy){
-            SeePage.SetActive(false);
-        }
 
         tween = cvg.DOFade(0, duration).OnComplete(complete);
     }
