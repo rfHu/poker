@@ -102,11 +102,11 @@ public class Insurance : MonoBehaviour {
 
         addEvents();
 
-        var myPlayer = GameData.Shared.FindPlayer(data.String("uid"));
+        var buyPlayer = GameData.Shared.FindPlayer(data.String("uid"));
 
         for (int i = 0; i < MyCards.Count; i++)
         {
-            MyCards[i].Show(myPlayer.Cards.Value[i]);
+            MyCards[i].Show(buyPlayer.Cards.Value[i]);
         }
 
         CardDesc.text = Card.GetCardDesc(GameData.Shared.MaxFiveRank.Value);

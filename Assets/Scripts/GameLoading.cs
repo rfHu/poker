@@ -9,10 +9,10 @@ public class GameLoading : MonoBehaviour {
 
 		#if UNITY_EDITOR  
         	// external.SetSid("s%3AdOlm2w5hGhqahgt--HMRhxyXjTCSmOLf.3IXxXmGw1R3E0Swr10JEcqYcGvn7AUZT4%2F0d99jOuT8");
-			external.SetSocket("https://socket.poker.top");
-        	external.SetSid("s%3A4gHJE4AJbNY5j6XT2OuoeO4-nqn6bl7t.5f5shYMZ2sFNrz0CKTpO5b2cUJujPknpA5OU7lThbJI");
+			external.SetSocket("https://socket.dev.poker.top");
+            external.SetSid("s%3AAN0aHRtcPLOAcsyLXRhv4ILXiVBkKYHt.DW9FrsSPSLXYPOxgUEYYJyYRdWGzgdKwLacaykHdbpM");
 			external.SetProxy("http://localhost:8888");
-            external.SetRoomID("594dfde1366b0b2ff9a0944f");
+            external.SetRoomID("594e14dea697787ff4f72dfc");
 		#endif
 	}
 	

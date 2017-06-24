@@ -12,14 +12,20 @@ public class GamerList : MonoBehaviour {
     public Transform Content;
 
 	// Use this for initialization
-	void Awake () {
-            var data = new Dictionary<string, object>(){
-			    {"type", 2}
-		    };
+	public void Init () {
 
-            Connect.Shared.Emit(new Dictionary<string, object>(){
-        	    {"f", "gamerlist"},
-                {"args",data},
+        for (int i = 1; i < Content.childCount; i++)
+        {
+            Destroy(Content.GetChild(i).gameObject);
+        }
+
+        var data = new Dictionary<string, object>(){
+			{"type", 2}
+		};
+
+        Connect.Shared.Emit(new Dictionary<string, object>(){
+        	{"f", "gamerlist"},
+            {"args",data},
         }, (json) => 
         {
             var list = json.List("list");
@@ -27,6 +33,10 @@ public class GamerList : MonoBehaviour {
             if (list.Count > 0)
             {
                 NoneText.SetActive(false);
+            }
+            else 
+            {
+                NoneText.SetActive(true);
             }
 
             foreach (var item in list)
