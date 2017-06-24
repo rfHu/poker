@@ -144,16 +144,6 @@ namespace ScorePage {
     }
 }
 
-
-
-
-
-
-
-
-
-
-
 // using UnityEngine.UI;
 // using System.Collections.Generic;
 // using UnityEngine;

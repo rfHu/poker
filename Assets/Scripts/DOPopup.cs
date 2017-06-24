@@ -74,7 +74,7 @@ public class DOPopup : MonoBehaviour {
 		if (modal) {
 			modalHelper = ModalHelper.Create();
 
-			modalHelper.Show(transform, () => {
+			modalHelper.Show(transform.parent, () => {
 				if (close != null) {
 					close();
 				}

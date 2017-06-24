@@ -28,6 +28,10 @@ public class CircleMask : MonoBehaviour {
 	}
 
 	public void Enable(float left, bool enableTick) {
+		if (runCoroutine != null) {
+			StopCoroutine(runCoroutine);
+		}
+
 		this.EnableTick = enableTick;
 
 		if (left < 0) {
@@ -36,21 +40,12 @@ public class CircleMask : MonoBehaviour {
 
 		proImage.enabled = true;
 		numberText.enabled = true;
+		numberText.gameObject.SetActive(true);
         runCoroutine = run(left);
         StartCoroutine(runCoroutine);
 	}
 
     IEnumerator runCoroutine;
-
-	public void Reset(float left) {
-        StopCoroutine(runCoroutine);
-
-        proImage.enabled = true;
-        numberText.enabled = true;
-        numberText.gameObject.SetActive(true);
-        runCoroutine = run(left);
-		StartCoroutine(runCoroutine);
-	}
 
 	public void Disable() {
 		activated = false;

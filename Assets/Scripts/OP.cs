@@ -42,7 +42,6 @@ public class OP : MonoBehaviour {
 	void OnSpawned()
 	{
 		if (instance != this && instance != null) {
-            
 			PoolMan.Despawn(instance.transform);
 		}
 
@@ -53,8 +52,17 @@ public class OP : MonoBehaviour {
 	}
 
 	void OnDespawned()
-	{
+	{	
 		hideModal();
+	}
+
+	void Awake()
+	{
+		CheckGo.GetComponent<Button>().onClick.AddListener(OPS.Check);
+		CallGo.GetComponent<Button>().onClick.AddListener(() => {
+			OPS.Call();
+		});
+		RaiseGo.GetComponent<Button>().onClick.AddListener(OnRaiseClick);
 	}
 	
 	public void StartWithCmds(Dictionary<string, object> data, int left) {
@@ -68,13 +76,10 @@ public class OP : MonoBehaviour {
 		if (check) { // 看牌
 			CallGo.SetActive(false);
 			CheckGo.SetActive(true);
-			CheckGo.GetComponent<Button>().onClick.AddListener(OPS.Check);
+			CheckGo.GetComponent<CanvasGroup>().alpha = 1;
 		} else if (callNum > 0) { // 跟注
 			CheckGo.SetActive(false);
 			CallGo.SetActive(true);
-			CallGo.GetComponent<Button>().onClick.AddListener(() => {
-				OPS.Call();
-			});
 			CallNumber.text = _.Num2CnDigit(callNum);
 		} else { // 不能跟注、不能看牌，展示灰掉的看牌按钮
 			CallGo.SetActive(false);
@@ -88,8 +93,8 @@ public class OP : MonoBehaviour {
 		if (range.Count >= 2) { // 可加注
 			AllinGo.SetActive(false);
 			RaiseGo.SetActive(true);
+			RaiseGo.GetComponent<CanvasGroup>().alpha = 1;
 			setRaiseButtons(callNum);
-			RaiseGo.GetComponent<Button>().onClick.AddListener(OnRaiseClick);
 		} else if(allin) { // 不可加注、可Allin
 			RaiseGo.SetActive(false);
 			AllinGo.SetActive(true);
@@ -99,6 +104,9 @@ public class OP : MonoBehaviour {
 			RaiseGo.SetActive(true);
 			RaiseGo.GetComponent<CanvasGroup>().alpha = disableAlpha;
 		}	
+
+		hideRaiseSlider();
+		setAccurateBtns(AccurateType.Default);
 	}
 
 	public void Reset(float left) {
@@ -106,7 +114,7 @@ public class OP : MonoBehaviour {
 			return ;
 		}
 
-		circleMask.Reset(left);
+		circleMask.Enable(left, true);
 	}
 
 	public void OnAccurate() {
@@ -130,6 +138,8 @@ public class OP : MonoBehaviour {
 	}
 
 	private void setAccurateBtns(AccurateType type) {
+		AccurateBtn.GetComponent<CanvasGroup>().alpha = 1;
+
 		RaiseGo.SetActive(false);
 		AllinGo.SetActive(false);
 		AccurateCacel.gameObject.SetActive(false);
@@ -199,6 +209,10 @@ public class OP : MonoBehaviour {
 		addProperty(R1, names[0], values[0]);	
 		addProperty(R2, names[1], values[1]);	
 		addProperty(R3, names[2], values[2]);
+
+		enableBtn(R1);	
+		enableBtn(R2);	
+		enableBtn(R3);	
 
 		var max = range[1];
 		if (values[0] > max) {
@@ -297,7 +311,7 @@ public class OP : MonoBehaviour {
 
 		// 展示遮罩
 		modal = ModalHelper.Create();
-		modal.Show(transform, close, true);
+		modal.Show(transform.parent, hideRaiseSlider, true);
 		transform.SetAsLastSibling();
 
 		setToggle(false);
@@ -336,7 +350,7 @@ public class OP : MonoBehaviour {
 		}
 	}
 
-	private void close() {
+	private void hideRaiseSlider() {
 		hideModal();
 		Slid.gameObject.SetActive(false);
 		AccurateBtn.SetActive(true);
@@ -358,9 +372,14 @@ public class OP : MonoBehaviour {
 		R1.transform.parent.gameObject.SetActive(active);
 	}
 
+	private void enableBtn(GameObject go) {
+		go.GetComponent<CanvasGroup>().alpha = 1;		
+		go.GetComponent<CanvasGroup>().interactable = true;
+	}
+
 	private void disableBtn(GameObject go) {
 		var button = go.GetComponent<Button>();
-		button.onClick.RemoveAllListeners();
+		button.interactable = false;
 		go.GetComponent<CanvasGroup>().alpha = disableAlpha;	
 	}
 
