@@ -28,10 +28,14 @@ namespace ScorePage {
 
         private List<Data> rowData = new List<Data>();
 
+        void Awake()
+        {
+            Scroller.Delegate = this;
+        }
+
         void OnSpawned()
         {
             // tell the scroller that this script will be its delegate
-            Scroller.Delegate = this;
             requestData();
         }
 

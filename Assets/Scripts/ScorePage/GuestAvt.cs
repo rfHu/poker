@@ -7,6 +7,8 @@ namespace ScorePage {
         public Avatar Avt;
 
         public void SetData(PlayerModel player) {
+            gameObject.SetActive(true);
+            
             NameText.text = player.name;
             Avt.Uid = player.uid;
             Avt.SetImage(player.avatar);            
