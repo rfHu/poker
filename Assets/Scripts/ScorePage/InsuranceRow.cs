@@ -3,16 +3,18 @@ using UnityEngine.UI;
 using System.Collections;
 using EnhancedUI.EnhancedScroller;
 
-    public class InsuranceRow : EnhancedScrollerCellView
+namespace ScorePage {
+    public class InsuranceRow : CellView
     {
         public Text ScoreText;
 
-        private int score;
-
-        public void SetScore(int score)
+        override public void SetData(Data data)
         {
-            this.score = score;
-            ScoreText.text = _.Number2Text(score);
-            ScoreText.color = _.GetTextColor(score);
+            var dt = data as InsuranceRowData;
+
+            ScoreText.text = _.Number2Text(dt.number);
+            ScoreText.color = _.GetTextColor(dt.number);
         }
     }
+}
+ 

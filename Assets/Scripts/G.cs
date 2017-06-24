@@ -55,7 +55,7 @@ public class PoolMan {
 	}
 
 	public static void Despawn(Transform transform) {
-		if (IsSpawned(transform)) {
+		if (!IsSpawned(transform)) {
 			return ;
 		}
 
