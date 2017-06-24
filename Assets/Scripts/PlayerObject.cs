@@ -819,7 +819,7 @@ public class PlayerObject : MonoBehaviour {
 		// 隐藏头像
 		Circle.SetActive(false);
 
-		OPGo = PoolMan.Spawn("OP", G.UICvs.transform).gameObject;
+		OPGo = PoolMan.Spawn("OP").gameObject;
 		var op = OPGo.GetComponent<OP>();
 		op.StartWithCmds(data, left);
 

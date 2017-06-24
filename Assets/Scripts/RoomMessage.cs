@@ -167,6 +167,7 @@ public class RoomMessage : MonoBehaviour {
         GetComponent<DOPopup>().Close();
         var go = PoolMan.Spawn("OwnerPanel");
         go.GetComponent<DOPopup>().Show();
+        go.GetComponent<OwnerPanel>().Init();
     }
 
     public void GamerListPage() 

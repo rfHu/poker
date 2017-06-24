@@ -141,7 +141,7 @@ public class RecallPage : MonoBehaviour {
         }
         else
         {
-            InsuranceGo.SetActive(false);
+            go.SetActive(false);
         }
     }
 
