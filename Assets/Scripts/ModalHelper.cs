@@ -36,11 +36,7 @@ public class ModalHelper: MonoBehaviour {
 		}).AddTo(this);
 	}
 
-	private bool despawned = false;
-
 	void OnDespawned() {
-		despawned = true;
-
 		#if UNITY_EDITOR
 		#else
             var modal = GameObject.FindObjectOfType<ModalHelper>();
@@ -51,14 +47,8 @@ public class ModalHelper: MonoBehaviour {
 		#endif	
 	}
 
-	void OnSpawned() {
-		despawned = false;
-	}
-
 	public void Despawn() {
-		if (!despawned) {
-			PoolMan.Despawn(transform);
-		}
+		PoolMan.Despawn(transform);
 	}
 
 	public static ModalHelper Create() {

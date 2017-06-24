@@ -11,4 +11,11 @@ namespace ScorePage
     {
         public int number;
     }
+
+    public class PlayerRowData: Data {
+        public int TakeCoin;
+        public string Nick;
+        public int Score;
+        public bool HasSeat;
+    }
 }
