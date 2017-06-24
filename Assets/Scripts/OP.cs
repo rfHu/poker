@@ -40,13 +40,7 @@ public class OP : MonoBehaviour {
 	private float disableAlpha = 0.4f;
 
 	void OnSpawned()
-	{
-		if (instance != this && instance != null) {
-			PoolMan.Despawn(instance.transform);
-		}
-
-		instance = this;
-
+	{	
 		var transform = GetComponent<RectTransform>();
 		transform.anchoredPosition = new Vector2(0, 360);
 	}
@@ -56,8 +50,19 @@ public class OP : MonoBehaviour {
 		hideModal();
 	}
 
+	void OnDestroy()
+	{
+		hideModal();
+	}
+
 	void Awake()
 	{
+		if (instance != null) {
+			Destroy(instance);
+		}
+
+		instance = this;
+
 		CheckGo.GetComponent<Button>().onClick.AddListener(OPS.Check);
 		CallGo.GetComponent<Button>().onClick.AddListener(() => {
 			OPS.Call();
@@ -416,7 +421,11 @@ public class OP : MonoBehaviour {
 				return ;
 			}
 
-			instance.gameObject.SetActive(flag);
+			if (flag) {
+				PoolMan.Spawn("OP", G.UICvs.transform);
+			} else {
+				PoolMan.Despawn(instance.transform);
+			}
 		}
 
 		private static void onres(Dictionary<string, object> json) {
