@@ -37,7 +37,7 @@ public class PlayerObject : MonoBehaviour {
 	public GameObject[] Eyes; 
 	public GameObject BackGameBtn;
 
-	private GameObject OPGo;
+	private Transform OPTransform;
 	private ChipsGo cgo; 
 	private Player player;
 	private float foldOpacity = 0.6f;
@@ -95,8 +95,8 @@ public class PlayerObject : MonoBehaviour {
 		activated = false;
 		AvatarMask.SetActive(false);
 
-		if (OPGo != null) {
-			PoolMan.Despawn(OPGo);
+		if (OPTransform != null) {
+			PoolMan.Despawn(OPTransform);
 		}
 
 		Circle.SetActive(true); // 显示头像
@@ -111,8 +111,8 @@ public class PlayerObject : MonoBehaviour {
 
 	void OnDestroy()
 	{
-		if (OPGo != null) {
-			PoolMan.Despawn(OPGo);
+		if (OPTransform != null) {
+			PoolMan.Despawn(OPTransform);
 		}
 
 		if (SpkText != null) {
@@ -545,7 +545,7 @@ public class PlayerObject : MonoBehaviour {
             }
 
 			if (isSelf()) {
-				OPGo.GetComponent<OP>().Reset(model.total);
+				OPTransform.GetComponent<OP>().Reset(model.total);
 			} else {
 				StopCoroutine(turnCoroutine);
                 turnCoroutine = yourTurn(model.total);
@@ -587,8 +587,8 @@ public class PlayerObject : MonoBehaviour {
 					HandGo.SetActive(true);
 					if (isSelf()) {
 						BackGameBtn.SetActive(true);
-						if (OPGo != null) {
-							PoolMan.Despawn(OPGo);
+						if (OPTransform != null) {
+							PoolMan.Despawn(OPTransform);
 						}
 					}
 					break;
@@ -739,7 +739,7 @@ public class PlayerObject : MonoBehaviour {
 			var callNum = player.Trust.CallNumber.Value;
 
 			if (flag == "10") { // 选中左边
-				PoolMan.Despawn(OPGo);	
+				PoolMan.Despawn(OPTransform);	
 				var check = dict.Dict("cmds").Bool("check");
 
 				if (check) {
@@ -753,7 +753,7 @@ public class PlayerObject : MonoBehaviour {
 				var check = data.Bool("check");
 
 				if (callNum == -1 || (callNum == 0 && check) || (callNum == call && call != 0)) {
-					PoolMan.Despawn(OPGo);
+					PoolMan.Despawn(OPTransform);
 
 					if (callNum == 0) {
 						OP.OPS.Check();
@@ -819,8 +819,8 @@ public class PlayerObject : MonoBehaviour {
 		// 隐藏头像
 		Circle.SetActive(false);
 
-		OPGo = PoolMan.Spawn("OP", G.UICvs.transform).gameObject;
-		var op = OPGo.GetComponent<OP>();
+		OPTransform = PoolMan.Spawn("OP", G.UICvs.transform);
+		var op = OPTransform.GetComponent<OP>();
 		op.StartWithCmds(data, left);
 
 		return op;

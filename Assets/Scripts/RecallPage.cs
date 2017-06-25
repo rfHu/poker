@@ -105,6 +105,7 @@ public class RecallPage : MonoBehaviour {
 
                 if (num < Users.Count) {
                     user = Users[num];
+                    user.gameObject.SetActive(true);
                 } else {
                     user = PoolMan.Spawn("RecallUser", Rect.transform).GetComponent<RecallUser>();
                     user.transform.SetParent(Rect.transform, false);

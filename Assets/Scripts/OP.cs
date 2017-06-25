@@ -34,7 +34,7 @@ public class OP : MonoBehaviour {
 	private List<int> range;
 	private ModalHelper modal;
 
-	private static OP instance; 
+	private static Transform instance; 
 	private CircleMask circleMask;
 	private int accurateValue;
 	private float disableAlpha = 0.4f;
@@ -57,9 +57,7 @@ public class OP : MonoBehaviour {
 
 	void Awake()
 	{
-		Debug.Log("next next next");
-
-		instance = this;
+		instance = transform;
 
 		CheckGo.GetComponent<Button>().onClick.AddListener(OPS.Check);
 		CallGo.GetComponent<Button>().onClick.AddListener(() => {
@@ -67,6 +65,19 @@ public class OP : MonoBehaviour {
 		});
 		RaiseGo.GetComponent<Button>().onClick.AddListener(OnRaiseClick);
 	}
+
+	// public static GameObject Spawn() {
+	// 	if (instance == null) {
+	// 		var ins = PoolMan.Spawn("OP", G.UICvs.transform);
+	// 		instance = ins;
+	// 	} else {
+	// 		if (PoolMan.IsSpawned(instance)) {
+	// 			PoolMan.Spawn("OP", G.UICvs.transform);
+	// 		}
+	// 	}
+
+	// 	return instance;			
+	// }
 	
 	public void StartWithCmds(Dictionary<string, object> data, int left) {
         var cmds = data.Dict("cmds");
@@ -422,7 +433,7 @@ public class OP : MonoBehaviour {
 			if (flag) {
 				PoolMan.Spawn("OP", G.UICvs.transform);
 			} else {
-				PoolMan.Despawn(instance.transform);
+				PoolMan.Despawn(instance);
 			}
 		}
 

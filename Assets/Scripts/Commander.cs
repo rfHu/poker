@@ -252,7 +252,7 @@ public class iOSCommander: ICommander {
     public void OptionToggle(bool isOpen, int type) {
 		#if UNITY_EDITOR 
 		#else
-        	// _ex_callOptionToggle(isOpen, type);
+        	_ex_callOptionToggle(isOpen, type);
 		#endif
     }
 }
