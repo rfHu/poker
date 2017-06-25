@@ -57,9 +57,7 @@ public class OP : MonoBehaviour {
 
 	void Awake()
 	{
-		if (instance != null) {
-			Destroy(instance);
-		}
+		Debug.Log("next next next");
 
 		instance = this;
 

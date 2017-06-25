@@ -72,7 +72,7 @@ public class PoolMan {
 		return pool.IsSpawned(transform);
 	}
 
-	public static void SpawnAll() {
-		PoolMan.SpawnAll();
+	public static void DespawnAll() {
+		PoolManager.Pools["Shared"].DespawnAll();
 	}
 }

@@ -51,10 +51,6 @@ public class CircleMask : MonoBehaviour {
 		activated = false;
 		proImage.enabled = false;
 		numberText.enabled = false;
-
-		if (runCoroutine != null) {
-			StopCoroutine(runCoroutine);
-		}
 	}
 
 	IEnumerator run(float left) {
@@ -96,6 +92,10 @@ public class CircleMask : MonoBehaviour {
 
 		G.PlaySound("time");
 		Invoke("clickSound", 1f);
+	}
+
+	void OnDisable() {
+		activated = false;
 	}
 
 	public void SetTextColor(Color color) {
