@@ -66,7 +66,7 @@ public class RecallPage : MonoBehaviour {
                     return ;
                 }
 
-				MainThreadDispatcher.StartUpdateMicroCoroutine(reload(json));
+				reload(json);
                 requesting = false;
 			},
             () => {
@@ -77,7 +77,7 @@ public class RecallPage : MonoBehaviour {
         requesting = true;
 	}
 
-	private IEnumerator reload(Dictionary<string, object> ret) {
+	private void reload(Dictionary<string, object> ret) {
 		totalNumber = ret.Int("total_hand");
 		currentNumber = ret.Int("cur_hand");
 
@@ -89,8 +89,6 @@ public class RecallPage : MonoBehaviour {
 
         SetPublicValue(insuValue, InsuranceGo);
         SetPublicValue(win27Value, Win27Go);
-
-        yield return null;
 
 		var comCards = ret.Dict("community").IL("cards");
 

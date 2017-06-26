@@ -12,7 +12,8 @@ public class Avatar : MonoBehaviour {
 		private Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
 		private Dictionary<String, int> counterHash = new Dictionary<string, int>();
 
-		private int max = 10;
+		// 最多存100个texture
+		private int max = 100;
 
 		private TexturePool() {}
 

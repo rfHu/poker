@@ -54,7 +54,7 @@ namespace ScorePage {
                 var data = _Params.rowData[index];
 
                 if (data is InsuranceRowData || data is PlayerRowData || data is GuestHeadData || data is Data27) {
-                    return 60f;
+                    return 70f;
                 } else if (data is LeaveIconData) {
                     return 44f;
                 } 
