@@ -50,7 +50,13 @@ public class UserDetail : MonoBehaviour {
         this.Uid = Uid;
 
         if (GameData.Shared.Owner && Uid != GameData.Shared.Uid)
+        {
             ButtonTeam.SetActive(true);
+        }
+        else 
+        {
+            ButtonTeam.SetActive(false);
+        }
 
         if (Uid == GameData.Shared.Uid || GameData.Shared.FindPlayerIndex(Uid) == -1 || GameData.Shared.emoticonClose)
         {
