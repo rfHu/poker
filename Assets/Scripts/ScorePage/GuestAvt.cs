@@ -12,9 +12,13 @@ namespace ScorePage {
             NameText.text = player.name;
             Avt.Uid = player.uid;
             Avt.SetImage(player.avatar);            
-
-
             Avt.SetAlpha(player.in_room);
+
+            if (player.in_room) {
+                NameText.color = new Color(1, 1, 1);
+            } else {
+                NameText.color = new Color(1, 1, 1, 0.6f);
+            }
         }
      }
 }

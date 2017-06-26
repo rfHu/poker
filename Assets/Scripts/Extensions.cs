@@ -11,44 +11,6 @@ using UniRx;
 using BestHTTP;
 using System.Text.RegularExpressions;
 
-public class TexturePool {
-    private Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
-    private int max = 150;
-
-    private TexturePool() {}
-
-    static public TexturePool Shared = new TexturePool();
-
-   public bool Exists(string url) {
-        return textures.ContainsKey(url);
-    }
-
-    public void Store(string url, Texture2D texture) {
-        textures[url] = texture;
-    }
-
-    public void Despawn(string url) {
-        if (textures.Count > max && Exists(url)) {
-            var tex = textures[url];
-            textures.Remove(url);
-            GameObject.Destroy(tex);
-
-            _.Log("回收Texture");
-        }
-    } 
-
-    public void FetchTexture(string url, Action<Texture2D> cb) {
-        if (Exists(url)) {
-            cb(textures[url]);
-        } else {
-            _.LoadTexture(url, (texture) => {
-                Store(url, texture);
-                cb(texture);
-            });
-        }
-    }
-}
-
     public static class CShapeExtensions
     {
         public static int Int<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key)

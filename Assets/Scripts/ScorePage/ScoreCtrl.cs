@@ -25,6 +25,8 @@ namespace ScorePage {
         public EnhancedScrollerCellView PlayerPrefab;
         public EnhancedScrollerCellView GuestHeaderPrefab;
         public EnhancedScrollerCellView GuestPrefab;
+        public EnhancedScrollerCellView LeaveIconPrefab;
+        public EnhancedScrollerCellView Award27Prefab;
 
         private List<Data> rowData = new List<Data>();
 
@@ -55,6 +57,13 @@ namespace ScorePage {
                     rowData.Add(
                         new InsuranceRowData() {Number = json.Dict("insurance").Int("pay")}
                     );
+                }
+
+                var award27 = json.Int("award_27");
+                if (award27 != 0) {
+                    rowData.Add(new Data27() {
+                        Number = award27
+                    });
                 }
 
                 var playerList = new List<Data>();
@@ -95,13 +104,13 @@ namespace ScorePage {
                 });
 
                 // 离开座位且排在第一位的显示已离桌标志
-                var leaveUser = playerList.Find((dt) => {
+                var index = playerList.FindIndex((dt) => {
                     var data = dt as PlayerRowData;
                     return !data.HasSeat; 
                 });
 
-                if (leaveUser != null) {
-                    (leaveUser as PlayerRowData).LeaveFlag = true;
+                if (index >= 0) {
+                    playerList.Insert(index, new LeaveIconData());
                 }
 
                 rowData.AddRange(playerList);
@@ -145,11 +154,12 @@ namespace ScorePage {
         {
             var data = rowData[dataIndex];
 
-            if (data is InsuranceRowData || data is PlayerRowData) {
-                return 76f;
-            } else if (data is GuestHeadData) {
+            if (data is InsuranceRowData || data is PlayerRowData || data is GuestHeadData || data is Data27) {
                 return 60f;
-            } else {
+            } else if (data is LeaveIconData) {
+                return 44f;
+            } 
+            else {
                 return 200f;
             }
         }
@@ -165,6 +175,10 @@ namespace ScorePage {
                 cellView = scroller.GetCellView(PlayerPrefab) as PlayerRow;
             } else if (data is GuestHeadData) {
                 cellView = scroller.GetCellView(GuestHeaderPrefab) as GuestHeader;
+            } else if (data is LeaveIconData) {
+                cellView = scroller.GetCellView(LeaveIconPrefab) as LeaveIcon;
+            } else if (data is Data27) {
+                cellView = scroller.GetCellView(Award27Prefab) as Award27Row;
             }
             else  {
                 cellView = scroller.GetCellView(GuestPrefab) as GuestRow;    

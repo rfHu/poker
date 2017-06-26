@@ -18,7 +18,6 @@ namespace ScorePage
         public string Nick;
         public int Score;
         public bool HasSeat;
-        public bool LeaveFlag;
     }
 
     public class GuestHeadData: Data {
@@ -27,5 +26,11 @@ namespace ScorePage
 
     public class GuestRowData: Data {
         public List<PlayerModel> PlayerList;
+    }
+
+    public class LeaveIconData: Data{}
+
+    public class Data27: Data {
+        public int Number;
     }
 }
