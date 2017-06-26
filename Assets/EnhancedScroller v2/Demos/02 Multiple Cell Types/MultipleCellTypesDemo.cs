@@ -67,6 +67,18 @@ namespace EnhancedScrollerDemos.MultipleCellTypesDemo
             _data.Add(new RowData() { userName = "Sally Brewer", userAvatarSpritePath = resourcePath + "/avatar_female", userHighScore = 17389 });
             _data.Add(new RowData() { userName = "Joe West", userAvatarSpritePath = resourcePath + "/avatar_male", userHighScore = 2918 });
             _data.Add(new FooterData());
+            _data.Add(new FooterData());
+            _data.Add(new FooterData());
+            _data.Add(new FooterData());
+            _data.Add(new FooterData());
+            _data.Add(new FooterData());
+            _data.Add(new FooterData());
+            _data.Add(new RowData() { userName = "Joe West", userAvatarSpritePath = resourcePath + "/avatar_male", userHighScore = 2918 });
+            _data.Add(new RowData() { userName = "Joe West", userAvatarSpritePath = resourcePath + "/avatar_male", userHighScore = 2918 });
+            _data.Add(new RowData() { userName = "Joe West", userAvatarSpritePath = resourcePath + "/avatar_male", userHighScore = 2918 });
+            _data.Add(new RowData() { userName = "Joe West", userAvatarSpritePath = resourcePath + "/avatar_male", userHighScore = 2918 });
+            _data.Add(new RowData() { userName = "Joe West", userAvatarSpritePath = resourcePath + "/avatar_male", userHighScore = 2918 });
+            _data.Add(new RowData() { userName = "Joe West", userAvatarSpritePath = resourcePath + "/avatar_male", userHighScore = 2918 });
 
             // tell the scroller to reload now that we have the data
             scroller.ReloadData();
