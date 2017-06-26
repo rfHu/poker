@@ -57,8 +57,6 @@ public class OP : MonoBehaviour {
 
 	void Awake()
 	{
-		instance = transform;
-
 		CheckGo.GetComponent<Button>().onClick.AddListener(OPS.Check);
 		CallGo.GetComponent<Button>().onClick.AddListener(() => {
 			OPS.Call();
@@ -66,18 +64,20 @@ public class OP : MonoBehaviour {
 		RaiseGo.GetComponent<Button>().onClick.AddListener(OnRaiseClick);
 	}
 
-	// public static GameObject Spawn() {
-	// 	if (instance == null) {
-	// 		var ins = PoolMan.Spawn("OP", G.UICvs.transform);
-	// 		instance = ins;
-	// 	} else {
-	// 		if (PoolMan.IsSpawned(instance)) {
-	// 			PoolMan.Spawn("OP", G.UICvs.transform);
-	// 		}
-	// 	}
+	public static Transform Spawn() {
+		if (instance == null) {
+			var ins = PoolMan.Spawn("OP", G.UICvs.transform);
+			instance = ins;
+		} else {
+			if (PoolMan.IsSpawned(instance)) {
+				// skip
+			} else {
+				PoolMan.Spawn("OP", G.UICvs.transform);
+			}
+		}
 
-	// 	return instance;			
-	// }
+		return instance;			
+	}
 	
 	public void StartWithCmds(Dictionary<string, object> data, int left) {
         var cmds = data.Dict("cmds");
@@ -431,7 +431,7 @@ public class OP : MonoBehaviour {
 			}
 
 			if (flag) {
-				PoolMan.Spawn("OP", G.UICvs.transform);
+				OP.Spawn();	
 			} else {
 				PoolMan.Despawn(instance);
 			}

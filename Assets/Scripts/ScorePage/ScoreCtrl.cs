@@ -32,13 +32,15 @@ namespace ScorePage {
 
         void Awake()
         {
-            Scroller.Delegate = this;
         }
 
         void OnSpawned()
         {
-            // tell the scroller that this script will be its delegate
             requestData();
+        }
+
+        void OnDespawned() {
+            Scroller.Delegate = null;
         }
 
         private void requestData() {
@@ -100,7 +102,7 @@ namespace ScorePage {
                         return bb.HasSeat ? 1 : -1;
                     }
 
-                    return bb.Score - bb.Score;
+                    return bb.Score - aa.Score;
                 });
 
                 // 离开座位且排在第一位的显示已离桌标志
@@ -124,23 +126,16 @@ namespace ScorePage {
                     return bin - ain;
                 });
 
-
                 var chunkList = guestList.ChunkBy(4);
-
                 foreach(var list in chunkList) {
                     rowData.Add(new GuestRowData() {
                         PlayerList = list
                     });
                 }
                 
-                LoadData();
+                Scroller.Delegate = this;
+                Scroller.ReloadData();
             });
-        }
-     
-        private void LoadData()
-        {
-
-            Scroller.ReloadData();
         }
 
         #region EnhancedScroller Handlers
