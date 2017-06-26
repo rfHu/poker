@@ -4,15 +4,15 @@ using System.Collections;
 using EnhancedUI.EnhancedScroller;
 
 namespace ScorePage {
-    public class InsuranceRow : CellView
+    public class Award27Row: CellView
     {
-        public Text ScoreText;
+        public Text NumberText;
 
         override public void SetData(Data data)
         {
             base.SetData(data);
-            var dt = data as InsuranceRowData;
-            SetNumber(ScoreText, dt.Number);
+            var dt = data as Data27;
+            SetNumber(NumberText, dt.Number);
         }
     }
 }
