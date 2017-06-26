@@ -8,12 +8,14 @@ public class GameLoading : MonoBehaviour {
 		ObjectsPool.Setup();
 
 		#if UNITY_EDITOR  
-        	// external.SetSid("s%3AdOlm2w5hGhqahgt--HMRhxyXjTCSmOLf.3IXxXmGw1R3E0Swr10JEcqYcGvn7AUZT4%2F0d99jOuT8");
-			external.SetSocket("https://socket.poker.top");
-            // external.SetSid("s%3AMlxEue3v7i2rYLs9bKAdOgaOTSXsAAei.xmUcVOEOHLwtUelq64efdBGZ28RAEJhF%2FuDkUE4QZtg");
-			external.SetSid("s%3AtlWwZxu4UCVIFOeNzUTOoL7njX52JALS.QkHG%2B7VsbQBBrsgnRSv0FeFO2eXRAQQpLGJeP5AIXNI");
+			external.SetSocket("https://socket.dev.poker.top");
 			external.SetProxy("http://localhost:8888");
-            external.SetRoomID("5950cf2ccfb1ed3a38615e61");
+			// external.SetSid("s%3AtlWwZxu4UCVIFOeNzUTOoL7njX52JALS.QkHG%2B7VsbQBBrsgnRSv0FeFO2eXRAQQpLGJeP5AIXNI");
+            // external.SetRoomID("5950a958cfb1ed3a3860c871");
+
+			external.SetSid("s%3AIqwKeQYx5U76gnwrJKDxJZjWL9n-CZFr.JPiC%2F4z6CkhI2HkJ5uZlttQaA874IWe8v1tQhFm8ECk");
+			external.SetRoomID("5950f94e7b6c2a0349a48ce9");
+
 		#endif
 	}
 	

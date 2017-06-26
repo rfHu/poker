@@ -1276,6 +1276,10 @@ namespace EnhancedUI.EnhancedScroller
             // request a cell view from the delegate
             var cellView = _delegate.GetCellView(this, dataIndex, cellIndex);
 
+            if (cellView == null) {
+                return ;
+            }
+
             // set the cell's properties
             cellView.cellIndex = cellIndex;
             cellView.dataIndex = dataIndex;

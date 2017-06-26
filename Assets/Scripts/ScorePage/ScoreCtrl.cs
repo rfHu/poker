@@ -34,13 +34,17 @@ namespace ScorePage {
         {
         }
 
+        void Start() {
+            Scroller.Delegate = this;
+        }
+
         void OnSpawned()
         {
             requestData();
         }
 
         void OnDespawned() {
-            Scroller.Delegate = null;
+            // Scroller.Delegate = null;
         }
 
         private void requestData() {
@@ -133,7 +137,6 @@ namespace ScorePage {
                     });
                 }
                 
-                Scroller.Delegate = this;
                 Scroller.ReloadData();
             });
         }
