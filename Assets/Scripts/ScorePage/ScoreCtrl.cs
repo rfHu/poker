@@ -169,6 +169,10 @@ namespace ScorePage {
             else  {
                 cellView = scroller.GetCellView(GuestPrefab) as GuestRow;    
             } 
+
+            if (cellView == null) {
+                return null;
+            }
         
             cellView.SetData(data);
             return cellView; 

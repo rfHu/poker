@@ -128,7 +128,9 @@ public sealed class Connect  {
 
 	public void Emit(Dictionary<string, object> json, Action<Dictionary<string, object>> success = null, Action error = null, int timeout = 5) {
 		Emit(json, (ret, err) => {
-			success(ret);
+			if (success != null) {
+				success(ret);
+			}
 		}, error, timeout);
 	}
 

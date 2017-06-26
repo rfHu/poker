@@ -37,14 +37,23 @@ public class ModalHelper: MonoBehaviour {
 	}
 
 	void OnDespawned() {
-		#if UNITY_EDITOR
-		#else
-            var modal = GameObject.FindObjectOfType<ModalHelper>();
+		var modals = GameObject.FindObjectsOfType<ModalHelper>();
+		var hasModal = false;
 
-            if (modal == null && !GameData.Shared.TalkLimit.Value) {
+		for (var i  = 0; i < modals.Length; i++) {
+			if (modals[i].gameObject.activeSelf) {
+				hasModal = true;
+				break;
+			}
+		}
+
+		if (hasModal && !GameData.Shared.TalkLimit.Value) {
+			_.Log("Show Native Voice Button");
+			#if UNITY_EDITOR 
+			#else
 				Commander.Shared.VoiceIconToggle(true);
-            }
-		#endif	
+			#endif
+		}
 	}
 
 	public void Despawn() {
