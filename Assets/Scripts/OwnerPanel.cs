@@ -33,23 +33,20 @@ public class OwnerPanel : MonoBehaviour {
     private bool[] isChanged = new bool[6]{ false, false, false, false, false ,false};
     private List<int> turn_countdownNum =new List<int>{ 10, 12, 15, 20 };
 
-    bool isFirstOpen = true;
+
 
 	public void Init()
 	{
-        if (isFirstOpen)
-        {
-            isFirstOpen = false;
-            AnteSliderInit();
+        AnteSliderInit();
 
-            MultipleSlider2.value = GameData.Shared.BankrollMul[0];
-            MultipleSlider1.value = GameData.Shared.BankrollMul[1];
+        MultipleSlider2.value = GameData.Shared.BankrollMul[0];
+        MultipleSlider1.value = GameData.Shared.BankrollMul[1];
 
-            Need_auditToggle.isOn = GameData.Shared.NeedAudit;
-            StraddleToggle.isOn = GameData.Shared.Straddle.Value;
+        Need_auditToggle.isOn = GameData.Shared.NeedAudit;
+        StraddleToggle.isOn = GameData.Shared.Straddle.Value;
 
-            Turn_countdownSlider.value = turn_countdownNum.IndexOf(GameData.Shared.SettingThinkTime);
-        }
+        Turn_countdownSlider.value = turn_countdownNum.IndexOf(GameData.Shared.SettingThinkTime);
+        
 
         ExtendTimeSlider.value = 0;
         ETSliderNum.text = "0h";
@@ -62,6 +59,11 @@ public class OwnerPanel : MonoBehaviour {
 
     private void AnteSliderInit()
     {
+        //清除原上标
+        for (int num = 0; num < AnteSuperscript.childCount; num++)
+        {
+            Destroy(AnteSuperscript.GetChild(num));
+        }
         
         int[] anteNums = {1,2,5,10,25,50,100};
         int[] BBNums = { 2, 4, 10, 20, 50, 100, 200 };

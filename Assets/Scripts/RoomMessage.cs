@@ -26,13 +26,15 @@ public class RoomMessage : MonoBehaviour {
     public Text NeedAudit;
     public Text GPSMes;
     public Text IPMes;
+    public Text Award27Mes;
+    public Text BuryCardMes;
 
     public GameObject[] Buttons;
 
     public VectorImage PauseIcon; 
     public VectorImage ContinueIcon;
 
-	void Start () {
+	public void Init () {
         OwnerName.text = GameData.Shared.OwnerName;
 
         GameData.Shared.LeftTime.Subscribe((value) =>
@@ -61,6 +63,8 @@ public class RoomMessage : MonoBehaviour {
         setMesText(GameData.Shared.NeedAudit, NeedAudit);
         setMesText(GameData.Shared.GPSLimit, GPSMes);
         setMesText(GameData.Shared.IPLimit, IPMes);
+        setMesText(GameData.Shared.Award27, Award27Mes);
+        setMesText(GameData.Shared.BuryCard, BuryCardMes);
         
         foreach (var item in Buttons)
         {

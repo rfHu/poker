@@ -548,6 +548,8 @@ sealed public class GameData {
 	public bool IPLimit = false;
 	public bool GPSLimit = false;
     public bool NeedInsurance = false;
+    public bool Award27 = false;
+    public bool BuryCard = false;
 	public ReactiveProperty<long> LeftTime = new ReactiveProperty<long>(0);
     public ReactiveProperty<int> Ante = new ReactiveProperty<int>(-1);
     public ReactiveProperty<bool> Straddle = new ReactiveProperty<bool>(false);
@@ -585,6 +587,8 @@ sealed public class GameData {
 		NeedAudit = options.Int("need_audit") == 1;
 		GPSLimit = options.Int("gps_limit") > 0;
 		IPLimit = options.Int("ip_limit") == 1;
+        Award27 = options.Int("award_27") == 1;
+        BuryCard = options.Int("bury_card") == 1;
 		GameCode = options.String("code");
 		Straddle.Value = options.Int("straddle") != 0;
         SettingThinkTime = ThinkTime = options.Int("turn_countdown");
