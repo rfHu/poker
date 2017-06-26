@@ -20,13 +20,13 @@ public class Emoticon : MonoBehaviour {
         _rectTransform = GetComponent<RectTransform>();
     }
 
-    public void Init(GameObject fromSeat, GameObject toSeat, int pid, bool isToMe) 
+    public void Init(Vector2 fromSeat, GameObject toSeat, int pid, bool isToMe) 
     {
         this.pid = pid;
         this.toSeat = toSeat;
 
         //transform.SetParent(G.UICvs.transform, false);
-        _rectTransform.anchoredPosition = fromSeat.GetComponent<RectTransform>().anchoredPosition;
+        _rectTransform.anchoredPosition = fromSeat;
 
         if (toSeat.GetComponent<Seat>().GetPos() == SeatPosition.Right)
             transform.localScale = new Vector3(-1, 1);

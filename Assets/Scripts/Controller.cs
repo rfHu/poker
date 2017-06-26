@@ -451,13 +451,13 @@ public class Controller : MonoBehaviour {
             int pid = e.Data.Int("pid");
             bool isToMe = false;
 
-            var fromSeat = Seats[0]; 
+            var fromSeatPos = new Vector2(0, 1920); 
             var toSeat = Seats[0];
 
             foreach (var seat in Seats)
             {
                 if (seat.GetComponent<Seat>().Index == fromSeatIndex)
-                    fromSeat = seat;
+                    fromSeatPos = seat.GetComponent<RectTransform>().anchoredPosition;
                 
                 if (seat.GetComponent<Seat>().Index == toSeatIndex)
                 {
@@ -469,7 +469,7 @@ public class Controller : MonoBehaviour {
             }
 
             var em = PoolMan.Spawn("Emoticon");
-            em.GetComponent<Emoticon>().Init(fromSeat, toSeat, pid, isToMe);
+            em.GetComponent<Emoticon>().Init(fromSeatPos, toSeat, pid, isToMe);
         }).AddTo(this);
 
         RxSubjects.Expression.Subscribe((e) => {
