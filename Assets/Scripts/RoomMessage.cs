@@ -11,6 +11,7 @@ public class RoomMessage : MonoBehaviour {
 
     private string open = "开启";
     private Color openColor = new Color(0.09375f, 1, 1);
+    string close = "关闭";
 
     public Text OwnerName;
     public Text LeftTime;
@@ -26,13 +27,15 @@ public class RoomMessage : MonoBehaviour {
     public Text NeedAudit;
     public Text GPSMes;
     public Text IPMes;
+    public Text Award27Mes;
+    public Text BuryCardMes;
 
     public GameObject[] Buttons;
 
     public VectorImage PauseIcon; 
     public VectorImage ContinueIcon;
 
-	void Start () {
+	public void Init () {
         OwnerName.text = GameData.Shared.OwnerName;
 
         GameData.Shared.LeftTime.Subscribe((value) =>
@@ -61,6 +64,8 @@ public class RoomMessage : MonoBehaviour {
         setMesText(GameData.Shared.NeedAudit, NeedAudit);
         setMesText(GameData.Shared.GPSLimit, GPSMes);
         setMesText(GameData.Shared.IPLimit, IPMes);
+        setMesText(GameData.Shared.Award27, Award27Mes);
+        setMesText(GameData.Shared.BuryCard, BuryCardMes);
         
         foreach (var item in Buttons)
         {
@@ -84,6 +89,11 @@ public class RoomMessage : MonoBehaviour {
         {
             text.text = open;
             text.color = openColor;
+        }
+        else 
+        {
+            text.text = close;
+            text.color = Color.white;
         }
     }
 
