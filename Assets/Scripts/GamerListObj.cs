@@ -50,6 +50,7 @@ public class GamerListObj : MonoBehaviour {
         TalkLimitImg.color = talkLimit ? Color.white : unlimitCol;
 
         GamerAvatar.GetComponent<Avatar>().SetImage(gamerMes.String("avatar"));
+        GamerAvatar.GetComponent<Avatar>().SetAlpha(gamerMes.Bool("in_room"));
     }
 
 
