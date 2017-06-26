@@ -111,7 +111,7 @@ public class PlayerObject : MonoBehaviour {
 
 	void OnDestroy()
 	{
-		if (OPTransform != null) {
+		if (OPTransform != null && GameData.Shared.MySeat == -1) {
 			PoolMan.Despawn(OPTransform);
 		}
 
@@ -819,7 +819,7 @@ public class PlayerObject : MonoBehaviour {
 		// 隐藏头像
 		Circle.SetActive(false);
 
-		OPTransform = PoolMan.Spawn("OP", G.UICvs.transform);
+		OPTransform = OP.Spawn();
 		var op = OPTransform.GetComponent<OP>();
 		op.StartWithCmds(data, left);
 
