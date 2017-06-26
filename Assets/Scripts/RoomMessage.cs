@@ -149,10 +149,8 @@ public class RoomMessage : MonoBehaviour {
         Connect.Shared.Emit(new Dictionary<string, object>() {
 			{"f", f},
 			{"args", "0"}
-		}, (data) =>
+		}, (data, err) =>
         {
-            var err = data.Int("err");
-
             if (err != 0)
             {
                 var msg = data.String("ret");

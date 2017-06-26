@@ -206,9 +206,9 @@ public class RecallPage : MonoBehaviour {
 				{"f", f},
 				{"args", dict}
 			},
-            (json) =>
+            (json, err) =>
             {
-                if (json.Int("err") == 0 && f == "fav") {
+                if (err == 0 && f == "fav") {
                     favhand_id = json.String("favhand_id");
                 } 
             }

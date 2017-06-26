@@ -437,8 +437,7 @@ public class OP : MonoBehaviour {
 			}
 		}
 
-		private static void onres(Dictionary<string, object> json) {
-			var err = json.Int("err");
+		private static void onres(Dictionary<string, object> json, int err) {
 			if (err != 0) {
 				setActive(true);
 			}

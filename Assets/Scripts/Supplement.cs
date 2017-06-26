@@ -79,8 +79,7 @@ public class Supplement : MonoBehaviour {
 			{"args", new Dictionary<string, object>{
 				{"multiple", value / (100 * GameData.Shared.BB)}
 			}}
-		}, (json) => {
-			var err = json.Int("err");
+		}, (json, err) => {
 			if (err == 1201) {
 				payDialog = PokerUI.Alert("金币不足，请购买", () => {
 					Commander.Shared.PayFor();

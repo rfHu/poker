@@ -94,9 +94,7 @@ public class Seat : MonoBehaviour {
 					{"position_x", pos[0]}, 
 					{"position_y", pos[1]} 
 				}}
-			}, (data) => {
-				var err = data.Int("err");
-				
+			}, (data, err) => {
 				if (err == 0) {
 					return ;
 				}

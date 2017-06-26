@@ -12,7 +12,7 @@ public sealed class Connect  {
 
 	private SocketManager manager;
 
-	private Dictionary<int, Action<Dictionary<string, object>>> successCallbacks = new Dictionary<int, Action<Dictionary<string, object>>>();
+	private Dictionary<int, Action<Dictionary<string, object>, int>> successCallbacks = new Dictionary<int, Action<Dictionary<string, object>, int>>();
 
 	private int seq = 0;
 
@@ -39,7 +39,7 @@ public sealed class Connect  {
 		manager.Socket.On("reconnect_attempt", onDisconnect);
 
 		manager.Socket.On("reconnect_failed", onDisconnect);
-		manager.Socket.On("error", onDisconnect);
+		// manager.Socket.On("error", onDisconnect);
 
 		manager.Open();	
 	}
@@ -53,13 +53,6 @@ public sealed class Connect  {
 				{"sid", GameData.Shared.Sid}
 			}}	
 		}, (json) => {
-			var err = json.Int("err");
-			if (err != 0) {
-				PokerUI.ConflictAlert();
-
-				return ;
-			}
-
 			_.Log("Unity: 登陆成功，准备进入房间……");
 
 			// 登陆成功，写用户数据
@@ -97,13 +90,6 @@ public sealed class Connect  {
 				{"ver", Application.version}
 			}}
 		}, (json) => {
-			var error = json.Int("err");
-
-			if (error == 400) {				
-				PokerUI.DisAlert("房间不存在！");
-				return ;
-			}
-
 			_.Log("Unity: 进入房间逻辑执行完毕");
 
 			// 取消2s内的loading提示
@@ -136,7 +122,17 @@ public sealed class Connect  {
 		Emit(dict, success, error, timeout);
 	}
 
+	public void Emit(Dictionary<string, object> json) {
+		Emit(json, (_) => {});
+	}
+
 	public void Emit(Dictionary<string, object> json, Action<Dictionary<string, object>> success = null, Action error = null, int timeout = 5) {
+		Emit(json, (ret, err) => {
+			success(ret);
+		}, error, timeout);
+	}
+
+	public void Emit(Dictionary<string, object> json, Action<Dictionary<string, object>, int> success = null, Action error = null, int timeout = 5) {
 		if (manager.State != BestHTTP.SocketIO.SocketManager.States.Open) {
 			return ;
 		}
@@ -162,20 +158,13 @@ public sealed class Connect  {
 				});
 			}
 
-			successCallbacks.Add(seq, (data) => {
+			successCallbacks.Add(seq, (data, err) => {
 				if (dispose != null) {
 					dispose.Dispose();
 				}
 				
-				var err = data.Int("err");
-
-				if (err == 403) {
-					PokerUI.ConflictAlert();	
-					return ;
-				}
-
 				successCallbacks.Remove(seq);
-				success(data);
+				success(data, err);
 			});
 		}
 	}
@@ -260,11 +249,19 @@ public sealed class Connect  {
 				GameData.MyCmd.SetCmd(ret.Dict("cmds"));
 			}
 
-			int seq = json.Int("seq");
+			var err = json.Int("err");
 
-			if (instance.successCallbacks.ContainsKey(seq)) {
-				instance.successCallbacks[seq](ret);
-			} 
+			// 公共错误处理
+			if (err == 403) {
+				PokerUI.ConflictAlert();	
+			} else if (err == 400) {
+				PokerUI.DisAlert("房间不存在！");
+			} else {
+				int seq = json.Int("seq");
+				if (instance.successCallbacks.ContainsKey(seq)) {
+					instance.successCallbacks[seq](ret, err);
+				}
+			}
 		});
 
 		instance.manager.Socket.On("push", (socket, packet, args) => {

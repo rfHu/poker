@@ -78,8 +78,7 @@ public class Controller : MonoBehaviour {
 	public void OnStartClick() {
 		Connect.Shared.Emit(new Dictionary<string, object>(){
 			{"f", "start"}
-		}, (data) => {
-			var err = data.Int("err");
+		}, (data, err) => {
 			if (err == 0) {
 				startButton.SetActive(false);
 			}
@@ -93,9 +92,7 @@ public class Controller : MonoBehaviour {
         Connect.Shared.Emit(new Dictionary<string, object>() {
 				{"f", "seecard"},
                 {"args", null}
-        }, (data) => {
-            var err = data.Int("err");
-
+        }, (data, err) => {
             if (err != 0)
             {
                 PokerUI.Toast(data.String("ret"));
