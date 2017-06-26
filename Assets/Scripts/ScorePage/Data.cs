@@ -1,11 +1,16 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 namespace ScorePage
 {
-    public class Data
+    public abstract class Data
     {
+        public Type cachedType { get; private set; }
+        
+        public Data()
+        { cachedType = GetType(); }
     }
 
     public class InsuranceRowData : Data

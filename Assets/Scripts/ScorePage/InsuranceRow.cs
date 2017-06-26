@@ -1,19 +1,26 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-using EnhancedUI.EnhancedScroller;
+using System;
 
 namespace ScorePage {
     public class InsuranceRow : CellView
     {
-        public Text ScoreText;
+        public Text scoreText;
 
         override public void SetData(Data data)
         {
             base.SetData(data);
             var dt = data as InsuranceRowData;
-            SetNumber(ScoreText, dt.Number);
+            SetNumber(scoreText, dt.Number);
         }
+
+        override public void CollectViews() {
+            base.CollectViews();
+            scoreText = root.Find("Score").GetComponent<Text>();
+        }
+
+        public override bool CanPresentModelType(Type modelType) { return modelType == typeof(InsuranceRowData); }
     }
 }
  

@@ -1,17 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
-using EnhancedUI;
-using EnhancedUI.EnhancedScroller;
 using System.Collections.Generic;
 using SimpleJSON;
 using UnityEngine.UI;
+using frame8.Logic.Misc.Visual.UI.ScrollRectItemsAdapter;
+using frame8.ScrollRectItemsAdapter.Util;
+using System;
 
 namespace ScorePage {
 
-    public class ScoreCtrl : MonoBehaviour, IEnhancedScrollerDelegate
+    public class ScoreCtrl : MonoBehaviour 
     {
-        public EnhancedScroller Scroller;
-
         public Text Hands;
 
         public Text Pot;
@@ -20,31 +19,94 @@ namespace ScorePage {
 
         public Text Buy;
 
+        public MyParams adapterParams;
 
-        public EnhancedScrollerCellView InsurancePrefab;
-        public EnhancedScrollerCellView PlayerPrefab;
-        public EnhancedScrollerCellView GuestHeaderPrefab;
-        public EnhancedScrollerCellView GuestPrefab;
-        public EnhancedScrollerCellView LeaveIconPrefab;
-        public EnhancedScrollerCellView Award27Prefab;
+        MyScrollRectAdapter _Adapter; 
 
-        private List<Data> rowData = new List<Data>();
-
-        void Awake()
+        void Start()
         {
+            _Adapter = new MyScrollRectAdapter();
+            _Adapter.Init(adapterParams);
         }
 
-        void Start() {
-            Scroller.Delegate = this;
+          void OnDestroy()
+        {
+            if (_Adapter != null)
+                _Adapter.Dispose();
         }
 
+        [Serializable]
+        public class MyParams: BaseParams {
+            public RectTransform InsurancePrefab;
+            public RectTransform PlayerPrefab;
+            public RectTransform GuestHeaderPrefab;
+            public RectTransform GuestPrefab;
+            public RectTransform LeaveIconPrefab;
+            public RectTransform Award27Prefab;
+
+            public List<Data> rowData = new List<Data>();
+        }
+
+        public class MyScrollRectAdapter : ScrollRectItemsAdapter8<MyParams, CellView> 
+        {
+            protected override float GetItemHeight(int index)
+            { 
+                var data = _Params.rowData[index];
+
+                if (data is InsuranceRowData || data is PlayerRowData || data is GuestHeadData || data is Data27) {
+                    return 60f;
+                } else if (data is LeaveIconData) {
+                    return 44f;
+                } 
+                else {
+                    return 200f;
+                }
+             }
+
+            protected override float GetItemWidth(int index)
+            { return 800; }
+
+            protected override CellView CreateViewsHolder(int itemIndex)
+            {
+                var data = _Params.rowData[itemIndex];
+                CellView instance; 
+
+                if (data is InsuranceRowData) {
+                    instance = new InsuranceRow();
+                    instance.Init(_Params.InsurancePrefab, itemIndex);
+                } else if (data is PlayerRowData) {
+                    instance = new PlayerRow();
+                    instance.Init(_Params.PlayerPrefab, itemIndex);
+                } else if (data is GuestHeadData) {
+                    instance = new GuestHeader();
+                    instance.Init(_Params.GuestHeaderPrefab, itemIndex);
+                } else if (data is LeaveIconData) {
+                    instance = new LeaveIcon();
+                    instance.Init(_Params.LeaveIconPrefab, itemIndex);
+                } else if (data is Data27) {
+                    instance = new Award27Row();
+                    instance.Init(_Params.Award27Prefab, itemIndex);
+                } else  {
+                    instance = new GuestRow();    
+                    instance.Init(_Params.GuestPrefab, itemIndex);
+                } 
+
+                return instance;
+            }
+
+            protected override void UpdateViewsHolder(CellView newOrRecycled)
+            {
+                Data model = _Params.rowData[newOrRecycled.itemIndex];
+                newOrRecycled.SetData(model);
+            }
+
+            protected override bool IsRecyclable(CellView potentiallyRecyclable, int indexOfItemThatWillBecomeVisible, float heightOfItemThatWillBecomeVisible)
+            { return potentiallyRecyclable.CanPresentModelType(_Params.rowData[indexOfItemThatWillBecomeVisible].cachedType); }
+        }
+      
         void OnSpawned()
         {
             requestData();
-        }
-
-        void OnDespawned() {
-            // Scroller.Delegate = null;
         }
 
         private void requestData() {
@@ -52,7 +114,7 @@ namespace ScorePage {
                 {"f", "gamerlist"}
             }, (json) =>
             {
-                rowData.Clear();
+                var rowData = new List<Data>();
 
                 Hands.text = json.String("handid");
                 Pot.text = json.String("avg_pot");
@@ -136,61 +198,13 @@ namespace ScorePage {
                         PlayerList = list
                     });
                 }
-                
-                Scroller.ReloadData();
+
+                adapterParams.rowData.Clear();
+                adapterParams.rowData.AddRange(rowData);
+
+                _Adapter.ChangeItemCountTo(rowData.Count);
             });
         }
-
-        #region EnhancedScroller Handlers
-
-        public int GetNumberOfCells(EnhancedScroller scroller)
-        {
-            return rowData.Count;
-        }
-
-        public float GetCellViewSize(EnhancedScroller scroller, int dataIndex)
-        {
-            var data = rowData[dataIndex];
-
-            if (data is InsuranceRowData || data is PlayerRowData || data is GuestHeadData || data is Data27) {
-                return 60f;
-            } else if (data is LeaveIconData) {
-                return 44f;
-            } 
-            else {
-                return 200f;
-            }
-        }
-
-        public EnhancedScrollerCellView GetCellView(EnhancedScroller scroller, int dataIndex, int cellIndex)
-        {
-            var data = rowData[dataIndex];
-            CellView cellView;
-
-            if (data is InsuranceRowData) {
-                cellView = scroller.GetCellView(InsurancePrefab) as InsuranceRow;
-            } else if (data is PlayerRowData) {
-                cellView = scroller.GetCellView(PlayerPrefab) as PlayerRow;
-            } else if (data is GuestHeadData) {
-                cellView = scroller.GetCellView(GuestHeaderPrefab) as GuestHeader;
-            } else if (data is LeaveIconData) {
-                cellView = scroller.GetCellView(LeaveIconPrefab) as LeaveIcon;
-            } else if (data is Data27) {
-                cellView = scroller.GetCellView(Award27Prefab) as Award27Row;
-            }
-            else  {
-                cellView = scroller.GetCellView(GuestPrefab) as GuestRow;    
-            } 
-
-            if (cellView == null) {
-                return null;
-            }
-        
-            cellView.SetData(data);
-            return cellView; 
-        }
-
-        #endregion
     }
 }
 
