@@ -11,6 +11,7 @@ public class RoomMessage : MonoBehaviour {
 
     private string open = "开启";
     private Color openColor = new Color(0.09375f, 1, 1);
+    string close = "关闭";
 
     public Text OwnerName;
     public Text LeftTime;
@@ -88,6 +89,11 @@ public class RoomMessage : MonoBehaviour {
         {
             text.text = open;
             text.color = openColor;
+        }
+        else 
+        {
+            text.text = close;
+            text.color = Color.white;
         }
     }
 

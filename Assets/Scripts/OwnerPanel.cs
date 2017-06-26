@@ -62,7 +62,7 @@ public class OwnerPanel : MonoBehaviour {
         //清除原上标
         for (int num = 0; num < AnteSuperscript.childCount; num++)
         {
-            Destroy(AnteSuperscript.GetChild(num));
+            Destroy(AnteSuperscript.GetChild(num).gameObject);
         }
         
         int[] anteNums = {1,2,5,10,25,50,100};
