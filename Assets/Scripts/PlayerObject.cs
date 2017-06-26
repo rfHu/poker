@@ -18,9 +18,7 @@ public class PlayerObject : MonoBehaviour {
 	public string Uid = "";
 	public GameObject Cardfaces;
 	public GameObject MyCards;
-	public GameObject Stars;
-    public GameObject NormalStar;
-    public GameObject Win27Star;
+    public GameObject WinStars;
 	public Text WinNumber;
 	public List<Card> ShowCards;
 	public GameObject AvatarMask;
@@ -357,8 +355,7 @@ public class PlayerObject : MonoBehaviour {
 		player.OverData.AsObservable().Where((data) => data != null).Subscribe((data) => {
 			var gain = data.Gain();
 			if (gain > 0) {
-                Stars.SetActive(true);
-                NormalStar.SetActive(true);
+                WinStars.SetActive(true);
 
 				if (isSelf()) {
 					WinImageGo.SetActive(true);
@@ -557,10 +554,6 @@ public class PlayerObject : MonoBehaviour {
             if (Uid == e.Data.String("uid"))
 	        {
                 CancelInvoke("hideAnim");
-                NormalStar.SetActive(false);
-                Win27Star.SetActive(true);
-                WinNumber.text = "" + (int.Parse(WinNumber.text) + e.Data.Int("award"));
-
                 Invoke("hideAnim", 4);
 	        }
         }).AddTo(this);
@@ -694,7 +687,7 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	private void hideAnim() {
-		hideGo(Stars, () => {
+		hideGo(WinStars, () => {
 			ScoreLabel.transform.parent.gameObject.SetActive(true);
 		});
 		hideGo(WinImageGo);	
