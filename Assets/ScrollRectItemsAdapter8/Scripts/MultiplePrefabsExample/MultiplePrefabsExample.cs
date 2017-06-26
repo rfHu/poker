@@ -157,7 +157,7 @@ namespace frame8.ScrollRectItemsAdapter.MultiplePrefabsExample
         }
 
 
-        public class MyScrollRectAdapter : ScrollRectItemsAdapter8<MyParams, ViewHolders.BaseVH>, ExpandCollapseOnClick.ISizeChangesHandler
+        public class MyScrollRectAdapter : ScrollRectItemsAdapter8<MyParams, ViewHolders.BaseVH> 
         {
             // Will be called for vertical scroll views
             protected override float GetItemHeight(int index)
@@ -186,7 +186,7 @@ namespace frame8.ScrollRectItemsAdapter.MultiplePrefabsExample
                     var instance = new ExpandableVH();
                     instance.Init(_Params.expandablePrefab, itemIndex);
 
-                    instance.expandCollapseOnClickBehaviour.sizeChangesHandler = this;
+                    // instance.expandCollapseOnClickBehaviour.sizeChangesHandler = this;
 
                     return instance;
                 }
@@ -208,41 +208,41 @@ namespace frame8.ScrollRectItemsAdapter.MultiplePrefabsExample
             { return potentiallyRecyclable.CanPresentModelType(_Params.data[indexOfItemThatWillBecomeVisible].cachedType); }
 
             #region ExpandCollapseOnClick.ISizeChangesHandler implementation
-            bool ExpandCollapseOnClick.ISizeChangesHandler.HandleSizeChangeRequest(RectTransform rt, float newSize)
-            {
-                var vh = GetItemViewsHolderIfVisible(rt);
+            // bool ExpandCollapseOnClick.ISizeChangesHandler.HandleSizeChangeRequest(RectTransform rt, float newSize)
+            // {
+            //     var vh = GetItemViewsHolderIfVisible(rt);
 
-                // If the vh is visible and the request is accepted, we update our list of sizes
-                if (vh != null)
-                {
-                    float resolvedSize = RequestChangeItemSizeAndUpdateLayout(vh, newSize);
-                    if (resolvedSize != -1f)
-                    {
-                        //_Sizes[vh.itemIndex] = newSize;
-                        _Params.data[vh.itemIndex].visualSize = newSize;
+            //     // If the vh is visible and the request is accepted, we update our list of sizes
+            //     if (vh != null)
+            //     {
+            //         float resolvedSize = RequestChangeItemSizeAndUpdateLayout(vh, newSize);
+            //         if (resolvedSize != -1f)
+            //         {
+            //             //_Sizes[vh.itemIndex] = newSize;
+            //             _Params.data[vh.itemIndex].visualSize = newSize;
 
-                        return true;
-                    }
-                }
+            //             return true;
+            //         }
+            //     }
 
-                return false;
-            }
+            //     return false;
+            // }
 
-            public void OnExpandedStateChanged(RectTransform rt, bool expanded)
-            {
-                var vh = GetItemViewsHolderIfVisible(rt);
+            // public void OnExpandedStateChanged(RectTransform rt, bool expanded)
+            // {
+            //     var vh = GetItemViewsHolderIfVisible(rt);
 
-                // If the vh is visible and the request is accepted, we update the model's "expanded" field
-                if (vh != null)
-                {
-                    var asExpandableModel = _Params.data[vh.itemIndex] as ExpandableModel;
-                    if (asExpandableModel == null)
-                        throw new UnityException(
-                            "MultiplePrefabsExample.MyScrollRectAdapter.OnExpandedStateChanged: item model at index " + vh.itemIndex
-                            + " is not of type " + typeof(ExpandableModel).Name + ", as expected by the view holder having this itemIndex. You messed up. Happy debugging :)");
-                    asExpandableModel.expanded = expanded;
-                }
-            }
+            //     // If the vh is visible and the request is accepted, we update the model's "expanded" field
+            //     if (vh != null)
+            //     {
+            //         var asExpandableModel = _Params.data[vh.itemIndex] as ExpandableModel;
+            //         if (asExpandableModel == null)
+            //             throw new UnityException(
+            //                 "MultiplePrefabsExample.MyScrollRectAdapter.OnExpandedStateChanged: item model at index " + vh.itemIndex
+            //                 + " is not of type " + typeof(ExpandableModel).Name + ", as expected by the view holder having this itemIndex. You messed up. Happy debugging :)");
+            //         asExpandableModel.expanded = expanded;
+            //     }
+            // }
             #endregion
         }
         #endregion

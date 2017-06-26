@@ -24,6 +24,10 @@ public class Seat : MonoBehaviour {
 			return ;
 		}
 
+		if (GameData.Shared.Players.ContainsKey(Index)) {
+			return ;
+		}
+
 		if (GameData.Shared.GPSLimit) {
 			StartCoroutine(Commander.Shared.Location(takeSeat, () => {
 				PokerUI.Alert("为保证公平竞技，请在设置—隐私—定位服务中开启位置权限");	
@@ -106,7 +110,7 @@ public class Seat : MonoBehaviour {
 				} else if(err == 1104) {
 					text = "您与某玩家距离过近，不能参与本牌局";
 				} else {
-					text = data.String("msg");
+					return ;
 				}
 
 				PokerUI.Alert(text);
