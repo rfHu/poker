@@ -157,7 +157,6 @@ public class DOPopup : MonoBehaviour {
 			return ;
 		}
 
-
 		var tween = Hide();	
 		hasShow = false; // hide也要判断hasShow，所以逻辑要放到hide之后
 

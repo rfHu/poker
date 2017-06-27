@@ -22,7 +22,10 @@ public class Commander {
 	}	
 
 	public void Exit() {
-		ic.Exit();
+		#if UNITY_EDITOR
+		#else
+			ic.Exit();
+		#endif
 	}
 
 	public void PauseUnity() {

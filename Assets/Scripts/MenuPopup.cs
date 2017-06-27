@@ -41,7 +41,7 @@ public class MenuPopup : MonoBehaviour {
             ReserveGo.SetActive(true);
         }
 
-        // fitState(GameData.Shared.SelfState.Value);
+        fitState(GameData.Shared.SelfState.Value);
 	}
 
 	void Awake()
@@ -107,7 +107,6 @@ public class MenuPopup : MonoBehaviour {
 
 	public void Exit() {
 		External.Instance.Exit();
-        Close();
 	}
 
 	public void Tips() {

@@ -84,16 +84,11 @@ public class External : MonoBehaviour{
 
 		PoolMan.DespawnAll();
 
-		// 返回上级界面
-		#if UNITY_EDITOR
-			// Nothing to do
-		#else
-			SceneManager.LoadScene("GameLoading");
-			// 延时执行突出逻辑
-			Observable.Timer(TimeSpan.FromMilliseconds(90)).AsObservable().Subscribe((_) => {
-				callback();
-			});
-		#endif
+		SceneManager.LoadScene("GameLoading");
+		// 延时执行突出逻辑
+		Observable.Timer(TimeSpan.FromMilliseconds(90)).AsObservable().Subscribe((_) => {
+			callback();
+		});
 	}
 
 	void OnApplicationQuit()
