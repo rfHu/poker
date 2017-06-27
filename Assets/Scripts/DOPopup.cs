@@ -4,6 +4,7 @@ using System;
 using UnityEngine.UI;
 using UniRx;
 using System.Collections;
+using System.Collections.Generic;
 
 public enum AnimType {
 	Up2Down,
@@ -66,9 +67,21 @@ public class DOPopup : MonoBehaviour {
 		rectTrans.anchoredPosition = startPosition;
 	}
 
-	void startAnimation() {
-		// yield return new WaitForFixedUpdate();
+	private void show() {
+		var contentSizeFitter = GetComponent<ContentSizeFitter>();
 
+		// 暂时兼容的写法
+		if (contentSizeFitter != null && contentSizeFitter.enabled && Animate == AnimType.Up2Down) {
+			Observable.TimerFrame(1, FrameCountType.EndOfFrame).Subscribe((_) => {
+				animateIn();
+			}).AddTo(this);
+		} else {
+			animateIn();
+		}
+
+	}
+
+	private void animateIn() {
 		autoFit();
 
 		if (modal) {
@@ -109,7 +122,7 @@ public class DOPopup : MonoBehaviour {
 		}
 
 		hasShow = true;
-		startAnimation();
+		show();
 	}
 
 	public void Show() {

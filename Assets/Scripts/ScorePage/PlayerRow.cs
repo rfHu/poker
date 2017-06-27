@@ -21,10 +21,7 @@ namespace ScorePage {
             nickText.text = dt.Nick;
             takeCoinText.text = _.Num2CnDigit(dt.TakeCoin);
             scoreText.text = _.Number2Text(dt.Score); 
-
-            if (dt.HasSeat) {
-                scoreText.color = _.GetTextColor(dt.Score);
-            }
+            scoreText.color = _.GetTextColor(dt.Score);
 
             if (dt.HasSeat) {
                 cvg.alpha = 1;
