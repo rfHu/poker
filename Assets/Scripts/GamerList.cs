@@ -12,7 +12,7 @@ public class GamerList : MonoBehaviour {
     public Transform Content;
 
 	// Use this for initialization
-	public void Init () {
+	void OnSpawned () {
 
         for (int i = 1; i < Content.childCount; i++)
         {

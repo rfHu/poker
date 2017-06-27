@@ -60,7 +60,7 @@ public class GamerOption : MonoBehaviour {
 
         if (fromList) 
         {
-            var go = (GameObject)Instantiate(Resources.Load("Prefab/GamerList"));
+            var go = PoolMan.Spawn("GamerList");
             go.GetComponent<DOPopup>().Show();
         }
         else 

@@ -72,6 +72,11 @@ public class PoolMan {
 		return pool.IsSpawned(transform);
 	}
 
+	public static bool Contains(Transform transform) {
+		var pool = PoolManager.Pools["Shared"];
+		return pool.GetPrefab(transform) != null;
+	}
+
 	public static void DespawnAll() {
 		PoolManager.Pools["Shared"].DespawnAll();
 	}

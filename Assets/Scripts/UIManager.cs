@@ -95,7 +95,7 @@ public class UIManager : MonoBehaviour {
 				Commander.Shared.Audit();
 			};
 
-            auditMsg.GetComponent<DOPopup>().Show(modal: false);
+            auditMsg.GetComponent<DOPopup>().Show(modal: false, singleton: false);
 		}).AddTo(this);	
 
 		RxSubjects.TakeCoin.Subscribe((e) => {

@@ -149,6 +149,10 @@ public class DOPopup : MonoBehaviour {
 				break;
 		}
 
+		if (instance == this) {
+			instance = null;
+		}
+
 		return tween;
 	}
 
@@ -172,7 +176,7 @@ public class DOPopup : MonoBehaviour {
 	private void release() {
 		if (PoolMan.IsSpawned(transform)) {
 			PoolMan.Despawn(transform);
-		} else {
+		} else if (!PoolMan.Contains(transform)) {
 			Destroy(gameObject);
 		}
 	}

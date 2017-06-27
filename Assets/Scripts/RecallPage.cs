@@ -60,12 +60,6 @@ public class RecallPage : MonoBehaviour {
 					return ;
 				}
 
-                var curHand = json.Int("cur_hand");
-                if (curHand == currentNumber) {
-                    requesting = false;
-                    return ;
-                }
-
 				reload(json);
                 requesting = false;
 			},
