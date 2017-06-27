@@ -162,7 +162,10 @@ public class AndroidCommander: ICommander {
 
     public void OptionToggle(bool isOpen, int type) 
     {
-        getJo().Call("gameMessageIsShowToggle", isOpen, type);
+		#if UNITY_EDITOR 
+		#else
+	        getJo().Call("gameMessageIsShowToggle", isOpen, type);
+		#endif
     }
 }
 #endif
