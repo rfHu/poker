@@ -13,7 +13,7 @@ public class GameLoading : MonoBehaviour {
 			// external.SetSid("s%3ASuOxhyXR0wmfu1xIZZUmFFdAq8Cd5xsD.h6RldH4l7niXxoZG0QyYnlt36QayIW0rtY0Z8GmorV0");
             // external.SetRoomID("5950a958cfb1ed3a3860c871");
 			external.SetSid("s%3AnAY8WOA0WJOalaBmsurL0IdJlMpyVBQT.3QV0VnRG4O5%2BIabkSchSIl9gpZp5L5Z1dHcLVcWz6kA");
-			external.SetRoomID("59529072912aeb53f98c3127");
+			external.SetRoomID("595353e4912aeb53f98d2415");
 
 		#endif
 	}

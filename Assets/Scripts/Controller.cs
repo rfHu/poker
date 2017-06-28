@@ -506,13 +506,13 @@ public class Controller : MonoBehaviour {
 
             expression.transform.GetComponent<Expression>().SetTrigger(expressionName);
            
-			Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe((_) => {
-				PoolMan.Despawn(expression.transform);
+			// Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe((_) => {
+			// 	PoolMan.Despawn(expression.transform);
 
-				if (uid == GameData.Shared.Uid) {
-					findExpCvg().alpha = 1; // 显示按钮
-				}
-			}).AddTo(this);
+			// 	if (uid == GameData.Shared.Uid) {
+			// 		findExpCvg().alpha = 1; // 显示按钮
+			// 	}
+			// }).AddTo(this);
         }).AddTo(this);
 
 		RxSubjects.ShowAudio.Where(isGuest).Subscribe((json) => {
