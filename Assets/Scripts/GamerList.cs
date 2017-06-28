@@ -13,11 +13,7 @@ public class GamerList : MonoBehaviour {
 
 	// Use this for initialization
 	void OnSpawned () {
-
-        for (int i = 1; i < Content.childCount; i++)
-        {
-            Destroy(Content.GetChild(i).gameObject);
-        }
+        Content.transform.Clear();
 
         var data = new Dictionary<string, object>(){
 			{"type", 2}
