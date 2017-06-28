@@ -9,7 +9,7 @@ using UniRx;
 public class UserDetail : MonoBehaviour {
 	public RawImage Avatar;
 	public Text Name;
-	public Text Coins;
+    public Text RemarkText;
 	public Text Hands;
 	public Text ShowHand;
 	public Text Join;
@@ -18,7 +18,7 @@ public class UserDetail : MonoBehaviour {
 	public Text PreRaise;
 	public Text ThreeBet;
 	public Text CBet;
-    public GameObject ButtonTeam;
+    public GameObject GameOptionBtn;
     public GameObject EmoticonsTeam;
     public GameObject R1;
     public GameObject R2;
@@ -51,11 +51,11 @@ public class UserDetail : MonoBehaviour {
 
         if (GameData.Shared.Owner && Uid != GameData.Shared.Uid)
         {
-            ButtonTeam.SetActive(true);
+            GameOptionBtn.SetActive(true);
         }
         else 
         {
-            ButtonTeam.SetActive(false);
+            GameOptionBtn.SetActive(false);
         }
 
         if (Uid == GameData.Shared.Uid || GameData.Shared.FindPlayerIndex(Uid) == -1 || GameData.Shared.emoticonClose)
@@ -92,8 +92,6 @@ public class UserDetail : MonoBehaviour {
             Name.text = profile.name;
             Avatar.GetComponent<Avatar>().SetImage(profile.avatar);
 
-            // 金币数
-            Coins.text = _.Num2CnDigit<int>(int.Parse(achieve.coins));
             // 手数
             Hands.text = achieve.total_hand_count.ToString();
             // 入池率
@@ -170,5 +168,9 @@ public class UserDetail : MonoBehaviour {
         image.color = color;
         text.color = color;
         icon.color = color;
+    }
+
+    public void OnRemark() {
+        
     }
 }

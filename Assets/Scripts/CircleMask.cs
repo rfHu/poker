@@ -10,6 +10,7 @@ public class CircleMask : MonoBehaviour {
 	bool activated = false;
 	private float time = 0;
 	private int tickTime = 8; 
+	private int vibraTime = 3;
 	ProceduralImage proImage;
 	public Text numberText;
 
@@ -91,6 +92,11 @@ public class CircleMask : MonoBehaviour {
 		}
 
 		G.PlaySound("time");
+
+		if (time <= vibraTime) {
+			Vibration.Vibrate();
+		}
+
 		Invoke("clickSound", 1f);
 	}
 
