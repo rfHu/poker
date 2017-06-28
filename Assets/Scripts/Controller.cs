@@ -504,15 +504,11 @@ public class Controller : MonoBehaviour {
                 SingleExpression(expression, player);
             }
 
-            expression.transform.GetComponent<Expression>().SetTrigger(expressionName);
-           
-			// Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe((_) => {
-			// 	PoolMan.Despawn(expression.transform);
-
-			// 	if (uid == GameData.Shared.Uid) {
-			// 		findExpCvg().alpha = 1; // 显示按钮
-			// 	}
-			// }).AddTo(this);
+            expression.transform.GetComponent<Expression>().SetTrigger(expressionName, () => {
+				if (uid == GameData.Shared.Uid) {
+					findExpCvg().alpha = 1; // 显示按钮
+				}
+			});
         }).AddTo(this);
 
 		RxSubjects.ShowAudio.Where(isGuest).Subscribe((json) => {

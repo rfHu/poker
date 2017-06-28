@@ -1,28 +1,30 @@
 using UnityEngine;
 using UniRx;
 using System;
+using UnityEngine.UI;
 
 public class Expression: MonoBehaviour {
     public Transform Face;
-    private string _name;
+    public Sprite FaceImage;
 
-    public void SetTrigger(string name) {
-        this._name = name;
-
-        foreach(Transform child in Face) {
-            child.gameObject.SetActive(false);
-        }
-
+    public void SetTrigger(string name, Action cb = null) {
         var animator = Face.GetComponent<Animator>();
-        animator.SetTrigger(name);
+        animator.Play(name);
 
-        Observable.Timer(TimeSpan.FromSeconds(1)).Subscribe((_) => {
-            animator.ResetTrigger(name);
+        Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe((__) => {
+            PoolMan.Despawn(transform);
+
+            if (cb != null) {
+                cb();
+            }
         }).AddTo(this);
     }
 
     void OnDespawned() {
-        var animator = Face.GetComponent<Animator>();
-        animator.ResetTrigger(_name);
+        foreach(Transform child in Face) {
+            child.gameObject.SetActive(false);
+        } 
+
+        Face.GetComponent<Image>().sprite = FaceImage;
     }
 }
