@@ -28,6 +28,8 @@ public class Supplement : MonoBehaviour {
 	}
 
 	void OnSpawned() {
+		Coins.text = _.Num2CnDigit(GameData.Shared.Coins);
+
 		Connect.Shared.Emit(new Dictionary<string, object>() {
 			{"f", "gamerdetail"},
 			{"args",  new Dictionary<string, object> {
@@ -35,11 +37,6 @@ public class Supplement : MonoBehaviour {
 				{"bankroll_multiple", "1"}
 			}}
 		}, (ret) => {
-			var coins = ret.Dict("achieve").Int("coins");
-
-			GameData.Shared.Coins = coins; // 保存coins
-			Coins.text = coins.ToString();
-
 			var mul = ret.IL("bankroll_multiple"); 
 			int score = GameData.Shared.BB * 100; 
 			int min = mul[0] * score;

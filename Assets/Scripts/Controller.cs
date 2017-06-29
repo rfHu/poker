@@ -574,35 +574,50 @@ public class Controller : MonoBehaviour {
 			});	
 		}).AddTo(this);
 
-		RxSubjects.Pausing.Subscribe((_) => {
-			var text = "房主已暂停游戏";
+		RxSubjects.Pausing.Subscribe((e) => {
+			var type = e.Data.Int("type");
+			var text = "";
 
-			if (GameData.Shared.InGame) {
-				text += "（下一手生效）";
+			if (type == 5) {
+				text = "我们即将对服务器进行升级，本手结束后将强制暂停牌局";
+			} else {
+				text = "房主已暂停游戏";
+
+				if (GameData.Shared.InGame) {
+					text += "（下一手生效）";
+				}
 			}
 
 			PokerUI.Toast(text);
 		}).AddTo(this);
 
 		RxSubjects.Modify.Subscribe((e) =>{
-
             var data = e.Data;
-            var str = "";
 
             foreach (var item in e.Data)
 	        {
+				var str = "";
                 switch (item.Key) 
                 {
                     case "bankroll_multiple":
                         GameData.Shared.BankrollMul = data.IL("bankroll_multiple");
                         str = "房主将记分牌带入倍数改为：" + GameData.Shared.BankrollMul[0] + "-" + GameData.Shared.BankrollMul[1];
                         PokerUI.Toast(str);
-                        break;
+                    	break;
 
                     case "time_limit": 
                         GameData.Shared.Duration += data.Long("time_limit");
                         GameData.Shared.LeftTime.Value += data.Long("time_limit");
-                        str = "房主将牌局延长了" + data.Long("time_limit") / 3600f + "小时";
+
+						var time = data.Long("time_limit") / 3600f;
+						var digit = "小时";
+
+						if (time < 1) {
+							time = time * 60;
+							digit = "分钟";
+						}
+
+                        str = "房主将牌局延长了" + time.ToString()  + digit;
                         PokerUI.Toast(str);
                         break;
 
@@ -629,6 +644,13 @@ public class Controller : MonoBehaviour {
                         str = "房主将思考时间改为" + GameData.Shared.SettingThinkTime +"秒";
                         PokerUI.Toast(str);
                         break;
+
+					case "off_score":
+						var off = data.Int("off_score") == 1;
+						GameData.Shared.OffScore.Value = off;
+					 	str = off ? "房主开启了提前下分" : "房主关闭了提前下分";
+						PokerUI.Toast(str);
+						break;	
                     default:
                         break;
                 }
@@ -685,6 +707,25 @@ public class Controller : MonoBehaviour {
         {
              ExpressionButton.SetActive(action);
         }).AddTo(this);
+
+		RxSubjects.OffScore.Subscribe((e) => {
+			var type = e.Data.Int("type");
+			if (type != 1) {
+				return ;
+			}
+
+			var name = e.Data.String("name");
+			var avatar = e.Data.String("avatar");
+
+			var dt = e.Data.Dict("data");
+			var takecoin = dt.Int("takecoin");
+			var profib = dt.Int("bankroll") - takecoin;
+
+			PokerUI.Alert("下分盈利: " + _.Number2Text(profib));
+
+			// 已下分，bankroll为0
+			GameData.Shared.Bankroll.Value = 0;
+		}).AddTo(this);
 	}
 
     private void TalkLimit(bool limit)
@@ -723,9 +764,15 @@ public class Controller : MonoBehaviour {
 				return ;
 			}
 
+			// 服务器升级
+			if (pause == 5) {
+				PokerUI.DisAlert("服务器升级中…");
+				return ;
+			} 
+
 			PauseGame.transform.Find("Text").GetComponent<Text>().text = "房主已暂停游戏";
 
-			if (pause && !GameData.Shared.InGame) {
+			if (pause > 0 && !GameData.Shared.InGame) {
 				PauseGame.SetActive(true);
 			} else {
 				PauseGame.SetActive(false);

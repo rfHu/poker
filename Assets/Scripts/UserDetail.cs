@@ -92,6 +92,14 @@ public class UserDetail : MonoBehaviour {
             Name.text = profile.name;
             Avatar.GetComponent<Avatar>().SetImage(profile.avatar);
 
+            var remark = data.String("remark");
+
+            if (string.IsNullOrEmpty(remark)) {
+                remark = "玩家备注";
+            }
+
+            RemarkText.text = remark;
+
             // 手数
             Hands.text = achieve.total_hand_count.ToString();
             // 入池率
@@ -112,7 +120,7 @@ public class UserDetail : MonoBehaviour {
             // 动态表情
             var emotion = data.List("emoticon");
 
-            for (int i = 0; i < emotion.Count; i++)
+            for (int i = 0; i < EmoticonPrice.Length && i < emotion.Count; i++)
             {
                 var dict = emotion[i] as Dictionary<string, object>;
                 EmoticonPrice[i].text = "" + dict.Int("coin");

@@ -110,6 +110,7 @@ sealed public class Player {
 
 	public ReactiveProperty<String> LastAct = new ReactiveProperty<String>();
 
+
 	public void SetState(int state, int cd = 0) {
 		var st = (PlayerState)state;
 		PlayerStat.OnNext(st);
@@ -234,13 +235,13 @@ sealed public class GameData {
 		});
 
 		RxSubjects.Paused.AsObservable().Subscribe((e) => {
-			Paused.OnNext(true); 	
+			Paused.OnNext(e.Data.Int("type")); 	
 		});
 
 		RxSubjects.Started.AsObservable().Subscribe((e) => {
 			GameStarted = true;
 			LeftTime.Value = e.Data.Int("left_time");
-			Paused.OnNext(false); 
+			Paused.OnNext(0); 
 		});
 
 		RxSubjects.UnSeat.AsObservable().Subscribe((e) => {
@@ -446,7 +447,7 @@ sealed public class GameData {
 		// 倒计时
 		Observable.Interval(TimeSpan.FromSeconds(1)).AsObservable().Subscribe((_) => {
 			// 游戏已暂停，不需要修改
-			if (GameStarted && Paused.Value) {
+			if (GameStarted && Paused.Value > 0) {
 				return ;
 			}
 
@@ -554,10 +555,13 @@ sealed public class GameData {
     public ReactiveProperty<int> Ante = new ReactiveProperty<int>(-1);
     public ReactiveProperty<bool> Straddle = new ReactiveProperty<bool>(false);
 
+	public ReactiveProperty<bool> OffScore = new ReactiveProperty<bool>(false);
+	public ReactiveProperty<int> Bankroll = new ReactiveProperty<int>(0);
+
 	public ReactiveProperty<int> Pot = new ReactiveProperty<int>();
 	public ReactiveProperty<List<Dictionary<string, object>>> Pots = new ReactiveProperty<List<Dictionary<string, object>>>(); 
 
-	public BehaviorSubject<bool> Paused = new BehaviorSubject<bool>(false);
+	public BehaviorSubject<int> Paused = new BehaviorSubject<int>(0);
 	public string GameCode = "";
 	public ReactiveProperty<int> MaxFiveRank = new ReactiveProperty<int>();
 
@@ -576,6 +580,8 @@ sealed public class GameData {
 		var options = json.Dict("options");
 		var gamers = json.Dict("gamers");
 
+		Coins = json.Int("coins");
+		Bankroll.Value = json.Int("bankroll");	
 		BB = options.Int("limit") ;
         OwnerName = json.Dict("owner").String("name");
 		Owner = options.String("ownerid") == GameData.Shared.Uid;
@@ -590,8 +596,9 @@ sealed public class GameData {
         Award27 = options.Int("award_27") == 1;
         BuryCard = options.Int("bury_card") == 1;
 		GameCode = options.String("code");
-		Straddle.Value = options.Int("straddle") != 0;
+		Straddle.Value = options.Int("straddle") == 1;
         SettingThinkTime = ThinkTime = options.Int("turn_countdown");
+		OffScore.Value = options.Int("off_score") == 1;
 		
         NeedInsurance = options.Int("need_insurance") == 1;
 		DealerSeat.Value = json.Int("dealer_seat");
@@ -610,9 +617,7 @@ sealed public class GameData {
 		StartTime = _.DateTimeFromTimeStamp(startTs);
 		// 游戏是否已开始
 		GameStarted = startTs != 0;
-
-		var pause = json.Int("is_pause") != 0;
-		Paused.OnNext(pause);
+		Paused.OnNext(json.Int("is_pause") == 0 ? 0 : 1);
 		
 		// 删除公共牌重新添加
 		var cards = json.IL("shared_cards");
@@ -642,7 +647,6 @@ sealed public class GameData {
 
 		if (mySeat != -1 && Players.ContainsKey(mySeat)) {
 			AuditCD.OnNext(Players[mySeat].AuditCD);
-			Coins = Players[mySeat].Coins;
 		} else {
 			AuditCD.OnNext(0);
 		}

@@ -9,12 +9,12 @@ public class GameLoading : MonoBehaviour {
 		ObjectsPool.Setup();
 
 		#if UNITY_EDITOR  
-			external.SetSocket("https://socket.poker.top");
+			external.SetSocket("https://socket.dev.poker.top");
 			external.SetProxy("http://localhost:8888");
 			// external.SetSid("s%3ASuOxhyXR0wmfu1xIZZUmFFdAq8Cd5xsD.h6RldH4l7niXxoZG0QyYnlt36QayIW0rtY0Z8GmorV0");
             // external.SetRoomID("5950a958cfb1ed3a3860c871");
-			external.SetSid("s%3AnAY8WOA0WJOalaBmsurL0IdJlMpyVBQT.3QV0VnRG4O5%2BIabkSchSIl9gpZp5L5Z1dHcLVcWz6kA");
-			external.SetRoomID("5953a9c6912aeb53f98daefd");
+			external.SetSid("s%3AjbIrPkhke0dxxC1xIYmgWcvkYvApI4TS.n%2Fv%2B%2FJfBpd51yXNIDwfSPdIZYnhMnuSXtuXGbRz9mMw");
+			external.SetRoomID("5954c5b7d15ea66e6248973c");
 
 		#endif
 

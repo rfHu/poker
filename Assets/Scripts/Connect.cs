@@ -86,8 +86,7 @@ public sealed class Connect  {
 		Emit(new Dictionary<string, object>{
 			{"f", "entergame"},
 			{"args", new Dictionary<string, object> {
-				{"roomid", GameData.Shared.Room},
-				{"ver", Application.version}
+				{"roomid", GameData.Shared.Room}
 			}}
 		}, (json) => {
 			_.Log("Unity: 进入房间逻辑执行完毕");
@@ -147,6 +146,7 @@ public sealed class Connect  {
 		json["seq"] = seq;
 		json["pin"] = GameData.Shared.Pin;
 		json["uid"] = GameData.Shared.Uid;
+		json["ver"] = Application.version;
 		manager.Socket.Emit("rpc", json);
 
 		if (success != null) {
@@ -246,9 +246,18 @@ public sealed class Connect  {
 				return ;
 			}
 
+			var rid = json.String("roomid");
+			if (!string.IsNullOrEmpty(rid) && rid != GameData.Shared.Room) {
+				return ;
+			}
+
 			var ret = json.Dict("ret");
 			if (ret.ContainsKey("cmds")) {
 				GameData.MyCmd.SetCmd(ret.Dict("cmds"));
+			}
+
+			if (ret.ContainsKey("coins")) {
+				GameData.Shared.Coins = ret.Int("coins");
 			}
 
 			var err = json.Int("err");
@@ -274,6 +283,10 @@ public sealed class Connect  {
 			var json = args[0] as Dictionary<string, object>;
 
 			if (json == null) {
+				return ;
+			}
+
+			if (json.String("roomid") != GameData.Shared.Room) {
 				return ;
 			}
 
@@ -420,6 +433,9 @@ public sealed class Connect  {
                 case "award_27":
                     RxSubjects.Award27.OnNext(rxdata);
                     break;
+				case "offscore":
+					RxSubjects.OffScore.OnNext(rxdata);
+					break;
 				default:
 					break;
 			}

@@ -73,7 +73,7 @@ public class RoomMessage : MonoBehaviour {
         }
 
         GameData.Shared.Paused.Subscribe((pause) => {
-            if (pause) {
+            if (pause > 0) {
                 PauseIcon.gameObject.SetActive(false);
                 ContinueIcon.gameObject.SetActive(true);
             } else {
@@ -141,17 +141,17 @@ public class RoomMessage : MonoBehaviour {
     public void Pause()
     {
         string f;
-        bool paused;
+        int paused;
 
-        if (GameData.Shared.Paused.Value && GameData.Shared.GameStarted)
+        if (GameData.Shared.Paused.Value > 0 && GameData.Shared.GameStarted)
         {
             f = "start";
-            paused = false;
+            paused = 1;
         }
         else
         {
             f = "pause";
-            paused = true;
+            paused = 0;
         }
 
         GameData.Shared.Paused.OnNext(paused);
