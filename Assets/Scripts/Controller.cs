@@ -719,9 +719,9 @@ public class Controller : MonoBehaviour {
 
 			var dt = e.Data.Dict("data");
 			var takecoin = dt.Int("takecoin");
-			var profib = dt.Int("bankroll") - takecoin;
+			var profit = dt.Int("bankroll") - takecoin;
 
-			PokerUI.Alert("下分盈利: " + _.Number2Text(profib));
+			PoolMan.Spawn("OffScore").GetComponent<OffScore>().Show(avatar, takecoin, profit);
 
 			// 已下分，bankroll为0
 			GameData.Shared.Bankroll.Value = 0;

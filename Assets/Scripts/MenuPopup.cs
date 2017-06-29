@@ -143,7 +143,7 @@ public class MenuPopup : MonoBehaviour {
 	}
 
     public void ExchangeMoney() {
-        var text = "选择下分将为您提前结算游戏，是否继续？(当前手牌结束后生效)";
+        var text = "将提前为您结算牌局，是否继续？(下一手生效)";
 
         PokerUI.Alert(text, () => 
         {

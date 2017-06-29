@@ -360,7 +360,7 @@ sealed public class GameData {
 			Coins = coins;
 
 			if (uid == GameData.Shared.Uid) {
-				GameData.Shared.Bankroll.Value = 0;
+				GameData.Shared.Bankroll.Value = bankroll;
 			}			
 
 			if (index < 0 || inGame || bankroll <= 0) {

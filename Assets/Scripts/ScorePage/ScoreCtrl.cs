@@ -135,6 +135,7 @@ namespace ScorePage {
                 }
 
                 var playerList = new List<Data>();
+                var offScoreList = new List<Data>();
                 var guestList = new List<PlayerModel>();
 
                 foreach(object item in json.List("list")) {
@@ -157,6 +158,19 @@ namespace ScorePage {
 
                     if (model.seat < 0) {
                         guestList.Add(model);
+                    }
+
+                    var list = dict.List("off_scores");
+                    if (list.Count > 0) {
+                        foreach(var o in list) {
+                            var dd = o as Dictionary<string, object>;
+                            offScoreList.Add(new PlayerRowData() {
+                                TakeCoin = dd.Int("takecoin"),
+                                Nick = model.name,
+                                Score = dd.Int("bankroll") - dd.Int("takecoin"),
+                                HasSeat = false
+                            });
+                        }
                     }
                 }
 
@@ -182,6 +196,15 @@ namespace ScorePage {
                 }
 
                 rowData.AddRange(playerList);
+
+                rowData.Add(new LeaveIconData());
+                offScoreList.Sort((a, b) => {
+                    var aa = a as PlayerRowData;
+                    var bb = b as PlayerRowData;
+                    return bb.Score - aa.Score;
+                });
+                rowData.AddRange(offScoreList);
+                
                 rowData.Add(new GuestHeadData() {
                     Number = guestList.Count
                 });

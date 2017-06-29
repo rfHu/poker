@@ -51,7 +51,7 @@ public class UserDetail : MonoBehaviour {
     {
         this.Uid = Uid;
 
-        if (GameData.Shared.Owner && Uid != GameData.Shared.Uid)
+        if (GameData.Shared.Owner)
         {
             GameOptionBtn.SetActive(true);
         }
@@ -60,10 +60,12 @@ public class UserDetail : MonoBehaviour {
             GameOptionBtn.SetActive(false);
         }
 
+        var parent = GameOptionBtn.transform.parent.gameObject;
+
         if (Uid == GameData.Shared.Uid) {
-            UserRemark.SetActive(false);
+            parent.SetActive(false);
         } else {
-            UserRemark.SetActive(true);
+            parent.SetActive(true);
         }
 
         if (Uid == GameData.Shared.Uid || GameData.Shared.FindPlayerIndex(Uid) == -1 || GameData.Shared.emoticonClose)
@@ -103,7 +105,7 @@ public class UserDetail : MonoBehaviour {
 
             remark = data.String("remark");
 
-            if (string.IsNullOrEmpty(remark)) {
+            if (string.IsNullOrEmpty(remark) && GameData.Shared.Uid != Uid) {
                 RemarkText.text = "玩家备注";
             } else {
                 RemarkText.text = remark;
