@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class GameLoading : MonoBehaviour {
 	// Use this for initialization
@@ -16,6 +17,19 @@ public class GameLoading : MonoBehaviour {
 			external.SetRoomID("5953a9c6912aeb53f98daefd");
 
 		#endif
+
+		// 开启SDK的日志打印，发布版本请务必关闭
+		// BuglyAgent.ConfigDebugMode (true);
+		// 注册日志回调，替换使用 'Application.RegisterLogCallback(Application.LogCallback)'注册日志回调的方式
+		// BuglyAgent.RegisterLogCallback (CallbackDelegate.Instance.OnApplicationLogCallbackHandler);
+		#if UNITY_IPHONE || UNITY_IOS
+			BuglyAgent.InitWithAppId ("b3d868488f");
+		#elif UNITY_ANDROID
+			BuglyAgent.InitWithAppId ("a8103a785a");
+		#endif
+
+		// 如果你确认已在对应的iOS工程或Android工程中初始化SDK，那么在脚本中只需启动C#异常捕获上报功能即可
+		BuglyAgent.EnableExceptionHandler ();
 	}
 	
 	// Update is called once per frame
