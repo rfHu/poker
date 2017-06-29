@@ -54,7 +54,7 @@ public class OP : MonoBehaviour {
 	{
 		hideModal();
 	}
-
+	
 	void Awake()
 	{
 		CheckGo.GetComponent<Button>().onClick.AddListener(OPS.Check);
@@ -93,25 +93,22 @@ public class OP : MonoBehaviour {
 
 		if (check) { // 看牌
 			CallGo.SetActive(false);
-			CheckGo.SetActive(true);
-			CheckGo.GetComponent<CanvasGroup>().alpha = 1;
+			toggleEnable(CheckGo, true);	
 		} else if (callNum > 0) { // 跟注
 			CheckGo.SetActive(false);
 			CallGo.SetActive(true);
 			CallNumber.text = _.Num2CnDigit(callNum);
 		} else { // 不能跟注、不能看牌，展示灰掉的看牌按钮
 			CallGo.SetActive(false);
-			CheckGo.SetActive(true);
-			CheckGo.GetComponent<CanvasGroup>().alpha = disableAlpha;
-		}
+			toggleEnable(CheckGo, false);	
+		}		
 
 		circleMask = FoldGo.transform.Find("CD").GetComponent<CircleMask>();
 		circleMask.Enable(left, true);
 
 		if (range.Count >= 2) { // 可加注
 			AllinGo.SetActive(false);
-			RaiseGo.SetActive(true);
-			RaiseGo.GetComponent<CanvasGroup>().alpha = 1;
+			toggleEnable(RaiseGo, true);	
 			setRaiseButtons(callNum);
 		} else if(allin) { // 不可加注、可Allin
 			RaiseGo.SetActive(false);
@@ -119,9 +116,17 @@ public class OP : MonoBehaviour {
 			disableAllBtns();
 		} else { // 不可加注、不可Allin
 			disableAllBtns();
-			RaiseGo.SetActive(true);
-			RaiseGo.GetComponent<CanvasGroup>().alpha = disableAlpha;
+			toggleEnable(RaiseGo, false);	
 		}	
+	}
+
+	private void toggleEnable(GameObject go, bool enable) {
+		var cvg = go.GetComponent<CanvasGroup>();
+		var btn = go.GetComponent<Button>();
+
+		go.SetActive(true);
+		btn.interactable = enable;
+		cvg.alpha = enable ? 1 : disableAlpha;
 	}
 
 	public void Reset(float left) {

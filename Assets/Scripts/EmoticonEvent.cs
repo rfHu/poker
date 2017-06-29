@@ -19,8 +19,6 @@ public class EmoticonEvent : MonoBehaviour {
         PoolMan.Despawn(transform.parent);
     }
 
-
-
     public void Destroythis() {
         PoolMan.Despawn(transform);
     }

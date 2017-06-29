@@ -504,15 +504,11 @@ public class Controller : MonoBehaviour {
                 SingleExpression(expression, player);
             }
 
-            expression.transform.Find("Face").GetComponent<Animator>().SetTrigger(expressionName);
-           
-			Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe((_) => {
-				PoolMan.Despawn(expression.transform);
-
+            expression.transform.GetComponent<Expression>().SetTrigger(expressionName, () => {
 				if (uid == GameData.Shared.Uid) {
 					findExpCvg().alpha = 1; // 显示按钮
 				}
-			}).AddTo(this);
+			});
         }).AddTo(this);
 
 		RxSubjects.ShowAudio.Where(isGuest).Subscribe((json) => {
@@ -745,8 +741,10 @@ public class Controller : MonoBehaviour {
     {
 		expression.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
 
-        if (parent.Find("Expression(Clone)") != null)
-            Destroy(parent.Find("Expression(Clone)").gameObject);
+		var exp = parent.GetComponentInChildren<Expression>(); 
+		if (exp != null) {
+			PoolMan.Despawn(exp.transform);
+		}
 
         expression.transform.SetParent(parent, false);
     }
