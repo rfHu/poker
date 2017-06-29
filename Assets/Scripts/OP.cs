@@ -39,6 +39,8 @@ public class OP : MonoBehaviour {
 	private int accurateValue;
 	private float disableAlpha = 0.4f;
 
+	public Text BuyTimeCost; 
+
 	void OnSpawned()
 	{	
 		var transform = GetComponent<RectTransform>();
@@ -79,7 +81,10 @@ public class OP : MonoBehaviour {
 		return instance;			
 	}
 	
-	public void StartWithCmds(Dictionary<string, object> data, int left) {
+	public void StartWithCmds(Dictionary<string, object> data, int left, int buyTimeCost = 10) {
+		// 设置购买时间按钮
+		setBuyCost(buyTimeCost);
+
         var cmds = data.Dict("cmds");
 		var check = cmds.Bool("check");
 		var callNum = cmds.Int("call");
@@ -350,13 +355,19 @@ public class OP : MonoBehaviour {
 			{"args", data}
         }, (redata) =>
         {
-            var display = redata.Int("display");
-            if (display == 0)
-            {
-                BuyTurnTime.SetActive(false);
-            }
+            var cost = redata.Int("show_moretime");
+			setBuyCost(cost);
         });
     }
+
+	private void setBuyCost(int cost) {
+		 if (cost < 0)
+		{
+			BuyTurnTime.SetActive(false);
+		} else {
+			BuyTimeCost.text = cost.ToString();
+		}
+	}
 
 	public void OnFoldClick() {
 		OPS.Fold();

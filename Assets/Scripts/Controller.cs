@@ -778,6 +778,13 @@ public class Controller : MonoBehaviour {
 				PauseGame.SetActive(false);
 			}
 		}).AddTo(this);
+
+		RxSubjects.UnSeat.AsObservable().Subscribe((e) => {
+			var uid = e.Data.String("uid");
+			if (uid == GameData.Shared.Uid && e.Data.Int("type") == 2) {
+				PokerUI.Alert("您已连续3次超时，先站起来休息下吧~");
+			}
+		});
 	}
 
 	private CanvasGroup findExpCvg() {

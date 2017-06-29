@@ -345,8 +345,14 @@ public class OwnerPanel : MonoBehaviour {
     public void SendRequest()
     {
         Connect.Shared.Emit(new Dictionary<string, object>() {
-				{"f", "modify"},
-				{"args", dict}
-			});
+			{"f", "modify"},
+			{"args", dict}
+		}, (data) => {
+            var err = data.Dict("err");
+
+            foreach(KeyValuePair<string, object>item in err) {
+                PokerUI.Toast(item.Value.ToString());
+            }
+        });
     }
 }

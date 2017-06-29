@@ -75,6 +75,7 @@ public class AutoDeposit {
 
 sealed public class Player {
 	sealed public class RestoreData {
+		public int BuyTimeCost = 10;
 		public int seconds = 0;
 		public Dictionary<string, object> data; 
 	}
@@ -158,6 +159,7 @@ sealed public class Player {
 			dt.data = new Dictionary<string, object>{
 				{"cmds", json.Dict("cmds")}
 			};
+			dt.BuyTimeCost = json.Int("show_moretime");
 
 			Countdown.OnNext(dt);
 		}
@@ -353,8 +355,13 @@ sealed public class GameData {
 			var inGame = e.Data.Bool("is_ingame");
 			var bankroll = e.Data.Int("bankroll");
 			var coins = e.Data.Int("coins");
+			var uid = e.Data.String("uid");
 
 			Coins = coins;
+
+			if (uid == GameData.Shared.Uid) {
+				GameData.Shared.Bankroll.Value = 0;
+			}			
 
 			if (index < 0 || inGame || bankroll <= 0) {
 				return ;
