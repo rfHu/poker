@@ -80,7 +80,6 @@ public class Avatar : MonoBehaviour {
 		}
 
 		var userPopup = PoolMan.Spawn("User");
-        userPopup.GetComponent<DOPopup>().Show();
         userPopup.GetComponent<UserDetail>().Init(Uid);
 	}
 

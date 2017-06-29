@@ -25,8 +25,10 @@ public class UserDetail : MonoBehaviour {
     public Button[] EmoticonButtons;
     public Button StandUpButton;
     public Text[] EmoticonPrice;
+    public GameObject UserRemark;
 
     string Uid;
+    private string remark;
     bool enterLimit;
     bool seatLimit;
     bool talkLimit;
@@ -58,6 +60,12 @@ public class UserDetail : MonoBehaviour {
             GameOptionBtn.SetActive(false);
         }
 
+        if (Uid == GameData.Shared.Uid) {
+            UserRemark.SetActive(false);
+        } else {
+            UserRemark.SetActive(true);
+        }
+
         if (Uid == GameData.Shared.Uid || GameData.Shared.FindPlayerIndex(Uid) == -1 || GameData.Shared.emoticonClose)
         {
             EmoticonsTeam.SetActive(false);
@@ -68,6 +76,7 @@ public class UserDetail : MonoBehaviour {
         }
 
         RequestById(Uid);
+        GetComponent<DOPopup>().Show();
     }
 
 	
@@ -92,13 +101,13 @@ public class UserDetail : MonoBehaviour {
             Name.text = profile.name;
             Avatar.GetComponent<Avatar>().SetImage(profile.avatar);
 
-            var remark = data.String("remark");
+            remark = data.String("remark");
 
             if (string.IsNullOrEmpty(remark)) {
-                remark = "玩家备注";
+                RemarkText.text = "玩家备注";
+            } else {
+                RemarkText.text = remark;
             }
-
-            RemarkText.text = remark;
 
             // 手数
             Hands.text = achieve.total_hand_count.ToString();
@@ -179,6 +188,7 @@ public class UserDetail : MonoBehaviour {
     }
 
     public void OnRemark() {
-        
+        var transform = PoolMan.Spawn("UserRemark");
+        transform.GetComponent<UserRemark>().Show(Uid, remark);
     }
 }

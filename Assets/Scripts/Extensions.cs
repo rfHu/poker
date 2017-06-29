@@ -161,4 +161,21 @@ using System.Text.RegularExpressions;
                 .Select(x => x.Select(v => v.Value).ToList())
                 .ToList();
         }
+
+        public static int CnCount(this string source) {
+            byte[] byteStr = System.Text.Encoding.GetEncoding("big5").GetBytes(source);  
+            return byteStr.Length;
+        }
+
+        public static string CnCut(this string source, int length) {
+            var len = source.CnCount();
+
+            if (length < len) {
+                len = length;
+            }
+
+            byte[] subbyte=System.Text.Encoding.GetEncoding("big5").GetBytes(source);
+            string sub=System.Text.Encoding.GetEncoding("big5").GetString(subbyte, 0, len);
+            return sub;
+        }
     }

@@ -148,7 +148,7 @@ public class MenuPopup : MonoBehaviour {
         PokerUI.Alert(text, () => 
         {
             Connect.Shared.Emit("offscore");
-        });
+        }, null);
 
         GetComponent<DOPopup>().Close();
     }

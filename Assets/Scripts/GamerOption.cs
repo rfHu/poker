@@ -66,7 +66,6 @@ public class GamerOption : MonoBehaviour {
         else 
         {
             var userPopup = PoolMan.Spawn("User");
-            userPopup.GetComponent<DOPopup>().Show();
             userPopup.GetComponent<UserDetail>().Init(uid);
         }
     }
