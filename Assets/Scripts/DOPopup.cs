@@ -145,10 +145,6 @@ public class DOPopup : MonoBehaviour {
 				break;
 		}
 
-		if (instance == this) {
-			instance = null;
-		}
-
 		return tween;
 	}
 
@@ -159,6 +155,10 @@ public class DOPopup : MonoBehaviour {
 
 		var tween = Hide();	
 		hasShow = false; // hide也要判断hasShow，所以逻辑要放到hide之后
+
+		if (instance == this) {
+			instance = null;
+		}
 
 		if (tween == null) {
 			release();
@@ -181,5 +181,7 @@ public class DOPopup : MonoBehaviour {
 		if (modalHelper != null) {
 			modalHelper.Despawn();
 		}
+
+		modalHelper = null;
 	}
 }
