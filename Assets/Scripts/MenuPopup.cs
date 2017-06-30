@@ -106,6 +106,7 @@ public class MenuPopup : MonoBehaviour {
     }
 
 	public void Exit() {
+        GetComponent<DOPopup>().Close();
 		External.Instance.Exit();
 	}
 

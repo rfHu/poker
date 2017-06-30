@@ -505,6 +505,10 @@ public class Controller : MonoBehaviour {
             }
 
             expression.transform.GetComponent<Expression>().SetTrigger(expressionName, () => {
+				if (this == null) {
+					return ;
+				}
+
 				if (uid == GameData.Shared.Uid) {
 					findExpCvg().alpha = 1; // 显示按钮
 				}

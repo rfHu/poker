@@ -379,8 +379,14 @@ public class PlayerObject : MonoBehaviour {
 		}).AddTo(this);
 
 		// 中途复原行动
-		player.Countdown.AsObservable().Where((obj) => obj.seconds > 0).Subscribe((obj) => {
-			turnTo(obj.data, obj.seconds, true);	
+		player.Countdown.AsObservable().Subscribe((obj) => {
+			if (obj.seconds == 0) {
+				if (isSelf()) {
+					OP.Despawn();
+				}
+			} else {
+				turnTo(obj.data, obj.seconds, true);	
+			}
 		}).AddTo(this);
 
 		RxSubjects.MoveTurn.Subscribe((e) => {

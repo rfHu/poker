@@ -372,6 +372,12 @@ public class OP : MonoBehaviour {
 		}
 	}
 
+	static public void Despawn() {
+		if (instance != null) {
+			PoolMan.Despawn(instance);
+		}
+	}
+
 	private void hideRaiseSlider() {
 		hideModal();
 		Slid.gameObject.SetActive(false);
@@ -383,6 +389,8 @@ public class OP : MonoBehaviour {
 		if (modal != null) {
 			modal.Despawn();
 		}
+
+		modal = null;
 	}
 
 	private void setToggle(bool active = true) {

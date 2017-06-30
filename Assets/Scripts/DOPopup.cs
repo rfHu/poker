@@ -181,5 +181,7 @@ public class DOPopup : MonoBehaviour {
 		if (modalHelper != null) {
 			modalHelper.Despawn();
 		}
+
+		modalHelper = null;
 	}
 }
