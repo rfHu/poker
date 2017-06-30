@@ -72,7 +72,7 @@ public class RoomMessage : MonoBehaviour {
             item.SetActive(GameData.Shared.Owner);
         }
 
-        GameData.Shared.Paused.Subscribe((pause) => {
+        GameData.Shared.Paused.Where((_) => GameData.Shared.GameStarted).Subscribe((pause) => {
             if (pause > 0) {
                 PauseIcon.gameObject.SetActive(false);
                 ContinueIcon.gameObject.SetActive(true);
@@ -161,11 +161,10 @@ public class RoomMessage : MonoBehaviour {
 			{"args", "0"}
 		}, (data, err) =>
         {
-            if (err != 0)
-            {
-                var msg = data.String("ret");
-                PokerUI.Alert(msg);
+            if (err == 1301) {
+                PokerUI.Alert("游戏还未开始");
             }
+
             GetComponent<DOPopup>().Close();
         });
     }
