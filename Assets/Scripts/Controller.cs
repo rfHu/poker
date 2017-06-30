@@ -710,6 +710,11 @@ public class Controller : MonoBehaviour {
 
 		RxSubjects.OffScore.Subscribe((e) => {
 			var type = e.Data.Int("type");
+			if (type == 0) {
+				PokerUI.Toast("您已提前下分，将在本局结束后结算");
+				return ;
+			} 
+
 			if (type != 1) {
 				return ;
 			}

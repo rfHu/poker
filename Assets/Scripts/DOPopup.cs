@@ -125,10 +125,6 @@ public class DOPopup : MonoBehaviour {
 		show();
 	}
 
-	public void Show() {
-		this.Show(close, modal, singleton);
-	}
-
 	public Tween Hide() {
 		if (!hasShow) {
 			return null;

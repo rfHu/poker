@@ -286,7 +286,8 @@ public sealed class Connect  {
 				return ;
 			}
 
-			if (json.String("roomid") != GameData.Shared.Room) {
+			var rid = json.String("roomid");			
+			if (!string.IsNullOrEmpty(rid) && rid != GameData.Shared.Room) {
 				return ;
 			}
 

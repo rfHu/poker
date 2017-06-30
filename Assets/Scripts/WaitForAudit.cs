@@ -24,7 +24,6 @@ public class WaitForAudit : MonoBehaviour {
 
 		GameData.Shared.AuditCD.Subscribe((secs) => {
 			if (secs > 0) {
-				GetComponent<DOPopup>().Show(null, false, false);
 				Show(secs);
 			} else {
 				Hide();

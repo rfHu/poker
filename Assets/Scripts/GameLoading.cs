@@ -13,8 +13,8 @@ public class GameLoading : MonoBehaviour {
 			external.SetProxy("http://localhost:8888");
 			// external.SetSid("s%3ASuOxhyXR0wmfu1xIZZUmFFdAq8Cd5xsD.h6RldH4l7niXxoZG0QyYnlt36QayIW0rtY0Z8GmorV0");
             // external.SetRoomID("5950a958cfb1ed3a3860c871");
-			external.SetSid("s%3AjbIrPkhke0dxxC1xIYmgWcvkYvApI4TS.n%2Fv%2B%2FJfBpd51yXNIDwfSPdIZYnhMnuSXtuXGbRz9mMw");
-			external.SetRoomID("5954fd4773c8d0751964515e");
+			external.SetSid("s%3AUcDkilU7MUKP57byZ_9aTeyzq053wLuf.rIKM7HxoBiX9veNaoHmu0YQUXfO2BgRlgNMLM6mzIhc");
+			external.SetRoomID("5955c34748f56212a71a4f82");
 
 		#endif
 
@@ -23,7 +23,7 @@ public class GameLoading : MonoBehaviour {
 		// 注册日志回调，替换使用 'Application.RegisterLogCallback(Application.LogCallback)'注册日志回调的方式
 		// BuglyAgent.RegisterLogCallback (CallbackDelegate.Instance.OnApplicationLogCallbackHandler);
 		#if UNITY_IPHONE || UNITY_IOS
-			BuglyAgent.InitWithAppId ("b3d868488f");
+			BuglyAgent.InitWithAppId("b3d868488f");
 		#elif UNITY_ANDROID
 			BuglyAgent.InitWithAppId ("a8103a785a");
 		#endif
