@@ -114,7 +114,7 @@ public class UserDetail : MonoBehaviour {
             // 动态表情
             var emotion = data.List("emoticon");
 
-            for (int i = 0; i < emotion.Count; i++)
+            for (int i = 0; i < 5; i++)
             {
                 var dict = emotion[i] as Dictionary<string, object>;
                 EmoticonPrice[i].text = "" + dict.Int("coin");
