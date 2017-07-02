@@ -2,21 +2,27 @@ using UnityEngine;
 using UniRx;
 using System;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class Expression: MonoBehaviour {
     public Transform Face;
     public Sprite FaceImage;
 
-    public void SetTrigger(string name, Action cb = null) {
+    public void SetTrigger(string name, Transform parent) {
+        var rect = GetComponent<RectTransform>();
+        var prect = parent.GetComponent<RectTransform>();
+
+        rect.anchorMax = prect.anchorMax;
+        rect.anchorMin = prect.anchorMin;
+        rect.pivot = prect.pivot;
+        rect.position = parent.position;
+        transform.SetParent(G.UICvs.transform, false);
+
         var animator = Face.GetComponent<Animator>();
         animator.Play(name);
 
         Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe((__) => {
             PoolMan.Despawn(transform);
-
-            if (cb != null) {
-                cb();
-            }
         }).AddTo(this);
     }
 
