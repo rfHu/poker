@@ -51,6 +51,7 @@ public class Controller : MonoBehaviour {
 
 	void Awake () {
 		if (Instance != null) {
+			PoolMan.DespawnAll();
 			Destroy(Instance);
 		}
 
@@ -472,19 +473,16 @@ public class Controller : MonoBehaviour {
             em.GetComponent<Emoticon>().Init(fromSeatPos, toSeat, pid, isToMe);
         }).AddTo(this);
 
+		Dictionary<string, Transform> expressCache = new Dictionary<string, Transform>(){};
         RxSubjects.Expression.Subscribe((e) => {
             var expressionName = e.Data.String("expression");
             var uid = e.Data.String("uid");
-
-            var expression = PoolMan.Spawn("Expression").gameObject;
+            var expression = PoolMan.Spawn("Expression");
+			Transform parent;
 
             if (uid == GameData.Shared.Uid)
             {
-                var parent = ExpressionButton.transform;
-                SingleExpression(expression, parent);
-
-				// 隐藏按钮
-				findExpCvg().alpha = 0;
+                parent = ExpressionButton.transform;
             }
             else
             {
@@ -500,19 +498,18 @@ public class Controller : MonoBehaviour {
                     }
                 }
 
-                var player = aimSeat.transform.Find("Player(Clone)");
-                SingleExpression(expression, player);
+                parent = aimSeat.transform.Find("Player(Clone)");
             }
 
-            expression.transform.GetComponent<Expression>().SetTrigger(expressionName, () => {
-				if (this == null) {
-					return ;
-				}
+			// 删除上一个
+			if (expressCache.ContainsKey(uid)) {
+				var exp = expressCache[uid];
+				PoolMan.Despawn(exp);
+				expressCache.Remove(uid);
+			}
 
-				if (uid == GameData.Shared.Uid) {
-					findExpCvg().alpha = 1; // 显示按钮
-				}
-			});
+            expression.GetComponent<Expression>().SetTrigger(expressionName, parent);
+			expressCache.Add(uid, expression);
         }).AddTo(this);
 
 		RxSubjects.ShowAudio.Where(isGuest).Subscribe((json) => {
@@ -736,22 +733,6 @@ public class Controller : MonoBehaviour {
 			}
 		}).AddTo(this);
 	}
-
-	private CanvasGroup findExpCvg() {
-		return ExpressionButton.transform.Find("Btn").GetComponent<CanvasGroup>();
-	}
-
-    private static void SingleExpression(GameObject expression, Transform parent)
-    {
-		expression.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
-
-		var exp = parent.GetComponentInChildren<Expression>(); 
-		if (exp != null) {
-			PoolMan.Despawn(exp.transform);
-		}
-
-        expression.transform.SetParent(parent, false);
-    }
 
 	private bool isGuest(string json) {
 		var N = JSON.Parse(json);
