@@ -1,21 +1,20 @@
 fileFormatVersion: 2
-guid: 41c385485d77f4745a2b1c04da7b794f
-timeCreated: 1492669833
+guid: 9861ddbff62107b468be9c377bc049a3
+timeCreated: 1499072434
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
     21300000: CatchChicken_0
     21300002: CatchChicken_1
     21300004: CatchChicken_2
-    21300006: CatchChicken_3
-    21300008: CatchChicken_4
-    21300010: CatchChicken_5
-    21300012: CatchChicken_6
-    21300014: CatchChicken_7
-    21300016: CatchChicken_8
-    21300018: CatchChicken_9
-    21300020: CatchChicken_10
-    21300022: CatchChicken_11
+    21300006: CatchChicken_4
+    21300008: CatchChicken_5
+    21300010: CatchChicken_7
+    21300012: CatchChicken_8
+    21300014: CatchChicken_10
+    21300016: CatchChicken_3
+    21300018: CatchChicken_6
+    21300020: CatchChicken_9
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -40,9 +39,9 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     filterMode: -1
-    aniso: 16
+    aniso: -1
     mipBias: -1
-    wrapMode: 0
+    wrapMode: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -63,38 +62,6 @@ TextureImporter:
   textureFormatSet: 0
   platformSettings:
   - buildTarget: DefaultTexturePlatform
-    maxTextureSize: 4096
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 1
-    allowsAlphaSplitting: 0
-    overridden: 0
-  - buildTarget: Standalone
-    maxTextureSize: 4096
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 1
-    allowsAlphaSplitting: 0
-    overridden: 0
-  - buildTarget: iPhone
-    maxTextureSize: 4096
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 1
-    allowsAlphaSplitting: 0
-    overridden: 0
-  - buildTarget: Android
-    maxTextureSize: 4096
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 1
-    allowsAlphaSplitting: 0
-    overridden: 0
-  - buildTarget: Windows Store Apps
     maxTextureSize: 2048
     textureFormat: -1
     textureCompression: 1
@@ -102,7 +69,23 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
-  - buildTarget: WebGL
+  - buildTarget: Standalone
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: iPhone
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Android
     maxTextureSize: 2048
     textureFormat: -1
     textureCompression: 1
@@ -117,10 +100,10 @@ TextureImporter:
       name: CatchChicken_0
       rect:
         serializedVersion: 2
-        x: 1
-        y: 40
-        width: 154
-        height: 113
+        x: 0
+        y: 32
+        width: 125
+        height: 91
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -130,10 +113,10 @@ TextureImporter:
       name: CatchChicken_1
       rect:
         serializedVersion: 2
-        x: 156
-        y: 12
-        width: 155
-        height: 169
+        x: 125
+        y: 10
+        width: 126
+        height: 135
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -143,23 +126,10 @@ TextureImporter:
       name: CatchChicken_2
       rect:
         serializedVersion: 2
-        x: 314
-        y: 12
-        width: 176
-        height: 170
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: CatchChicken_3
-      rect:
-        serializedVersion: 2
-        x: 491
-        y: 6
-        width: 180
-        height: 182
+        x: 253
+        y: 5
+        width: 142
+        height: 146
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -169,10 +139,10 @@ TextureImporter:
       name: CatchChicken_4
       rect:
         serializedVersion: 2
-        x: 673
-        y: 6
-        width: 172
-        height: 180
+        x: 540
+        y: 5
+        width: 140
+        height: 144
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -182,23 +152,10 @@ TextureImporter:
       name: CatchChicken_5
       rect:
         serializedVersion: 2
-        x: 847
-        y: 6
-        width: 172
-        height: 181
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: CatchChicken_6
-      rect:
-        serializedVersion: 2
-        x: 1022
-        y: 12
-        width: 172
-        height: 181
+        x: 681
+        y: 5
+        width: 139
+        height: 151
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -208,12 +165,12 @@ TextureImporter:
       name: CatchChicken_7
       rect:
         serializedVersion: 2
-        x: 1194
-        y: 4
-        width: 174
-        height: 182
+        x: 961
+        y: 5
+        width: 139
+        height: 144
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -221,10 +178,49 @@ TextureImporter:
       name: CatchChicken_8
       rect:
         serializedVersion: 2
-        x: 1370
-        y: 6
-        width: 172
-        height: 181
+        x: 1101
+        y: 4
+        width: 140
+        height: 148
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: CatchChicken_10
+      rect:
+        serializedVersion: 2
+        x: 1387
+        y: 3
+        width: 157
+        height: 151
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: CatchChicken_3
+      rect:
+        serializedVersion: 2
+        x: 397
+        y: 5
+        width: 143
+        height: 146
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: CatchChicken_6
+      rect:
+        serializedVersion: 2
+        x: 822
+        y: 9
+        width: 139
+        height: 145
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -234,25 +230,12 @@ TextureImporter:
       name: CatchChicken_9
       rect:
         serializedVersion: 2
-        x: 1541
-        y: 6
-        width: 180
-        height: 182
+        x: 1241
+        y: 4
+        width: 143
+        height: 145
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: CatchChicken_11
-      rect:
-        serializedVersion: 2
-        x: 1724
-        y: 3
-        width: 194
-        height: 188
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0

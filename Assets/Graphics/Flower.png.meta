@@ -1,27 +1,17 @@
 fileFormatVersion: 2
-guid: 8c355a1f22814fb4caee2b0291b41b3f
-timeCreated: 1492676462
+guid: f1061c18bbdffeb449fbfc1647605fc5
+timeCreated: 1499073145
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Flower_0
-    21300002: Flower_1
-    21300004: Flower_2
-    21300006: Flower_0
-    21300008: Flower_1
-    21300010: Flower_2
-    21300012: Flower_5
-    21300014: Flower_7
-    21300016: Flower_8
-    21300018: Flower_9
-    21300020: Flower_3
-    21300022: Flower_11
-    21300024: Flower_6
-    21300026: Flower_7
-    21300028: Flower_14
-    21300030: Flower_4
-    21300032: Flower_16
-    21300034: Flower_6
+    21300000: flower_2
+    21300002: flower_0
+    21300004: flower_1
+    21300006: flower_3
+    21300008: flower_6
+    21300010: flower_7
+    21300012: flower_4
+    21300014: flower_5
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -46,9 +36,9 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     filterMode: -1
-    aniso: 16
+    aniso: -1
     mipBias: -1
-    wrapMode: 0
+    wrapMode: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -69,38 +59,6 @@ TextureImporter:
   textureFormatSet: 0
   platformSettings:
   - buildTarget: DefaultTexturePlatform
-    maxTextureSize: 4096
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 1
-    allowsAlphaSplitting: 0
-    overridden: 0
-  - buildTarget: Standalone
-    maxTextureSize: 4096
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 1
-    allowsAlphaSplitting: 0
-    overridden: 0
-  - buildTarget: iPhone
-    maxTextureSize: 4096
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 1
-    allowsAlphaSplitting: 0
-    overridden: 0
-  - buildTarget: Android
-    maxTextureSize: 4096
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 1
-    allowsAlphaSplitting: 0
-    overridden: 0
-  - buildTarget: Windows Store Apps
     maxTextureSize: 2048
     textureFormat: -1
     textureCompression: 1
@@ -108,7 +66,23 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
-  - buildTarget: WebGL
+  - buildTarget: Standalone
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: iPhone
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Android
     maxTextureSize: 2048
     textureFormat: -1
     textureCompression: 1
@@ -120,104 +94,104 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Flower_0
-      rect:
-        serializedVersion: 2
-        x: 139
-        y: 250
-        width: 181
-        height: 119
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Flower_1
-      rect:
-        serializedVersion: 2
-        x: 325
-        y: 243
-        width: 229
-        height: 129
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Flower_2
-      rect:
-        serializedVersion: 2
-        x: 1
-        y: 255
-        width: 136
-        height: 115
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Flower_3
+      name: flower_2
       rect:
         serializedVersion: 2
         x: 0
-        y: 135
-        width: 138
-        height: 118
+        y: 205
+        width: 110
+        height: 92
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Flower_6
+      name: flower_0
       rect:
         serializedVersion: 2
-        x: 141
+        x: 111
+        y: 201
+        width: 145
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: flower_1
+      rect:
+        serializedVersion: 2
+        x: 260
+        y: 193
+        width: 189
+        height: 105
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: flower_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 108
+        width: 111
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: flower_6
+      rect:
+        serializedVersion: 2
+        x: 113
         y: 0
-        width: 276
-        height: 245
+        width: 221
+        height: 196
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Flower_7
+      name: flower_7
       rect:
         serializedVersion: 2
-        x: 474
-        y: 177
-        width: 35
-        height: 36
+        x: 380
+        y: 141
+        width: 28
+        height: 30
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Flower_4
+      name: flower_4
       rect:
         serializedVersion: 2
-        x: 2
-        y: 10
-        width: 137
-        height: 123
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Flower_5
-      rect:
-        serializedVersion: 2
-        x: 420
+        x: 1
         y: 8
-        width: 137
-        height: 124
+        width: 111
+        height: 99
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: flower_5
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 6
+        width: 111
+        height: 100
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
