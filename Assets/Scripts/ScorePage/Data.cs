@@ -33,7 +33,9 @@ namespace ScorePage
         public List<PlayerModel> PlayerList;
     }
 
-    public class LeaveIconData: Data{}
+    public class LeaveIconData: Data{
+        public string Label;
+    }
 
     public class Data27: Data {
         public int Number;

@@ -192,18 +192,24 @@ namespace ScorePage {
                 });
 
                 if (index >= 0) {
-                    playerList.Insert(index, new LeaveIconData());
+                    playerList.Insert(index, new LeaveIconData() {
+                        Label = "已离桌"
+                    });
                 }
 
                 rowData.AddRange(playerList);
 
-                rowData.Add(new LeaveIconData());
-                offScoreList.Sort((a, b) => {
-                    var aa = a as PlayerRowData;
-                    var bb = b as PlayerRowData;
-                    return bb.Score - aa.Score;
-                });
-                rowData.AddRange(offScoreList);
+                if (offScoreList.Count > 0) {
+                    rowData.Add(new LeaveIconData(){
+                        Label = "已下分"
+                    });
+                    offScoreList.Sort((a, b) => {
+                        var aa = a as PlayerRowData;
+                        var bb = b as PlayerRowData;
+                        return bb.Score - aa.Score;
+                    });
+                    rowData.AddRange(offScoreList);
+                }
                 
                 rowData.Add(new GuestHeadData() {
                     Number = guestList.Count
