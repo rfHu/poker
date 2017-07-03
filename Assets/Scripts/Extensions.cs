@@ -161,4 +161,51 @@ using System.Text.RegularExpressions;
                 .Select(x => x.Select(v => v.Value).ToList())
                 .ToList();
         }
+
+        public static int CnCount(this string source) {
+            if (string.IsNullOrEmpty(source)) {
+                return 0;
+            }
+
+            int len = source.Length;
+            int i = 0;
+            int count = 0;
+
+            while (i < len) {
+                var _char = source[i];
+                if (Convert.ToInt32(_char) > 255) {
+                    count += 2;
+                } else {
+                    count += 1;
+                }
+
+                i++;
+            } 
+
+            return count;
+        }
+
+        public static string CnCut(this string source, int length) {
+            var cnCount = source.CnCount();
+
+            if (cnCount <= length) {
+                return source;
+            }
+            
+            var idx = source.Length;
+
+            while (cnCount > length) {
+                var _char = source[idx - 1];
+                
+                if (Convert.ToInt32(_char) > 255) {
+                    cnCount -= 2;
+                } else {
+                    cnCount -= 1;
+                }
+                
+                idx--;
+            }
+
+            return source.Substring(0, idx);
+        }
     }

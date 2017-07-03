@@ -49,9 +49,9 @@ public class RoomMessage : MonoBehaviour {
             setText(LeftTime, secToStr(value));
         }).AddTo(this);
 
-        var startNum = GameData.Shared.StartTime;
+        var cTime = GameData.Shared.CreateTime;
+        StartTime.text = cTime.Month + "月" + cTime.Day + "日   " + cTime.Hour + ":" + cTime.Minute;
 
-        StartTime.text = startNum.Month + "月" + startNum.Day + "日   " + startNum.Hour + ":" + startNum.Minute;
         GameTime.text = (float)GameData.Shared.Duration / 3600 + "小时";
         AnteMeg.text = GameData.Shared.Ante.Value.ToString();
         SbBb.text = GameData.Shared.SB + "/" + GameData.Shared.BB;
@@ -72,8 +72,8 @@ public class RoomMessage : MonoBehaviour {
             item.SetActive(GameData.Shared.Owner);
         }
 
-        GameData.Shared.Paused.Subscribe((pause) => {
-            if (pause) {
+        GameData.Shared.Paused.Where((_) => GameData.Shared.GameStarted).Subscribe((pause) => {
+            if (pause > 0) {
                 PauseIcon.gameObject.SetActive(false);
                 ContinueIcon.gameObject.SetActive(true);
             } else {
@@ -141,17 +141,17 @@ public class RoomMessage : MonoBehaviour {
     public void Pause()
     {
         string f;
-        bool paused;
+        int paused;
 
-        if (GameData.Shared.Paused.Value && GameData.Shared.GameStarted)
+        if (GameData.Shared.Paused.Value > 0 && GameData.Shared.GameStarted)
         {
             f = "start";
-            paused = false;
+            paused = 1;
         }
         else
         {
             f = "pause";
-            paused = true;
+            paused = 0;
         }
 
         GameData.Shared.Paused.OnNext(paused);
@@ -161,11 +161,10 @@ public class RoomMessage : MonoBehaviour {
 			{"args", "0"}
 		}, (data, err) =>
         {
-            if (err != 0)
-            {
-                var msg = data.String("ret");
-                PokerUI.Alert(msg);
+            if (err == 1301) {
+                PokerUI.Alert("游戏还未开始");
             }
+
             GetComponent<DOPopup>().Close();
         });
     }

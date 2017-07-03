@@ -15,6 +15,7 @@ public class OwnerPanel : MonoBehaviour {
     public Slider Turn_countdownSlider;
     public Toggle Need_auditToggle;
     public Toggle StraddleToggle;
+    public Toggle OffScoreToggle;
 
     public GameObject AnteScriptNum;
     public Transform AnteSuperscript;
@@ -23,6 +24,8 @@ public class OwnerPanel : MonoBehaviour {
     public Text ETSliderNum;
     public Text ASliderNum;
     public Text T_cNum;
+    public Text MyCoins;
+    public Text CostCoins;
 
     public CButton SaveButton;
     
@@ -30,7 +33,7 @@ public class OwnerPanel : MonoBehaviour {
     private List<int> bankroll_multiple;
 
     private Dictionary<string, object> dict = new Dictionary<string, object>();
-    private bool[] isChanged = new bool[6]{ false, false, false, false, false ,false};
+    private bool[] isChanged = new bool[7]{ false, false, false, false, false ,false, false};
     private List<int> turn_countdownNum =new List<int>{ 10, 12, 15, 20 };
 
 
@@ -44,9 +47,10 @@ public class OwnerPanel : MonoBehaviour {
 
         Need_auditToggle.isOn = GameData.Shared.NeedAudit;
         StraddleToggle.isOn = GameData.Shared.Straddle.Value;
+        OffScoreToggle.isOn = GameData.Shared.OffScore.Value;
+        MyCoins.text = _.Num2CnDigit(GameData.Shared.Coins);
 
         Turn_countdownSlider.value = turn_countdownNum.IndexOf(GameData.Shared.SettingThinkTime);
-        
 
         ExtendTimeSlider.value = 0;
         ETSliderNum.text = "0h";
@@ -56,6 +60,10 @@ public class OwnerPanel : MonoBehaviour {
             isChanged[i] = false;
         }
 	}
+
+    void Awake() {
+        
+    }
 
     private void AnteSliderInit()
     {
@@ -189,12 +197,9 @@ public class OwnerPanel : MonoBehaviour {
 
     public void ETSliderChanged() 
     {
-        if (ExtendTimeSlider.value == 0)
-            ETSliderNum.text = "0h";
-        else if (ExtendTimeSlider.value == 1)
-            ETSliderNum.text = "0.5h";
-        else
-            ETSliderNum.text = (ExtendTimeSlider.value - 1).ToString() + "h";
+        var realValue = buyTimeCost;
+        ETSliderNum.text = (buyTimeCost / 100).ToString() + "h";
+        CostCoins.text = realValue.ToString();
 
         dict.Remove("time_limit");
 
@@ -213,6 +218,21 @@ public class OwnerPanel : MonoBehaviour {
             isChanged[1] = false;
         }
         SaveButtonInteractable();
+    }
+
+    private float buyTimeCost {
+        get {
+           var value = ExtendTimeSlider.value;
+           var cost = 0f;
+
+           if (value <= 1) {
+                cost = (value / 2) * 100;
+           } else {
+               cost = (value - 1) * 100;
+           }
+
+           return cost;
+        }
     }
 
     public void AnteSliderChanged() 
@@ -266,6 +286,20 @@ public class OwnerPanel : MonoBehaviour {
         SaveButtonInteractable();
     }
 
+    public void OffScoreToggleChanged() {
+         dict.Remove("off_score");
+
+        if (OffScoreToggle.isOn != GameData.Shared.OffScore.Value)
+        {
+            dict.Add("off_score", OffScoreToggle.isOn ? 1 : 0);
+            isChanged[6] = true;
+        }
+        else 
+        {
+            isChanged[6] = false;
+        }
+        SaveButtonInteractable();
+    }
 
     public void Turn_countdownSliderChanged()
     {
@@ -290,6 +324,11 @@ public class OwnerPanel : MonoBehaviour {
     
     void SaveButtonInteractable() 
     {
+        if (buyTimeCost > GameData.Shared.Coins) {
+            SaveButton.interactable = false;
+            return ;
+        } 
+
         foreach (var item in isChanged)
         {
             if (item)
@@ -306,8 +345,14 @@ public class OwnerPanel : MonoBehaviour {
     public void SendRequest()
     {
         Connect.Shared.Emit(new Dictionary<string, object>() {
-				{"f", "modify"},
-				{"args", dict}
-			});
+			{"f", "modify"},
+			{"args", dict}
+		}, (data) => {
+            var err = data.Dict("err");
+
+            foreach(KeyValuePair<string, object>item in err) {
+                PokerUI.Toast(item.Value.ToString());
+            }
+        });
     }
 }

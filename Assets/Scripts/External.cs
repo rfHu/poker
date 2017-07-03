@@ -77,6 +77,10 @@ public class External : MonoBehaviour{
 		Connect.Domain = domain;	
 	}
 
+	public void SetAPIDomain(string domain) {
+		HTTP.APIDomain = domain;
+	}
+
 	private void close(Action callback) {
 		// 清空两个关键数据
 		GameData.Shared.Sid = "";

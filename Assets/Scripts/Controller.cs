@@ -51,6 +51,7 @@ public class Controller : MonoBehaviour {
 
 	void Awake () {
 		if (Instance != null) {
+			PoolMan.DespawnAll();
 			Destroy(Instance);
 		}
 
@@ -472,19 +473,16 @@ public class Controller : MonoBehaviour {
             em.GetComponent<Emoticon>().Init(fromSeatPos, toSeat, isToMe);
         }).AddTo(this);
 
+		Dictionary<string, Transform> expressCache = new Dictionary<string, Transform>(){};
         RxSubjects.Expression.Subscribe((e) => {
             var expressionName = e.Data.String("expression");
             var uid = e.Data.String("uid");
-
-            var expression = PoolMan.Spawn("Expression").gameObject;
+            var expression = PoolMan.Spawn("Expression");
+			Transform parent;
 
             if (uid == GameData.Shared.Uid)
             {
-                var parent = ExpressionButton.transform;
-                SingleExpression(expression, parent);
-
-				// 隐藏按钮
-				findExpCvg().alpha = 0;
+                parent = ExpressionButton.transform;
             }
             else
             {
@@ -500,15 +498,18 @@ public class Controller : MonoBehaviour {
                     }
                 }
 
-                var player = aimSeat.transform.Find("Player(Clone)");
-                SingleExpression(expression, player);
+                parent = aimSeat.transform.Find("Player(Clone)");
             }
 
-            expression.transform.GetComponent<Expression>().SetTrigger(expressionName, () => {
-				if (uid == GameData.Shared.Uid) {
-					findExpCvg().alpha = 1; // 显示按钮
-				}
-			});
+			// 删除上一个
+			if (expressCache.ContainsKey(uid)) {
+				var exp = expressCache[uid];
+				PoolMan.Despawn(exp);
+				expressCache.Remove(uid);
+			}
+
+            expression.GetComponent<Expression>().SetTrigger(expressionName, parent);
+			expressCache.Add(uid, expression);
         }).AddTo(this);
 
 		RxSubjects.ShowAudio.Where(isGuest).Subscribe((json) => {
@@ -574,35 +575,50 @@ public class Controller : MonoBehaviour {
 			});	
 		}).AddTo(this);
 
-		RxSubjects.Pausing.Subscribe((_) => {
-			var text = "房主已暂停游戏";
+		RxSubjects.Pausing.Subscribe((e) => {
+			var type = e.Data.Int("type");
+			var text = "";
 
-			if (GameData.Shared.InGame) {
-				text += "（下一手生效）";
+			if (type == 5) {
+				text = "服务器即将升级，牌局将强制暂停";
+			} else {
+				text = "房主已暂停游戏";
+
+				if (GameData.Shared.InGame) {
+					text += "（下一手生效）";
+				}
 			}
 
 			PokerUI.Toast(text);
 		}).AddTo(this);
 
 		RxSubjects.Modify.Subscribe((e) =>{
-
             var data = e.Data;
-            var str = "";
 
             foreach (var item in e.Data)
 	        {
+				var str = "";
                 switch (item.Key) 
                 {
                     case "bankroll_multiple":
                         GameData.Shared.BankrollMul = data.IL("bankroll_multiple");
                         str = "房主将记分牌带入倍数改为：" + GameData.Shared.BankrollMul[0] + "-" + GameData.Shared.BankrollMul[1];
                         PokerUI.Toast(str);
-                        break;
+                    	break;
 
                     case "time_limit": 
                         GameData.Shared.Duration += data.Long("time_limit");
                         GameData.Shared.LeftTime.Value += data.Long("time_limit");
-                        str = "房主将牌局延长了" + data.Long("time_limit") / 3600f + "小时";
+
+						var time = data.Long("time_limit") / 3600f;
+						var digit = "小时";
+
+						if (time < 1) {
+							time = time * 60;
+							digit = "分钟";
+						}
+
+                        str = "房主将牌局延长了" + time.ToString()  + digit;
                         PokerUI.Toast(str);
                         break;
 
@@ -629,6 +645,13 @@ public class Controller : MonoBehaviour {
                         str = "房主将思考时间改为" + GameData.Shared.SettingThinkTime +"秒";
                         PokerUI.Toast(str);
                         break;
+
+					case "off_score":
+						var off = data.Int("off_score") == 1;
+						GameData.Shared.OffScore.Value = off;
+					 	str = off ? "房主开启了提前下分" : "房主关闭了提前下分";
+						PokerUI.Toast(str);
+						break;	
                     default:
                         break;
                 }
@@ -685,6 +708,30 @@ public class Controller : MonoBehaviour {
         {
              ExpressionButton.SetActive(action);
         }).AddTo(this);
+
+		RxSubjects.OffScore.Subscribe((e) => {
+			var type = e.Data.Int("type");
+			if (type == 0) {
+				PokerUI.Toast("您已提前下分，将在本局结束后结算");
+				return ;
+			} 
+
+			if (type != 1) {
+				return ;
+			}
+
+			var name = e.Data.String("name");
+			var avatar = e.Data.String("avatar");
+
+			var dt = e.Data.Dict("data");
+			var takecoin = dt.Int("takecoin");
+			var profit = dt.Int("bankroll") - takecoin;
+
+			PoolMan.Spawn("OffScore").GetComponent<OffScore>().Show(avatar, takecoin, profit);
+
+			// 已下分，bankroll为0
+			GameData.Shared.Bankroll.Value = 0;
+		}).AddTo(this);
 	}
 
     private void TalkLimit(bool limit)
@@ -723,31 +770,28 @@ public class Controller : MonoBehaviour {
 				return ;
 			}
 
+			// 服务器升级
+			if (pause == 5) {
+				PokerUI.DisAlert("服务器升级中…");
+				return ;
+			} 
+
 			PauseGame.transform.Find("Text").GetComponent<Text>().text = "房主已暂停游戏";
 
-			if (pause && !GameData.Shared.InGame) {
+			if (pause > 0 && !GameData.Shared.InGame) {
 				PauseGame.SetActive(true);
 			} else {
 				PauseGame.SetActive(false);
 			}
 		}).AddTo(this);
+
+		RxSubjects.UnSeat.AsObservable().Subscribe((e) => {
+			var uid = e.Data.String("uid");
+			if (uid == GameData.Shared.Uid && e.Data.Int("type") == 2) {
+				PokerUI.Alert("您已连续3次超时，先站起来休息下吧~");
+			}
+		});
 	}
-
-	private CanvasGroup findExpCvg() {
-		return ExpressionButton.transform.Find("Btn").GetComponent<CanvasGroup>();
-	}
-
-    private static void SingleExpression(GameObject expression, Transform parent)
-    {
-		expression.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
-
-		var exp = parent.GetComponentInChildren<Expression>(); 
-		if (exp != null) {
-			PoolMan.Despawn(exp.transform);
-		}
-
-        expression.transform.SetParent(parent, false);
-    }
 
 	private bool isGuest(string json) {
 		var N = JSON.Parse(json);

@@ -379,8 +379,14 @@ public class PlayerObject : MonoBehaviour {
 		}).AddTo(this);
 
 		// 中途复原行动
-		player.Countdown.AsObservable().Where((obj) => obj.seconds > 0).Subscribe((obj) => {
-			turnTo(obj.data, obj.seconds, true);	
+		player.Countdown.AsObservable().Subscribe((obj) => {
+			if (obj.seconds == 0) {
+				if (isSelf()) {
+					OP.Despawn();
+				}
+			} else {
+				turnTo(obj.data, obj.seconds, true, obj.BuyTimeCost);	
+			}
 		}).AddTo(this);
 
 		RxSubjects.MoveTurn.Subscribe((e) => {
@@ -724,9 +730,9 @@ public class PlayerObject : MonoBehaviour {
 		}	
 	}
 
-	private void turnTo(Dictionary<string, object> dict, int left, bool restore = false) {
+	private void turnTo(Dictionary<string, object> dict, int left, bool restore = false,int buyTimeCost = 10) {
 		if (isSelf()) {
-			showOP(dict, left);
+			showOP(dict, left, buyTimeCost);
 
 			var flag = player.Trust.FlagString();
 			var callNum = player.Trust.CallNumber.Value;
@@ -804,7 +810,7 @@ public class PlayerObject : MonoBehaviour {
         Countdown.SetActive(false); 
 	}
 
-	private OP showOP(Dictionary<string, object> data, int left) {
+	private OP showOP(Dictionary<string, object> data, int left, int buyTimeCost = 10) {
 		if (this == null) {
 			return null;
 		}
@@ -814,7 +820,7 @@ public class PlayerObject : MonoBehaviour {
 
 		OPTransform = OP.Spawn();
 		var op = OPTransform.GetComponent<OP>();
-		op.StartWithCmds(data, left);
+		op.StartWithCmds(data, left, buyTimeCost);
 
 		return op;
 	}

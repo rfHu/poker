@@ -39,6 +39,8 @@ public class OP : MonoBehaviour {
 	private int accurateValue;
 	private float disableAlpha = 0.4f;
 
+	public Text BuyTimeCost; 
+
 	void OnSpawned()
 	{	
 		var transform = GetComponent<RectTransform>();
@@ -79,7 +81,10 @@ public class OP : MonoBehaviour {
 		return instance;			
 	}
 	
-	public void StartWithCmds(Dictionary<string, object> data, int left) {
+	public void StartWithCmds(Dictionary<string, object> data, int left, int buyTimeCost = 10) {
+		// 设置购买时间按钮
+		setBuyCost(buyTimeCost);
+
         var cmds = data.Dict("cmds");
 		var check = cmds.Bool("check");
 		var callNum = cmds.Int("call");
@@ -350,13 +355,19 @@ public class OP : MonoBehaviour {
 			{"args", data}
         }, (redata) =>
         {
-            var display = redata.Int("display");
-            if (display == 0)
-            {
-                BuyTurnTime.SetActive(false);
-            }
+            var cost = redata.Int("show_moretime");
+			setBuyCost(cost);
         });
     }
+
+	private void setBuyCost(int cost) {
+		 if (cost < 0 || GameData.Shared.Coins < cost)
+		{
+			BuyTurnTime.SetActive(false);
+		} else {
+			BuyTimeCost.text = cost.ToString();
+		}
+	}
 
 	public void OnFoldClick() {
 		OPS.Fold();
@@ -372,6 +383,12 @@ public class OP : MonoBehaviour {
 		}
 	}
 
+	static public void Despawn() {
+		if (instance != null) {
+			PoolMan.Despawn(instance);
+		}
+	}
+
 	private void hideRaiseSlider() {
 		hideModal();
 		Slid.gameObject.SetActive(false);
@@ -383,6 +400,8 @@ public class OP : MonoBehaviour {
 		if (modal != null) {
 			modal.Despawn();
 		}
+
+		modal = null;
 	}
 
 	private void setToggle(bool active = true) {

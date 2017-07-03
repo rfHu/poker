@@ -17,6 +17,7 @@ public class MenuPopup : MonoBehaviour {
 
 	public GameObject HangGo;
 	public GameObject ReserveGo;
+    public GameObject ExchangeGo;
 
 	public void Supplement() {
 		if (!GameData.MyCmd.Takecoin) {
@@ -29,6 +30,13 @@ public class MenuPopup : MonoBehaviour {
 	{
         StandCG.alpha = GameData.MyCmd.Unseat ? 1 : 0.6f;
         SuppCG.alpha = GameData.MyCmd.Takecoin ? 1 : 0.6f;
+
+        // 可下分  
+        if (GameData.Shared.Bankroll.Value > 0 && GameData.Shared.OffScore.Value) {
+            ExchangeGo.SetActive(true);
+        } else {
+            ExchangeGo.SetActive(false);
+        }
 
         // 还未坐下
         if (!GameData.MyCmd.Unseat)
@@ -106,6 +114,7 @@ public class MenuPopup : MonoBehaviour {
     }
 
 	public void Exit() {
+        GetComponent<DOPopup>().Close();
 		External.Instance.Exit();
 	}
 
@@ -133,4 +142,15 @@ public class MenuPopup : MonoBehaviour {
 	public void Close() {
 		GetComponent<DOPopup>().Close();
 	}
+
+    public void ExchangeMoney() {
+        var text = "将提前为您结算牌局，是否继续？";
+
+        PokerUI.Alert(text, () => 
+        {
+            Connect.Shared.Emit("offscore");
+        }, null);
+
+        GetComponent<DOPopup>().Close();
+    }
 }

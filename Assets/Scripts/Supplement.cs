@@ -14,7 +14,6 @@ public class Supplement : MonoBehaviour {
 	public Text Pay;
 	public Slider slider;
 
-	private bool ready = false;
 	private DialogAlert payDialog;
 
 	// Use this for initialization
@@ -28,34 +27,34 @@ public class Supplement : MonoBehaviour {
 	}
 
 	void OnSpawned() {
-		Connect.Shared.Emit(new Dictionary<string, object>() {
-			{"f", "gamerdetail"},
-			{"args",  new Dictionary<string, object> {
-				{"uid", GameData.Shared.Uid},
-				{"bankroll_multiple", "1"}
-			}}
-		}, (ret) => {
-			var coins = ret.Dict("achieve").Int("coins");
-
-			GameData.Shared.Coins = coins; // 保存coins
-			Coins.text = coins.ToString();
-
-			var mul = ret.IL("bankroll_multiple"); 
-			int score = GameData.Shared.BB * 100; 
-			int min = mul[0] * score;
-			int max = Math.Max(mul[0], mul[1]) * score;
-			
-			OnChange(min);
-
-			slider.minValue = min;
-			slider.maxValue = max;
-			slider.onValueChanged.AddListener(OnChange);		
-
-			ready = true;	
-		});
-
-		Coins.text = GameData.Shared.Coins.ToString();
+		Coins.text = _.Num2CnDigit(GameData.Shared.Coins);
 		Blind.text = string.Format("{0}/{1}", GameData.Shared.BB / 2, GameData.Shared.BB);
+
+		var mul = GameData.Shared.BankrollMul;
+		var bb100 = 100 * GameData.Shared.BB;
+		var min = mul[0] * bb100;
+		var max = mul[1] * bb100;
+		var bankroll = GameData.Shared.Bankroll.Value;
+
+		if (bankroll >= max) {
+			return ;
+		}
+
+		int smin; 
+		int smax;
+
+		if (bankroll < min) {
+			smin = Mathf.CeilToInt((min - bankroll) / bb100) * bb100; 
+		} else {
+			smin = bb100;
+		}
+
+		smax = Mathf.CeilToInt((max - bankroll) / bb100) * bb100;
+
+		OnChange(smin);
+		slider.minValue = smin;
+		slider.maxValue = smax;
+		slider.onValueChanged.AddListener(OnChange);
 	}
 
 	public void OnChange(float value) {
@@ -69,10 +68,6 @@ public class Supplement : MonoBehaviour {
 	}
 
 	public void TakeCoin() {
-		if (!ready) {
-			return ;
-		}
-
 		float value = slider.value;	
 		Connect.Shared.Emit(new Dictionary<string, object>(){
 			{"f", "takecoin"},

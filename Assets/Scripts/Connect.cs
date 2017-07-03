@@ -8,7 +8,7 @@ using UniRx;
 
 public sealed class Connect  {
 	public static string Proxy;
-	public static string Domain = "https://socket.dev.poker.top";
+	public static string Domain = "https://socket.dev.poker.top"; 
 
 	private SocketManager manager;
 
@@ -147,6 +147,7 @@ public sealed class Connect  {
 		json["seq"] = seq;
 		json["pin"] = GameData.Shared.Pin;
 		json["uid"] = GameData.Shared.Uid;
+		json["ver"] = Application.version;
 		manager.Socket.Emit("rpc", json);
 
 		if (success != null) {
@@ -246,9 +247,18 @@ public sealed class Connect  {
 				return ;
 			}
 
+			var rid = json.String("roomid");
+			if (!string.IsNullOrEmpty(rid) && rid != GameData.Shared.Room) {
+				return ;
+			}
+
 			var ret = json.Dict("ret");
 			if (ret.ContainsKey("cmds")) {
 				GameData.MyCmd.SetCmd(ret.Dict("cmds"));
+			}
+
+			if (ret.ContainsKey("coins")) {
+				GameData.Shared.Coins = ret.Int("coins");
 			}
 
 			var err = json.Int("err");
@@ -274,6 +284,11 @@ public sealed class Connect  {
 			var json = args[0] as Dictionary<string, object>;
 
 			if (json == null) {
+				return ;
+			}
+
+			var rid = json.String("roomid");			
+			if (!string.IsNullOrEmpty(rid) && rid != GameData.Shared.Room) {
 				return ;
 			}
 
@@ -420,6 +435,9 @@ public sealed class Connect  {
                 case "award_27":
                     RxSubjects.Award27.OnNext(rxdata);
                     break;
+				case "offscore":
+					RxSubjects.OffScore.OnNext(rxdata);
+					break;
 				default:
 					break;
 			}
@@ -431,6 +449,28 @@ public sealed class Connect  {
 		manager.Close();
 		manager.Socket.Off();
 		instance = null;
+	}
+}
+
+public class HTTP {
+	public static string APIDomain = "https://api.poker.top";
+
+	public static void Post(string url, Dictionary<string, object> data, Action<string> cb = null) {
+		url = string.Format("{0}{1}", APIDomain, url);
+
+		HTTPRequest request = new HTTPRequest(new Uri(url), HTTPMethods.Post, (req, res) => {
+			if (cb != null) {
+				cb(res.DataAsText);
+			}
+		});
+
+		foreach(KeyValuePair<string, object> item in data) {
+			request.AddField(item.Key, item.Value.ToString());
+		}
+
+		request.Cookies.Add(new BestHTTP.Cookies.Cookie("connect.sid", GameData.Shared.Sid));
+
+		request.Send();
 	}
 }
 

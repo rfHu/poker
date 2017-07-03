@@ -9,7 +9,7 @@ using UniRx;
 public class UserDetail : MonoBehaviour {
 	public RawImage Avatar;
 	public Text Name;
-	public Text Coins;
+    public Text RemarkText;
 	public Text Hands;
 	public Text ShowHand;
 	public Text Join;
@@ -18,15 +18,18 @@ public class UserDetail : MonoBehaviour {
 	public Text PreRaise;
 	public Text ThreeBet;
 	public Text CBet;
-    public GameObject ButtonTeam;
+    public GameObject GameOptionBtn;
     public GameObject EmoticonsTeam;
     public GameObject R1;
     public GameObject R2;
     public Button[] EmoticonButtons;
     public Button StandUpButton;
     public Text[] EmoticonPrice;
+    public GameObject UserRemark;
+    public Text CoinsNumber;
 
     string Uid;
+    private string remark;
     bool enterLimit;
     bool seatLimit;
     bool talkLimit;
@@ -49,13 +52,21 @@ public class UserDetail : MonoBehaviour {
     {
         this.Uid = Uid;
 
-        if (GameData.Shared.Owner && Uid != GameData.Shared.Uid)
+        if (GameData.Shared.Owner)
         {
-            ButtonTeam.SetActive(true);
+            GameOptionBtn.SetActive(true);
         }
         else 
         {
-            ButtonTeam.SetActive(false);
+            GameOptionBtn.SetActive(false);
+        }
+
+        var parent = GameOptionBtn.transform.parent.gameObject;
+
+        if (Uid == GameData.Shared.Uid) {
+            parent.SetActive(false);
+        } else {
+            parent.SetActive(true);
         }
 
         if (Uid == GameData.Shared.Uid || GameData.Shared.FindPlayerIndex(Uid) == -1 || GameData.Shared.emoticonClose)
@@ -68,10 +79,22 @@ public class UserDetail : MonoBehaviour {
         }
 
         RequestById(Uid);
+        GetComponent<DOPopup>().Show();
     }
 
 	
     void RequestById(string id) {
+        var coinGo = CoinsNumber.transform.parent.gameObject;
+
+        if (Uid == GameData.Shared.Uid) {
+            RemarkText.gameObject.SetActive(false);
+            coinGo.SetActive(true);
+            CoinsNumber.text = _.Num2CnDigit(GameData.Shared.Coins);
+        } else {
+            RemarkText.gameObject.SetActive(true);
+            coinGo.SetActive(false);
+        } 
+
 		var d = new Dictionary<string, object>(){
 			{"uid", id}
 		};
@@ -92,8 +115,13 @@ public class UserDetail : MonoBehaviour {
             Name.text = profile.name;
             Avatar.GetComponent<Avatar>().SetImage(profile.avatar);
 
-            // 金币数
-            Coins.text = _.Num2CnDigit<int>(int.Parse(achieve.coins));
+            remark = data.String("remark");
+            if (string.IsNullOrEmpty(remark)) {
+                RemarkText.text = "玩家备注";
+            } else {
+                RemarkText.text = remark;
+            }
+
             // 手数
             Hands.text = achieve.total_hand_count.ToString();
             // 入池率
@@ -170,5 +198,10 @@ public class UserDetail : MonoBehaviour {
         image.color = color;
         text.color = color;
         icon.color = color;
+    }
+
+    public void OnRemark() {
+        var transform = PoolMan.Spawn("UserRemark");
+        transform.GetComponent<UserRemark>().Show(Uid, remark);
     }
 }
