@@ -26,6 +26,7 @@ public class UserDetail : MonoBehaviour {
     public Button StandUpButton;
     public Text[] EmoticonPrice;
     public GameObject UserRemark;
+    public Text CoinsNumber;
 
     string Uid;
     private string remark;
@@ -83,6 +84,17 @@ public class UserDetail : MonoBehaviour {
 
 	
     void RequestById(string id) {
+        var coinGo = CoinsNumber.transform.parent.gameObject;
+
+        if (Uid == GameData.Shared.Uid) {
+            RemarkText.gameObject.SetActive(false);
+            coinGo.SetActive(true);
+            CoinsNumber.text = _.Num2CnDigit(GameData.Shared.Coins);
+        } else {
+            RemarkText.gameObject.SetActive(true);
+            coinGo.SetActive(false);
+        } 
+
 		var d = new Dictionary<string, object>(){
 			{"uid", id}
 		};
@@ -104,8 +116,7 @@ public class UserDetail : MonoBehaviour {
             Avatar.GetComponent<Avatar>().SetImage(profile.avatar);
 
             remark = data.String("remark");
-
-            if (string.IsNullOrEmpty(remark) && GameData.Shared.Uid != Uid) {
+            if (string.IsNullOrEmpty(remark)) {
                 RemarkText.text = "玩家备注";
             } else {
                 RemarkText.text = remark;

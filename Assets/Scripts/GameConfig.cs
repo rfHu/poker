@@ -558,6 +558,7 @@ sealed public class GameData {
     public bool NeedInsurance = false;
     public bool Award27 = false;
     public bool BuryCard = false;
+	public DateTime CreateTime; 
 	public ReactiveProperty<long> LeftTime = new ReactiveProperty<long>(0);
     public ReactiveProperty<int> Ante = new ReactiveProperty<int>(-1);
     public ReactiveProperty<bool> Straddle = new ReactiveProperty<bool>(false);
@@ -619,6 +620,7 @@ sealed public class GameData {
 
         TalkLimit.Value = json.Int("talk_limit") == 1;
         ShowAudit.Value = json.List("un_audit").Count > 0;
+		CreateTime = _.DateTimeFromTimeStamp(json.Int("create_time"));
 
 		var startTs = json.Int("begin_time");
 		StartTime = _.DateTimeFromTimeStamp(startTs);
