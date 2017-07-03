@@ -94,7 +94,7 @@ public class CircleMask : MonoBehaviour {
 		G.PlaySound("time");
 
 		if (time <= vibraTime) {
-			Vibration.Vibrate();
+			Vibration.Vibrate(500);
 		}
 
 		Invoke("clickSound", 1f);
