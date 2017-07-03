@@ -15,7 +15,7 @@ public class GameLoading : MonoBehaviour {
             // external.SetRoomID("5950a958cfb1ed3a3860c871");
 
 			external.SetSid("s%3Ayzoz9QLBjEnL_Mg-ZbPDwEagrsmK7yFN.UqyioUkyg7j757Sk80TogBT4PPlB6rH0KtNsWo1qP4U");
-			external.SetRoomID("5959ae23178561751bcc2c7e");
+			external.SetRoomID("5959fbb40bb30f1037f38827");
 
 		#endif
 

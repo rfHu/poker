@@ -580,7 +580,7 @@ public class Controller : MonoBehaviour {
 			var text = "";
 
 			if (type == 5) {
-				text = "我们即将对服务器进行升级，本手结束后将强制暂停牌局";
+				text = "服务器即将升级，牌局将强制暂停";
 			} else {
 				text = "房主已暂停游戏";
 
