@@ -8,7 +8,7 @@ using UniRx;
 
 public sealed class Connect  {
 	public static string Proxy;
-	public static string Domain = "https://socket.dev.poker.top";
+	public static string Domain = "https://socket.dev.poker.top"; 
 
 	private SocketManager manager;
 
@@ -86,7 +86,8 @@ public sealed class Connect  {
 		Emit(new Dictionary<string, object>{
 			{"f", "entergame"},
 			{"args", new Dictionary<string, object> {
-				{"roomid", GameData.Shared.Room}
+				{"roomid", GameData.Shared.Room},
+				{"ver", Application.version}
 			}}
 		}, (json) => {
 			_.Log("Unity: 进入房间逻辑执行完毕");
@@ -452,7 +453,7 @@ public sealed class Connect  {
 }
 
 public class HTTP {
-	public static string APIDomain = "https://api.dev.poker.top";
+	public static string APIDomain = "https://api.poker.top";
 
 	public static void Post(string url, Dictionary<string, object> data, Action<string> cb = null) {
 		url = string.Format("{0}{1}", APIDomain, url);
