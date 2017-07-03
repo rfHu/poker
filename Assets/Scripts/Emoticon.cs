@@ -16,8 +16,13 @@ public class Emoticon : MonoBehaviour {
         _rectTransform.anchoredPosition = fromSeat;
 
         if (toSeat.GetComponent<Seat>().GetPos() == SeatPosition.Left)
-            transform.localScale = new Vector3( -1, 1);
-
+        {
+            transform.localScale = new Vector3(-1, 1);
+        }
+        else
+        {
+            transform.localScale = new Vector3(1, 1);
+        }
 
         Vector2 aimSeat = toSeat.transform.localPosition + new Vector3(0, 65, 0);
 
