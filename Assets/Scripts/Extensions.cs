@@ -163,19 +163,49 @@ using System.Text.RegularExpressions;
         }
 
         public static int CnCount(this string source) {
-            byte[] byteStr = System.Text.Encoding.GetEncoding("big5").GetBytes(source);  
-            return byteStr.Length;
+            if (string.IsNullOrEmpty(source)) {
+                return 0;
+            }
+
+            int len = source.Length;
+            int i = 0;
+            int count = 0;
+
+            while (i < len) {
+                var _char = source[i];
+                if (Convert.ToInt32(_char) > 255) {
+                    count += 2;
+                } else {
+                    count += 1;
+                }
+
+                i++;
+            } 
+
+            return count;
         }
 
         public static string CnCut(this string source, int length) {
-            var len = source.CnCount();
+            var cnCount = source.CnCount();
 
-            if (length < len) {
-                len = length;
+            if (cnCount <= length) {
+                return source;
+            }
+            
+            var idx = source.Length;
+
+            while (cnCount > length) {
+                var _char = source[idx - 1];
+                
+                if (Convert.ToInt32(_char) > 255) {
+                    cnCount -= 2;
+                } else {
+                    cnCount -= 1;
+                }
+                
+                idx--;
             }
 
-            byte[] subbyte=System.Text.Encoding.GetEncoding("big5").GetBytes(source);
-            string sub=System.Text.Encoding.GetEncoding("big5").GetString(subbyte, 0, len);
-            return sub;
+            return source.Substring(0, idx);
         }
     }

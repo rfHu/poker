@@ -49,9 +49,13 @@ public class RoomMessage : MonoBehaviour {
             setText(LeftTime, secToStr(value));
         }).AddTo(this);
 
-        var startNum = GameData.Shared.StartTime;
+        if (GameData.Shared.GameStarted) {
+            var startDate = GameData.Shared.StartTime;
+            StartTime.text = startDate.Month + "月" + startDate.Day + "日   " + startDate.Hour + ":" + startDate.Minute;
+        } else {
+            StartTime.text = "游戏未开始";
+        }
 
-        StartTime.text = startNum.Month + "月" + startNum.Day + "日   " + startNum.Hour + ":" + startNum.Minute;
         GameTime.text = (float)GameData.Shared.Duration / 3600 + "小时";
         AnteMeg.text = GameData.Shared.Ante.Value.ToString();
         SbBb.text = GameData.Shared.SB + "/" + GameData.Shared.BB;
