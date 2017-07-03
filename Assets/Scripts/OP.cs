@@ -361,7 +361,7 @@ public class OP : MonoBehaviour {
     }
 
 	private void setBuyCost(int cost) {
-		 if (cost < 0)
+		 if (cost < 0 || GameData.Shared.Coins < cost)
 		{
 			BuyTurnTime.SetActive(false);
 		} else {
