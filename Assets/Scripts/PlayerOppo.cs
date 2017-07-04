@@ -16,7 +16,6 @@ namespace PokerPlayer {
         public Text CardDesc;
 	    public List<Card> ShowCards;
         public Transform Cardfaces;
-        public Transform Circle;
         public Transform Countdown;
 
         private IEnumerator turnFactor;
@@ -25,7 +24,7 @@ namespace PokerPlayer {
         void Awake()
         {
             Countdown.gameObject.SetActive(false);                        
-            Countdown.SetParent(Circle, false);
+            Countdown.SetParent(Base.Circle, false);
             Countdown.SetAsFirstSibling();
         }
 
@@ -65,7 +64,6 @@ namespace PokerPlayer {
 
             // 中途复原行动
             player.Countdown.AsObservable().Where((obj) => obj.seconds > 0).Subscribe((obj) => {
-                Debug.Log(111111111111);
                 TurnTo(null, obj.seconds);
             }).AddTo(this);
         }
@@ -159,7 +157,8 @@ namespace PokerPlayer {
         }
 
         public void MoveOut() {
-
+            Base.Avt.GetComponent<CircleMask>().Disable();
+            activated = false;
         }
 
         public void TurnTo(Dictionary<string, object> data, int left) {
@@ -172,13 +171,7 @@ namespace PokerPlayer {
         }
 
         public void ResetTime(int total) {
-            // if (isSelf) {
-            //         OPTransform.GetComponent<OP>().Reset(model.total);
-            //     } else {
-                    // StopCoroutine(turnCoroutine);
-                    // turnCoroutine = yourTurn(model.total);
-                    // StartCoroutine(turnCoroutine);
-                // } 
+             TurnTo(null, total);
         }
     }
 }

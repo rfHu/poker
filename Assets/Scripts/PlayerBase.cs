@@ -24,6 +24,8 @@ namespace PokerPlayer {
 	    public GameObject BackGameBtn;
 	    public GameObject HandGo;
         public GameObject AllinGo;
+        public Transform Circle;
+
         protected Player player;
         private ActionState lastState;
 	    private int actCardsNumber = 0;
@@ -44,6 +46,10 @@ namespace PokerPlayer {
             var avatar = Avt.GetComponent<Avatar>();
 		    avatar.Uid = player.Uid;
 		    avatar.SetImage(player.Avatar);	
+
+            if (GameData.Shared.InGame && !player.InGame) {
+		    	SetFolded();
+		    }
 
             addEvents();
         }
@@ -229,6 +235,16 @@ namespace PokerPlayer {
                 }
 
                 myDelegate.ResetTime(model.total); 
+            }).AddTo(this);
+
+            RxSubjects.GameOver.Subscribe((e) => {
+                myDelegate.MoveOut();
+                PlayerAct.gameObject.SetActive(false);
+                AllinGo.SetActive(false);
+
+                if (chipsGo != null) {
+                    chipsGo.Hide();
+                }
             }).AddTo(this);
         }
 

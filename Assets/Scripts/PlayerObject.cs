@@ -20,7 +20,6 @@ public class PlayerObject : MonoBehaviour {
 	public List<Transform> MyCards;
     public GameObject WinStars;
 	public Text WinNumber;
-	public GameObject AvatarMask;
 	public PlayerActGo PlayerAct;
 	public Sprite[] ActSprites;
 	public GameObject AllinGo;
@@ -30,12 +29,11 @@ public class PlayerObject : MonoBehaviour {
 	public GameObject Circle;
 	public GameObject AutoArea;
 	public GameObject[] AutoOperas; 
-	public GameObject[] Eyes; 
+	
 
 	private Transform OPTransform;
 	private ChipsGo cgo; 
 	private Player player;
-    private float hideDuration = 0.3f; 
 	private ActionState lastState;
 	private bool gameover = false;
 
@@ -71,146 +69,25 @@ public class PlayerObject : MonoBehaviour {
 		}
 	}
 
-	public void MoveOut() {
-		// @TODO: 未定位出什么错误，暂时这么处理
-		if (this == null || AvatarMask == null) {
-			return ;
-		}
+	// void OnDespawned()
+	// {
+	// 	if (OPTransform != null && GameData.Shared.MySeat == -1) {
+	// 		PoolMan.Despawn(OPTransform);
+	// 	}
 
-		activated = false;
-		AvatarMask.SetActive(false);
-
-		if (OPTransform != null) {
-			PoolMan.Despawn(OPTransform);
-		}
-
-		Circle.SetActive(true); // 显示头像
-		Avt.GetComponent<CircleMask>().Disable();
-	}
-
-	void OnDespawned()
-	{
-		if (OPTransform != null && GameData.Shared.MySeat == -1) {
-			PoolMan.Despawn(OPTransform);
-		}
-
-        if (isSelf && GameData.Shared.MySeat == -1)
-        {
-            RxSubjects.Seating.OnNext(false);
-        }
-
-		if (turnCoroutine != null) {
-			StopCoroutine(turnCoroutine);
-		}
-
-		disposables.Clear();
-	}
+    //     if (isSelf && GameData.Shared.MySeat == -1)
+    //     {
+    //         RxSubjects.Seating.OnNext(false);
+    //     }
+	// }
 
 	public void ShowPlayer(Player player, Transform parent) {
-		Index = player.Index;
-		Uid = player.Uid;
-
-		this.player = player;
-
-		if (isSelf) {
-			RxSubjects.ChangeVectorsByIndex.OnNext(Index);
-            RxSubjects.Seating.OnNext(true);
-		} else {
-			
-		}
-
-		if (GameData.Shared.InGame && !player.InGame) {
-			setFolded();
-		}
-
-
-		GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
-		transform.SetParent(parent, false);
 		
-		registerRxEvent();
-	}
-
-	public void AutoCheckOrFold() {
-		toggleAutoBtns(0);	
-	}
-
-	public void AutoCall() {
-		toggleAutoBtns(1);	
-	}
-
-	private void toggleAutoBtns(int index) {
-		var valStr = player.Trust.SelectedFlag.Value;
-
-		if (String.IsNullOrEmpty(valStr)) {
-			valStr = "00";
-		}
-		
-		var value = new System.Text.StringBuilder(valStr);
-
-		value[index] = value[index] == '0' ? '1' : '0';
-		value[index ^ 1] = '0';	
-
-		player.Trust.SelectedFlag.Value = value.ToString();	
 	}
 	
-	private void toggleEye(int index) {
-		var value = new System.Text.StringBuilder(player.ShowCard.Value);
 
-		// 这一手结束后，只能亮牌，不能关闭亮牌
-		if (value[index] == '1' && gameover) {
-			return ;
-		}
-
-		value[index] =  value[index] == '0' ? '1' : '0';
-
-		player.ShowCard.Value = value.ToString();
-
-		// 转换10进制
-		var num = Convert.ToInt16(value.ToString(), 2); 
-
-		// 发送请求
-		Connect.Shared.Emit(new Dictionary<string, object> {
-			{"f", "showcard"},
-			{"args", new Dictionary<string, object> {
-				{"showcard", num}
-			}}
-		});
-	}
-
-	public void ShowFirstCard() {
-		toggleEye(0);	
-	}
-
-	public void ShowSecondCard() {
-		toggleEye(1);
-	}
-
-	public void Fold() {
-		MoveOut();
-
-		if (isSelf) {
-			// 图片灰掉
-			darkenCards();
-		} else {
-
-		}
-
-		setFolded();
-	}
-
-	private void darkenCards() {
-		MyCards[0].GetComponent<Card>().Darken();
-		MyCards[1].GetComponent<Card>().Darken();
-	}
 
 	
-
-	private void setFolded() {
-		if (isSelf) {
-			darkenCards();	
-		}
-
-	}
 
 	private bool isSelf {
 		get {
@@ -259,98 +136,6 @@ public class PlayerObject : MonoBehaviour {
 			Invoke("hideAnim", 4);			
 		}).AddTo(disposables);
 
-		// Gameover 应该清掉所有状态
-		RxSubjects.GameOver.Subscribe((e) => {
-			MoveOut();
-			PlayerAct.gameObject.SetActive(false);
-			AllinGo.SetActive(false);
-			AutoArea.SetActive(false);
-			gameover = true;
-
-			if (cgo != null) {
-			 	cgo.Hide();
-			}
-		}).AddTo(disposables);
-		
-		setupSelfEvents();		
-	}
-
-	private void setupSelfEvents() {
-		if (!isSelf) {
-			return ;
-		}
-
-		GameData.Shared.MaxFiveRank.Subscribe((value) => {
-			var parent = CardDesc.transform.parent.gameObject;
-
-			if (value == 0)
-			{
-				parent.SetActive(false);
-				return;
-			}
-
-			parent.SetActive(true);
-			CardDesc.text = Card.GetCardDesc(value);
-		}).AddTo(disposables);
-
-		player.ShowCard.Subscribe((value) => {
-			if (value[0] == '1') {
-				Eyes[0].SetActive(true);
-			} else {
-				Eyes[0].SetActive(false);
-			}
-
-			if (value[1] == '1') {
-				Eyes[1].SetActive(true);
-			} else {
-				Eyes[1].SetActive(false);
-			}
-		}).AddTo(disposables);
-
-		player.Trust.ShouldShow.Subscribe((show) => {
-			AutoArea.SetActive(show);
-		}).AddTo(disposables);
-
-		player.Trust.CallNumber.Subscribe((num) => {
-			var text = AutoOperas[1].transform.Find("Text").GetComponent<Text>();
-
-			if (num == 0) {
-				text.text = "自动让牌";
-			} else if (num == -1) {
-				text.text = "全下";
-			} else if (num > 0) {
-				text.text = String.Format("跟注\n<size=40>{0}</size>", _.Num2CnDigit<int>(num));
-			}
-
-			var flag = player.Trust.FlagString();
-			if (flag == "01") {
-				player.Trust.SelectedFlag.Value = "00";	
-			}
-		}).AddTo(disposables);
-
-		player.Trust.SelectedFlag.Where((flags) => { return flags != null; }).Subscribe((flags) => {
-			var ncolor = _.HexColor("#2196F300");
-			var scolor = _.HexColor("#2196F3");
-			
-			var img0 = AutoOperas[0].GetComponent<ProceduralImage>();
-			var img1 = AutoOperas[1].GetComponent<ProceduralImage>();
-
-			if (flags[0] == '0') {
-				img0.color = ncolor;
-			} else {
-				img0.color = scolor;
-			}
-
-			if (flags[1] == '0') {
-				img1.color = ncolor;
-			} else {
-				img1.color = scolor;
-			}
-		}).AddTo(disposables);
-
-		RxSubjects.Deal.Subscribe((_) => {
-			player.Trust.Hide();
-		}).AddTo(disposables);
 	}
 
 	private void hideAnim() {
@@ -367,7 +152,7 @@ public class PlayerObject : MonoBehaviour {
 		if (!go.activeSelf) {
 			return ;
 		}
-		go.GetComponent<CanvasGroup>().DOFade(0, hideDuration).OnComplete(() => {
+		go.GetComponent<CanvasGroup>().DOFade(0, 0.3f).OnComplete(() => {
 			go.SetActive(false);
 
 			if (callback != null) {
@@ -377,7 +162,6 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	private void turnTo(Dictionary<string, object> dict, int left, bool restore = false,int buyTimeCost = 10) {
-		if (isSelf) {
 			showOP(dict, left, buyTimeCost);
 
 			var flag = player.Trust.FlagString();
@@ -419,10 +203,7 @@ public class PlayerObject : MonoBehaviour {
 			}
 			
 			player.Trust.SelectedFlag.Value = "00";
-		} 
 	}
-
-    IEnumerator turnCoroutine;
 
 	private OP showOP(Dictionary<string, object> data, int left, int buyTimeCost = 10) {
 		if (this == null) {
