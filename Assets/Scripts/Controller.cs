@@ -469,8 +469,8 @@ public class Controller : MonoBehaviour {
                 }
             }
 
-            var em = PoolMan.Spawn("Emoticon");
-            em.GetComponent<Emoticon>().Init(fromSeatPos, toSeat, pid, isToMe);
+            var em = PoolMan.Spawn("Emo" + pid);
+            em.GetComponent<Emoticon>().Init(fromSeatPos, toSeat, isToMe);
         }).AddTo(this);
 
 		Dictionary<string, Transform> expressCache = new Dictionary<string, Transform>(){};
