@@ -20,50 +20,29 @@ public class PlayerObject : MonoBehaviour {
 	public List<Transform> MyCards;
     public GameObject WinStars;
 	public Text WinNumber;
-	public List<Card> ShowCards;
 	public GameObject AvatarMask;
 	public PlayerActGo PlayerAct;
 	public Sprite[] ActSprites;
 	public GameObject AllinGo;
 
-	public Text NameLabel;
 	public Text ScoreLabel;
 	public GameObject Countdown;
 	public GameObject Circle;
 	public GameObject AutoArea;
 	public GameObject[] AutoOperas; 
 	public GameObject[] Eyes; 
-	public GameObject BackGameBtn;
 
 	private Transform OPTransform;
 	private ChipsGo cgo; 
 	private Player player;
-	private float foldOpacity = 0.6f;
-	private float animDuration = 0.5f;
     private float hideDuration = 0.3f; 
 	private ActionState lastState;
 	private bool gameover = false;
-	private int actCardsNumber = 0;
 
 	public Text CardDesc;
-	public Text OthersCardDesc;
-
-	public SpkTextGo SpkText;
-	public GameObject Volume;
-	public GameObject HandGo;
-	public Text StateLabel;
+	
 
 	private CompositeDisposable disposables = new CompositeDisposable();
-
-	private Seat theSeat {
-		get {
-			return  transform.parent.GetComponent<Seat>();
-		}
-	}
-
-	void OnDestroy() {
-		disposables.Clear();
-	}
 
 	void OnSpawned() {
 		Countdown.SetActive(false);
@@ -109,12 +88,6 @@ public class PlayerObject : MonoBehaviour {
 		Avt.GetComponent<CircleMask>().Disable();
 	}
 
-	public void BackGame() {
-		Connect.Shared.Emit(new Dictionary<string, object>{
-			{"f", "ready"}
-		});
-	}
-
 	void OnDespawned()
 	{
 		if (OPTransform != null && GameData.Shared.MySeat == -1) {
@@ -136,38 +109,24 @@ public class PlayerObject : MonoBehaviour {
 	public void ShowPlayer(Player player, Transform parent) {
 		Index = player.Index;
 		Uid = player.Uid;
-		SpkText.Uid = Uid;
 
 		this.player = player;
 
-		// 头像点击事件
-		Avt.GetComponent<Avatar>().Uid = Uid;
-
 		if (isSelf) {
-			NameLabel.gameObject.SetActive(false);
 			RxSubjects.ChangeVectorsByIndex.OnNext(Index);
             RxSubjects.Seating.OnNext(true);
 		} else {
-			if (player.InGame) {
-				Cardfaces.SetActive(true);
-			}
-			NameLabel.gameObject.SetActive(true);
+			
 		}
 
 		if (GameData.Shared.InGame && !player.InGame) {
 			setFolded();
 		}
 
-		NameLabel.text = player.Name;
-		ScoreLabel.text = _.Num2CnDigit<int>(player.Bankroll.Value);
-		Avt.GetComponent<Avatar>().SetImage(player.Avatar);	
 
 		GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
 		transform.SetParent(parent, false);
 		
-		// 隐藏坐下按钮
-		var image = parent.gameObject.GetComponent<Image>();
-		image.enabled = false;
 		registerRxEvent();
 	}
 
@@ -233,7 +192,7 @@ public class PlayerObject : MonoBehaviour {
 			// 图片灰掉
 			darkenCards();
 		} else {
-			foldCards(Cardfaces.transform);			
+
 		}
 
 		setFolded();
@@ -244,39 +203,13 @@ public class PlayerObject : MonoBehaviour {
 		MyCards[1].GetComponent<Card>().Darken();
 	}
 
-	private void dealAct(ActionState state) {
-		lastState = state;
-
-		setPlayerAct(true);
-		PlayerAct.SetAct(state);
-
-		if (state == ActionState.Allin) {
-			AllinGo.SetActive(true);
-		}
-	}
-
-	private void setPlayerAct(bool active, bool anim = true) {
-		if (!active && isPersisState()) {
-			return ;
-		}
-
-		var cvg = PlayerAct.GetComponent<CanvasGroup>();
-		var targetValue = active ? 1 : 0;
-		var duration = 0.1f;
-
-		if (anim) {
-			cvg.DOFade(targetValue, duration);
-		} else {
-			cvg.alpha = targetValue;
-		}
-	}
+	
 
 	private void setFolded() {
 		if (isSelf) {
 			darkenCards();	
 		}
 
-		Avt.GetComponent<CanvasGroup>().alpha = foldOpacity;
 	}
 
 	private bool isSelf {
@@ -286,67 +219,9 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	private void registerRxEvent() {
-		player.PrChips.AsObservable().Subscribe((value) => {
-			if (value == 0) {
-				return ;
-			}
-
-			setPrChips(value);
-		}).AddTo(disposables);
-
-		player.Bankroll.Subscribe((value) => {
-			ScoreLabel.text = _.Num2CnDigit(value);
-		}).AddTo(disposables);
-
-		player.ActState.AsObservable().Subscribe((e) => {
-			// 对象已被销毁，不应该执行
-			if (this == null) {
-				return ;
-			}
-
-			if (e == ActionState.None) {
-				return ;
-			}
-
-			switch(e) {
-				case ActionState.Check:
-					G.PlaySound("check");
-					break;
-				case ActionState.Fold:
-					G.PlaySound("foldpai");
-					break;
-				case ActionState.Call:
-					break;
-				case ActionState.Allin:
-					if (player.ActStateTrigger) {
-						G.PlaySound("allin");
-					}
-					break;
-				case ActionState.Raise:
-					break;
-				default:
-					break;
-			}
-
-			if (e == ActionState.Fold) {
-				Fold();
-			} else {
-				MoveOut();
-			}
-
-			dealAct(e);
-			actCardsNumber = GameData.Shared.PublicCards.Count;	
-		}).AddTo(disposables);
-
-		player.Destroyed.AsObservable().Where((v) => v).Subscribe((_) => {
-			PoolMan.Despawn(transform);
-		}).AddTo(disposables);
-
 		player.Cards.AsObservable().Where((cards) => {
 			if (cards != null && cards.Count == 2) {
-				if (cards[0] > 0 && cards[1] > 0) {
-					return true;
-				}
+				return cards[0] > 0 && cards[1] > 0;
 			}
 
 			return false;
@@ -354,7 +229,7 @@ public class PlayerObject : MonoBehaviour {
 			if (isSelf) {
 				SeeCard(cards);
 			} else {
-				showTheCards(cards, player.SeeCardAnim);
+				// showTheCards(cards, player.SeeCardAnim);
 			}
 		}).AddTo(disposables);
 
@@ -376,45 +251,12 @@ public class PlayerObject : MonoBehaviour {
 			}
 
 			if (!isSelf) {
-				showTheCards(data.cards, true);
-				showCardType(data.maxFiveRank);
+				// showTheCards(data.cards, true);
+				// showCardType(data.maxFiveRank);
 			}
 
 			// 4s后隐藏动画
 			Invoke("hideAnim", 4);			
-		}).AddTo(disposables);
-
-		// 中途复原行动
-		player.Countdown.AsObservable().Subscribe((obj) => {
-			if (obj.seconds == 0) {
-				if (isSelf) {
-					OP.Despawn();
-				}
-			} else {
-				turnTo(obj.data, obj.seconds, true, obj.BuyTimeCost);	
-			}
-		}).AddTo(disposables);
-
-		RxSubjects.MoveTurn.Subscribe((e) => {
-			var index = e.Data.Int("seat");
-			var dc = e.Data.Int("deal_card");
-		
-			if (index == Index) {
-				turnTo(e.Data, GameData.Shared.ThinkTime);
-				setPlayerAct(false, false);
-			} else {
-				MoveOut();
-
-				// 刚发了牌
-				if (dc == 1 || GameData.Shared.PublicCards.Count != actCardsNumber) {
-					setPlayerAct(false);
-				}
-			}
-
-			// 自动托管
-			if (isSelf) {
-				player.SetTrust(e.Data.Dict("trust"));
-			}
 		}).AddTo(disposables);
 
 		// Gameover 应该清掉所有状态
@@ -430,129 +272,6 @@ public class PlayerObject : MonoBehaviour {
 			}
 		}).AddTo(disposables);
 		
-		theSeat.SeatPos.Subscribe((pos) => {
-			fixChatPos(pos);
-			PlayerAct.ChangePos(pos);
-		}).AddTo(disposables);
-	
-		RxSubjects.ShowAudio.Where(isSelfJson).Subscribe((jsonStr) => {
-			Volume.SetActive(true);
-			ScoreLabel.gameObject.SetActive(false);
-		}).AddTo(disposables);
-
-		RxSubjects.HideAudio.Where(isSelfJson).Subscribe((_) => {
-			Volume.SetActive(false);
-			ScoreLabel.gameObject.SetActive(true);
-		}).AddTo(disposables);
-
-		RxSubjects.SendChat.Where(isSelfJson).Subscribe((jsonStr) => {
-            var N = JSON.Parse(jsonStr);
-            var text = N["text"].Value;
-            SpkText.ShowMessage(text);
-        }).AddTo(disposables);
-
-		RxSubjects.ShowCard.Subscribe((e) => {
-			var uid = e.Data.String("uid");
-			if (uid != Uid) {
-				return ;
-			}
-
-			var cards = e.Data.IL("cards");
-			showTheCards(cards, true);
-		}).AddTo(disposables);
-
-		// 思考延时
-		RxSubjects.Moretime.Subscribe((e) => {
-			var model = e.Data.ToObject<MoreTimeModel>();
-
-			if (model.uid != Uid) {
-				return ;
-			}
-
-            if (!model.IsRound())
-            {
-                return;
-            }
-
-			if (isSelf) {
-				OPTransform.GetComponent<OP>().Reset(model.total);
-			} else {
-				StopCoroutine(turnCoroutine);
-                turnCoroutine = yourTurn(model.total);
-				StartCoroutine(turnCoroutine);
-			} 
-		}).AddTo(disposables);
-
-        RxSubjects.Award27.Subscribe((e) => {
-            if (Uid == e.Data.String("uid"))
-	        {
-                CancelInvoke("hideAnim");
-                Invoke("hideAnim", 4);
-	        }
-        }).AddTo(disposables);
-
-		player.Allin.Subscribe((allin) => {
-			if (allin) {
-				player.ActStateTrigger = false;
-				player.ActState.OnNext(ActionState.Allin);
-			}
-		}).AddTo(disposables);
-
-		player.PlayerStat.Subscribe((state) => {
-			HandGo.SetActive(false);
-			BackGameBtn.SetActive(false);
-
-			var stateGo = StateLabel.transform.parent.gameObject;
-			stateGo.SetActive(false);
-
-			switch(state) {
-				case PlayerState.Waiting: case PlayerState.Auditing:
-					ScoreLabel.text = "<size=28>等待</size>";
-					break;
-				case PlayerState.Hanging:
-					HandGo.SetActive(true);
-					if (isSelf) {
-						BackGameBtn.SetActive(true);
-						if (OPTransform != null) {
-							PoolMan.Despawn(OPTransform);
-						}
-					}
-					break;
-				case PlayerState.Reserve:
-					stateGo.SetActive(true);	
-					if (isSelf) {
-						BackGameBtn.SetActive(true);
-					}
-					break;
-				default: 
-					break;
-			}
-		}).AddTo(disposables);
-
-		IDisposable reserveCd = null; 
-		player.ReservedCD.Subscribe((value) => {
-			if (reserveCd != null) {
-				reserveCd.Dispose();
-			}
-
-			if (value > 0) {
-				setReserveCd(value);
-
-				reserveCd = Observable.Interval(TimeSpan.FromSeconds(1)).Subscribe((_) => {
-					value = Mathf.Max(value - 1, 1);
-					setReserveCd(value);
-				}).AddTo(disposables);
-			}
-		}).AddTo(disposables);
-
-		player.LastAct.Where((act) => !String.IsNullOrEmpty(act)).Subscribe((act) => {
-			dealAct(act.ToActionEnum());	
-		}).AddTo(disposables);
-
-		RxSubjects.GainChip.Where((gainChip) => gainChip.Uid == Uid).Subscribe((gainChip) => {
-			gainChip.Grp.ToPlayer(this);
-		}).AddTo(disposables);
-
 		setupSelfEvents();		
 	}
 
@@ -634,78 +353,13 @@ public class PlayerObject : MonoBehaviour {
 		}).AddTo(disposables);
 	}
 
-	private void setReserveCd(int number) {
-		var text = String.Format("留座<b>{0}s</b>", number);
-		StateLabel.text = text;
-	}
-
-	private void fixChatPos(SeatPosition pos) {
-		SpkText.ChangePos(pos);
-	}
-
-	private bool isSelfJson(String jsonStr) {
-		var N = JSON.Parse(jsonStr);
-		var uid = N["uid"].Value;
-		return uid == Uid;
-	}
-
-	private bool isPersisState() {
-		return lastState == ActionState.Allin || lastState == ActionState.Fold;
-	}
-
-	private void showTheCards(List<int> cards, bool anim) {
-		if (cards.Count < 2 || isSelf) {
-			return ;
-		}
-
-		PlayerAct.gameObject.SetActive(false);		
-	
-		if (cards[0] > 0 || cards[1] > 0) {
-			// 显示GameObject
-			getShowCard().SetActive(true);
-
-			// 显示手牌
-			if (cards[0] > 0) {
-				ShowCards[0].Show(cards[0], anim);
-			} 
-
-			if (cards[1] > 0) {
-				ShowCards[1].Show(cards[1], anim);
-			}
-
-			if (Cardfaces != null) {
-				Cardfaces.SetActive(false);
-			}
-		}
-	}
-
-	private GameObject getOtherCardGo() {
-		return OthersCardDesc.transform.parent.gameObject;
-	}
-
-	private void showCardType(int maxFive) {
-		var desc = Card.GetCardDesc(maxFive);
-
-		if (string.IsNullOrEmpty(desc)) {
-			return ;
-		}
-
-		getOtherCardGo().SetActive(true);
-		OthersCardDesc.text = desc;
-		NameLabel.gameObject.SetActive(false);
-	}
-
-	private GameObject getShowCard() {
-		return ShowCards[0].transform.parent.gameObject;
-	}
-
 	private void hideAnim() {
 		hideGo(WinStars, () => {
 			ScoreLabel.transform.parent.gameObject.SetActive(true);
 		});
 		hideGo(WinImageGo);	
-		hideGo(getShowCard());	
-		hideGo(getOtherCardGo());
+		// hideGo(getShowCard());	
+		// hideGo(getOtherCardGo());
 		hideGo(WinNumber.transform.parent.gameObject);
 	}
 
@@ -720,21 +374,6 @@ public class PlayerObject : MonoBehaviour {
 				callback();
 			}
 		});
-	}
-
-	private void setPrChips(int value) {
-		var chips = (GameObject)Instantiate(Resources.Load("Prefab/UpChip"));
-		chips.transform.SetParent(transform, false);
-		chips.transform.SetAsLastSibling();
-
-		if (cgo == null) {
-			cgo = chips.GetComponent<ChipsGo>();
-			cgo.Create(value, theSeat, player);
-		} else {
-			chips.GetComponent<ChipsGo>().AddMore(() => {
-				cgo.SetChips(value);
-			}, theSeat, player);	
-		}	
 	}
 
 	private void turnTo(Dictionary<string, object> dict, int left, bool restore = false,int buyTimeCost = 10) {
@@ -780,42 +419,10 @@ public class PlayerObject : MonoBehaviour {
 			}
 			
 			player.Trust.SelectedFlag.Value = "00";
-		} else {
-            turnCoroutine = yourTurn(left);
-			StartCoroutine(turnCoroutine);				
-		}
+		} 
 	}
 
     IEnumerator turnCoroutine;
-
-	private IEnumerator yourTurn(float left) {
-		Countdown.SetActive(true);
-		activated = true;
-		AvatarMask.SetActive(true);
-
-        Countdown.GetComponent<Animator>().SetTrigger("1");
-        Countdown.GetComponent<Animator>().speed = 1 / left;
-
-		float time = left;
-		float total = left.GetThinkTime();
-		var mask = Avt.GetComponent<CircleMask>();
-        mask.numberText.gameObject.SetActive(true);
-
-		while (time > 0 && activated) {
-			time = time - Time.deltaTime;
-			
-			var percent = Mathf.Min(1, time / total);
-			var image = Countdown.GetComponent<ProceduralImage>();
-			image.fillAmount = percent;
-			mask.SetTextColor(image.color);
-            mask.SetFillAmount(time / total, time); 
-
-			yield return new WaitForFixedUpdate();
-		}
-
-		activated = false;
-        Countdown.SetActive(false); 
-	}
 
 	private OP showOP(Dictionary<string, object> data, int left, int buyTimeCost = 10) {
 		if (this == null) {
@@ -830,26 +437,5 @@ public class PlayerObject : MonoBehaviour {
 		op.StartWithCmds(data, left, buyTimeCost);
 
 		return op;
-	}
-
-	private void foldCards(Transform transform) {
-		var sourceParent = transform.parent;
-
-		Ease ease = Ease.Flash;
-		transform.DOMove(new Vector2(0, 200), animDuration).SetEase(ease);
-
-		var image = transform.GetComponent<Image>();
-		Tween tween; 
-
-		if (image != null) {
-			tween = image.DOFade(0.2f, animDuration).SetEase(ease);
-		} else {
-			var canvasGrp = transform.GetComponent<CanvasGroup>();
-			tween = canvasGrp.DOFade(0.2f, animDuration).SetEase(ease);
-		}
-
-		tween.OnComplete(() => {
-			transform.gameObject.SetActive(false);
-		});
 	}
 }

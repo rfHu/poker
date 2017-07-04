@@ -94,7 +94,7 @@ namespace UnityEngine.UI.ProceduralImage {
 		protected override void OnDestroy()
 		{
 			base.OnDestroy();
-			Destroy(materialInstance);			
+			DestroyImmediate(materialInstance);			
 		}
 
 		/// <summary>

@@ -373,8 +373,10 @@ public class Controller : MonoBehaviour {
 
 		Action<Player> showPlayer = (obj) => {
 			var parent = Seats[obj.Index].transform;
-			var go = PoolMan.Spawn("Player");
-			go.GetComponent<PlayerObject>().ShowPlayer(obj, parent);
+			// var go = PoolMan.Spawn("Player");
+			var go = (GameObject)Instantiate(Resources.Load("Prefab/PlayerOppo"));
+			go.GetComponent<PokerPlayer.PlayerOppo>().Init(obj, parent);
+			parent.GetComponent<Image>().enabled = false;
 		};
 
 		Action<int> enableSeat = (index) => {
