@@ -17,7 +17,7 @@ public class PlayerObject : MonoBehaviour {
 	public bool activated = false;
 	public string Uid = "";
 	public GameObject Cardfaces;
-	public GameObject MyCards;
+	public List<Transform> MyCards;
     public GameObject WinStars;
 	public Text WinNumber;
 	public List<Card> ShowCards;
@@ -53,34 +53,42 @@ public class PlayerObject : MonoBehaviour {
 	public GameObject HandGo;
 	public Text StateLabel;
 
+	private CompositeDisposable disposables = new CompositeDisposable();
+
 	private Seat theSeat {
 		get {
 			return  transform.parent.GetComponent<Seat>();
 		}
 	}
 
-	void Awake() {
-		// 倒计时隐藏
+	void OnDestroy() {
+		disposables.Clear();
+	}
+
+	void OnSpawned() {
 		Countdown.SetActive(false);
+		Avt.GetComponent<CanvasGroup>().alpha = 1;	
+		Avt.GetComponent<CircleMask>().Disable();
+		Cardfaces.GetComponent<Image>().color = new Color(1, 1, 1);
+		Cardfaces.GetComponent<RectTransform>().anchoredPosition = new Vector2(40, -20);
+		AutoArea.SetActive(false);
+		MyCards[0].parent.gameObject.SetActive(false);
 	}
 
 	public void SeeCard(List<int> cards) {
-		var first = MyCards.transform.Find("First");
-		var second = MyCards.transform.Find("Second");
-
-		MyCards.SetActive(true);
+		MyCards[0].parent.gameObject.SetActive(true);
 
 		var state = player.SeeCardAnim;
 
 		if (state) {
-			first.GetComponent<Card>().ShowWithSound(cards[0], state);
+			MyCards[0].GetComponent<Card>().ShowWithSound(cards[0], state);
 
 			Observable.Timer(TimeSpan.FromSeconds(0.3)).Subscribe((_) => {
-				second.GetComponent<Card>().ShowWithSound(cards[1], state);
-			}).AddTo(this);
+				MyCards[1].GetComponent<Card>().ShowWithSound(cards[1], state);
+			}).AddTo(disposables);
 		} else {
-			first.GetComponent<Card>().Show(cards[0], state);
-			second.GetComponent<Card>().Show(cards[1], state);
+			MyCards[0].GetComponent<Card>().Show(cards[0], state);
+			MyCards[1].GetComponent<Card>().Show(cards[1], state);
 		}
 	}
 
@@ -107,21 +115,22 @@ public class PlayerObject : MonoBehaviour {
 		});
 	}
 
-	void OnDestroy()
+	void OnDespawned()
 	{
 		if (OPTransform != null && GameData.Shared.MySeat == -1) {
 			PoolMan.Despawn(OPTransform);
 		}
 
-		if (SpkText != null) {
-			Destroy(SpkText);
-		}
-
-		// OnDestory是异步的，存在时序的问题，所以要判断用户是否还在座位中
-        if (isSelf() && GameData.Shared.MySeat == -1)
+        if (isSelf && GameData.Shared.MySeat == -1)
         {
             RxSubjects.Seating.OnNext(false);
         }
+
+		if (turnCoroutine != null) {
+			StopCoroutine(turnCoroutine);
+		}
+
+		disposables.Clear();
 	}
 
 	public void ShowPlayer(Player player, Transform parent) {
@@ -134,12 +143,14 @@ public class PlayerObject : MonoBehaviour {
 		// 头像点击事件
 		Avt.GetComponent<Avatar>().Uid = Uid;
 
-		if (isSelf()) {
+		if (isSelf) {
 			NameLabel.gameObject.SetActive(false);
 			RxSubjects.ChangeVectorsByIndex.OnNext(Index);
             RxSubjects.Seating.OnNext(true);
-		} else if(player.InGame) { 
-			Cardfaces.SetActive(true);
+		} else {
+			if (player.InGame) {
+				Cardfaces.SetActive(true);
+			}
 			NameLabel.gameObject.SetActive(true);
 		}
 
@@ -152,7 +163,7 @@ public class PlayerObject : MonoBehaviour {
 		Avt.GetComponent<Avatar>().SetImage(player.Avatar);	
 
 		GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
-		transform.SetParent(parent.transform, false);
+		transform.SetParent(parent, false);
 		
 		// 隐藏坐下按钮
 		var image = parent.gameObject.GetComponent<Image>();
@@ -218,22 +229,19 @@ public class PlayerObject : MonoBehaviour {
 	public void Fold() {
 		MoveOut();
 
-		var canvas = G.UICvs;
-
-		if (isSelf()) {
+		if (isSelf) {
 			// 图片灰掉
 			darkenCards();
 		} else {
-			Cardfaces.transform.SetParent(canvas.transform, true);
-			foldCards(Cardfaces);			
+			foldCards(Cardfaces.transform);			
 		}
 
 		setFolded();
 	}
 
 	private void darkenCards() {
-		MyCards.transform.Find("First").GetComponent<Card>().Darken();
-		MyCards.transform.Find("Second").GetComponent<Card>().Darken();
+		MyCards[0].GetComponent<Card>().Darken();
+		MyCards[1].GetComponent<Card>().Darken();
 	}
 
 	private void dealAct(ActionState state) {
@@ -264,15 +272,17 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	private void setFolded() {
-		if (isSelf()) {
+		if (isSelf) {
 			darkenCards();	
 		}
 
-		Circle.transform.Find("Avatar").GetComponent<CanvasGroup>().alpha = foldOpacity;
+		Avt.GetComponent<CanvasGroup>().alpha = foldOpacity;
 	}
 
-	private bool isSelf() {
-		return Uid == GameData.Shared.Uid;
+	private bool isSelf {
+		get {
+			return Uid == GameData.Shared.Uid;
+		}
 	}
 
 	private void registerRxEvent() {
@@ -282,11 +292,11 @@ public class PlayerObject : MonoBehaviour {
 			}
 
 			setPrChips(value);
-		}).AddTo(this);
+		}).AddTo(disposables);
 
 		player.Bankroll.Subscribe((value) => {
 			ScoreLabel.text = _.Num2CnDigit(value);
-		}).AddTo(this);
+		}).AddTo(disposables);
 
 		player.ActState.AsObservable().Subscribe((e) => {
 			// 对象已被销毁，不应该执行
@@ -303,20 +313,16 @@ public class PlayerObject : MonoBehaviour {
 					G.PlaySound("check");
 					break;
 				case ActionState.Fold:
-					// G.PlaySound("fold_boy");
 					G.PlaySound("foldpai");
 					break;
 				case ActionState.Call:
-					// G.PlaySound("call_boy");
 					break;
 				case ActionState.Allin:
 					if (player.ActStateTrigger) {
-						// G.PlaySound("allin_boy");
 						G.PlaySound("allin");
 					}
 					break;
 				case ActionState.Raise:
-					// G.PlaySound("raise_boy");
 					break;
 				default:
 					break;
@@ -330,11 +336,11 @@ public class PlayerObject : MonoBehaviour {
 
 			dealAct(e);
 			actCardsNumber = GameData.Shared.PublicCards.Count;	
-		}).AddTo(this);
+		}).AddTo(disposables);
 
 		player.Destroyed.AsObservable().Where((v) => v).Subscribe((_) => {
-			Destroy(gameObject);
-		}).AddTo(this);
+			PoolMan.Despawn(transform);
+		}).AddTo(disposables);
 
 		player.Cards.AsObservable().Where((cards) => {
 			if (cards != null && cards.Count == 2) {
@@ -345,19 +351,19 @@ public class PlayerObject : MonoBehaviour {
 
 			return false;
 		}).Subscribe((cards) => {
-			if (isSelf()) {
+			if (isSelf) {
 				SeeCard(cards);
 			} else {
 				showTheCards(cards, player.SeeCardAnim);
 			}
-		}).AddTo(this);
+		}).AddTo(disposables);
 
 		player.OverData.AsObservable().Where((data) => data != null).Subscribe((data) => {
 			var gain = data.Gain();
 			if (gain > 0) {
                 WinStars.SetActive(true);
 
-				if (isSelf()) {
+				if (isSelf) {
 					WinImageGo.SetActive(true);
 				}
 			}
@@ -369,25 +375,25 @@ public class PlayerObject : MonoBehaviour {
 				ScoreLabel.transform.parent.gameObject.SetActive(false);
 			}
 
-			if (!isSelf()) {
+			if (!isSelf) {
 				showTheCards(data.cards, true);
 				showCardType(data.maxFiveRank);
 			}
 
 			// 4s后隐藏动画
 			Invoke("hideAnim", 4);			
-		}).AddTo(this);
+		}).AddTo(disposables);
 
 		// 中途复原行动
 		player.Countdown.AsObservable().Subscribe((obj) => {
 			if (obj.seconds == 0) {
-				if (isSelf()) {
+				if (isSelf) {
 					OP.Despawn();
 				}
 			} else {
 				turnTo(obj.data, obj.seconds, true, obj.BuyTimeCost);	
 			}
-		}).AddTo(this);
+		}).AddTo(disposables);
 
 		RxSubjects.MoveTurn.Subscribe((e) => {
 			var index = e.Data.Int("seat");
@@ -406,10 +412,10 @@ public class PlayerObject : MonoBehaviour {
 			}
 
 			// 自动托管
-			if (isSelf()) {
+			if (isSelf) {
 				player.SetTrust(e.Data.Dict("trust"));
 			}
-		}).AddTo(this);
+		}).AddTo(disposables);
 
 		// Gameover 应该清掉所有状态
 		RxSubjects.GameOver.Subscribe((e) => {
@@ -422,107 +428,28 @@ public class PlayerObject : MonoBehaviour {
 			if (cgo != null) {
 			 	cgo.Hide();
 			}
-		}).AddTo(this);
+		}).AddTo(disposables);
 		
 		theSeat.SeatPos.Subscribe((pos) => {
 			fixChatPos(pos);
 			PlayerAct.ChangePos(pos);
-		}).AddTo(this);
-
-		// fixChatPos(SeatPosition.Right);
-		// Observable.Timer(TimeSpan.FromSeconds(5)).AsObservable().Subscribe((e) => {
-		// 	SpkText.ShowMessage("快来看啊~~这时很长很长的文字很长很长的文字很长很长的问题很长的文字");
-		// }).AddTo(this);
-
-		if (isSelf()) {
-			GameData.Shared.MaxFiveRank.Subscribe((value) => {
-				var parent = CardDesc.transform.parent.gameObject;
-
-				if (value == 0)
-                {
-                    parent.SetActive(false);
-                    return;
-                }
-
-                parent.SetActive(true);
-                CardDesc.text = Card.GetCardDesc(value);
-            }).AddTo(this);
-
-			player.ShowCard.Subscribe((value) => {
-				if (value[0] == '1') {
-					Eyes[0].SetActive(true);
-				} else {
-					Eyes[0].SetActive(false);
-				}
-
-				if (value[1] == '1') {
-					Eyes[1].SetActive(true);
-				} else {
-					Eyes[1].SetActive(false);
-				}
-			}).AddTo(this);
-
-			player.Trust.ShouldShow.Subscribe((show) => {
-				AutoArea.SetActive(show);
-			}).AddTo(this);
-
-			player.Trust.CallNumber.Subscribe((num) => {
-				var text = AutoOperas[1].transform.Find("Text").GetComponent<Text>();
-
-				if (num == 0) {
-					text.text = "自动让牌";
-				} else if (num == -1) {
-					text.text = "全下";
-				} else if (num > 0) {
-					text.text = String.Format("跟注\n<size=40>{0}</size>", _.Num2CnDigit<int>(num));
-				}
-
-				var flag = player.Trust.FlagString();
-				if (flag == "01") {
-					player.Trust.SelectedFlag.Value = "00";	
-				}
-			}).AddTo(this);
-
-			player.Trust.SelectedFlag.Where((flags) => { return flags != null; }).Subscribe((flags) => {
-				var ncolor = _.HexColor("#2196F300");
-				var scolor = _.HexColor("#2196F3");
-				
-				var img0 = AutoOperas[0].GetComponent<ProceduralImage>();
-				var img1 = AutoOperas[1].GetComponent<ProceduralImage>();
-
-				if (flags[0] == '0') {
-					img0.color = ncolor;
-				} else {
-					img0.color = scolor;
-				}
-
-				if (flags[1] == '0') {
-					img1.color = ncolor;
-				} else {
-					img1.color = scolor;
-				}
-			}).AddTo(this);
-
-			RxSubjects.Deal.Subscribe((_) => {
-				player.Trust.Hide();
-			}).AddTo(this);
-		}
-
-		RxSubjects.ShowAudio.Where(isSelf).Subscribe((jsonStr) => {
+		}).AddTo(disposables);
+	
+		RxSubjects.ShowAudio.Where(isSelfJson).Subscribe((jsonStr) => {
 			Volume.SetActive(true);
 			ScoreLabel.gameObject.SetActive(false);
-		}).AddTo(this);
+		}).AddTo(disposables);
 
-		RxSubjects.HideAudio.Where(isSelf).Subscribe((_) => {
+		RxSubjects.HideAudio.Where(isSelfJson).Subscribe((_) => {
 			Volume.SetActive(false);
 			ScoreLabel.gameObject.SetActive(true);
-		}).AddTo(this);
+		}).AddTo(disposables);
 
-		RxSubjects.SendChat.Where(isSelf).Subscribe((jsonStr) => {
+		RxSubjects.SendChat.Where(isSelfJson).Subscribe((jsonStr) => {
             var N = JSON.Parse(jsonStr);
             var text = N["text"].Value;
             SpkText.ShowMessage(text);
-        }).AddTo(this);
+        }).AddTo(disposables);
 
 		RxSubjects.ShowCard.Subscribe((e) => {
 			var uid = e.Data.String("uid");
@@ -532,7 +459,7 @@ public class PlayerObject : MonoBehaviour {
 
 			var cards = e.Data.IL("cards");
 			showTheCards(cards, true);
-		}).AddTo(this);
+		}).AddTo(disposables);
 
 		// 思考延时
 		RxSubjects.Moretime.Subscribe((e) => {
@@ -547,14 +474,14 @@ public class PlayerObject : MonoBehaviour {
                 return;
             }
 
-			if (isSelf()) {
+			if (isSelf) {
 				OPTransform.GetComponent<OP>().Reset(model.total);
 			} else {
 				StopCoroutine(turnCoroutine);
                 turnCoroutine = yourTurn(model.total);
 				StartCoroutine(turnCoroutine);
 			} 
-		}).AddTo(this);
+		}).AddTo(disposables);
 
         RxSubjects.Award27.Subscribe((e) => {
             if (Uid == e.Data.String("uid"))
@@ -562,14 +489,14 @@ public class PlayerObject : MonoBehaviour {
                 CancelInvoke("hideAnim");
                 Invoke("hideAnim", 4);
 	        }
-        }).AddTo(this);
+        }).AddTo(disposables);
 
 		player.Allin.Subscribe((allin) => {
 			if (allin) {
 				player.ActStateTrigger = false;
 				player.ActState.OnNext(ActionState.Allin);
 			}
-		}).AddTo(this);
+		}).AddTo(disposables);
 
 		player.PlayerStat.Subscribe((state) => {
 			HandGo.SetActive(false);
@@ -584,7 +511,7 @@ public class PlayerObject : MonoBehaviour {
 					break;
 				case PlayerState.Hanging:
 					HandGo.SetActive(true);
-					if (isSelf()) {
+					if (isSelf) {
 						BackGameBtn.SetActive(true);
 						if (OPTransform != null) {
 							PoolMan.Despawn(OPTransform);
@@ -593,14 +520,14 @@ public class PlayerObject : MonoBehaviour {
 					break;
 				case PlayerState.Reserve:
 					stateGo.SetActive(true);	
-					if (isSelf()) {
+					if (isSelf) {
 						BackGameBtn.SetActive(true);
 					}
 					break;
 				default: 
 					break;
 			}
-		}).AddTo(this);
+		}).AddTo(disposables);
 
 		IDisposable reserveCd = null; 
 		player.ReservedCD.Subscribe((value) => {
@@ -614,17 +541,97 @@ public class PlayerObject : MonoBehaviour {
 				reserveCd = Observable.Interval(TimeSpan.FromSeconds(1)).Subscribe((_) => {
 					value = Mathf.Max(value - 1, 1);
 					setReserveCd(value);
-				}).AddTo(this);
+				}).AddTo(disposables);
 			}
-		}).AddTo(this);
+		}).AddTo(disposables);
 
 		player.LastAct.Where((act) => !String.IsNullOrEmpty(act)).Subscribe((act) => {
 			dealAct(act.ToActionEnum());	
-		}).AddTo(this);
+		}).AddTo(disposables);
 
 		RxSubjects.GainChip.Where((gainChip) => gainChip.Uid == Uid).Subscribe((gainChip) => {
 			gainChip.Grp.ToPlayer(this);
-		}).AddTo(this);
+		}).AddTo(disposables);
+
+		setupSelfEvents();		
+	}
+
+	private void setupSelfEvents() {
+		if (!isSelf) {
+			return ;
+		}
+
+		GameData.Shared.MaxFiveRank.Subscribe((value) => {
+			var parent = CardDesc.transform.parent.gameObject;
+
+			if (value == 0)
+			{
+				parent.SetActive(false);
+				return;
+			}
+
+			parent.SetActive(true);
+			CardDesc.text = Card.GetCardDesc(value);
+		}).AddTo(disposables);
+
+		player.ShowCard.Subscribe((value) => {
+			if (value[0] == '1') {
+				Eyes[0].SetActive(true);
+			} else {
+				Eyes[0].SetActive(false);
+			}
+
+			if (value[1] == '1') {
+				Eyes[1].SetActive(true);
+			} else {
+				Eyes[1].SetActive(false);
+			}
+		}).AddTo(disposables);
+
+		player.Trust.ShouldShow.Subscribe((show) => {
+			AutoArea.SetActive(show);
+		}).AddTo(disposables);
+
+		player.Trust.CallNumber.Subscribe((num) => {
+			var text = AutoOperas[1].transform.Find("Text").GetComponent<Text>();
+
+			if (num == 0) {
+				text.text = "自动让牌";
+			} else if (num == -1) {
+				text.text = "全下";
+			} else if (num > 0) {
+				text.text = String.Format("跟注\n<size=40>{0}</size>", _.Num2CnDigit<int>(num));
+			}
+
+			var flag = player.Trust.FlagString();
+			if (flag == "01") {
+				player.Trust.SelectedFlag.Value = "00";	
+			}
+		}).AddTo(disposables);
+
+		player.Trust.SelectedFlag.Where((flags) => { return flags != null; }).Subscribe((flags) => {
+			var ncolor = _.HexColor("#2196F300");
+			var scolor = _.HexColor("#2196F3");
+			
+			var img0 = AutoOperas[0].GetComponent<ProceduralImage>();
+			var img1 = AutoOperas[1].GetComponent<ProceduralImage>();
+
+			if (flags[0] == '0') {
+				img0.color = ncolor;
+			} else {
+				img0.color = scolor;
+			}
+
+			if (flags[1] == '0') {
+				img1.color = ncolor;
+			} else {
+				img1.color = scolor;
+			}
+		}).AddTo(disposables);
+
+		RxSubjects.Deal.Subscribe((_) => {
+			player.Trust.Hide();
+		}).AddTo(disposables);
 	}
 
 	private void setReserveCd(int number) {
@@ -636,7 +643,7 @@ public class PlayerObject : MonoBehaviour {
 		SpkText.ChangePos(pos);
 	}
 
-	private bool isSelf(String jsonStr) {
+	private bool isSelfJson(String jsonStr) {
 		var N = JSON.Parse(jsonStr);
 		var uid = N["uid"].Value;
 		return uid == Uid;
@@ -647,7 +654,7 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	private void showTheCards(List<int> cards, bool anim) {
-		if (cards.Count < 2 || isSelf()) {
+		if (cards.Count < 2 || isSelf) {
 			return ;
 		}
 
@@ -731,7 +738,7 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	private void turnTo(Dictionary<string, object> dict, int left, bool restore = false,int buyTimeCost = 10) {
-		if (isSelf()) {
+		if (isSelf) {
 			showOP(dict, left, buyTimeCost);
 
 			var flag = player.Trust.FlagString();
@@ -825,24 +832,24 @@ public class PlayerObject : MonoBehaviour {
 		return op;
 	}
 
-	private void foldCards(GameObject go) {
+	private void foldCards(Transform transform) {
+		var sourceParent = transform.parent;
+
 		Ease ease = Ease.Flash;
+		transform.DOMove(new Vector2(0, 200), animDuration).SetEase(ease);
 
-		var rectTrans = go.GetComponent<RectTransform>();
-		rectTrans.DOAnchorPos(new Vector2(0, 200), animDuration).SetEase(ease);
-
-		var image = go.GetComponent<Image>();
+		var image = transform.GetComponent<Image>();
 		Tween tween; 
 
 		if (image != null) {
 			tween = image.DOFade(0.2f, animDuration).SetEase(ease);
 		} else {
-			var canvasGrp = go.GetComponent<CanvasGroup>();
+			var canvasGrp = transform.GetComponent<CanvasGroup>();
 			tween = canvasGrp.DOFade(0.2f, animDuration).SetEase(ease);
 		}
 
 		tween.OnComplete(() => {
-			Destroy(go);
+			transform.gameObject.SetActive(false);
 		});
 	}
 }

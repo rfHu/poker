@@ -9,7 +9,6 @@ using SimpleJSON;
 using DG.Tweening;
 
 public class Controller : MonoBehaviour {
-	public GameObject seat;
 	public GameObject LoadingModal;
 
 	public GameObject gameInfo;
@@ -274,13 +273,13 @@ public class Controller : MonoBehaviour {
 		// 删除已有座位
 		var seats = FindObjectsOfType<Seat>();
 		foreach(var seat in seats) {
-			Destroy(seat.gameObject);
+			PoolMan.Despawn(seat.transform);
 		}
 		
 		anchorPositions = getVectors (numberOfPlayers);
 
 		for (int i = 0; i < numberOfPlayers; i++) {
-			GameObject cpseat = Instantiate (seat);
+			GameObject cpseat = PoolMan.Spawn("Seat").gameObject;
 			cpseat.SetActive(true);
 			
 			var st = cpseat.GetComponent<Seat>();
@@ -374,7 +373,7 @@ public class Controller : MonoBehaviour {
 
 		Action<Player> showPlayer = (obj) => {
 			var parent = Seats[obj.Index].transform;
-			var go = (GameObject)GameObject.Instantiate(Resources.Load("Prefab/Player"));
+			var go = PoolMan.Spawn("Player");
 			go.GetComponent<PlayerObject>().ShowPlayer(obj, parent);
 		};
 
