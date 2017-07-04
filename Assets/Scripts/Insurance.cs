@@ -71,24 +71,14 @@ public class Insurance : MonoBehaviour {
         myCoroutine = Timer(time);
         StartCoroutine(myCoroutine);
 
-        if (mustBuy)
-        {
-            ExitButton.gameObject.SetActive(false);
-            CheckAllToggle.gameObject.SetActive(false);
-        } else {
-            // CheckAllToggle.OnPointerClick
-        }
+        ExitButton.gameObject.SetActive(!mustBuy);
+        CheckAllToggle.gameObject.SetActive(!mustBuy);
 
-        if (!isBuyer)
-        {
-            BuyerButtons.SetActive(false);
-            WatcherText.SetActive(true);
-            ExitButton.gameObject.SetActive(true);
-            CheckAllToggle.interactable = false;
-            Destroy(CheckAllToggle.transform.GetComponent<EventTrigger>());
-            CASlider.interactable = false;
-            Destroy(CASliderUp);
-        }
+        BuyerButtons.SetActive(isBuyer);
+        WatcherText.SetActive(!isBuyer);
+        ExitButton.gameObject.SetActive(!isBuyer);
+        CheckAllToggle.interactable = isBuyer;
+        CASlider.interactable = isBuyer;
 
         SetOdds();
         CASlider.value = CASlider.minValue;
@@ -233,6 +223,11 @@ public class Insurance : MonoBehaviour {
 
     public void ClickUp() 
     {
+        if (!isBuyer)
+        {
+            return;
+        }
+
         RPCRsyncInsurance();
     }
 
@@ -410,7 +405,8 @@ public class Insurance : MonoBehaviour {
 
     public void OnSLButtonClick() 
     {
-        if (mustBuy) {
+
+        if (mustBuy || !isBuyer) {
             return ;
         }
             

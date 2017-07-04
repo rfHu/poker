@@ -469,8 +469,8 @@ public class Controller : MonoBehaviour {
                 }
             }
 
-            var em = PoolMan.Spawn("Emo" + pid);
-            em.GetComponent<Emoticon>().Init(fromSeatPos, toSeat, isToMe);
+            var em = PoolMan.Spawn("Emoticon");
+            em.GetComponent<Emoticon>().Init(fromSeatPos, toSeat, pid, isToMe);
         }).AddTo(this);
 
 		Dictionary<string, Transform> expressCache = new Dictionary<string, Transform>(){};
@@ -692,15 +692,19 @@ public class Controller : MonoBehaviour {
 
 		RxSubjects.ToInsurance.Subscribe((e) =>
         {
-            var InsurancePopup = (GameObject)Instantiate(Resources.Load("Prefab/Insurance"), G.DialogCvs.transform);
-            InsurancePopup.GetComponent<DOPopup>().Show(/*modal: false*/);
+            //var InsurancePopup = (GameObject)Instantiate(Resources.Load("Prefab/Insurance"), G.DialogCvs.transform);
+
+            var InsurancePopup = PoolMan.Spawn("Insurance");
+            InsurancePopup.GetComponent<DOPopup>().Show();
             InsurancePopup.GetComponent<Insurance>().Init(e.Data, true);
         }).AddTo(this);
 
         RxSubjects.ShowInsurance.Subscribe((e) =>
         {
-            var InsurancePopup = (GameObject)Instantiate(Resources.Load("Prefab/Insurance"), G.DialogCvs.transform);
-            InsurancePopup.GetComponent<DOPopup>().Show(/*modal: false*/);
+            //var InsurancePopup = (GameObject)Instantiate(Resources.Load("Prefab/Insurance"), G.DialogCvs.transform);
+
+            var InsurancePopup = PoolMan.Spawn("Insurance");
+            InsurancePopup.GetComponent<DOPopup>().Show();
             InsurancePopup.GetComponent<Insurance>().Init(e.Data, false);
         });
 
