@@ -37,8 +37,6 @@ public class PlayerObject : MonoBehaviour {
 	private ActionState lastState;
 	private bool gameover = false;
 
-	public Text CardDesc;
-	
 
 	private CompositeDisposable disposables = new CompositeDisposable();
 
@@ -50,23 +48,6 @@ public class PlayerObject : MonoBehaviour {
 		Cardfaces.GetComponent<RectTransform>().anchoredPosition = new Vector2(40, -20);
 		AutoArea.SetActive(false);
 		MyCards[0].parent.gameObject.SetActive(false);
-	}
-
-	public void SeeCard(List<int> cards) {
-		MyCards[0].parent.gameObject.SetActive(true);
-
-		var state = player.SeeCardAnim;
-
-		if (state) {
-			MyCards[0].GetComponent<Card>().ShowWithSound(cards[0], state);
-
-			Observable.Timer(TimeSpan.FromSeconds(0.3)).Subscribe((_) => {
-				MyCards[1].GetComponent<Card>().ShowWithSound(cards[1], state);
-			}).AddTo(disposables);
-		} else {
-			MyCards[0].GetComponent<Card>().Show(cards[0], state);
-			MyCards[1].GetComponent<Card>().Show(cards[1], state);
-		}
 	}
 
 	// void OnDespawned()
@@ -96,20 +77,6 @@ public class PlayerObject : MonoBehaviour {
 	}
 
 	private void registerRxEvent() {
-		player.Cards.AsObservable().Where((cards) => {
-			if (cards != null && cards.Count == 2) {
-				return cards[0] > 0 && cards[1] > 0;
-			}
-
-			return false;
-		}).Subscribe((cards) => {
-			if (isSelf) {
-				SeeCard(cards);
-			} else {
-				// showTheCards(cards, player.SeeCardAnim);
-			}
-		}).AddTo(disposables);
-
 		player.OverData.AsObservable().Where((data) => data != null).Subscribe((data) => {
 			var gain = data.Gain();
 			if (gain > 0) {

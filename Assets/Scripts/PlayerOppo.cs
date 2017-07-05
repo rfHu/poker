@@ -56,11 +56,6 @@ namespace PokerPlayer {
                 showTheCards(cards, true);
             }).AddTo(this);
 
-            player.Destroyed.AsObservable().Where((v) => v).Subscribe((_) => {
-                // PoolMan.Despawn(transform);
-                Destroy(gameObject);
-            }).AddTo(this);
-
             // 中途复原行动
             player.Countdown.AsObservable().Where((obj) => obj.seconds > 0).Subscribe((obj) => {
                 TurnTo(null, obj.seconds);
@@ -105,7 +100,6 @@ namespace PokerPlayer {
         private IEnumerator turnTo(int left) {
             Countdown.gameObject.SetActive(true);
             activated = true;
-            // AvatarMask.SetActive(true);
 
             Countdown.GetComponent<Animator>().SetTrigger("1");
             Countdown.GetComponent<Animator>().speed = 1 / (float)left;
@@ -171,6 +165,14 @@ namespace PokerPlayer {
 
         public void ResetTime(int total) {
              TurnTo(null, total);
+        }
+
+        public void Despawn() {
+            Destroy(gameObject);
+        }
+
+        public void SeeCard(List<int> cards) {
+            showTheCards(cards, player.SeeCardAnim);
         }
     }
 }

@@ -12,6 +12,7 @@ namespace PokerPlayer {
         public GameObject AutoArea;
         public GameObject[] AutoOperas; 
         public List<Transform> MyCards;
+		public Text CardDesc;
         
         private Transform OPTransform;
         private Player player {
@@ -33,16 +34,16 @@ namespace PokerPlayer {
 
         private void addEvents() {
             GameData.Shared.MaxFiveRank.Subscribe((value) => {
-                // var parent = CardDesc.transform.parent.gameObject;
+                var parent = CardDesc.transform.parent.gameObject;
 
-                // if (value == 0)
-                // {
-                //     parent.SetActive(false);
-                //     return;
-                // }
+                if (value == 0)
+                {
+                    parent.SetActive(false);
+                    return;
+                }
 
-                // parent.SetActive(true);
-                // CardDesc.text = Card.GetCardDesc(value);
+                parent.SetActive(true);
+                CardDesc.text = Card.GetCardDesc(value);
             }).AddTo(this);
 
 		player.ShowCard.Subscribe((value) => {
@@ -60,7 +61,6 @@ namespace PokerPlayer {
 		}).AddTo(this);
 
 		player.Trust.ShouldShow.Subscribe((show) => {
-			Debug.Log(1111111111);
 			AutoArea.SetActive(show);
 		}).AddTo(this);
 
@@ -109,6 +109,15 @@ namespace PokerPlayer {
             AutoArea.SetActive(false);
             gameover = true;
         }).AddTo(this);
+
+		  // 中途复原行动
+            player.Countdown.AsObservable().Subscribe((obj) => {
+				if (obj.seconds > 0) {
+                	turnTo(obj.data, obj.seconds, true, obj.BuyTimeCost);
+				} else {
+					OP.Despawn();
+				}
+            }).AddTo(this);
 
         }
 
@@ -253,5 +262,26 @@ namespace PokerPlayer {
         public void ResetTime(int total) {
             OPTransform.GetComponent<OP>().Reset(total);
         }
+
+		public void Despawn() {
+            Destroy(gameObject);
+        }
+
+		public void SeeCard(List<int> cards) {
+			MyCards[0].parent.gameObject.SetActive(true);
+
+			var state = player.SeeCardAnim;
+
+			if (state) {
+				MyCards[0].GetComponent<Card>().ShowWithSound(cards[0], state);
+
+				Observable.Timer(TimeSpan.FromSeconds(0.3)).Subscribe((_) => {
+					MyCards[1].GetComponent<Card>().ShowWithSound(cards[1], state);
+				}).AddTo(this);
+			} else {
+				MyCards[0].GetComponent<Card>().Show(cards[0], state);
+				MyCards[1].GetComponent<Card>().Show(cards[1], state);
+			}
+		}	
     }
 }

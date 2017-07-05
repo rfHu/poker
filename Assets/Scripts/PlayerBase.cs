@@ -98,6 +98,10 @@ namespace PokerPlayer {
                 }
             }).AddTo(this);
 
+            player.Destroyed.AsObservable().Where((v) => v).Subscribe((_) => {
+                myDelegate.Despawn();
+            }).AddTo(this);
+
             player.PlayerStat.Subscribe((state) => {
                 HandGo.SetActive(false);
                 BackGameBtn.SetActive(false);
@@ -215,10 +219,9 @@ namespace PokerPlayer {
             		}
             	}
 
-            	// // 自动托管
-            	// if (isSelf) {
-            	// 	player.SetTrust(e.Data.Dict("trust"));
-            	// }
+                if (Uid == GameData.Shared.Uid) {
+                    player.SetTrust(e.Data.Dict("trust"));
+                }
             }).AddTo(this);
 
             // 思考延时
@@ -245,6 +248,16 @@ namespace PokerPlayer {
                 if (chipsGo != null) {
                     chipsGo.Hide();
                 }
+            }).AddTo(this);
+
+            player.Cards.AsObservable().Where((cards) => {
+                if (cards != null && cards.Count == 2) {
+                    return cards[0] > 0 && cards[1] > 0;
+                }
+
+                return false;
+            }).Subscribe((cards) => {
+                myDelegate.SeeCard(cards);
             }).AddTo(this);
         }
 
@@ -323,5 +336,7 @@ namespace PokerPlayer {
         void TurnTo(Dictionary<string, object> data, int left);
         void Fold();
         void ResetTime(int time);
+        void Despawn();
+        void SeeCard(List<int> cards);
     } 
 }
