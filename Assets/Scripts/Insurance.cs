@@ -13,11 +13,11 @@ public class Insurance : MonoBehaviour {
     public Text Pot;
     public Text CountDown;
     public Text AllinTitle;
-    public GameObject AllinPlayer;
+    public Transform AllinPlayersParent;
     public List<Card> PublicCards;
     public Text Odds;
     public Text SelectNum;
-    public GameObject OutsCard;
+    public Transform OutsCardsParent;
     public Text SumInsured;
     public Text ClaimAmount;
     public Slider CASlider;
@@ -35,22 +35,22 @@ public class Insurance : MonoBehaviour {
     public GameObject WatcherText;
     public EventTrigger CASliderUp;
 
-    int cost;
-    List<int> scope;
-    private int potValue;
-
     float OddsNum;
     float[] OddsNums = { 30, 16, 10, 8, 6, 5, 4, 3.5f, 3, 2.5f, 2.2f, 2, 1.7f, 1.5f, 1.3f, 1.1f, 1, 0.8f, 0.6f, 0.5f };
 
-    List<Toggle> OUTSCards = new List<Toggle>();
-    HashSet<int> selectedCards; 
     private List<int> outsCardArray;
+    private int potValue;
+    int cost;
+    List<int> scope;
+    bool mustBuy = false;
+    private bool isFlop = false;
+    bool isBuyer;
+    HashSet<int> selectedCards; 
+    List<Toggle> OUTSCards = new List<Toggle>();
     List<int> isoffToggles = new List<int>();
 
     int closeFlag = 0;
-    bool mustBuy = false;
-    bool isBuyer;
-    private bool isFlop = false;
+
     IEnumerator myCoroutine;
 
 
@@ -66,19 +66,23 @@ public class Insurance : MonoBehaviour {
         isFlop = (data.Int("room_state") == 4);
         List<object> allinPlayers = data.List("outs_count");
         selectedCards = new HashSet<int>(outsCardArray.ToList());
+        isoffToggles.Clear();
 
         var time = data.Int("time");
         myCoroutine = Timer(time);
         StartCoroutine(myCoroutine);
 
+        //必须购买设置
         ExitButton.gameObject.SetActive(!mustBuy);
         CheckAllToggle.gameObject.SetActive(!mustBuy);
 
+        //区分观看者和购买者
         BuyerButtons.SetActive(isBuyer);
         WatcherText.SetActive(!isBuyer);
         ExitButton.gameObject.SetActive(!isBuyer);
         CheckAllToggle.interactable = isBuyer;
         CASlider.interactable = isBuyer;
+
 
         SetOdds();
         CASlider.value = CASlider.minValue;
@@ -113,9 +117,7 @@ public class Insurance : MonoBehaviour {
             var player = GameData.Shared.FindPlayer(data.String("uid"));
             var outsNumber = data.Int("ct");
 
-            var playerMes = Instantiate(AllinPlayer);
-            playerMes.transform.SetParent(AllinPlayer.transform.parent,false);
-            playerMes.SetActive(true);
+            var playerMes = PoolMan.Spawn("AllInPlayer",AllinPlayersParent.transform);
             playerMes.GetComponent<AllInPlayer>().Init(player.Name, player.Cards.Value, player.Uid, outsNumber);
         }
     }
@@ -123,20 +125,26 @@ public class Insurance : MonoBehaviour {
     private void setupPbCards() {
         var cards = GameData.Shared.PublicCards.ToList();
 
-        for (int i = 0; i < cards.Count; i++)
+        for (int i = 0; i < PublicCards.Count; i++)
 		{
             var card = PublicCards[i];
-            card.gameObject.SetActive(true);
-            card.Show(cards[i]);
+            if (i < cards.Count)
+            {
+                card.gameObject.SetActive(true);
+                card.Show(cards[i]);
+            }
+            else 
+            {
+                card.gameObject.SetActive(false);
+            }
 		}
     }
 
     private void setupOutsCards() {
+
         foreach (var cardNum in outsCardArray)
         {
-            var card = Instantiate(OutsCard);
-            card.SetActive(true);
-            card.transform.SetParent(OutsCard.transform.parent,false);
+            var card = PoolMan.Spawn("InsureCard",OutsCardsParent.transform);
             card.GetComponent<Card>().Show(cardNum);
             OUTSCards.Add(card.GetComponent<Toggle>());
 
@@ -460,13 +468,29 @@ public class Insurance : MonoBehaviour {
 			        {"isoff", isoffToggles},
                     {"CASlidernum", int.Parse(SumInsured.text)},
                     {"closeflag", closeFlag}
-		        };
+		};
 
         Connect.Shared.Emit(new Dictionary<string, object>() {
 				{"f", "rsyncinsurance"},
 				{"args", data}
 
-			});
+		});
 
+    }
+
+    void OnDespawned() 
+    {
+        for (int i = AllinPlayersParent.childCount - 1; i > -1; i--)
+        {
+            if (PoolMan.Contains(AllinPlayersParent.GetChild(i))) 
+            {
+                PoolMan.Despawn(AllinPlayersParent.GetChild(i));
+            }
+        }
+
+        for (int i = OutsCardsParent.childCount - 1; i > -1; i--)
+        {
+            PoolMan.Despawn(OutsCardsParent.GetChild(i));
+        }
     }
 }

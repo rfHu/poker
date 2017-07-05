@@ -13,8 +13,8 @@ public class GameLoading : MonoBehaviour {
 			external.SetProxy("http://localhost:8888");
 			// external.SetSid("s%3ASuOxhyXR0wmfu1xIZZUmFFdAq8Cd5xsD.h6RldH4l7niXxoZG0QyYnlt36QayIW0rtY0Z8GmorV0");
             // external.SetRoomID("5950a958cfb1ed3a3860c871");
-            external.SetSid("s%3A-aQSxLwvnOxfxaFXAp3X_uVVclly1SuL.byIzHdOevZTTUaiLDNts%2FAm0dDOCj%2BecQlC89yAm6tU");
-            external.SetRoomID("5959ee649bf0960db7119b61");
+            external.SetSid("s%3A5oV4waP2FdytuZ_daHx1cOgW_0JwkJJ3.x7y5%2B%2BoEaDDtAZetL8CAiJVX2ZMOrUds%2BNP5IzyNjyc");
+            external.SetRoomID("595cab5f7cf12b69a8b45624");
 
 		#endif
 
@@ -25,7 +25,7 @@ public class GameLoading : MonoBehaviour {
 #if UNITY_IPHONE || UNITY_IOS
             BuglyAgent.InitWithAppId ("b3d868488f");
 #elif UNITY_ANDROID
-            BuglyAgent.InitWithAppId("a8103a785a");
+            //BuglyAgent.InitWithAppId("a8103a785a");
 #endif
 
 		// 如果你确认已在对应的iOS工程或Android工程中初始化SDK，那么在脚本中只需启动C#异常捕获上报功能即可
