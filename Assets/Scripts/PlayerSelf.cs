@@ -14,13 +14,17 @@ namespace PokerPlayer {
         public List<Transform> MyCards;
         
         private Transform OPTransform;
-        private Player player; 
+        private Player player {
+			get {
+				return Base.player;
+			}
+		} 
         private bool gameover = false;
 
         public void Init(Player player, Transform parent) {
-            this.player = player;
             Base.Init(player, parent.GetComponent<Seat>(), this);
-            transform.SetParent(parent, true);
+			PlayerBase.SetInParent(transform, parent);
+
             addEvents();
 
             RxSubjects.ChangeVectorsByIndex.OnNext(GameData.Shared.MySeat);
@@ -56,6 +60,7 @@ namespace PokerPlayer {
 		}).AddTo(this);
 
 		player.Trust.ShouldShow.Subscribe((show) => {
+			Debug.Log(1111111111);
 			AutoArea.SetActive(show);
 		}).AddTo(this);
 
@@ -167,6 +172,63 @@ namespace PokerPlayer {
 		MyCards[1].GetComponent<Card>().Darken();
 	}
 
+	private OP showOP(Dictionary<string, object> data, int left, int buyTimeCost = 10) {
+		if (this == null) {
+			return null;
+		}
+
+		OPTransform = OP.Spawn();
+		var op = OPTransform.GetComponent<OP>();
+		op.StartWithCmds(data, left, buyTimeCost);
+		Base.Circle.gameObject.SetActive(false);
+
+		return op;
+	}
+
+	private void turnTo(Dictionary<string, object> dict, int left, bool restore = false,int buyTimeCost = 10) {
+			showOP(dict, left, buyTimeCost);
+
+			var flag = player.Trust.FlagString();
+			var callNum = player.Trust.CallNumber.Value;
+
+			if (flag == "10") { // 选中左边
+				PoolMan.Despawn(OPTransform);	
+				var check = dict.Dict("cmds").Bool("check");
+
+				if (check) {
+					OP.OPS.Check();
+ 				} else {
+					OP.OPS.Fold();
+				 }
+			} else if (flag == "01") { // 选中右边
+				var data = dict.Dict("cmds");
+				var call = data.Int("call");
+				var check = data.Bool("check");
+
+				if (callNum == -1 || (callNum == 0 && check) || (callNum == call && call != 0)) {
+					PoolMan.Despawn(OPTransform);
+
+					if (callNum == 0) {
+						OP.OPS.Check();
+					} else if (callNum == -1) {
+						OP.OPS.AllIn();
+					} else {
+						OP.OPS.Call();
+					}
+				} else {
+					if (!restore) {
+						G.PlaySound("on_turn");
+					}
+				}
+			} else {
+				if (!restore) {
+					G.PlaySound("on_turn");
+				}
+			}
+			
+			player.Trust.SelectedFlag.Value = "00";
+	}
+
 
 
         // ===== Delegate =====
@@ -181,11 +243,11 @@ namespace PokerPlayer {
                 PoolMan.Despawn(OPTransform);
             }
 
-            // Base.Circle.SetActive(true); // 显示头像
+            Base.Circle.gameObject.SetActive(true); // 显示头像
         }
 
         public void TurnTo(Dictionary<string, object> data, int left) {
-        
+			turnTo(data, left);
         }
 
         public void ResetTime(int total) {

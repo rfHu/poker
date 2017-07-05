@@ -10,8 +10,6 @@ namespace PokerPlayer {
     public class PlayerOppo: MonoBehaviour, PlayerDelegate {
         public PlayerBase Base;
 
-        private Player player; 
-
 	    public Text NameLabel;
         public Text CardDesc;
 	    public List<Card> ShowCards;
@@ -21,6 +19,12 @@ namespace PokerPlayer {
         private IEnumerator turnFactor;
         private bool activated;
 
+        private Player player {
+            get {
+                return Base.player;
+            }
+        }
+
         void Awake()
         {
             Countdown.gameObject.SetActive(false);                        
@@ -29,13 +33,8 @@ namespace PokerPlayer {
         }
 
         public void Init(Player player, Transform parent) {
-            this.player = player;
             Base.Init(player, parent.GetComponent<Seat>(), this);
-            transform.SetParent(parent, true);
-            
-            var rect = GetComponent<RectTransform>(); 
-            rect.anchoredPosition = new Vector2(0, 0);
-            rect.localScale = new Vector2(1, 1);
+            PlayerBase.SetInParent(transform, parent);
 
 		    NameLabel.text = player.Name;
 

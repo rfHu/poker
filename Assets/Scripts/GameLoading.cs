@@ -14,7 +14,7 @@ public class GameLoading : MonoBehaviour {
 			// external.SetSid("s%3ASuOxhyXR0wmfu1xIZZUmFFdAq8Cd5xsD.h6RldH4l7niXxoZG0QyYnlt36QayIW0rtY0Z8GmorV0");
             // external.SetRoomID("5950a958cfb1ed3a3860c871");
             external.SetSid("s%3A-aT1X_vpdP1YmTaGDwroTXrQBJd9d_9D.gAh198EI2tOYl70Dn1%2F1p5QL5OyzXnmz4OevLUZdJgQ");
-            external.SetRoomID("595b60767c12f911b45af2a2");
+            external.SetRoomID("595c888f481bd61cf50045b7");
 		#endif
 
 		// 开启SDK的日志打印，发布版本请务必关闭

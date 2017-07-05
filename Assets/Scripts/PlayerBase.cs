@@ -26,7 +26,7 @@ namespace PokerPlayer {
         public GameObject AllinGo;
         public Transform Circle;
 
-        protected Player player;
+        public Player player;
         private ActionState lastState;
 	    private int actCardsNumber = 0;
         private ChipsGo chipsGo;
@@ -307,6 +307,13 @@ namespace PokerPlayer {
 
         public void SetFolded() {
 		    Avt.GetComponent<CanvasGroup>().alpha = 0.6f;
+        }
+
+        static public void SetInParent(Transform target, Transform parent) {
+            target.SetParent(parent, true);
+			var rect = target.GetComponent<RectTransform>(); 
+            rect.anchoredPosition = new Vector2(0, 0);
+            rect.localScale = new Vector2(1, 1);
         }
     }
 
