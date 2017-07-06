@@ -10,5 +10,6 @@ public class Loading : MonoBehaviour {
 	void Awake()
 	{
 		LoadingText.text = Txt;	
+		// Debug.Log(transform.position);
 	}
 }
