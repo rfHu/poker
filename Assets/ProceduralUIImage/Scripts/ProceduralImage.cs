@@ -88,13 +88,13 @@ namespace UnityEngine.UI.ProceduralImage {
 			this.material = materialInstance;
 		}
 		public void Update(){
-			this.UpdateMaterial ();
+			// this.UpdateMaterial ();
 		}
 
 		protected override void OnDestroy()
 		{
 			base.OnDestroy();
-			Destroy(materialInstance);			
+			DestroyImmediate(materialInstance);			
 		}
 
 		/// <summary>

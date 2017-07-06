@@ -9,7 +9,7 @@ public class ChipsGrp : MonoBehaviour {
 	public List<GameObject> Chips;
 	public Text PotText;
 
-	private PlayerObject player;
+	private Transform target;
 
 	void Awake()
 	{
@@ -20,8 +20,8 @@ public class ChipsGrp : MonoBehaviour {
 		PotText.enabled = false;
 	}
 
-	public void ToPlayer(PlayerObject player) {
-		this.player = player;
+	public void ToParent(Transform target) {
+		this.target = target;
 
 		doAnim(Chips[0], 0);	
 		doAnim(Chips[1], 0.05f);	
@@ -35,7 +35,7 @@ public class ChipsGrp : MonoBehaviour {
 	} 
 
 	private void doAnim(GameObject go, float delay) {
-		go.transform.SetParent(player.transform, true);
+		go.transform.SetParent(target, true);
 		go.GetComponent<Image>().DOFade(0.3f, 0.3f).SetDelay(delay);
 		go.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0, 0), 0.3f).SetDelay(delay).OnComplete(() => {
 			Destroy(go);

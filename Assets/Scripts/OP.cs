@@ -94,7 +94,6 @@ public class OP : MonoBehaviour {
 
 		setAccurateBtns(AccurateType.Default); // 还原精确加注
 		hideRaiseSlider(); // 还原加注拉杆
-		BuyTurnTime.SetActive(true); // 还原加时按钮
 
 		if (check) { // 看牌
 			CallGo.SetActive(false);
@@ -366,6 +365,7 @@ public class OP : MonoBehaviour {
 			BuyTurnTime.SetActive(false);
 		} else {
 			BuyTimeCost.text = cost.ToString();
+			BuyTurnTime.SetActive(true);
 		}
 	}
 
