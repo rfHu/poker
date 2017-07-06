@@ -21,10 +21,11 @@ namespace PokerPlayer {
 	    public Text ScoreLabel;
         public PlayerActGo PlayerAct;
         public Text StateLabel;
-	    public GameObject BackGameBtn;
 	    public GameObject HandGo;
         public GameObject AllinGo;
         public Transform Circle;
+        public GameObject WinStars;
+        public Text WinNumber;
 
         public Player player;
         private ActionState lastState;
@@ -90,21 +91,12 @@ namespace PokerPlayer {
                 setPrChips(value);
             }).AddTo(this);
 
-             RxSubjects.Award27.Subscribe((e) => {
-                if (Uid == e.Data.String("uid"))
-                {
-                    CancelInvoke("hideAnim");
-                    Invoke("hideAnim", 4);
-                }
-            }).AddTo(this);
-
             player.Destroyed.AsObservable().Where((v) => v).Subscribe((_) => {
                 myDelegate.Despawn();
             }).AddTo(this);
 
             player.PlayerStat.Subscribe((state) => {
                 HandGo.SetActive(false);
-                BackGameBtn.SetActive(false);
 
                 var stateGo = StateLabel.transform.parent.gameObject;
                 stateGo.SetActive(false);
@@ -115,18 +107,9 @@ namespace PokerPlayer {
                         break;
                     case PlayerState.Hanging:
                         HandGo.SetActive(true);
-                        // if (isSelf) {
-                        //     BackGameBtn.SetActive(true);
-                        //     if (OPTransform != null) {
-                        //         PoolMan.Despawn(OPTransform);
-                        //     }
-                        // }
                         break;
                     case PlayerState.Reserve:
                         stateGo.SetActive(true);	
-                        // if (isSelf) {
-                        //     BackGameBtn.SetActive(true);
-                        // }
                         break;
                     default: 
                         break;
@@ -259,6 +242,22 @@ namespace PokerPlayer {
             }).Subscribe((cards) => {
                 myDelegate.SeeCard(cards);
             }).AddTo(this);
+
+            player.OverData.AsObservable().Where((data) => data != null).Subscribe((data) => {
+                var gain = data.Gain();
+                if (gain > 0) {
+                    WinStars.SetActive(true);
+                }
+
+                // 收回大于0，展示盈亏
+                if (data.prize > 0) {
+                    WinNumber.transform.parent.gameObject.SetActive(true); 
+                    WinNumber.text = _.Number2Text(gain);
+                    ScoreLabel.transform.parent.gameObject.SetActive(false);
+                }
+
+                myDelegate.HandOver(data);
+            }).AddTo(this);
         }
 
         private bool isSelfJson(string jsonStr) {
@@ -338,5 +337,6 @@ namespace PokerPlayer {
         void ResetTime(int time);
         void Despawn();
         void SeeCard(List<int> cards);
+        void HandOver(GameOverJson data);
     } 
 }

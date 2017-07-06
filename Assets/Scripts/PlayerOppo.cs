@@ -82,6 +82,8 @@ namespace PokerPlayer {
             Base.PlayerAct.gameObject.SetActive(false);		
         
             if (cards[0] > 0 || cards[1] > 0) {
+                ShowCards[0].transform.parent.gameObject.SetActive(true);
+
                 // 显示手牌
                 if (cards[0] > 0) {
                     ShowCards[0].Show(cards[0], anim);
@@ -173,6 +175,11 @@ namespace PokerPlayer {
 
         public void SeeCard(List<int> cards) {
             showTheCards(cards, player.SeeCardAnim);
+        }
+
+        public void HandOver(GameOverJson data) {
+            showTheCards(data.cards, true);
+            showCardType(data.maxFiveRank);
         }
     }
 }

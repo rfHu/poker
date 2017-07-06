@@ -35,7 +35,7 @@ public class ChipsGrp : MonoBehaviour {
 	} 
 
 	private void doAnim(GameObject go, float delay) {
-		go.transform.SetParent(transform, true);
+		go.transform.SetParent(target, true);
 		go.GetComponent<Image>().DOFade(0.3f, 0.3f).SetDelay(delay);
 		go.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0, 0), 0.3f).SetDelay(delay).OnComplete(() => {
 			Destroy(go);

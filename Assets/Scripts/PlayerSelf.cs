@@ -13,6 +13,8 @@ namespace PokerPlayer {
         public GameObject[] AutoOperas; 
         public List<Transform> MyCards;
 		public Text CardDesc;
+		public GameObject YouWin;
+		public GameObject BackGameBtn;
         
         private Transform OPTransform;
         private Player player {
@@ -119,6 +121,22 @@ namespace PokerPlayer {
 				}
             }).AddTo(this);
 
+			 player.PlayerStat.Subscribe((state) => {
+				switch(state) {
+                    case PlayerState.Hanging:
+						BackGameBtn.SetActive(true);
+						if (OPTransform != null) {
+							PoolMan.Despawn(OPTransform);
+						}
+                        break;
+                    case PlayerState.Reserve:
+                        BackGameBtn.SetActive(true);
+                        break;
+                    default:
+						BackGameBtn.SetActive(false);
+                        break;
+                }
+			 }).AddTo(this);
         }
 
         private void toggleAutoBtns(int index) {
@@ -283,5 +301,11 @@ namespace PokerPlayer {
 				MyCards[1].GetComponent<Card>().Show(cards[1], state);
 			}
 		}	
+
+		public void HandOver(GameOverJson data) {
+			if (data.Gain() > 0) {
+				YouWin.SetActive(true);
+			}
+		}
     }
 }

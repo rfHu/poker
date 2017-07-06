@@ -38,8 +38,6 @@ public class PlayerObject : MonoBehaviour {
 	private bool gameover = false;
 
 
-	private CompositeDisposable disposables = new CompositeDisposable();
-
 	void OnSpawned() {
 		Countdown.SetActive(false);
 		Avt.GetComponent<CanvasGroup>().alpha = 1;	
@@ -62,47 +60,11 @@ public class PlayerObject : MonoBehaviour {
     //     }
 	// }
 
-	public void ShowPlayer(Player player, Transform parent) {
-		
-	}
-	
-
-
-	
 
 	private bool isSelf {
 		get {
 			return Uid == GameData.Shared.Uid;
 		}
-	}
-
-	private void registerRxEvent() {
-		player.OverData.AsObservable().Where((data) => data != null).Subscribe((data) => {
-			var gain = data.Gain();
-			if (gain > 0) {
-                WinStars.SetActive(true);
-
-				if (isSelf) {
-					WinImageGo.SetActive(true);
-				}
-			}
-
-			// 收回大于0，展示盈亏
-			if (data.prize > 0) {
-				WinNumber.transform.parent.gameObject.SetActive(true); 
-				WinNumber.text = _.Number2Text(gain);
-				ScoreLabel.transform.parent.gameObject.SetActive(false);
-			}
-
-			if (!isSelf) {
-				// showTheCards(data.cards, true);
-				// showCardType(data.maxFiveRank);
-			}
-
-			// 4s后隐藏动画
-			Invoke("hideAnim", 4);			
-		}).AddTo(disposables);
-
 	}
 
 	private void hideAnim() {
