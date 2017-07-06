@@ -19,7 +19,7 @@ public class WaitForAudit : MonoBehaviour {
 
 		RxSubjects.UnPass.Subscribe((e) => {
 			Hide();
-			PokerUI.Toast("您的带入请求被房主拒绝");
+			PokerUI.Toast("房主拒绝您的带入申请");
 		}).AddTo(this);
 
 		GameData.Shared.AuditCD.Subscribe((secs) => {
