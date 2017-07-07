@@ -78,6 +78,11 @@ public class UIManager : MonoBehaviour {
         });
     }
 
+    public void OnClickSNGMsgbutton() 
+    {
+        var SngMsgPage = PoolMan.Spawn("SNGMsgPage");
+    }
+
 	void Awake()
 	{
 		

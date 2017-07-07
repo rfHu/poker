@@ -32,6 +32,8 @@ public class Controller : MonoBehaviour {
 	public GameObject SeeCardTable;
 	public GameObject SeeCardTips;
 
+    public GameObject SNGMsgButton;
+
 	// public GameObject Cutoff;
 
 	List<Vector2> anchorPositions = new List<Vector2>();
@@ -268,6 +270,11 @@ public class Controller : MonoBehaviour {
 		}
         Commander.Shared.OptionToggle(!GameData.Shared.talkSoundClose, 2);
         Commander.Shared.OptionToggle(!GameData.Shared.chatBubbleClose, 1);
+
+        if (GameData.Shared.GameType == "sng")
+        {
+            SNGMsgButton.SetActive(true);
+        }
 	}
 
 	private void addGameInfo(string text) {
