@@ -30,6 +30,7 @@ namespace PokerPlayer {
             Base.Init(player, parent.GetComponent<Seat>(), this);
 			PlayerBase.SetInParent(transform, parent);
 
+			gameover = false;
             addEvents();
 
             RxSubjects.ChangeVectorsByIndex.OnNext(GameData.Shared.MySeat);
@@ -38,6 +39,13 @@ namespace PokerPlayer {
 
 		void OnDespawned() {
 			disposables.Clear();	
+
+			YouWin.SetActive(false);
+			CardDesc.transform.parent.gameObject.SetActive(false);
+			MyCards[0].parent.gameObject.SetActive(false);
+			MyCards[0].GetComponent<Card>().Turnback();
+			MyCards[1].GetComponent<Card>().Turnback();
+			OP.Despawn();
 		}
 
         private void addEvents() {

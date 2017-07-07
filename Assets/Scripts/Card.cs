@@ -103,6 +103,7 @@ public class Card : MonoBehaviour {
 	public void Turnback() {
 		_index = -1;
 		GetComponent<Image>().sprite = CardBack;
+		ReColor();
 	}
 
 	public void Hide() {

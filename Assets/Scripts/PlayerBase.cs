@@ -64,6 +64,15 @@ namespace PokerPlayer {
 
         void OnDespawned() {
             disposables.Clear();
+
+            WinStars.SetActive(false);
+            WinNumber.transform.parent.gameObject.SetActive(false);
+            ScoreLabel.transform.parent.gameObject.SetActive(true);
+            setPlayerAct(false, false);
+            AllinGo.SetActive(false);
+            Avt.GetComponent<CanvasGroup>().alpha = 1;
+            chipsGo = null;
+            Destroy(chipsGo);
         } 
 
         private void addEvents() {
@@ -147,6 +156,7 @@ namespace PokerPlayer {
                 }
 
                 if (e == ActionState.Fold) {
+                    SetFolded();
                     myDelegate.Fold();
                 } else {
                     myDelegate.MoveOut();

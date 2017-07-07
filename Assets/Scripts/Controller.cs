@@ -513,7 +513,7 @@ public class Controller : MonoBehaviour {
                     }
                 }
 
-                parent = aimSeat.transform.Find("Player(Clone)");
+                parent = aimSeat.GetComponentInChildren<PokerPlayer.PlayerOppo>().transform;
             }
 
 			// 删除上一个
