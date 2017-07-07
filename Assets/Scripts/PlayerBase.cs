@@ -33,6 +33,7 @@ namespace PokerPlayer {
         private ChipsGo chipsGo;
 
         private Seat theSeat;
+        CompositeDisposable disposables = new CompositeDisposable();
 
         private PlayerDelegate myDelegate;
 
@@ -61,27 +62,31 @@ namespace PokerPlayer {
             });
         }
 
+        void OnDespawned() {
+            disposables.Clear();
+        } 
+
         private void addEvents() {
             RxSubjects.ShowAudio.Where(isSelfJson).Subscribe((jsonStr) => {
                 Volume.SetActive(true);
                 ScoreLabel.gameObject.SetActive(false);
-            }).AddTo(this);
+            }).AddTo(disposables);
 
             RxSubjects.HideAudio.Where(isSelfJson).Subscribe((_) => {
                 Volume.SetActive(false);
                 ScoreLabel.gameObject.SetActive(true);
-            }).AddTo(this);
+            }).AddTo(disposables);
 
             RxSubjects.SendChat.Where(isSelfJson).Subscribe((jsonStr) => {
                 var N = JSON.Parse(jsonStr);
                 var text = N["text"].Value;
                 SpkText.ShowMessage(text);
-            }).AddTo(this);
+            }).AddTo(disposables);
 
             theSeat.SeatPos.Subscribe((pos) => {
                 SpkText.ChangePos(pos);
                 PlayerAct.ChangePos(pos);
-            }).AddTo(this);
+            }).AddTo(disposables);
 
             player.PrChips.AsObservable().Subscribe((value) => {
                 if (value == 0) {
@@ -89,11 +94,11 @@ namespace PokerPlayer {
                 }
 
                 setPrChips(value);
-            }).AddTo(this);
+            }).AddTo(disposables);
 
             player.Destroyed.AsObservable().Where((v) => v).Subscribe((_) => {
                 myDelegate.Despawn();
-            }).AddTo(this);
+            }).AddTo(disposables);
 
             player.PlayerStat.Subscribe((state) => {
                 HandGo.SetActive(false);
@@ -114,7 +119,7 @@ namespace PokerPlayer {
                     default: 
                         break;
                 }
-            }).AddTo(this);
+            }).AddTo(disposables);
 
             player.ActState.AsObservable().Subscribe((e) => {
                 if (e == ActionState.None) {
@@ -149,7 +154,7 @@ namespace PokerPlayer {
 
                 dealAct(e);
                 actCardsNumber = GameData.Shared.PublicCards.Count;	
-            }).AddTo(this);
+            }).AddTo(disposables);
 
             IDisposable reserveCd = null; 
             player.ReservedCD.Subscribe((value) => {
@@ -163,28 +168,28 @@ namespace PokerPlayer {
                     reserveCd = Observable.Interval(TimeSpan.FromSeconds(1)).Subscribe((_) => {
                         value = Mathf.Max(value - 1, 1);
                         setReserveCd(value);
-                    }).AddTo(this);
+                    }).AddTo(disposables);
                 }
-            }).AddTo(this);
+            }).AddTo(disposables);
 
             player.LastAct.Where((act) => !String.IsNullOrEmpty(act)).Subscribe((act) => {
                 dealAct(act.ToActionEnum());	
-            }).AddTo(this);
+            }).AddTo(disposables);
 
             player.Allin.Subscribe((allin) => {
                 if (allin) {
                     player.ActStateTrigger = false;
                     player.ActState.OnNext(ActionState.Allin);
                 }
-            }).AddTo(this);
+            }).AddTo(disposables);
 
             RxSubjects.GainChip.Where((gainChip) => gainChip.Uid == Uid).Subscribe((gainChip) => {
                 gainChip.Grp.ToParent(transform);
-            }).AddTo(this);
+            }).AddTo(disposables);
 
             player.Bankroll.Subscribe((value) => {
                 ScoreLabel.text = _.Num2CnDigit(value);
-            }).AddTo(this);
+            }).AddTo(disposables);
 
             RxSubjects.MoveTurn.Subscribe((e) => {
             	var uid = e.Data.String("uid");
@@ -205,7 +210,7 @@ namespace PokerPlayer {
                 if (Uid == GameData.Shared.Uid) {
                     player.SetTrust(e.Data.Dict("trust"));
                 }
-            }).AddTo(this);
+            }).AddTo(disposables);
 
             // 思考延时
             RxSubjects.Moretime.Subscribe((e) => {
@@ -221,7 +226,7 @@ namespace PokerPlayer {
                 }
 
                 myDelegate.ResetTime(model.total); 
-            }).AddTo(this);
+            }).AddTo(disposables);
 
             RxSubjects.GameOver.Subscribe((e) => {
                 myDelegate.MoveOut();
@@ -231,7 +236,7 @@ namespace PokerPlayer {
                 if (chipsGo != null) {
                     chipsGo.Hide();
                 }
-            }).AddTo(this);
+            }).AddTo(disposables);
 
             player.Cards.AsObservable().Where((cards) => {
                 if (cards != null && cards.Count == 2) {
@@ -241,7 +246,7 @@ namespace PokerPlayer {
                 return false;
             }).Subscribe((cards) => {
                 myDelegate.SeeCard(cards);
-            }).AddTo(this);
+            }).AddTo(disposables);
 
             player.OverData.AsObservable().Where((data) => data != null).Subscribe((data) => {
                 var gain = data.Gain();
@@ -257,7 +262,7 @@ namespace PokerPlayer {
                 }
 
                 myDelegate.HandOver(data);
-            }).AddTo(this);
+            }).AddTo(disposables);
         }
 
         private bool isSelfJson(string jsonStr) {

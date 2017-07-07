@@ -17,6 +17,8 @@ namespace PokerPlayer {
 		public GameObject BackGameBtn;
         
         private Transform OPTransform;
+		private CompositeDisposable disposables = new CompositeDisposable();
+
         private Player player {
 			get {
 				return Base.player;
@@ -34,6 +36,10 @@ namespace PokerPlayer {
             RxSubjects.Seating.OnNext(true);
         }
 
+		void OnDespawned() {
+			disposables.Clear();	
+		}
+
         private void addEvents() {
             GameData.Shared.MaxFiveRank.Subscribe((value) => {
                 var parent = CardDesc.transform.parent.gameObject;
@@ -46,7 +52,7 @@ namespace PokerPlayer {
 
                 parent.SetActive(true);
                 CardDesc.text = Card.GetCardDesc(value);
-            }).AddTo(this);
+            }).AddTo(disposables);
 
 		player.ShowCard.Subscribe((value) => {
 			if (value[0] == '1') {
@@ -60,11 +66,11 @@ namespace PokerPlayer {
 			} else {
 				Eyes[1].SetActive(false);
 			}
-		}).AddTo(this);
+		}).AddTo(disposables);
 
 		player.Trust.ShouldShow.Subscribe((show) => {
 			AutoArea.SetActive(show);
-		}).AddTo(this);
+		}).AddTo(disposables);
 
 		player.Trust.CallNumber.Subscribe((num) => {
 			var text = AutoOperas[1].transform.Find("Text").GetComponent<Text>();
@@ -81,7 +87,7 @@ namespace PokerPlayer {
 			if (flag == "01") {
 				player.Trust.SelectedFlag.Value = "00";	
 			}
-		}).AddTo(this);
+		}).AddTo(disposables);
 
 		player.Trust.SelectedFlag.Where((flags) => { return flags != null; }).Subscribe((flags) => {
 			var ncolor = _.HexColor("#2196F300");
@@ -101,16 +107,16 @@ namespace PokerPlayer {
 			} else {
 				img1.color = scolor;
 			}
-		}).AddTo(this);
+		}).AddTo(disposables);
 
 		RxSubjects.Deal.Subscribe((_) => {
 			player.Trust.Hide();
-		}).AddTo(this);
+		}).AddTo(disposables);
 
         RxSubjects.GameOver.Subscribe((_) => {
             AutoArea.SetActive(false);
             gameover = true;
-        }).AddTo(this);
+        }).AddTo(disposables);
 
 		  // 中途复原行动
             player.Countdown.AsObservable().Subscribe((obj) => {
@@ -119,7 +125,7 @@ namespace PokerPlayer {
 				} else {
 					OP.Despawn();
 				}
-            }).AddTo(this);
+            }).AddTo(disposables);
 
 			 player.PlayerStat.Subscribe((state) => {
 				switch(state) {
@@ -136,7 +142,7 @@ namespace PokerPlayer {
 						BackGameBtn.SetActive(false);
                         break;
                 }
-			 }).AddTo(this);
+			 }).AddTo(disposables);
         }
 
         private void toggleAutoBtns(int index) {
@@ -282,7 +288,7 @@ namespace PokerPlayer {
         }
 
 		public void Despawn() {
-            Destroy(gameObject);
+			PoolMan.Despawn(transform);
         }
 
 		public void SeeCard(List<int> cards) {
@@ -295,7 +301,7 @@ namespace PokerPlayer {
 
 				Observable.Timer(TimeSpan.FromSeconds(0.3)).Subscribe((_) => {
 					MyCards[1].GetComponent<Card>().ShowWithSound(cards[1], state);
-				}).AddTo(this);
+				}).AddTo(disposables);
 			} else {
 				MyCards[0].GetComponent<Card>().Show(cards[0], state);
 				MyCards[1].GetComponent<Card>().Show(cards[1], state);

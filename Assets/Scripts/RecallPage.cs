@@ -33,14 +33,6 @@ public class RecallPage : MonoBehaviour {
         request();
     }
 
-    // void DepawnedChildren() {
-    //     foreach(var user in Users) {
-    //         PoolMan.Despawn(user.transform);
-    //     }
-
-    //     Users = new List<RecallUser>();
-    // }
-
 	public void request(int num = 0) {
         if (requesting) {
             return ;

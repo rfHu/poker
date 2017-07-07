@@ -44,12 +44,12 @@ public class Supplement : MonoBehaviour {
 		int smax;
 
 		if (bankroll < min) {
-			smin = Mathf.CeilToInt((min - bankroll) / bb100) * bb100; 
+			smin = Mathf.CeilToInt((min - bankroll) / (float)bb100) * bb100; 
 		} else {
 			smin = bb100;
 		}
 
-		smax = Mathf.CeilToInt((max - bankroll) / bb100) * bb100;
+		smax = Mathf.CeilToInt((max - bankroll) / (float)bb100) * bb100;
 
 		OnChange(smin);
 		slider.minValue = smin;

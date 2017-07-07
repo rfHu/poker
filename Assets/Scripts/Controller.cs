@@ -383,10 +383,10 @@ public class Controller : MonoBehaviour {
 			var parent = Seats[obj.Index].transform;
 
 			if (obj.Uid == GameData.Shared.Uid) {
-				var go = (GameObject)Instantiate(Resources.Load("Prefab/PlayerSelf"));
+				var go = PoolMan.Spawn("PlayerSelf");
 				go.GetComponent<PokerPlayer.PlayerSelf>().Init(obj, parent);
 			} else {
-				var go = (GameObject)Instantiate(Resources.Load("Prefab/PlayerOppo"));
+				var go = PoolMan.Spawn("PlayerOppo");
 				go.GetComponent<PokerPlayer.PlayerOppo>().Init(obj, parent);
 			}
 
@@ -563,7 +563,7 @@ public class Controller : MonoBehaviour {
 
 		RxSubjects.Pass.Subscribe((_) => {
 			if (GameData.Shared.InGame) {
-				PokerUI.Toast("记分牌带入成功，将在下局游戏生效");
+				PokerUI.Toast("记分牌带入成功（下局生效）");
 			} else {
 				PokerUI.Toast("记分牌带入成功");
 			}
