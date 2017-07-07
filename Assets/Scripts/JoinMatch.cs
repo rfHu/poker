@@ -54,6 +54,15 @@ public class JoinMatch : MonoBehaviour {
 
     public void Exit() 
     {
+        if (!GameData.MyCmd.Unseat)
+        {
+            return;
+        }
+
+        Connect.Shared.Emit(new Dictionary<string, object>(){
+			{"f", "unseat"}
+		});
+
         GetComponent<DOPopup>().Close();
     }
 }
