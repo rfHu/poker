@@ -59,6 +59,14 @@ public class Controller : MonoBehaviour {
 		load();
     }
 
+    void Start() 
+    {
+        if (GameData.Shared.GameType == "sng")
+        {
+            OwnerButton.SetActive(false);
+        }
+    }
+
 	void OnDestroy()
 	{
 		// 在这里重置相关数据

@@ -80,23 +80,7 @@ public class UIManager : MonoBehaviour {
 
 	void Awake()
 	{
-		GameData.Shared.ShowAudit.Subscribe((show) => {
-			if (!show) {
-				if (auditMsg != null) {
-					auditMsg.GetComponent<DOPopup>().Close();
-					auditMsg = null;
-				}
-
-				return;
-			}
-			
-            auditMsg = PoolMan.Spawn("AuditMsg").GetComponent<AuditMsg>();
-			auditMsg.GetComponent<AuditMsg>().Click = () => {
-				Commander.Shared.Audit();
-			};
-
-            auditMsg.GetComponent<DOPopup>().Show(modal: false, singleton: false);
-		}).AddTo(this);	
+		
 
 		RxSubjects.TakeCoin.Subscribe((e) => {
 			if (e.Data != null) {
@@ -140,23 +124,67 @@ public class UIManager : MonoBehaviour {
 		}).AddTo(this);
 	}
 
+    void Start() 
+    {
+        GameData.Shared.ShowAudit.Subscribe((show) =>
+        {
+            if (!show)
+            {
+                if (auditMsg != null)
+                {
+                    auditMsg.GetComponent<DOPopup>().Close();
+                    auditMsg = null;
+                }
+
+                return;
+            }
+
+            auditMsg = PoolMan.Spawn("AuditMsg").GetComponent<AuditMsg>();
+            auditMsg.GetComponent<AuditMsg>().Click = () =>
+            {
+                Commander.Shared.Audit();
+            };
+
+            auditMsg.GetComponent<DOPopup>().Show(modal: false, singleton: false);
+        }).AddTo(this);	
+    }
+
     public string ShareGame() 
     {
         string str = "";
         str += "\"" + GameData.Shared.Name + "\"邀请您加入\"" + GameData.Shared.RoomName + "\"";
 
+        if (GameData.Shared.GameType == "holdem")
+        {
+            str += "SNG";
+            switch (GameData.Shared.SNGType)
+            {
+                case 1: str += "快速赛"; break;
+                case 2: str += "标准赛"; break;
+                case 3: str += "长时赛"; break;
+                case 4: str += "深筹赛"; break;
+                default:
+                    break;
+            }
+        }
+
         if (!string.IsNullOrEmpty(GameData.Shared.GameCode))
             str += "，邀请码[" + GameData.Shared.GameCode + "]";
+
+
+        if (GameData.Shared.GameType == "holdem")
+        {
+            str += "，盲注[";
+
+            if (GameData.Shared.Straddle.Value)
+                str += GameData.Shared.SB/2 + "/";
+
+            str += GameData.Shared.SB + "/" + GameData.Shared.BB + "]";
+
+            if (GameData.Shared.Ante.Value > 0)
+                str += "，底注[" + GameData.Shared.Ante + "]";           
+        }
         
-        str += "，盲注[";
-
-        if (GameData.Shared.Straddle.Value)
-            str += GameData.Shared.SB/2 + "/";
-
-        str += GameData.Shared.SB + "/" + GameData.Shared.BB + "]";
-
-        if (GameData.Shared.Ante.Value >0)
-            str += "，底注[" + GameData.Shared.Ante + "]";
         
         str += "。一键约局，与好友畅享德州扑克的乐趣。";
         return str;
