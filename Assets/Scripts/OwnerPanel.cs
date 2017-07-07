@@ -29,7 +29,7 @@ public class OwnerPanel : MonoBehaviour {
 
     public CButton SaveButton;
     
-    private List<int> AnteSuperScriptNums;
+    private int[] AnteSuperScriptNums;
     private List<int> bankroll_multiple;
 
     private Dictionary<string, object> dict = new Dictionary<string, object>();
@@ -72,45 +72,37 @@ public class OwnerPanel : MonoBehaviour {
         {
             Destroy(AnteSuperscript.GetChild(num).gameObject);
         }
-        
-        int[] anteNums = {1,2,5,10,25,50,100};
-        int[] BBNums = { 2, 4, 10, 20, 50, 100, 200 };
 
-        int BBsub = 0;
-        for (; BBsub < BBNums.Length; BBsub++)
+        if (GameData.Shared.BB == 2)
         {
-            if (BBNums[BBsub] == GameData.Shared.BB) 
+            AnteSlider.maxValue = 2;
+            AnteSuperscript.GetComponent<RectTransform>().sizeDelta = new Vector2(993, 42);
+            AnteSuperScriptNums = new int[] { 0, 1, 2 };
+        }
+        else if (GameData.Shared.BB == 4)
+        {
+            AnteSuperscript.GetComponent<RectTransform>().sizeDelta = new Vector2(882, 42);
+            AnteSlider.maxValue = 3;
+            AnteSuperScriptNums = new int[] { 0, 1, 2 ,4};
+        }
+        else
+        {
+            AnteSlider.maxValue = 4;
+            AnteSuperscript.GetComponent<RectTransform>().sizeDelta = new Vector2(814, 42);
+            if (GameData.Shared.BB <= 200)
             {
-                if (BBsub == 0)
-                {
-                    AnteSlider.maxValue = 2;
-                    AnteSuperscript.GetComponent<RectTransform>().sizeDelta = new Vector2(993, 42);
-                }
-                else if (BBsub == 1)
-                {
-                    AnteSuperscript.GetComponent<RectTransform>().sizeDelta = new Vector2(882, 42);
-                    AnteSlider.maxValue = 3;
-                }
-                else
-                    AnteSlider.maxValue = 4;
-                break;
+                AnteSuperScriptNums = new int[] { 0, (int)(GameData.Shared.BB * 0.1f), (int)(GameData.Shared.BB * 0.2f), (int)(GameData.Shared.BB * 0.5f), GameData.Shared.BB };
+            }
+            else 
+            {
+                AnteSuperScriptNums = new int[] { 0, (int)(GameData.Shared.BB * 0.125f), (int)(GameData.Shared.BB * 0.25f), (int)(GameData.Shared.BB * 0.5f), GameData.Shared.BB };
             }
         }
-        AnteSuperScriptNums = new List<int>();
-        AnteSuperScriptNums.Add(0);
-        int i = BBsub - 2;
-        if (i < 0)
-            i = 0;
 
-        for (; i <= BBsub; i++)
-            AnteSuperScriptNums.Add(anteNums[i]);
-
-        AnteSuperScriptNums.Add(GameData.Shared.BB);
-
-        for (int j = 0; j < AnteSuperScriptNums.Count; j++)
+        for (int j = 0; j < AnteSuperScriptNums.Length; j++)
         {
             GameObject text = Instantiate(AnteScriptNum);
-            text.GetComponent<Text>().text = ("" + AnteSuperScriptNums[j]).PadRight(3,' ');
+            text.GetComponent<Text>().text = (" " + AnteSuperScriptNums[j]).PadRight(5,' ');
             text.transform.SetParent(AnteSuperscript,false);
             text.SetActive(true);
 

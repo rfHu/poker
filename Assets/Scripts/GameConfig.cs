@@ -548,6 +548,11 @@ sealed public class GameData {
 	public int BB = 0;
 	public string RoomName = "";
 
+    
+    public string GameType = "";
+    public int SNGType;
+
+
 	// 游戏是否已经开始，跟暂停状态无关
 	public bool GameStarted = false; 
 	public float Rake = 0;
@@ -613,6 +618,12 @@ sealed public class GameData {
 		RoomName = json.String("name");
 		Pot.Value = json.Int("pot");
 		Pots.Value = json.DL("pots");
+
+        GameType = json.String("type");
+        if (GameType == "sng")
+        {
+            SNGType = options.Int("sub_type");
+        }
 		
 		InGame = json.Bool("is_ingame");
 		MaxFiveRank.Value = json.Int("maxFiveRank");

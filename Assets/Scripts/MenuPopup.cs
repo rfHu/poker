@@ -19,6 +19,8 @@ public class MenuPopup : MonoBehaviour {
 	public GameObject ReserveGo;
     public GameObject ExchangeGo;
 
+    public GameObject[] SNGHideGos;
+
 	public void Supplement() {
 		if (!GameData.MyCmd.Takecoin) {
 			return ;
@@ -28,13 +30,34 @@ public class MenuPopup : MonoBehaviour {
 
 	void OnSpawned()
 	{
+        CommonSetting();
+        SNGSetting();
+	}
+
+    private void SNGSetting()
+    {
+
+        if (GameData.Shared.GameType == "sng")
+        {
+            foreach (var item in SNGHideGos)
+            {
+                item.SetActive(false);
+            }
+        }
+    }
+
+    private void CommonSetting()
+    {
         StandCG.alpha = GameData.MyCmd.Unseat ? 1 : 0.6f;
         SuppCG.alpha = GameData.MyCmd.Takecoin ? 1 : 0.6f;
 
         // 可下分  
-        if (GameData.Shared.Bankroll.Value > 0 && GameData.Shared.OffScore.Value) {
+        if (GameData.Shared.Bankroll.Value > 0 && GameData.Shared.OffScore.Value)
+        {
             ExchangeGo.SetActive(true);
-        } else {
+        }
+        else
+        {
             ExchangeGo.SetActive(false);
         }
 
@@ -44,13 +67,14 @@ public class MenuPopup : MonoBehaviour {
             HangGo.SetActive(false);
             ReserveGo.SetActive(false);
         }
-        else {
+        else
+        {
             HangGo.SetActive(true);
             ReserveGo.SetActive(true);
         }
 
         fitState(GameData.Shared.SelfState.Value);
-	}
+    }
 
 	void Awake()
 	{

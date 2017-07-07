@@ -539,7 +539,8 @@ public class Controller : MonoBehaviour {
         }).AddTo(this);
 
         RxSubjects.GameOver.Subscribe((e) =>{
-			if (GameData.Shared.PublicCards.Count < 5) {
+            if (GameData.Shared.PublicCards.Count < 5 && GameData.Shared.GameType == "holdem")
+            {
             	SeeLeftCard.SetActive(true);
 			}
         }).AddTo(this);
