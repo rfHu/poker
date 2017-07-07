@@ -117,7 +117,7 @@ public class Insurance : MonoBehaviour {
             var player = GameData.Shared.FindPlayer(data.String("uid"));
             var outsNumber = data.Int("ct");
 
-            var playerMes = PoolMan.Spawn("AllInPlayer",AllinPlayersParent.transform);
+            var playerMes = PoolMan.Spawn("InsureAllInPlayer",AllinPlayersParent.transform);
             playerMes.GetComponent<AllInPlayer>().Init(player.Name, player.Cards.Value, player.Uid, outsNumber);
         }
     }

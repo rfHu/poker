@@ -102,8 +102,19 @@ public class UIManager : MonoBehaviour {
 			if (e.Data != null) {
 				GameData.Shared.Coins = e.Data.Int("coins");
             }
+
+            //根据类别生成不同预制体
+            Transform transform;
+            if (GameData.Shared.GameType == "holdem")
+            {
+                transform = PoolMan.Spawn("Supplement");
+            }
+            else 
+            {
+                transform = PoolMan.Spawn("JoinMatch");
+            }
+
 			
-            Transform transform = PoolMan.Spawn("Supplement");
             transform.GetComponent<DOPopup>().Show(() => {
 				var player = GameData.Shared.GetMyPlayer();
 
