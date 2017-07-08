@@ -237,9 +237,9 @@ namespace PokerPlayer {
 				var check = dict.Dict("cmds").Bool("check");
 
 				if (check) {
-					OP.OPS.Check();
+					delayCall(OP.OPS.Check);
  				} else {
-					OP.OPS.Fold();
+					delayCall(OP.OPS.Fold);
 				 }
 			} else if (flag == "01") { // 选中右边
 				var data = dict.Dict("cmds");
@@ -250,11 +250,11 @@ namespace PokerPlayer {
 					PoolMan.Despawn(OPTransform);
 
 					if (callNum == 0) {
-						OP.OPS.Check();
+						delayCall(OP.OPS.Check);
 					} else if (callNum == -1) {
-						OP.OPS.AllIn();
+						delayCall(OP.OPS.AllIn);
 					} else {
-						OP.OPS.Call();
+						delayCall(OP.OPS.Call);
 					}
 				} else {
 					if (!restore) {
@@ -270,7 +270,11 @@ namespace PokerPlayer {
 			player.Trust.SelectedFlag.Value = "00";
 	}
 
-
+	private void delayCall(Action cb) {
+		Observable.Timer(TimeSpan.FromSeconds(0.5)).Subscribe((_) => {
+			cb();
+		}).AddTo(this);
+	}
 
         // ===== Delegate =====
 
