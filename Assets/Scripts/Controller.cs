@@ -24,6 +24,7 @@ public class Controller : MonoBehaviour {
 	public GameObject BBGo;
 	public GameObject InviteCodeGo;
 	public GameObject TimeLeftGo;
+	public GameObject Logo;
 
     public GameObject SeeLeftCard;
 
@@ -50,6 +51,8 @@ public class Controller : MonoBehaviour {
 
 	public static Controller Instance; 
 
+	public static Vector2 LogoVector;
+
 	void Awake () {
 		if (Instance != null) {
 			PoolMan.DespawnAll();
@@ -57,6 +60,7 @@ public class Controller : MonoBehaviour {
 		}
 
 		Instance = this;
+		LogoVector = Logo.transform.position;
 
 		load();
     }

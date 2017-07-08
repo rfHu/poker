@@ -124,12 +124,28 @@ using System.Text.RegularExpressions;
             return transform;
         }
 
-        public static T ToObject<T>(this Dictionary<string, object> source)
-          where T : class, new()
-        {
-            var json = Json.Encode(source);
-            return JsonUtility.FromJson<T>(json);
-        }
+        public static T ToObject<T>(this IDictionary<string, object> source)
+        where T : class, new()
+    {
+            T result = new T();
+            Type type = result.GetType();
+
+            foreach (var item in source)
+            {
+                FieldInfo property = type.GetField(item.Key);
+
+                if (property == null)
+                {
+                    continue;
+                }
+
+                Type propType = property.FieldType;
+                property.SetValue(result, Convert.ChangeType(item.Value, propType));
+            }
+
+            return result;
+ 
+    }
 
         public static String Serialize(this Dictionary<string, object> source)
         {

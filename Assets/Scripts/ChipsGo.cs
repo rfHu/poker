@@ -92,7 +92,7 @@ public class ChipsGo : MonoBehaviour {
 		var pos = theSeat.GetPos();
 
 		tween = GetComponent<RectTransform>()
-		.DOAnchorPos(getVector(pos), 0.25f);
+		.DOAnchorPos(getVector(pos), 0.3f);
 
 		return tween;
 	}

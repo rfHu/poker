@@ -150,7 +150,7 @@ namespace PokerPlayer {
             var duration = 0.5f;
 
             Ease ease = Ease.Flash;
-            Cardfaces.DOMove(new Vector2(277, 492), duration).SetEase(ease);
+            Cardfaces.DOMove(Controller.LogoVector, duration).SetEase(ease);
 
             var image = Cardfaces.GetComponent<Image>();
             Tween tween; 
