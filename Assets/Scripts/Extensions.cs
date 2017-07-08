@@ -171,11 +171,26 @@ using System.Text.RegularExpressions;
 
          public static List<List<T>> ChunkBy<T>(this List<T> source, int chunkSize) 
         {
-            return source
-                .Select((x, i) => new { Index = i, Value = x })
-                .GroupBy(x => x.Index / chunkSize)
-                .Select(x => x.Select(v => v.Value).ToList())
-                .ToList();
+            var count = 0;
+            var chunked = new List<List<T>>();
+
+            foreach(var item in source) {
+                var idx = count / chunkSize;
+                if (chunked.Count <= idx) {
+                    chunked.Add(new List<T>());
+                }                
+
+                chunked[idx].Add(source[count]);
+                count++;
+            }
+
+            return chunked;
+
+            // return source
+            //     .Select((x, i) => new { Index = i, Value = x })
+            //     .GroupBy(x => x.Index / chunkSize)
+            //     .Select(x => x.Select(v => v.Value).ToList())
+            //     .ToList();
         }
 
         public static int CnCount(this string source) {
