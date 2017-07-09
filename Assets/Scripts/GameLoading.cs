@@ -25,8 +25,6 @@ public class GameLoading : MonoBehaviour {
 		// BuglyAgent.RegisterLogCallback (CallbackDelegate.Instance.OnApplicationLogCallbackHandler);
 		#if UNITY_IPHONE || UNITY_IOS
 			BuglyAgent.InitWithAppId("b3d868488f");
-		#elif UNITY_ANDROID
-			BuglyAgent.InitWithAppId ("a8103a785a");
 		#endif
 
 		// 如果你确认已在对应的iOS工程或Android工程中初始化SDK，那么在脚本中只需启动C#异常捕获上报功能即可
