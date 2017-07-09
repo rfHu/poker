@@ -51,6 +51,7 @@ namespace PokerPlayer {
 
             if (GameData.Shared.InGame && !player.InGame) {
 		    	SetFolded();
+                myDelegate.SetFolded();
 		    }
 
             addEvents();
@@ -349,6 +350,7 @@ namespace PokerPlayer {
         void MoveOut();
         void TurnTo(Dictionary<string, object> data, int left);
         void Fold();
+        void SetFolded();
         void ResetTime(int time);
         void Despawn();
         void SeeCard(List<int> cards);

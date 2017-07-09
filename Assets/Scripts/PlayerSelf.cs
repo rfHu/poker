@@ -283,6 +283,10 @@ namespace PokerPlayer {
             darkenCards();
         }
 
+		public void SetFolded() {
+			darkenCards();
+		}
+
         public void MoveOut() {
             if (OPTransform != null) {
                 PoolMan.Despawn(OPTransform);

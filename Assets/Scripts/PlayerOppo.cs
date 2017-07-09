@@ -167,6 +167,10 @@ namespace PokerPlayer {
             });
         }
 
+        public void SetFolded() {
+            
+        }
+
         public void MoveOut() {
             Base.Avt.GetComponent<CircleMask>().Disable();
             activated = false;
