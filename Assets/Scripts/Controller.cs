@@ -719,8 +719,6 @@ public class Controller : MonoBehaviour {
 
 		RxSubjects.ToInsurance.Subscribe((e) =>
         {
-            //var InsurancePopup = (GameObject)Instantiate(Resources.Load("Prefab/Insurance"), G.DialogCvs.transform);
-
             var InsurancePopup = PoolMan.Spawn("Insurance");
             InsurancePopup.GetComponent<DOPopup>().Show();
             InsurancePopup.GetComponent<Insurance>().Init(e.Data, true);
@@ -728,8 +726,6 @@ public class Controller : MonoBehaviour {
 
         RxSubjects.ShowInsurance.Subscribe((e) =>
         {
-            //var InsurancePopup = (GameObject)Instantiate(Resources.Load("Prefab/Insurance"), G.DialogCvs.transform);
-
             var InsurancePopup = PoolMan.Spawn("Insurance");
             InsurancePopup.GetComponent<DOPopup>().Show();
             InsurancePopup.GetComponent<Insurance>().Init(e.Data, false);

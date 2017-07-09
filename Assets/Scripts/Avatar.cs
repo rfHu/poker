@@ -75,7 +75,7 @@ public class Avatar : MonoBehaviour {
 	private string url;
 
 	void onClick() {
-		if (Uid == null || string.IsNullOrEmpty(Uid)) {
+		if (string.IsNullOrEmpty(Uid)) {
 			return ;
 		}
 
@@ -96,10 +96,6 @@ public class Avatar : MonoBehaviour {
 		this.url = url;
 
 		TexturePool.Shared.Spawn(url, (texture) => {
-			if (this == null) {
-				return ;
-			}
-
 			GetComponent<RawImage>().texture = texture;
 		});		
 	}

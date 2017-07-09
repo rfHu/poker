@@ -214,7 +214,7 @@ namespace PokerPlayer {
 	}
 
 	private OP showOP(Dictionary<string, object> data, int left, int buyTimeCost = 10) {
-		if (this == null) {
+		if (!PoolMan.IsSpawned(transform)) {
 			return null;
 		}
 

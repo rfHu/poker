@@ -95,7 +95,7 @@ namespace PokerPlayer {
                 return ;
             }
 
-            Base.PlayerAct.gameObject.SetActive(false);		
+            Base.PlayerAct.SetActive(false);		
         
             if (cards[0] > 0 || cards[1] > 0) {
                 ShowCards[0].transform.parent.gameObject.SetActive(true);
@@ -168,7 +168,7 @@ namespace PokerPlayer {
         }
 
         public void SetFolded() {
-            
+
         }
 
         public void MoveOut() {

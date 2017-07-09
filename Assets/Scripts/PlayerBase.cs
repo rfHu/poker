@@ -72,8 +72,11 @@ namespace PokerPlayer {
             setPlayerAct(false, false);
             AllinGo.SetActive(false);
             Avt.GetComponent<CanvasGroup>().alpha = 1;
-            chipsGo = null;
-            Destroy(chipsGo);
+
+            if (chipsGo != null) {
+                PoolMan.Despawn(chipsGo.transform);
+                chipsGo = null;
+            }
         } 
 
         private void addEvents() {
@@ -241,7 +244,7 @@ namespace PokerPlayer {
 
             RxSubjects.GameOver.Subscribe((e) => {
                 myDelegate.MoveOut();
-                PlayerAct.gameObject.SetActive(false);
+                setPlayerActForce(false);
                 AllinGo.SetActive(false);
 
                 if (chipsGo != null) {
@@ -283,11 +286,11 @@ namespace PokerPlayer {
 	    }
 
         private void setPrChips(int value) {
-            var chips = (GameObject)Instantiate(Resources.Load("Prefab/UpChip"));
-            chips.transform.SetParent(transform, false);
-            chips.transform.SetAsLastSibling();
+            var chips = PoolMan.Spawn("UpChip");
+            chips.SetParent(transform, false);
+            chips.SetAsLastSibling();
 
-            if (chipsGo == null) {
+            if (chipsGo == null || !PoolMan.IsSpawned(chipsGo.transform)) {
                 chipsGo = chips.GetComponent<ChipsGo>();
                 chipsGo.Create(value, theSeat, player);
             } else {
@@ -311,15 +314,11 @@ namespace PokerPlayer {
                 return ;
             }
 
-            var cvg = PlayerAct.GetComponent<CanvasGroup>();
-            var targetValue = active ? 1 : 0;
-            var duration = 0.1f;
+            PlayerAct.SetActive(active, anim); 
+        }
 
-            if (anim) {
-                cvg.DOFade(targetValue, duration);
-            } else {
-                cvg.alpha = targetValue;
-            }
+        private void setPlayerActForce(bool active) {
+            PlayerAct.SetActive(active, true);
         }
 
         private void dealAct(ActionState state) {

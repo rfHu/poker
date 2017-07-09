@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DG.Tweening;
 using UniRx;
+using UnityEngine.UI;
 
 public enum SeatPosition {
 	Top,
@@ -84,6 +85,7 @@ public class Seat : MonoBehaviour {
 		Index = index;
 		transform.SetParent (G.UICvs.transform, false);
 		GetComponent<RectTransform>().anchoredPosition = vector;
+		GetComponent<Image>().enabled = true;
 
 		SeatPos.Value = GetPos();
 	}
