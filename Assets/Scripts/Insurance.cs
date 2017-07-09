@@ -35,6 +35,8 @@ public class Insurance : MonoBehaviour {
     public GameObject WatcherText;
     public EventTrigger CASliderUp;
 
+    private CompositeDisposable disposables = new CompositeDisposable();
+
     float OddsNum;
     float[] OddsNums = { 30, 16, 10, 8, 6, 5, 4, 3.5f, 3, 2.5f, 2.2f, 2, 1.7f, 1.5f, 1.3f, 1.1f, 1, 0.8f, 0.6f, 0.5f };
 
@@ -150,7 +152,7 @@ public class Insurance : MonoBehaviour {
 
             var toggle = card.GetComponent<Toggle>();
 
-            toggle.onValueChanged.AddListener((bool value) => 
+            toggle.OnValueChangedAsObservable().Subscribe((bool value) => 
             {
                 SelectedChanged(value, cardNum, toggle);
                 if (isBuyer)
@@ -165,7 +167,8 @@ public class Insurance : MonoBehaviour {
                     }
                     RPCRsyncInsurance();
                 }
-            });
+            }).AddTo(disposables);
+
             if (mustBuy || !isBuyer){
                 card.GetComponent<Toggle>().interactable = false;
             }
@@ -184,11 +187,11 @@ public class Insurance : MonoBehaviour {
             StopCoroutine(myCoroutine);
             myCoroutine = Timer(model.total);
             StartCoroutine(myCoroutine);
-        }).AddTo(this);
+        }).AddTo(disposables);
 
         RxSubjects.Look.Subscribe((e) => {
             GetComponent<DOPopup>().Close();
-        }).AddTo(this);
+        }).AddTo(disposables);
 
         RxSubjects.RsyncInsurance.Subscribe((e) => {
             if (e.Data.Int("closeflag") == 1)
@@ -214,10 +217,9 @@ public class Insurance : MonoBehaviour {
 
             CASlider.value = CASlidernum;
 
-        }).AddTo(this);
+        }).AddTo(disposables);
 
-        ExitButton.onClick.AddListener(() => {
-
+        ExitButton.OnClickAsObservable().Subscribe((_) => {
             if (isBuyer)
             {
                 Connect.Shared.Emit(new Dictionary<string, object>() { 
@@ -225,8 +227,7 @@ public class Insurance : MonoBehaviour {
                 });
             }
             GetComponent<DOPopup>().Close();
-        });
-
+        }).AddTo(disposables);
     }
 
     public void ClickUp() 
@@ -480,17 +481,16 @@ public class Insurance : MonoBehaviour {
 
     void OnDespawned() 
     {
-        for (int i = AllinPlayersParent.childCount - 1; i > -1; i--)
-        {
-            if (PoolMan.Contains(AllinPlayersParent.GetChild(i))) 
-            {
-                PoolMan.Despawn(AllinPlayersParent.GetChild(i));
+        disposables.Clear();
+
+        foreach(Transform child in AllinPlayersParent) {
+            if (PoolMan.Contains(child)) {
+                PoolMan.Despawn(child);
             }
         }
 
-        for (int i = OutsCardsParent.childCount - 1; i > -1; i--)
-        {
-            PoolMan.Despawn(OutsCardsParent.GetChild(i));
+        foreach(Transform child in OutsCardsParent) {
+            PoolMan.Despawn(child);
         }
     }
 }
