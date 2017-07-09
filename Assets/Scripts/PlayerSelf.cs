@@ -273,7 +273,7 @@ namespace PokerPlayer {
 	private void delayCall(Action cb) {
 		Observable.Timer(TimeSpan.FromSeconds(0.5)).Subscribe((_) => {
 			cb();
-		}).AddTo(this);
+		}).AddTo(disposables);
 	}
 
         // ===== Delegate =====

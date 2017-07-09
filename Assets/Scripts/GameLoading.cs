@@ -23,8 +23,6 @@ public class GameLoading : MonoBehaviour {
 
 		// 开启SDK的日志打印，发布版本请务必关闭
 		//BuglyAgent.ConfigDebugMode (true);
-		// 注册日志回调，替换使用 'Application.RegisterLogCallback(Application.LogCallback)'注册日志回调的方式
-		// BuglyAgent.RegisterLogCallback (CallbackDelegate.Instance.OnApplicationLogCallbackHandler);
 #if UNITY_IPHONE || UNITY_IOS
             BuglyAgent.InitWithAppId ("b3d868488f");
 #elif UNITY_ANDROID
