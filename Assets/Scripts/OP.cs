@@ -41,6 +41,8 @@ public class OP : MonoBehaviour {
 
 	public Text BuyTimeCost; 
 
+	private CompositeDisposable disposables = new CompositeDisposable();
+
 	void OnSpawned()
 	{	
 		var transform = GetComponent<RectTransform>();
@@ -50,6 +52,7 @@ public class OP : MonoBehaviour {
 	void OnDespawned()
 	{	
 		hideModal();
+		disposables.Clear();
 	}
 
 	void OnDestroy()
@@ -94,7 +97,6 @@ public class OP : MonoBehaviour {
 
 		setAccurateBtns(AccurateType.Default); // 还原精确加注
 		hideRaiseSlider(); // 还原加注拉杆
-		BuyTurnTime.SetActive(true); // 还原加时按钮
 
 		if (check) { // 看牌
 			CallGo.SetActive(false);
@@ -316,7 +318,7 @@ public class OP : MonoBehaviour {
 			
 			RaiseNumber.text = _.Num2CnDigit(newValue);
 			TipsText.text = _.Num2CnDigit(newValue);
-		}).AddTo(this);
+		}).AddTo(disposables);
 
 		Slid.OnPointerDownAsObservable().Subscribe((pointerEvt) => {
 			var rect = Slid.GetComponent<RectTransform>();
@@ -324,17 +326,17 @@ public class OP : MonoBehaviour {
 			changeTipsPosition(rect, pointerEvt.position, pointerEvt.pressEventCamera);
 			pointerDown = true;
 			RoundTipsGo.SetActive(true);
-		}).AddTo(this);
+		}).AddTo(disposables);
 
 		Slid.OnDragAsObservable().Subscribe((dragEvt) => {
 			var rect = Slid.GetComponent<RectTransform>();
 			changeTipsPosition(rect, dragEvt.position, dragEvt.pressEventCamera);
-		}).AddTo(this);
+		}).AddTo(disposables);
 
 		Slid.OnPointerUpAsObservable().Subscribe((_) => {
 			pointerDown = false;
 			RoundTipsGo.SetActive(false);
-		}).AddTo(this);
+		}).AddTo(disposables);
 
 		// 展示遮罩
 		modal = ModalHelper.Create();
@@ -366,6 +368,7 @@ public class OP : MonoBehaviour {
 			BuyTurnTime.SetActive(false);
 		} else {
 			BuyTimeCost.text = cost.ToString();
+			BuyTurnTime.SetActive(true);
 		}
 	}
 
