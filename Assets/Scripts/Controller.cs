@@ -466,6 +466,10 @@ public class Controller : MonoBehaviour {
 			// 获取roomID，调用ExitCb后无法获取
 			var roomID = GameData.Shared.Room;
 
+            if (GameData.Shared.GetMyPlayer().Rank.Value == 1)
+            {
+                
+            }
 			// 清理
 			External.Instance.ExitCb(() => {
 				_.Log("Unity: Game End");

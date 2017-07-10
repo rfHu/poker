@@ -70,17 +70,27 @@ public class UserDetail : MonoBehaviour {
             normalInit(Uid);
         }
         else if (GameData.Shared.Type == GameType.SNG)
-	{
-		    NormalPart.SetActive(false);
+        {
+            NormalPart.SetActive(false);
             SNGPart.SetActive(true);
-	}
+        }
+
+        //动态表情
+        if (Uid == GameData.Shared.Uid || GameData.Shared.FindPlayerIndex(Uid) == -1 || GameData.Shared.emoticonClose)
+        {
+            EmoticonsTeam.SetActive(false);
+            GetComponent<VerticalLayoutGroup>().padding.bottom = 40;
+        } else {
+            EmoticonsTeam.SetActive(true);
+            GetComponent<VerticalLayoutGroup>().padding.bottom = 0;
+        }
 
         RequestById(Uid);
         GetComponent<DOPopup>().Show();
     }
 
-private void normalInit(string Uid)
-{
+    private void normalInit(string Uid)
+    {
         if (GameData.Shared.Owner)
         {
             GameOptionBtn.SetActive(true);
@@ -97,16 +107,7 @@ private void normalInit(string Uid)
         } else {
             parent.SetActive(true);
         }
-
-        if (Uid == GameData.Shared.Uid || GameData.Shared.FindPlayerIndex(Uid) == -1 || GameData.Shared.emoticonClose)
-        {
-            EmoticonsTeam.SetActive(false);
-            GetComponent<VerticalLayoutGroup>().padding.bottom = 40;
-        } else {
-            EmoticonsTeam.SetActive(true);
-            GetComponent<VerticalLayoutGroup>().padding.bottom = 0;
-        }
-}
+    }
 
 	
     void RequestById(string id) {
