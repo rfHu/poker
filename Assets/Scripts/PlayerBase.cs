@@ -51,6 +51,7 @@ namespace PokerPlayer {
 
             if (GameData.Shared.InGame && !player.InGame) {
 		    	SetFolded();
+                myDelegate.SetFolded();
 		    }
 
             addEvents();
@@ -64,6 +65,18 @@ namespace PokerPlayer {
 
         void OnDespawned() {
             disposables.Clear();
+
+            WinStars.SetActive(false);
+            WinNumber.transform.parent.gameObject.SetActive(false);
+            ScoreLabel.transform.parent.gameObject.SetActive(true);
+            setPlayerAct(false, false);
+            AllinGo.SetActive(false);
+            Avt.GetComponent<CanvasGroup>().alpha = 1;
+
+            if (chipsGo != null) {
+                PoolMan.Despawn(chipsGo.transform);
+                chipsGo = null;
+            }
         } 
 
         private void addEvents() {
@@ -147,6 +160,7 @@ namespace PokerPlayer {
                 }
 
                 if (e == ActionState.Fold) {
+                    SetFolded();
                     myDelegate.Fold();
                 } else {
                     myDelegate.MoveOut();
@@ -230,7 +244,7 @@ namespace PokerPlayer {
 
             RxSubjects.GameOver.Subscribe((e) => {
                 myDelegate.MoveOut();
-                PlayerAct.gameObject.SetActive(false);
+                setPlayerActForce(false);
                 AllinGo.SetActive(false);
 
                 if (chipsGo != null) {
@@ -272,11 +286,11 @@ namespace PokerPlayer {
 	    }
 
         private void setPrChips(int value) {
-            var chips = (GameObject)Instantiate(Resources.Load("Prefab/UpChip"));
-            chips.transform.SetParent(transform, false);
-            chips.transform.SetAsLastSibling();
+            var chips = PoolMan.Spawn("UpChip");
+            chips.SetParent(transform, false);
+            chips.SetAsLastSibling();
 
-            if (chipsGo == null) {
+            if (chipsGo == null || !PoolMan.IsSpawned(chipsGo.transform)) {
                 chipsGo = chips.GetComponent<ChipsGo>();
                 chipsGo.Create(value, theSeat, player);
             } else {
@@ -300,15 +314,11 @@ namespace PokerPlayer {
                 return ;
             }
 
-            var cvg = PlayerAct.GetComponent<CanvasGroup>();
-            var targetValue = active ? 1 : 0;
-            var duration = 0.1f;
+            PlayerAct.SetActive(active, anim); 
+        }
 
-            if (anim) {
-                cvg.DOFade(targetValue, duration);
-            } else {
-                cvg.alpha = targetValue;
-            }
+        private void setPlayerActForce(bool active) {
+            PlayerAct.SetActive(active, true);
         }
 
         private void dealAct(ActionState state) {
@@ -339,6 +349,7 @@ namespace PokerPlayer {
         void MoveOut();
         void TurnTo(Dictionary<string, object> data, int left);
         void Fold();
+        void SetFolded();
         void ResetTime(int time);
         void Despawn();
         void SeeCard(List<int> cards);

@@ -9,32 +9,29 @@ public class GameLoading : MonoBehaviour {
 		ObjectsPool.Setup();
 
 		#if UNITY_EDITOR  
-			external.SetSocket("https://socket.dev.poker.top");
+			external.SetSocket("https://socket.poker.top");
 			external.SetProxy("http://localhost:8888");
 			// external.SetSid("s%3ASuOxhyXR0wmfu1xIZZUmFFdAq8Cd5xsD.h6RldH4l7niXxoZG0QyYnlt36QayIW0rtY0Z8GmorV0");
             // external.SetRoomID("5950a958cfb1ed3a3860c871");
-            external.SetSid("s%3A5oV4waP2FdytuZ_daHx1cOgW_0JwkJJ3.x7y5%2B%2BoEaDDtAZetL8CAiJVX2ZMOrUds%2BNP5IzyNjyc");
-            external.SetRoomID("59631bbf9d1f6d7f35b1383d");
+			            external.SetRoomID("59626d6c2d981b2c1a4f1628");
+			external.SetSid("s%3A-o9DIIsOU8WXgJkNpxbu32roUbMlR43U.tLaqfNX7O6%2FP0eLUI%2FAWtCc2TlkZxqnfGtxm13g8bFw");
+
+            // external.SetSid("s%3A5oV4waP2FdytuZ_daHx1cOgW_0JwkJJ3.x7y5%2B%2BoEaDDtAZetL8CAiJVX2ZMOrUds%2BNP5IzyNjyc");
+            // external.SetRoomID("595f73098425856d1c241a49");
 
 		#endif
 
 		// 开启SDK的日志打印，发布版本请务必关闭
 		//BuglyAgent.ConfigDebugMode (true);
-		// 注册日志回调，替换使用 'Application.RegisterLogCallback(Application.LogCallback)'注册日志回调的方式
-		// BuglyAgent.RegisterLogCallback (CallbackDelegate.Instance.OnApplicationLogCallbackHandler);
+
+		BuglyAgent.RegisterLogCallback (CallbackDelegate.Instance.OnApplicationLogCallbackHandler);
+
 #if UNITY_IPHONE || UNITY_IOS
             BuglyAgent.InitWithAppId ("b3d868488f");
-#elif UNITY_ANDROID
-            //BuglyAgent.InitWithAppId("a8103a785a");
 #endif
 
 		// 如果你确认已在对应的iOS工程或Android工程中初始化SDK，那么在脚本中只需启动C#异常捕获上报功能即可
 		BuglyAgent.EnableExceptionHandler ();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
 	}
 
 	public void ExitGame() {

@@ -24,6 +24,7 @@ public class Controller : MonoBehaviour {
 	public GameObject BBGo;
 	public GameObject InviteCodeGo;
 	public GameObject TimeLeftGo;
+	public GameObject Logo;
 
     public GameObject SeeLeftCard;
 
@@ -50,6 +51,8 @@ public class Controller : MonoBehaviour {
 
 	public static Controller Instance; 
 
+	public static Vector2 LogoVector;
+
 	void Awake () {
 		if (Instance != null) {
 			PoolMan.DespawnAll();
@@ -57,6 +60,7 @@ public class Controller : MonoBehaviour {
 		}
 
 		Instance = this;
+		LogoVector = Logo.transform.position;
 
 		load();
     }
@@ -525,7 +529,7 @@ public class Controller : MonoBehaviour {
                     }
                 }
 
-                parent = aimSeat.transform.Find("Player(Clone)");
+                parent = aimSeat.GetComponentInChildren<PokerPlayer.PlayerOppo>().transform;
             }
 
 			// 删除上一个
@@ -720,8 +724,6 @@ public class Controller : MonoBehaviour {
 
 		RxSubjects.ToInsurance.Subscribe((e) =>
         {
-            //var InsurancePopup = (GameObject)Instantiate(Resources.Load("Prefab/Insurance"), G.DialogCvs.transform);
-
             var InsurancePopup = PoolMan.Spawn("Insurance");
             InsurancePopup.GetComponent<DOPopup>().Show();
             InsurancePopup.GetComponent<Insurance>().Init(e.Data, true);
@@ -729,8 +731,6 @@ public class Controller : MonoBehaviour {
 
         RxSubjects.ShowInsurance.Subscribe((e) =>
         {
-            //var InsurancePopup = (GameObject)Instantiate(Resources.Load("Prefab/Insurance"), G.DialogCvs.transform);
-
             var InsurancePopup = PoolMan.Spawn("Insurance");
             InsurancePopup.GetComponent<DOPopup>().Show();
             InsurancePopup.GetComponent<Insurance>().Init(e.Data, false);

@@ -3,6 +3,7 @@ using MaterialUI;
 using UnityEngine.UI;
 using UnityEngine.UI.ProceduralImage;
 using System.Collections.Generic;
+using DG.Tweening;
 
 public class PlayerActGo: MonoBehaviour {
     public Text ActText;
@@ -26,6 +27,18 @@ public class PlayerActGo: MonoBehaviour {
         };
 
         return map[act];
+    }
+
+    public void SetActive(bool active, bool anim = true) {
+        var cvg = GetComponent<CanvasGroup>();
+        var targetValue = active ? 1 : 0;
+        var duration = 0.1f;
+
+        if (anim) {
+            cvg.DOFade(targetValue, duration);
+        } else {
+            cvg.alpha = targetValue;
+        }
     }
 
     public void ChangePos(SeatPosition pos) {

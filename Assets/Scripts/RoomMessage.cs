@@ -35,9 +35,8 @@ public class RoomMessage : MonoBehaviour {
     public VectorImage PauseIcon; 
     public VectorImage ContinueIcon;
 
-	public void Init () {
-        OwnerName.text = GameData.Shared.OwnerName;
-
+    void Awake()
+    {
         GameData.Shared.LeftTime.Subscribe((value) =>
         {
             if (!GameData.Shared.GameStarted)
@@ -48,6 +47,20 @@ public class RoomMessage : MonoBehaviour {
 
             setText(LeftTime, secToStr(value));
         }).AddTo(this);
+
+         GameData.Shared.Paused.Where((_) => GameData.Shared.GameStarted).Subscribe((pause) => {
+            if (pause > 0) {
+                PauseIcon.gameObject.SetActive(false);
+                ContinueIcon.gameObject.SetActive(true);
+            } else {
+                PauseIcon.gameObject.SetActive(true);
+                ContinueIcon.gameObject.SetActive(false);
+            }
+        }).AddTo(this);
+    }
+
+	public void Init () {
+        OwnerName.text = GameData.Shared.OwnerName;
 
         var cTime = GameData.Shared.CreateTime;
         StartTime.text = cTime.Month + "月" + cTime.Day + "日   " + cTime.Hour + ":" + cTime.Minute;
@@ -71,16 +84,6 @@ public class RoomMessage : MonoBehaviour {
         {
             item.SetActive(GameData.Shared.Owner);
         }
-
-        GameData.Shared.Paused.Where((_) => GameData.Shared.GameStarted).Subscribe((pause) => {
-            if (pause > 0) {
-                PauseIcon.gameObject.SetActive(false);
-                ContinueIcon.gameObject.SetActive(true);
-            } else {
-                PauseIcon.gameObject.SetActive(true);
-                ContinueIcon.gameObject.SetActive(false);
-            }
-        }).AddTo(this);
 	}
 
     private void setMesText(bool isOpen, Text text) 

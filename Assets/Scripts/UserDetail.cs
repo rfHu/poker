@@ -104,11 +104,6 @@ public class UserDetail : MonoBehaviour {
 			{"args", d}
 		}, (data) =>
         {
-            if (gameObject == null)
-            {
-                return;
-            }
-
 			var profile = data.Dict("profile").ToObject<ProfileModel>();
 			var achieve = data.Dict("achieve").ToObject<AchieveModel>();
 

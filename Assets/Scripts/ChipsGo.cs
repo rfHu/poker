@@ -13,6 +13,19 @@ public class ChipsGo : MonoBehaviour {
 	private bool hided = false;
 	private Player player;
 	private Tweener tween;
+	private CompositeDisposable disposables = new CompositeDisposable();
+
+
+	void OnDespawned() {
+		disposables.Clear();	
+		TextNumber.gameObject.SetActive(false);
+	}
+
+	void OnSpawned() {
+		hided = false;
+		GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
+		GetComponent<Image>().color = new Color(1, 1, 1);
+	}
 
 	public void SetChips(int chips) {
 		TextNumber.text = _.Num2CnDigit(chips);
@@ -29,7 +42,7 @@ public class ChipsGo : MonoBehaviour {
 			
 			theSeat.SeatPos.AsObservable().Subscribe((pos) => {
 				GetComponent<RectTransform>().anchoredPosition = getVector(pos);
-			}).AddTo(this);
+			}).AddTo(disposables);
 		};
 
 		if (player.ChipsChange) {
@@ -48,13 +61,13 @@ public class ChipsGo : MonoBehaviour {
 
 		G.PlaySound("chip");
 		doTween().OnComplete(() => {
-			Destroy(gameObject);	
+			PoolMan.Despawn(transform);
 			callback();
 		});
 	}
 
 	public void Hide() {
-		if (hided || this == null) {
+		if (hided || !PoolMan.IsSpawned(transform)) {
 			return ;
 		}
 
@@ -70,7 +83,7 @@ public class ChipsGo : MonoBehaviour {
 		GetComponent<Image>().DOFade(0.3f, duration);
 		GetComponent<RectTransform>().DOAnchorPos(new Vector2(0, 350), duration)
 		.OnComplete(() => {
-			Destroy(gameObject);
+			PoolMan.Despawn(transform);
 		});
 	}
 
@@ -81,18 +94,14 @@ public class ChipsGo : MonoBehaviour {
 			}
 
 			Hide();
-		}).AddTo(this);
-
-		RxSubjects.Look.Subscribe((_) => {
-			Destroy(gameObject);
-		}).AddTo(this);
+		}).AddTo(disposables);
 	}
 	
 	private Tweener doTween() {
 		var pos = theSeat.GetPos();
 
 		tween = GetComponent<RectTransform>()
-		.DOAnchorPos(getVector(pos), 0.25f);
+		.DOAnchorPos(getVector(pos), 0.3f);
 
 		return tween;
 	}

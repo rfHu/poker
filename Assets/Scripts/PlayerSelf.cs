@@ -30,6 +30,7 @@ namespace PokerPlayer {
             Base.Init(player, parent.GetComponent<Seat>(), this);
 			PlayerBase.SetInParent(transform, parent);
 
+			gameover = false;
             addEvents();
 
             RxSubjects.ChangeVectorsByIndex.OnNext(GameData.Shared.MySeat);
@@ -38,6 +39,13 @@ namespace PokerPlayer {
 
 		void OnDespawned() {
 			disposables.Clear();	
+
+			YouWin.SetActive(false);
+			CardDesc.transform.parent.gameObject.SetActive(false);
+			MyCards[0].parent.gameObject.SetActive(false);
+			MyCards[0].GetComponent<Card>().Turnback();
+			MyCards[1].GetComponent<Card>().Turnback();
+			OP.Despawn();
 		}
 
         private void addEvents() {
@@ -206,7 +214,7 @@ namespace PokerPlayer {
 	}
 
 	private OP showOP(Dictionary<string, object> data, int left, int buyTimeCost = 10) {
-		if (this == null) {
+		if (!PoolMan.IsSpawned(transform)) {
 			return null;
 		}
 
@@ -229,9 +237,9 @@ namespace PokerPlayer {
 				var check = dict.Dict("cmds").Bool("check");
 
 				if (check) {
-					OP.OPS.Check();
+					delayCall(OP.OPS.Check);
  				} else {
-					OP.OPS.Fold();
+					delayCall(OP.OPS.Fold);
 				 }
 			} else if (flag == "01") { // 选中右边
 				var data = dict.Dict("cmds");
@@ -242,11 +250,11 @@ namespace PokerPlayer {
 					PoolMan.Despawn(OPTransform);
 
 					if (callNum == 0) {
-						OP.OPS.Check();
+						delayCall(OP.OPS.Check);
 					} else if (callNum == -1) {
-						OP.OPS.AllIn();
+						delayCall(OP.OPS.AllIn);
 					} else {
-						OP.OPS.Call();
+						delayCall(OP.OPS.Call);
 					}
 				} else {
 					if (!restore) {
@@ -262,7 +270,11 @@ namespace PokerPlayer {
 			player.Trust.SelectedFlag.Value = "00";
 	}
 
-
+	private void delayCall(Action cb) {
+		Observable.Timer(TimeSpan.FromSeconds(0.5)).Subscribe((_) => {
+			cb();
+		}).AddTo(disposables);
+	}
 
         // ===== Delegate =====
 
@@ -270,6 +282,10 @@ namespace PokerPlayer {
             MoveOut();
             darkenCards();
         }
+
+		public void SetFolded() {
+			darkenCards();
+		}
 
         public void MoveOut() {
             if (OPTransform != null) {

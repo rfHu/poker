@@ -124,12 +124,28 @@ using System.Text.RegularExpressions;
             return transform;
         }
 
-        public static T ToObject<T>(this Dictionary<string, object> source)
-          where T : class, new()
-        {
-            var json = Json.Encode(source);
-            return JsonUtility.FromJson<T>(json);
-        }
+        public static T ToObject<T>(this IDictionary<string, object> source)
+        where T : class, new()
+    {
+            T result = new T();
+            Type type = result.GetType();
+
+            foreach (var item in source)
+            {
+                FieldInfo property = type.GetField(item.Key);
+
+                if (property == null)
+                {
+                    continue;
+                }
+
+                Type propType = property.FieldType;
+                property.SetValue(result, Convert.ChangeType(item.Value, propType));
+            }
+
+            return result;
+ 
+    }
 
         public static String Serialize(this Dictionary<string, object> source)
         {
@@ -155,11 +171,26 @@ using System.Text.RegularExpressions;
 
          public static List<List<T>> ChunkBy<T>(this List<T> source, int chunkSize) 
         {
-            return source
-                .Select((x, i) => new { Index = i, Value = x })
-                .GroupBy(x => x.Index / chunkSize)
-                .Select(x => x.Select(v => v.Value).ToList())
-                .ToList();
+            var count = 0;
+            var chunked = new List<List<T>>();
+
+            foreach(var item in source) {
+                var idx = count / chunkSize;
+                if (chunked.Count <= idx) {
+                    chunked.Add(new List<T>());
+                }                
+
+                chunked[idx].Add(source[count]);
+                count++;
+            }
+
+            return chunked;
+
+            // return source
+            //     .Select((x, i) => new { Index = i, Value = x })
+            //     .GroupBy(x => x.Index / chunkSize)
+            //     .Select(x => x.Select(v => v.Value).ToList())
+            //     .ToList();
         }
 
         public static int CnCount(this string source) {

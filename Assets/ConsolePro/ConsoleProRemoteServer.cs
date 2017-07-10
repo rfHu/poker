@@ -125,22 +125,22 @@ public class ConsoleProRemoteServer : MonoBehaviour
 	void OnEnable()
 	{
 		StartServer();
-		Application.RegisterLogCallback(LogCallback);
+		BuglyAgent.RegisterLogCallback(LogCallback);
 	}
 
 	void Update()
 	{
-		Application.RegisterLogCallback(LogCallback);
+		BuglyAgent.RegisterLogCallback(LogCallback);
 	}
 
 	void LateUpdate()
 	{
-		Application.RegisterLogCallback(LogCallback);
+		BuglyAgent.RegisterLogCallback(LogCallback);
 	}
 
 	void OnDisable()
 	{
-		Application.RegisterLogCallback(null);
+		BuglyAgent.RegisterLogCallback(null);
 		StopServer();
 	}
 

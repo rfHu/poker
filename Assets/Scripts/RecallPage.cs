@@ -48,10 +48,6 @@ public class RecallPage : MonoBehaviour {
 				{"args", dict}
 			},
 			(json) => {
-				if (this == null) {
-					return ;
-				}
-
 				reload(json);
                 requesting = false;
 			},

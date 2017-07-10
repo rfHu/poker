@@ -35,6 +35,15 @@ namespace PokerPlayer {
 
         void OnDespawned() {
             disposables.Clear();
+            CardDesc.transform.parent.gameObject.SetActive(false);
+            Cardfaces.GetComponent<RectTransform>().anchoredPosition = new Vector2(40, -20);
+            Cardfaces.GetComponent<Image>().color = new Color(1, 1, 1);
+
+            MoveOut();
+            ShowCards[0].Turnback();
+            ShowCards[1].Turnback();
+            ShowCards[0].transform.parent.gameObject.SetActive(false);
+            NameLabel.gameObject.SetActive(true);
         }
 
         public void Init(Player player, Transform parent) {
@@ -45,7 +54,9 @@ namespace PokerPlayer {
 
             if (player.InGame) {
 				Cardfaces.gameObject.SetActive(true);
-			}
+			} else {
+                Cardfaces.gameObject.SetActive(false);
+            }
 
             addEvents();
         }
@@ -84,7 +95,7 @@ namespace PokerPlayer {
                 return ;
             }
 
-            Base.PlayerAct.gameObject.SetActive(false);		
+            Base.PlayerAct.SetActive(false);		
         
             if (cards[0] > 0 || cards[1] > 0) {
                 ShowCards[0].transform.parent.gameObject.SetActive(true);
@@ -139,7 +150,7 @@ namespace PokerPlayer {
             var duration = 0.5f;
 
             Ease ease = Ease.Flash;
-            Cardfaces.DOMove(new Vector2(277, 492), duration).SetEase(ease);
+            Cardfaces.DOMove(Controller.LogoVector, duration).SetEase(ease);
 
             var image = Cardfaces.GetComponent<Image>();
             Tween tween; 
@@ -156,9 +167,14 @@ namespace PokerPlayer {
             });
         }
 
+        public void SetFolded() {
+
+        }
+
         public void MoveOut() {
             Base.Avt.GetComponent<CircleMask>().Disable();
             activated = false;
+            Countdown.gameObject.SetActive(false);
         }
 
         public void TurnTo(Dictionary<string, object> data, int left) {
