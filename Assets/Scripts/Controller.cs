@@ -370,6 +370,8 @@ public class Controller : MonoBehaviour {
 		} else {
 			SNGBtn.SetActive(false);
 		}
+
+		setBBGoText();
 	}
 
 	void registerRxEvents() {
@@ -382,7 +384,6 @@ public class Controller : MonoBehaviour {
 			showGameInfo();
 			infoShow = true;
             addReadyEvents();
-			setBBGoText();
             SNGSetting();
 			gameReload();
 		}).AddTo(this);

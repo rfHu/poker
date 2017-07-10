@@ -23,6 +23,7 @@ namespace ScorePage
         public string Nick;
         public int Score;
         public bool HasSeat;
+        public string Uid;
     }
 
     public class GuestHeadData: Data {

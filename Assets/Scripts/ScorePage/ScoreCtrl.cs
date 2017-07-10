@@ -175,7 +175,8 @@ namespace ScorePage {
                             TakeCoin = model.takecoin,
                             Nick = model.name,
                             Score = GameData.Shared.IsMatch() ? model.bankroll : model.bankroll - model.takecoin,
-                            HasSeat = GameData.Shared.IsMatch() ? true : (model.seat >= 0)
+                            HasSeat = GameData.Shared.IsMatch() ? true : (model.seat >= 0),
+                            Uid = model.uid
                         };
                         playerList.Add(data);
                     }
