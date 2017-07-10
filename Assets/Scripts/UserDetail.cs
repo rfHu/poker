@@ -27,6 +27,17 @@ public class UserDetail : MonoBehaviour {
     public Text[] EmoticonPrice;
     public GameObject UserRemark;
     public Text CoinsNumber;
+    public GameObject NormalPart;
+
+    public GameObject SNGPart;
+    public Text SNGJoin;
+    public Text ReturnPercent;
+    public Text WinMatchCount;
+    public Text WinMatchPercent;
+    public Text SNGBankroll;
+    public Text Golden;
+    public Text Silver;
+    public Text Copper;
 
     string Uid;
     private string remark;
@@ -52,7 +63,25 @@ public class UserDetail : MonoBehaviour {
     {
         this.Uid = Uid;
 
-        if (GameData.Shared.Owner && GameData.Shared.Type != GameType.SNG)
+        if (GameData.Shared.Type == GameType.Normal)
+        {
+            NormalPart.SetActive(true);
+            SNGPart.SetActive(false);
+            normalInit(Uid);
+        }
+        else if (GameData.Shared.Type == GameType.SNG)
+	{
+		    NormalPart.SetActive(false);
+            SNGPart.SetActive(true);
+	}
+
+        RequestById(Uid);
+        GetComponent<DOPopup>().Show();
+    }
+
+private void normalInit(string Uid)
+{
+        if (GameData.Shared.Owner)
         {
             GameOptionBtn.SetActive(true);
         }
@@ -77,10 +106,7 @@ public class UserDetail : MonoBehaviour {
             EmoticonsTeam.SetActive(true);
             GetComponent<VerticalLayoutGroup>().padding.bottom = 0;
         }
-
-        RequestById(Uid);
-        GetComponent<DOPopup>().Show();
-    }
+}
 
 	
     void RequestById(string id) {
@@ -110,29 +136,15 @@ public class UserDetail : MonoBehaviour {
             Name.text = profile.name;
             Avatar.GetComponent<Avatar>().SetImage(profile.avatar);
 
-            remark = data.String("remark");
-            if (string.IsNullOrEmpty(remark)) {
-                RemarkText.text = "玩家备注";
-            } else {
-                RemarkText.text = remark;
-            }
+            if (GameData.Shared.Type == GameType.Normal)
+	        {
+		        setNormalText(data, achieve);
+	        }
+            else if (GameData.Shared.Type == GameType.SNG)
+	        {
+                setSNGText(achieve);
+	        }
 
-            // 手数
-            Hands.text = achieve.total_hand_count.ToString();
-            // 入池率
-            Join.text = _.PercentStr(achieve.entry_hand_percent);
-            // 摊牌率
-            ShowHand.text = _.PercentStr(achieve.showdown_hand_percent);
-            // 入池胜率
-            JoinWin.text = _.PercentStr(achieve.entry_win_hand_percent);
-            // 激进度
-            Aggressive.text = achieve.aggressiveness.ToString();
-            // 翻前加注
-            PreRaise.text = _.PercentStr(achieve.pfr_hand_percent);
-            // 再次加注
-            ThreeBet.text = _.PercentStr(achieve.t_bet_percent);
-            // 持续下注
-            CBet.text = _.PercentStr(achieve.c_bet_round_percent);
 
             // 动态表情
             var emotion = data.List("emoticon");
@@ -143,11 +155,63 @@ public class UserDetail : MonoBehaviour {
                 EmoticonPrice[i].text = "" + dict.Int("coin");
             }
 
-            enterLimit = data.Int("enter_limit") == 1;
-            seatLimit = data.Int("seat_limit") == 1;
-            talkLimit = data.Int("talk_limit") == 1;
+
         });
 	}
+
+    private void setSNGText(AchieveModel achieve)
+    {
+        SNGJoin.text = achieve.total_match_count.ToString();
+
+        ReturnPercent.text = _.PercentStr(achieve.bankroll_return_percent);
+
+        WinMatchCount.text = achieve.win_match_count.ToString();
+
+        WinMatchPercent.text = _.PercentStr(achieve.win_match_percent);
+
+        SNGBankroll.text = achieve.total_bankroll_return.ToString();
+
+        Golden.text = achieve.golden_cup_count.ToString();
+
+        Silver.text = achieve.silver_cup_count.ToString();
+
+        Copper.text = achieve.copper_cup_count.ToString();
+    }
+
+    void setNormalText(Dictionary<string, object> data, AchieveModel achieve)
+    {
+
+        remark = data.String("remark");
+        if (string.IsNullOrEmpty(remark))
+        {
+            RemarkText.text = "玩家备注";
+        }
+        else
+        {
+            RemarkText.text = remark;
+        }
+
+        // 手数
+        Hands.text = achieve.total_hand_count.ToString();
+        // 入池率
+        Join.text = _.PercentStr(achieve.entry_hand_percent);
+        // 摊牌率
+        ShowHand.text = _.PercentStr(achieve.showdown_hand_percent);
+        // 入池胜率
+        JoinWin.text = _.PercentStr(achieve.entry_win_hand_percent);
+        // 激进度
+        Aggressive.text = achieve.aggressiveness.ToString();
+        // 翻前加注
+        PreRaise.text = _.PercentStr(achieve.pfr_hand_percent);
+        // 再次加注
+        ThreeBet.text = _.PercentStr(achieve.t_bet_percent);
+        // 持续下注
+        CBet.text = _.PercentStr(achieve.c_bet_round_percent);
+
+        enterLimit = data.Int("enter_limit") == 1;
+        seatLimit = data.Int("seat_limit") == 1;
+        talkLimit = data.Int("talk_limit") == 1;
+    }
 
     public void OnGamerOptionClick() 
     {

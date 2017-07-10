@@ -15,6 +15,7 @@ public class AchieveModel
     public float pfr_hand_percent;
     public float t_bet_percent;
     public float c_bet_round_percent;
+    public float bankroll_return_percent;
     public int pfr_hand_count;
     public int win_hand_count;
     public int pf_raise_count;
@@ -24,4 +25,10 @@ public class AchieveModel
     public int showdown_hand_count;
     public int total_allin_count;
     public int allin_win_count;
+    //SNG
+    public int win_match_count;
+    public int golden_cup_count;
+    public int silver_cup_count;
+    public int copper_cup_count;    
+    public float win_match_percent;
 }
