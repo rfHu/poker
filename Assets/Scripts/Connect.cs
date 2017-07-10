@@ -441,6 +441,9 @@ public sealed class Connect  {
                 case "match_rank":
                     RxSubjects.MatchRank.OnNext(rxdata);
                     break;
+				case "raise_blind":
+					RxSubjects.RaiseBlind.OnNext(rxdata);
+					break; 
 				default:
 					break;
 			}

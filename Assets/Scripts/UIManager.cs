@@ -56,12 +56,6 @@ public class UIManager : MonoBehaviour {
 		PoolMan.Spawn("RecallPage");
 	}
 
-    public void OnClickSNGMsgButton() {
-        var SNGMsgPage = PoolMan.Spawn("SNGMsgPage");
-        SNGMsgPage.GetComponent<DOPopup>().Show();
-        SNGMsgPage.GetComponent<SNGMsgPage>().Init();
-    }
-
 	public void OnClickChat() {
 		Commander.Shared.Chat();
 	}
@@ -94,7 +88,7 @@ public class UIManager : MonoBehaviour {
 
             //根据类别生成不同预制体
             Transform transform;
-            if (GameData.Shared.GameType == "holdem")
+            if (GameData.Shared.Type == GameType.Normal)
             {
                 transform = PoolMan.Spawn("Supplement");
             }
@@ -159,25 +153,16 @@ public class UIManager : MonoBehaviour {
         string str = "";
         str += "\"" + GameData.Shared.Name + "\"邀请您加入\"" + GameData.Shared.RoomName + "\"";
 
-        if (GameData.Shared.GameType == "holdem")
+        if (GameData.Shared.Type == GameType.SNG)
         {
-            str += "SNG";
-            switch (GameData.Shared.SNGType)
-            {
-                case 1: str += "快速赛"; break;
-                case 2: str += "标准赛"; break;
-                case 3: str += "长时赛"; break;
-                case 4: str += "深筹赛"; break;
-                default:
-                    break;
-            }
+            str += "SNG" + GameData.SNGData.Type;
         }
 
         if (!string.IsNullOrEmpty(GameData.Shared.GameCode))
             str += "，邀请码[" + GameData.Shared.GameCode + "]";
 
 
-        if (GameData.Shared.GameType == "holdem")
+        if (GameData.Shared.Type == GameType.Normal)
         {
             str += "，盲注[";
 

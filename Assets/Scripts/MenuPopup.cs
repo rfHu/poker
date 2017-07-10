@@ -30,19 +30,17 @@ public class MenuPopup : MonoBehaviour {
 
 	void OnSpawned()
 	{
-        CommonSetting();
         SNGSetting();
+        CommonSetting();
 	}
 
     private void SNGSetting()
     {
+        var active = GameData.Shared.Type == GameType.Normal;
 
-        if (GameData.Shared.GameType == "sng")
+        foreach (var item in SNGHideGos)
         {
-            foreach (var item in SNGHideGos)
-            {
-                item.SetActive(false);
-            }
+            item.SetActive(active);
         }
     }
 
@@ -70,7 +68,10 @@ public class MenuPopup : MonoBehaviour {
         else
         {
             HangGo.SetActive(true);
-            ReserveGo.SetActive(true);
+
+            if (GameData.Shared.Type == GameType.Normal) {
+                ReserveGo.SetActive(true);
+            }
         }
 
         fitState(GameData.Shared.SelfState.Value);
