@@ -52,7 +52,7 @@ public class UserDetail : MonoBehaviour {
     {
         this.Uid = Uid;
 
-        if (GameData.Shared.Owner && GameData.Shared.GameType != "sng")
+        if (GameData.Shared.Owner && GameData.Shared.Type != GameType.SNG)
         {
             GameOptionBtn.SetActive(true);
         }

@@ -25,6 +25,8 @@ public class Controller : MonoBehaviour {
 	public GameObject InviteCodeGo;
 	public GameObject TimeLeftGo;
 	public GameObject Logo;
+	public GameObject SNGGo;
+	public GameObject SNGBtn;
 
     public GameObject SeeLeftCard;
 
@@ -67,10 +69,12 @@ public class Controller : MonoBehaviour {
 
     void Start() 
     {
-        if (GameData.Shared.GameType == "sng")
+        if (GameData.Shared.Type == GameType.SNG)
         {
             OwnerButton.SetActive(false);
-        }
+        } else {
+			OwnerButton.SetActive(true);
+		}
     }
 
 	void OnDestroy()
@@ -274,11 +278,6 @@ public class Controller : MonoBehaviour {
 		}
         Commander.Shared.OptionToggle(!GameData.Shared.talkSoundClose, 2);
         Commander.Shared.OptionToggle(!GameData.Shared.chatBubbleClose, 1);
-
-        if (GameData.Shared.GameType == "sng")
-        {
-            SNGMsgButton.SetActive(true);
-        }
 	}
 
 	private void addGameInfo(string text) {
@@ -308,13 +307,15 @@ public class Controller : MonoBehaviour {
 	}
 
 	private void setNotStarted() {
-		if (GameData.Shared.Owner) {
+		if (GameData.Shared.Owner && GameData.Shared.Type == GameType.Normal) {
 			startButton.SetActive(true);
             PauseGame.SetActive(false);
 		} else {
 			startButton.SetActive(false);
 			PauseGame.SetActive(true);
-			PauseGame.transform.Find("Text").GetComponent<Text>().text = "等待房主开始游戏";
+
+			var text = GameData.Shared.Type == GameType.Normal ? "等待房主开始游戏" : "报名中";
+			PauseGame.transform.Find("Text").GetComponent<Text>().text = text;
 		}
 	}
 
@@ -363,6 +364,12 @@ public class Controller : MonoBehaviour {
 		SeeLeftCard.SetActive(false);
 		cardAnimQueue.Clear();
 		queueIsActive = false;
+
+		if (GameData.Shared.IsMatch() && GameData.Shared.GameStarted) {
+			SNGBtn.SetActive(true);
+		} else {
+			SNGBtn.SetActive(false);
+		}
 	}
 
 	void registerRxEvents() {
@@ -375,11 +382,8 @@ public class Controller : MonoBehaviour {
 			showGameInfo();
 			infoShow = true;
             addReadyEvents();
-            if (GameData.Shared.GameType == "sng")
-            {
-                addSNGEvent();
-            }
-
+			setBBGoText();
+            SNGSetting();
 		}).AddTo(this);
 
 		RxSubjects.Connecting.Subscribe((stat) => {
@@ -563,7 +567,11 @@ public class Controller : MonoBehaviour {
         }).AddTo(this);
 
         RxSubjects.GameOver.Subscribe((e) =>{
-            if (GameData.Shared.PublicCards.Count < 5 && GameData.Shared.GameType == "holdem")
+			if (GameData.Shared.Type != GameType.Normal) {
+				return ;
+			}
+
+            if (GameData.Shared.PublicCards.Count < 5)
             {
             	SeeLeftCard.SetActive(true);
 			}
@@ -581,7 +589,8 @@ public class Controller : MonoBehaviour {
 			if (GameData.Shared.InGame) {
 				PokerUI.Toast("记分牌带入成功（下局生效）");
 			} else {
-				PokerUI.Toast("记分牌带入成功");
+				var text = GameData.Shared.Type == GameType.Normal ? "记分牌带入成功" : "报名成功";
+				PokerUI.Toast(text);
 			}
 		}).AddTo(this);
 
@@ -734,7 +743,17 @@ public class Controller : MonoBehaviour {
             var InsurancePopup = PoolMan.Spawn("Insurance");
             InsurancePopup.GetComponent<DOPopup>().Show();
             InsurancePopup.GetComponent<Insurance>().Init(e.Data, false);
-        });
+        }).AddTo(this);
+
+		RxSubjects.RaiseBlind.Subscribe((e) => {
+			var bb = e.Data.Int("big_blind");
+			var cd = e.Data.Int("blind_countdown");
+
+			GameData.Shared.BB = bb;
+			GameData.Shared.LeftTime.Value = cd;
+
+			PokerUI.Toast(string.Format("下一手盲注将升至{0}/{1}", bb / 2, bb));			
+		}).AddTo(this);
 
         RxSubjects.Seating.Subscribe((action) => 
         {
@@ -766,32 +785,13 @@ public class Controller : MonoBehaviour {
 		}).AddTo(this);
 	}
 
-    private void addSNGEvent()
+    private void SNGSetting()
     {
-        GameData.Shared.BlindCountdown.Subscribe((value) =>
-        {
-            var go = SNGMsgButton.transform.GetChild(2).gameObject;
-            if (!GameData.Shared.GameStarted)
-            {
-                setText(go, "暂未开始");
-                return;
-            }
-            setText(go, secToStr(value));
-        }).AddTo(this);
-
-        GameData.Shared.SNGRank.Subscribe((rank) => 
-        {
-            var go = SNGMsgButton.transform.GetChild(1).gameObject;
-            if (rank == 0)
-            {
-                setText(go, "/");
-            }
-            else
-            {
-                setText(go, rank.ToString());
-            }
-
-        }).AddTo(this);
+		if (GameData.Shared.Type == GameType.Normal) {
+			SNGGo.SetActive(false);
+		} else {
+			SNGGo.SetActive(true);
+		}
     }
 
     private void TalkLimit(bool limit)
@@ -807,8 +807,14 @@ public class Controller : MonoBehaviour {
 	private void addReadyEvents() {
 		GameData.Shared.LeftTime.Subscribe((value) => {
 			if (!GameData.Shared.GameStarted) {
-				setText(TimeLeftGo, "暂未开始");
+				setText(TimeLeftGo, "未开始");
 				return;
+			}
+
+			setText(TimeLeftGo, secToStr(value));
+
+			if (GameData.Shared.Type != GameType.Normal) {
+				return ;
 			}
 
 			if (value > 5 * 60) {
@@ -821,7 +827,6 @@ public class Controller : MonoBehaviour {
 				hasShowEnding = true;
 			}
 
-			setText(TimeLeftGo, secToStr(value));
 		}).AddTo(this);
 
 		GameData.Shared.Paused.Subscribe((pause) => {
@@ -850,7 +855,7 @@ public class Controller : MonoBehaviour {
 			if (uid == GameData.Shared.Uid && e.Data.Int("type") == 2) {
 				PokerUI.Alert("您已连续3次超时，先站起来休息下吧~");
 			}
-		});
+		}).AddTo(this);
 	}
 
 	private bool isGuest(string json) {

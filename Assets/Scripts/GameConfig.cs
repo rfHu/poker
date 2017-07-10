@@ -14,6 +14,12 @@ public enum ActionState {
 	Raise = 5
 }
 
+public enum GameType {
+	Normal,
+	SNG,
+	MTT
+}
+
 public static class ActionStateExt {
 	public static ActionState ToActionEnum(this String str) {
 		var map = new Dictionary<string, ActionState>() {
@@ -111,7 +117,7 @@ sealed public class Player {
 
 	public ReactiveProperty<String> LastAct = new ReactiveProperty<String>();
 
-    public int SNGRank = 0;
+    public ReactiveProperty<int> Rank = new ReactiveProperty<int>();
 
 	public void SetState(int state, int cd = 0) {
 		var st = (PlayerState)state;
@@ -141,7 +147,11 @@ sealed public class Player {
 		Coins = json.Int("coins");
 		Allin.Value = json.Bool("is_allin");
 		LastAct.Value = json.String("last_act");
-        SNGRank = json.Int("sng_rank");
+        Rank.Value = json.Int("match_rank");
+
+		if (Uid == GameData.Shared.Uid) {
+			GameData.SNGData.Rank.Value = Rank.Value;
+		}
 
 		var showValue = Convert.ToString(json.Int("showcard"), 2);
 
@@ -260,6 +270,8 @@ sealed public class GameData {
 		});
 
 		RxSubjects.GameStart.AsObservable().Subscribe((e) => {
+			GameStarted = true;
+
 			var json = e.Data.Dict("room");
 			PublicCardAnimState = true;
 
@@ -462,9 +474,6 @@ sealed public class GameData {
 
 			var value = Math.Max(0, LeftTime.Value - 1);
 			LeftTime.Value = value;
-
-            var BlindCountdownValue = Math.Max(0, BlindCountdown.Value - 1);
-            BlindCountdown.Value = BlindCountdownValue;
 		});
 
 		RxSubjects.GamerState.Subscribe((e) => {
@@ -554,11 +563,29 @@ sealed public class GameData {
 	public string RoomName = "";
 
     
-    public string GameType = "";
-    public int SNGType;
-    public ReactiveProperty<long> BlindCountdown = new ReactiveProperty<long>(0);
-    public ReactiveProperty<int> SNGRank = new ReactiveProperty<int>(0);
-    public int SeatsCount;
+    public GameType Type;
+
+	public bool IsMatch() {
+		return Type != GameType.Normal;
+	}
+
+	public class SNGData {
+		static public int Type;
+		static public ReactiveProperty<int> Rank = new ReactiveProperty<int>();
+
+		static string SngString {
+			get {
+				var map = new Dictionary<int, string>(){
+					{1, "快速赛"},
+					{2, "标准赛"},
+					{3, "长时赛"},
+					{4, "深筹赛"}
+				};
+
+				return map[Type];
+			}
+		}
+	}
 
 	// 游戏是否已经开始，跟暂停状态无关
 	public bool GameStarted = false; 
@@ -596,6 +623,16 @@ sealed public class GameData {
 
 	private Dictionary<string, object> jsonData;
 
+	private GameType string2GameType(string type) {
+		if (type == "sng") {
+			return GameType.SNG;
+		} else if (type == "mtt") {
+			return GameType.MTT;
+		}
+
+		return GameType.Normal;	
+	}
+
 	private void byJson(Dictionary<string, object> json) {
 		var options = json.Dict("options");
 		var gamers = json.Dict("gamers");
@@ -626,17 +663,17 @@ sealed public class GameData {
 		Pot.Value = json.Int("pot");
 		Pots.Value = json.DL("pots");
 
-        GameType = json.String("type");
-        if (GameType == "sng")
+        Type = string2GameType(json.String("type"));
+        if (Type == GameType.SNG)
         {
-            SNGType = options.Int("sub_type");
-            BlindCountdown.Value = json.Long("blind_countdown");
-            SeatsCount = json.Int("seats_count");
-        }
+            SNGData.Type = options.Int("sub_type");
+			LeftTime.Value = json.Long("blind_countdown");
+        } else {
+			LeftTime.Value = json.Long("left_time");
+		}
 		
 		InGame = json.Bool("is_ingame");
 		MaxFiveRank.Value = json.Int("maxFiveRank");
-		LeftTime.Value = json.Long("left_time");
 
         TalkLimit.Value = json.Int("talk_limit") == 1;
         ShowAudit.Value = json.List("un_audit").Count > 0;
@@ -670,11 +707,6 @@ sealed public class GameData {
 			var index = Convert.ToInt32(entry.Key);
 			var player = new Player(dict, index);
 			Players[index] = player;
-
-            if (player.Uid == Uid)
-            {
-                SNGRank.Value = player.SNGRank;
-            }
 		}
 
 		var mySeat = MySeat;

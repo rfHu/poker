@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 public class SNGMsgPage : MonoBehaviour {
 
-    public Text Rank;
-
     public Text PlayerNum;
 
     public Text Time;
@@ -17,9 +15,8 @@ public class SNGMsgPage : MonoBehaviour {
 
     public void Init() 
     {
-        Rank.text = GameData.Shared.SNGRank.Value == 0 ? "/" : GameData.Shared.SNGRank.ToString();
-        PlayerNum.text = GameData.Shared.SeatsCount.ToString();
-        Time.text = data[GameData.Shared.SNGType - 1][1].ToString();
+        PlayerNum.text = GameData.Shared.PlayerCount.Value.ToString();
+        Time.text = data[GameData.SNGData.Type - 1][1].ToString() + "分钟";
 
         SetCups();
     }
@@ -27,22 +24,25 @@ public class SNGMsgPage : MonoBehaviour {
     private void SetCups()
     {
         int[] coinArr = new int[0];
-        switch (GameData.Shared.SeatsCount)
+        var seats = GameData.Shared.PlayerCount.Value;
+        var factor = data[GameData.SNGData.Type][0] * seats;
+
+        switch (seats)
         {
             case 2:
                 coinArr = new int[1];
-                coinArr[0] = data[GameData.Shared.SNGType][0] * GameData.Shared.SeatsCount;
+                coinArr[0] = factor;
                 break;
             case 6:
                 coinArr = new int[2];
-                coinArr[0] = (int)(data[GameData.Shared.SNGType][0] * GameData.Shared.SeatsCount * 0.6f);
-                coinArr[1] = (int)(data[GameData.Shared.SNGType][0] * GameData.Shared.SeatsCount * 0.4f);
+                coinArr[0] = (int)(factor * 0.6f);
+                coinArr[1] = (int)(factor * 0.4f);
                 break;
             case 9:
-                coinArr = new int[2];
-                coinArr[0] = (int)(data[GameData.Shared.SNGType][0] * GameData.Shared.SeatsCount * 0.5f);
-                coinArr[1] = (int)(data[GameData.Shared.SNGType][0] * GameData.Shared.SeatsCount * 0.3f);
-                coinArr[2] = (int)(data[GameData.Shared.SNGType][0] * GameData.Shared.SeatsCount * 0.2f);
+                coinArr = new int[3];
+                coinArr[0] = (int)(factor * 0.5f);
+                coinArr[1] = (int)(factor * 0.3f);
+                coinArr[2] = (int)(factor * 0.2f);
                 break;
             default:
                 break;
