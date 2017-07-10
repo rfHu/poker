@@ -145,8 +145,8 @@ public class MenuPopup : MonoBehaviour {
 
 	public void Tips() {
         var tip = PoolMan.Spawn("Explain");
-        tip.GetChild(0).GetChild(1).GetComponent<Toggle>().isOn = true;
-        tip.GetChild(0).GetChild(0).gameObject.SetActive(false);
+        tip.GetChild(0).GetChild(1).GetComponent<Toggle>().isOn = GameData.Shared.IsMatch();
+        tip.GetChild(0).GetChild(0).gameObject.SetActive(!GameData.Shared.IsMatch());
 		tip.GetComponent<DOPopup>().Show();
 	}
 
