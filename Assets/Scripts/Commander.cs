@@ -64,8 +64,8 @@ public class Commander {
 		ic.PayFor();
 	}
 
-	public void GameEnd(string roomID) {
-		ic.GameEnd(roomID);
+	public void GameEnd(string roomID, string gameType) {
+		ic.GameEnd(roomID, gameType);
 	}
 
 	public int Power() {
@@ -92,21 +92,25 @@ public class Commander {
         ic.VoiceIconToggle(isShowing);
     }
 
-    public void OptionToggle(bool isOpen, int type) 
-    {
+    public void OptionToggle(bool isOpen, int type) {
         ic.OptionToggle(isOpen, type);
+    }
+
+    public void ShareSNGResult() {
+        ic.ShareSNGResult();
     }
 }
 
 public interface ICommander {
 	void Exit();
 	void PayFor();
-	void GameEnd(string roomID);
+	void GameEnd(string roomID, string gameType);
 	int Power();
 	void Audit();
 	void Chat();
     void ShareRecord(int handID);
     void ShareGameRoom(string shareText);
+    void ShareSNGResult();
     void VoiceIconToggle(bool isShowing);
 	void PauseUnity();
     void OptionToggle(bool isOpen, int type);
@@ -128,8 +132,8 @@ public class AndroidCommander: ICommander {
 		getJo().Call("payFor");
 	}
 
-	public void GameEnd(string roomID) {
-		getJo().Call("gameEnd", roomID);
+	public void GameEnd(string roomID, string gameType) {
+		getJo().Call("gameEnd", roomID, gameType);
 	}
 
 	public int Power() {
@@ -161,6 +165,10 @@ public class AndroidCommander: ICommander {
         getJo().Call("voiceIconToggle", isShowing);
     }
 
+    public void ShareSNGResult() {
+        getJo().Call("shareSNGResult");
+    }
+
 	public void PauseUnity(){}
 
     public void OptionToggle(bool isOpen, int type) 
@@ -182,7 +190,7 @@ public class iOSCommander: ICommander {
 	private static extern void _ex_callOpenCoinMall();
 
 	[DllImport("__Internal")]
-	private static extern void _ex_callGameOver(string roomID);
+	private static extern void _ex_callGameOver(string roomID, string gameType);
 
 	[DllImport("__Internal")]
 	private static extern int _ex_callGetBatteryLevel();
@@ -208,6 +216,9 @@ public class iOSCommander: ICommander {
 	[DllImport("__Internal")]
 	private static extern void _ex_callOptionToggle(bool isOpen, int type);
 
+	[DllImport("__Internal")]
+	private static extern void _ex_callShareSNGResult();
+
 	public void Exit() {
 		_ex_callExitGame();
 	}
@@ -216,8 +227,8 @@ public class iOSCommander: ICommander {
 		_ex_callOpenCoinMall();
 	}
 
-	public void GameEnd(string roomID) {
-		_ex_callGameOver(roomID);
+	public void GameEnd(string roomID, string gameType) {
+		_ex_callGameOver(roomID, gameType);
 	}
 
 	public void PauseUnity() {
@@ -255,11 +266,15 @@ public class iOSCommander: ICommander {
         _ex_callVoiceIconState(isShowing);
     }
 
+    public void ShareSNGResult() {
+        _ex_callShareSNGResult();
+    }
+
     public void OptionToggle(bool isOpen, int type) {
-		#if UNITY_EDITOR 
-		#else
+#if UNITY_EDITOR
+#else
         	_ex_callOptionToggle(isOpen, type);
-		#endif
+#endif
     }
 }
 #endif
