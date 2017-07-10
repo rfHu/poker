@@ -56,6 +56,12 @@ public class UIManager : MonoBehaviour {
 		PoolMan.Spawn("RecallPage");
 	}
 
+    public void OnClickSNGMsgButton() {
+        var SNGMsgPage = PoolMan.Spawn("SNGMsgPage");
+        SNGMsgPage.GetComponent<DOPopup>().Show();
+        SNGMsgPage.GetComponent<SNGMsgPage>().Init();
+    }
+
 	public void OnClickChat() {
 		Commander.Shared.Chat();
 	}
@@ -78,15 +84,9 @@ public class UIManager : MonoBehaviour {
         });
     }
 
-    public void OnClickSNGMsgbutton() 
-    {
-        var SngMsgPage = PoolMan.Spawn("SNGMsgPage");
-    }
-
 	void Awake()
 	{
 		
-
 		RxSubjects.TakeCoin.Subscribe((e) => {
 			if (e.Data != null) {
 				GameData.Shared.Coins = e.Data.Int("coins");

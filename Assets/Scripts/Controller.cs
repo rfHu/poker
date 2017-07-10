@@ -370,7 +370,12 @@ public class Controller : MonoBehaviour {
 		GameData.Shared.GameInfoReady.Where((ready) => ready && !infoShow).Subscribe((_) => {
 			showGameInfo();
 			infoShow = true;
-			addReadyEvents();	
+            addReadyEvents();
+            if (GameData.Shared.GameType == "sng")
+            {
+                addSNGEvent();
+            }
+
 		}).AddTo(this);
 
 		RxSubjects.Connecting.Subscribe((stat) => {
@@ -760,6 +765,34 @@ public class Controller : MonoBehaviour {
 			GameData.Shared.Bankroll.Value = 0;
 		}).AddTo(this);
 	}
+
+    private void addSNGEvent()
+    {
+        GameData.Shared.BlindCountdown.Subscribe((value) =>
+        {
+            var go = SNGMsgButton.transform.GetChild(2).gameObject;
+            if (!GameData.Shared.GameStarted)
+            {
+                setText(go, "暂未开始");
+                return;
+            }
+            setText(go, secToStr(value));
+        }).AddTo(this);
+
+        GameData.Shared.SNGRank.Subscribe((rank) => 
+        {
+            var go = SNGMsgButton.transform.GetChild(1).gameObject;
+            if (rank == 0)
+            {
+                setText(go, "/");
+            }
+            else
+            {
+                setText(go, rank.ToString());
+            }
+
+        }).AddTo(this);
+    }
 
     private void TalkLimit(bool limit)
     {

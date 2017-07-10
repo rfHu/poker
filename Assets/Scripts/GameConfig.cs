@@ -111,6 +111,7 @@ sealed public class Player {
 
 	public ReactiveProperty<String> LastAct = new ReactiveProperty<String>();
 
+    public int SNGRank = 0;
 
 	public void SetState(int state, int cd = 0) {
 		var st = (PlayerState)state;
@@ -140,6 +141,7 @@ sealed public class Player {
 		Coins = json.Int("coins");
 		Allin.Value = json.Bool("is_allin");
 		LastAct.Value = json.String("last_act");
+        SNGRank = json.Int("sng_rank");
 
 		var showValue = Convert.ToString(json.Int("showcard"), 2);
 
@@ -460,6 +462,9 @@ sealed public class GameData {
 
 			var value = Math.Max(0, LeftTime.Value - 1);
 			LeftTime.Value = value;
+
+            var BlindCountdownValue = Math.Max(0, BlindCountdown.Value - 1);
+            BlindCountdown.Value = BlindCountdownValue;
 		});
 
 		RxSubjects.GamerState.Subscribe((e) => {
@@ -551,7 +556,9 @@ sealed public class GameData {
     
     public string GameType = "";
     public int SNGType;
-
+    public ReactiveProperty<long> BlindCountdown = new ReactiveProperty<long>(0);
+    public ReactiveProperty<int> SNGRank = new ReactiveProperty<int>(0);
+    public int SeatsCount;
 
 	// 游戏是否已经开始，跟暂停状态无关
 	public bool GameStarted = false; 
@@ -623,6 +630,8 @@ sealed public class GameData {
         if (GameType == "sng")
         {
             SNGType = options.Int("sub_type");
+            BlindCountdown.Value = json.Long("blind_countdown");
+            SeatsCount = json.Int("seats_count");
         }
 		
 		InGame = json.Bool("is_ingame");
@@ -661,6 +670,11 @@ sealed public class GameData {
 			var index = Convert.ToInt32(entry.Key);
 			var player = new Player(dict, index);
 			Players[index] = player;
+
+            if (player.Uid == Uid)
+            {
+                SNGRank.Value = player.SNGRank;
+            }
 		}
 
 		var mySeat = MySeat;
