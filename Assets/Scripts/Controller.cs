@@ -468,10 +468,9 @@ public class Controller : MonoBehaviour {
 			// 获取roomID，调用ExitCb后无法获取
 			var roomID = GameData.Shared.Room;
 
-            if (GameData.Shared.GetMyPlayer().Rank.Value == 1)
-            {
-                
-            }
+            if (GameData.Shared.GetMyPlayer().Rank.Value == 1 || GameData.Shared.GetMyPlayer().Rank.Value == 2)
+                return;
+
 			// 清理
 			External.Instance.ExitCb(() => {
 				_.Log("Unity: Game End");
@@ -559,7 +558,7 @@ public class Controller : MonoBehaviour {
 
             var SNGWinner = PoolMan.Spawn("SNGWinner");
             SNGWinner.GetComponent<DOPopup>().Show();
-            SNGWinner.GetComponent<SNGWinner>().Init(coin, rank == 1);
+            SNGWinner.GetComponent<SNGWinner>().Init(coin, rank == 3);
         }).AddTo(this);
 
 		RxSubjects.ShowAudio.Where(isGuest).Subscribe((json) => {

@@ -9,11 +9,15 @@ public class SNGWinner : MonoBehaviour {
 
     public GameObject StayInRoom;
 
-    public void Init(int coin, bool isFirst) 
+    private bool isThird;
+
+    public void Init(int coin, bool isThird) 
     {
+        this.isThird = isThird; 
+
         coinNum.text = "奖金 X " + coin.ToString();
 
-        StayInRoom.SetActive(!isFirst);
+        StayInRoom.SetActive(isThird);
     }
 
     public void ShareSNGResult() 
@@ -24,7 +28,17 @@ public class SNGWinner : MonoBehaviour {
     public void LeftRoom() 
     {
         GetComponent<DOPopup>().Close();
-		External.Instance.Exit();
+        if (!isThird)
+        {
+            External.Instance.ExitCb(() =>
+            {
+                _.Log("Unity: Game End");
+                Commander.Shared.GameEnd(GameData.Shared.Room, "record_sng.html");
+            });
+        }
+        else{
+		    External.Instance.Exit();   
+        }
     }
     public void Stay() 
     {
