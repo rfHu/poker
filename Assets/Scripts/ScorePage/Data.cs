@@ -40,4 +40,8 @@ namespace ScorePage
     public class Data27: Data {
         public int Number;
     }
+
+    public class ScoreHeaderData: Data {
+        public List<string> List;
+    }
 }

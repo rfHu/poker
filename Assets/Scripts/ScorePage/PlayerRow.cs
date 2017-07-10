@@ -20,8 +20,14 @@ namespace ScorePage {
 
             nickText.text = dt.Nick;
             takeCoinText.text = _.Num2CnDigit(dt.TakeCoin);
-            scoreText.text = _.Number2Text(dt.Score); 
-            scoreText.color = _.GetTextColor(dt.Score);
+
+            if (GameData.Shared.IsMatch()) {
+                scoreText.color = new Color(1,1,1);
+                scoreText.text = dt.Score.ToString(); 
+            } else {
+                scoreText.color = _.GetTextColor(dt.Score);
+                scoreText.text = _.Number2Text(dt.Score); 
+            }
 
             if (dt.HasSeat) {
                 cvg.alpha = 1;

@@ -43,6 +43,7 @@ namespace ScorePage {
             public RectTransform GuestPrefab;
             public RectTransform LeaveIconPrefab;
             public RectTransform Award27Prefab;
+            public RectTransform ScoreHeaderPrefab;
 
             public List<Data> rowData = new List<Data>();
         }
@@ -55,7 +56,7 @@ namespace ScorePage {
 
                 if (data is InsuranceRowData || data is PlayerRowData || data is Data27) {
                     return 90f;
-                } else if (data is GuestHeadData) {
+                } else if (data is GuestHeadData || data is ScoreHeaderData) {
                     return 60f;
                 } else if (data is LeaveIconData) {
                     return 44f;
@@ -88,6 +89,9 @@ namespace ScorePage {
                 } else if (data is Data27) {
                     instance = new Award27Row();
                     instance.Init(_Params.Award27Prefab, itemIndex);
+                } else if (data is ScoreHeaderData) {
+                    instance = new ScoreHeader();
+                    instance.Init(_Params.ScoreHeaderPrefab, itemIndex);
                 } else  {
                     instance = new GuestRow();    
                     instance.Init(_Params.GuestPrefab, itemIndex);
@@ -123,6 +127,24 @@ namespace ScorePage {
                 Time.text = json.Int("hand_time").ToString() + "s";
                 Buy.text = json.String("avg_buy");
 
+                if (GameData.Shared.IsMatch()) {
+                    rowData.Add(new ScoreHeaderData() {
+                        List = new List<string>() {
+                            "昵称",
+                            "排名",
+                            "记分牌"
+                        }
+                    });
+                } else {
+                    rowData.Add(new ScoreHeaderData() {
+                        List = new List<string>() {
+                            "昵称",
+                            "带入",
+                            "积分"
+                        }
+                    });
+                }
+
                 if (GameData.Shared.NeedInsurance) {
                     rowData.Add(
                         new InsuranceRowData() {Number = json.Dict("insurance").Int("pay")}
@@ -152,8 +174,8 @@ namespace ScorePage {
                         var data = new PlayerRowData() {
                             TakeCoin = model.takecoin,
                             Nick = model.name,
-                            Score = model.bankroll - model.takecoin,
-                            HasSeat = (model.seat >= 0)
+                            Score = GameData.Shared.IsMatch() ? model.bankroll : model.bankroll - model.takecoin,
+                            HasSeat = GameData.Shared.IsMatch() ? true : (model.seat >= 0)
                         };
                         playerList.Add(data);
                     }
@@ -184,6 +206,14 @@ namespace ScorePage {
 
                     return bb.Score - aa.Score;
                 });
+
+                if (GameData.Shared.Type == GameType.SNG) {
+                    for (var i = 0; i < playerList.Count; i++) {
+                        // SNG换成是排名
+                        var dt = playerList[i] as PlayerRowData;
+                        dt.TakeCoin = i + 1;
+                    }
+                }
 
                 // 离开座位且排在第一位的显示已离桌标志
                 var index = playerList.FindIndex((dt) => {

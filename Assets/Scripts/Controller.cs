@@ -384,6 +384,7 @@ public class Controller : MonoBehaviour {
             addReadyEvents();
 			setBBGoText();
             SNGSetting();
+			gameReload();
 		}).AddTo(this);
 
 		RxSubjects.Connecting.Subscribe((stat) => {
