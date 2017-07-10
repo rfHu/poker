@@ -316,6 +316,13 @@ public class Controller : MonoBehaviour {
 			PauseGame.SetActive(true);
 			PauseGame.transform.Find("Text").GetComponent<Text>().text = "等待房主开始游戏";
 		}
+
+        if (GameData.Shared.GameType == "sng")
+        {
+            startButton.SetActive(false);
+            PauseGame.SetActive(true);
+            PauseGame.transform.Find("Text").GetComponent<Text>().text = "等待玩家报名";
+        }
 	}
 
 	private string secToStr(long seconds) {
@@ -465,7 +472,7 @@ public class Controller : MonoBehaviour {
 			// 清理
 			External.Instance.ExitCb(() => {
 				_.Log("Unity: Game End");
-				Commander.Shared.GameEnd(roomID);
+				Commander.Shared.GameEnd(roomID, GameData.Shared.GameType == "sng" ? "record_sng.html" : "record.html");
 			});	
 		}).AddTo(this);
 
@@ -768,6 +775,8 @@ public class Controller : MonoBehaviour {
 
     private void addSNGEvent()
     {
+        SNGMsgButton.SetActive(true);
+
         GameData.Shared.BlindCountdown.Subscribe((value) =>
         {
             var go = SNGMsgButton.transform.GetChild(2).gameObject;

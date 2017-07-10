@@ -438,6 +438,9 @@ public sealed class Connect  {
 				case "offscore":
 					RxSubjects.OffScore.OnNext(rxdata);
 					break;
+                case "match_rank":
+                    RxSubjects.MatchRank.OnNext(rxdata);
+                    break;
 				default:
 					break;
 			}
