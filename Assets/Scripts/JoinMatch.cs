@@ -26,10 +26,6 @@ public class JoinMatch : MonoBehaviour {
         Coins.text = _.Num2CnDigit(GameData.Shared.Coins);
     }
 
-    void OnDespawned() {
-        GameData.Shared.Emit("unseat");
-    }
-
     public void TakeCoin()
     {
         Connect.Shared.Emit(new Dictionary<string, object>(){

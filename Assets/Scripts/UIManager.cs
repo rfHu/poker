@@ -105,9 +105,7 @@ public class UIManager : MonoBehaviour {
 					return ;
 				}
 
-				Connect.Shared.Emit(new Dictionary<string, object>() {
-					{"f", "unseat"}
-				});
+				Connect.Shared.Emit("unseat");
 			});
 		}).AddTo(this);
 

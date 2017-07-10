@@ -469,7 +469,7 @@ public class Controller : MonoBehaviour {
 			// 清理
 			External.Instance.ExitCb(() => {
 				_.Log("Unity: Game End");
-				Commander.Shared.GameEnd(roomID);
+				// Commander.Shared.GameEnd(roomID);
 			});	
 		}).AddTo(this);
 
