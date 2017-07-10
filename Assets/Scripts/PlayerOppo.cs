@@ -31,6 +31,9 @@ namespace PokerPlayer {
             Countdown.gameObject.SetActive(false);                        
             Countdown.SetParent(Base.Circle, false);
             Countdown.SetAsFirstSibling();
+
+            Cardfaces.SetParent(Base.Circle, false);
+            Cardfaces.SetSiblingIndex(3);
         }
 
         void OnDespawned() {

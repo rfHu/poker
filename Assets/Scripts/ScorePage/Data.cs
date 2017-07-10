@@ -23,6 +23,7 @@ namespace ScorePage
         public string Nick;
         public int Score;
         public bool HasSeat;
+        public string Uid;
     }
 
     public class GuestHeadData: Data {
@@ -39,5 +40,9 @@ namespace ScorePage
 
     public class Data27: Data {
         public int Number;
+    }
+
+    public class ScoreHeaderData: Data {
+        public List<string> List;
     }
 }
