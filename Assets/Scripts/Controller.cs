@@ -469,7 +469,7 @@ public class Controller : MonoBehaviour {
 			// 清理
 			External.Instance.ExitCb(() => {
 				_.Log("Unity: Game End");
-				Commander.Shared.GameEnd(roomID);
+				Commander.Shared.GameEnd(roomID, GameData.Shared.IsMatch() ? "record_sng.html" : "record.html");
 			});	
 		}).AddTo(this);
 
@@ -545,6 +545,15 @@ public class Controller : MonoBehaviour {
 
             expression.GetComponent<Expression>().SetTrigger(expressionName, parent);
 			expressCache.Add(uid, expression);
+        }).AddTo(this);
+
+        RxSubjects.MatchRank.Subscribe((json) => {
+            var rank = json.Data.Int("rank");
+            var coin = json.Data.Int("coin");
+
+            var SNGWinner = PoolMan.Spawn("SNGWinner");
+            SNGWinner.GetComponent<DOPopup>().Show();
+            SNGWinner.GetComponent<SNGWinner>().Init(coin, rank == 1);
         }).AddTo(this);
 
 		RxSubjects.ShowAudio.Where(isGuest).Subscribe((json) => {

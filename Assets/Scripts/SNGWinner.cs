@@ -9,7 +9,7 @@ public class SNGWinner : MonoBehaviour {
 
     public GameObject StayInRoom;
 
-    public void Init(int coin, bool isFirst = false) 
+    public void Init(int coin, bool isFirst) 
     {
         coinNum.text = "奖金 X " + coin.ToString();
 
