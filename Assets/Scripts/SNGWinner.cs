@@ -36,10 +36,18 @@ public class SNGWinner : MonoBehaviour {
         instance = transform;
     }
 
-    public void Init(int rank, int coin, bool gameEnd) 
+    public void Init(int rank, int score, bool gameEnd) 
     {
-        this.gameEnd = gameEnd; 
-        coinNum.text = coin.ToString();
+        this.gameEnd = gameEnd;
+        if (score != 0)
+        {
+            coinNum.text = score.ToString();
+        }
+        else 
+        {
+            coinNum.text = "没奖不可怕，调整心态再接再厉吧！";
+        }
+
         StayInRoom.SetActive(!gameEnd);
 
         rank = setRankNum(rank);
