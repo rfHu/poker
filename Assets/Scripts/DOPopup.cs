@@ -96,7 +96,7 @@ public class DOPopup : MonoBehaviour {
 				if (closeOnClick) {
 					Close();
 				}				
-			});				
+			}, modalColor: true);				
 			transform.SetAsLastSibling();
 		}
 
@@ -119,6 +119,7 @@ public class DOPopup : MonoBehaviour {
 		this.close = close;
 		this.modal = modal;
 		this.singleton = singleton;
+		this.closeOnClick = closeOnClick;
 
 		if (instance != null && instance != this && singleton) {
 			instance.Close();

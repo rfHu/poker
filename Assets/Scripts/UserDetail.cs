@@ -76,7 +76,7 @@ public class UserDetail : MonoBehaviour {
         }
 
         //动态表情
-        if (Uid == GameData.Shared.Uid || GameData.Shared.FindPlayerIndex(Uid) == -1 || GameData.Shared.emoticonClose)
+        if (Uid == GameData.Shared.Uid || GameData.Shared.FindPlayerIndex(Uid) == -1 || GameSetting.emoticonClose)
         {
             EmoticonsTeam.SetActive(false);
             GetComponent<VerticalLayoutGroup>().padding.bottom = 40;
