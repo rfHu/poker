@@ -154,6 +154,8 @@ sealed public class Player {
 
 		if (Uid == GameData.Shared.Uid) {
 			GameData.Shared.Rank.Value = Rank.Value;
+		} else {
+			GameData.Shared.Rank.Value = 0;
 		}
 
 		var showValue = Convert.ToString(json.Int("showcard"), 2);
