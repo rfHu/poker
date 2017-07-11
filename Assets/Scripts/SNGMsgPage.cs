@@ -25,10 +25,10 @@ public class SNGMsgPage : MonoBehaviour {
     {
         int[] coinArr = new int[0];
         var seats = GameData.Shared.PlayerCount.Value;
-        var factor = data[GameData.SNGData.Type][0] * seats;
+        var factor = data[GameData.SNGData.Type - 1][0] * seats;
 
         switch (seats)
-        {
+        {   
             case 2:
                 coinArr = new int[1];
                 coinArr[0] = factor;
