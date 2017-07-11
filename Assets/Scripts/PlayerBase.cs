@@ -26,6 +26,7 @@ namespace PokerPlayer {
         public Transform Circle;
         public GameObject WinStars;
         public Text WinNumber;
+        public Text RankText;
 
         public Player player;
         private ActionState lastState;
@@ -73,6 +74,7 @@ namespace PokerPlayer {
             AllinGo.SetActive(false);
             Avt.GetComponent<CanvasGroup>().alpha = 1;
             Circle.gameObject.SetActive(true);
+            RankText.transform.parent.gameObject.SetActive(false);
 
             if (chipsGo != null) {
                 PoolMan.Despawn(chipsGo.transform);
@@ -278,6 +280,11 @@ namespace PokerPlayer {
 
                 myDelegate.HandOver(data);
             }).AddTo(disposables);
+
+            player.Rank.Subscribe((rank) => {
+                RankText.transform.parent.gameObject.SetActive(true);
+                RankText.text  = string.Format("第<size=42>{0}</size>名", rank);
+            }).AddTo(this);
         }
 
         private bool isSelfJson(string jsonStr) {
