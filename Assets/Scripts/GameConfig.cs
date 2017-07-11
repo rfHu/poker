@@ -153,7 +153,9 @@ sealed public class Player {
 		readyState = json.Int("is_ready");
 
 		if (Uid == GameData.Shared.Uid) {
-			GameData.SNGData.Rank.Value = Rank.Value;
+			GameData.Shared.Rank.Value = Rank.Value;
+		} else {
+			GameData.Shared.Rank.Value = 0;
 		}
 
 		var showValue = Convert.ToString(json.Int("showcard"), 2);
@@ -572,6 +574,7 @@ sealed public class GameData {
     
     public GameType Type;
     public int BlindLv;
+	public ReactiveProperty<int> Rank = new ReactiveProperty<int>();
 
 	public bool IsMatch() {
 		return Type != GameType.Normal;
@@ -579,7 +582,6 @@ sealed public class GameData {
 
 	public class SNGData {
 		static public int Type;
-		static public ReactiveProperty<int> Rank = new ReactiveProperty<int>();
 
 		static string SngString {
 			get {

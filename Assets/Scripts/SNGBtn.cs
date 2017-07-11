@@ -16,7 +16,7 @@ public class SNGBtn: MonoBehaviour {
 
     void OnEnable()
     {
-        GameData.SNGData.Rank.Subscribe((rank) => {
+        GameData.Shared.Rank.Subscribe((rank) => {
             var image = GetComponent<ProceduralImage>();
             var rect = GetComponent<RectTransform>();
             

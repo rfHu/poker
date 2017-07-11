@@ -30,6 +30,7 @@ public class DOPopup : MonoBehaviour {
 	private bool modal = true;
 	private bool singleton = true;  
 	private bool closeOnClick = true;
+	private Color  modalColor = ModalHelper.DefaultColor;
 
 	public Vector2 StartPosition;
 	public Vector2 EndPosition;
@@ -94,7 +95,7 @@ public class DOPopup : MonoBehaviour {
 				}			
 
 				Close();
-			}, modalColor: true);				
+			});				
 			transform.SetAsLastSibling();
 		}
 
@@ -112,12 +113,22 @@ public class DOPopup : MonoBehaviour {
 			instance = this;
 		}
 	}
-	
-	public void Show(Action close = null, bool modal = true, bool singleton = true, bool closeOnClick = true) {
+
+	public void ShowModal(Color color, Action close = null, bool closeOnClick = true) {
+		this.modalColor = color;
+		Show(close, true, true, closeOnClick, true);		
+	}
+
+	public void Show(Action close = null, bool modal = true, bool singleton = true, bool closeOnClick = true, bool _configModalColor = false) {
 		this.close = close;
 		this.modal = modal;
 		this.singleton = singleton;
 		this.closeOnClick = closeOnClick;
+
+		// 该字段只在内部使用
+		if (!_configModalColor) {
+			this.modalColor = ModalHelper.DefaultColor;
+		}
 
 		if (instance != null && instance != this && singleton) {
 			instance.Close();

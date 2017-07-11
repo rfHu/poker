@@ -340,7 +340,7 @@ public class OP : MonoBehaviour {
 
 		// 展示遮罩
 		modal = ModalHelper.Create();
-		modal.Show(transform.parent, hideRaiseSlider, true);
+		modal.Show(transform.parent, hideRaiseSlider);
 		transform.SetAsLastSibling();
 
 		setToggle(false);
