@@ -10,6 +10,10 @@ public class SNGWinner : MonoBehaviour {
 
     public GameObject StayInRoom;
 
+    public GameObject[] RankNumGo;
+
+    public Sprite[] NumberImgs;
+
     private static Transform instance;
 
     public static bool IsSpawned {
@@ -32,11 +36,38 @@ public class SNGWinner : MonoBehaviour {
         instance = transform;
     }
 
-    public void Init(int coin, bool gameEnd) 
+    public void Init(int rank, int coin, bool gameEnd) 
     {
         this.gameEnd = gameEnd; 
         coinNum.text = coin.ToString();
         StayInRoom.SetActive(!gameEnd);
+
+        rank = setRankNum(rank);
+    }
+
+    private int setRankNum(int rank)
+    {
+        List<int> rankNum = new List<int>();
+        while (rank != 0)
+        {
+            rankNum.Add(rank % 10);
+            rank /= 10;
+        }
+        rankNum.Reverse();
+
+        for (int i = 0; i < RankNumGo.Length; i++)
+        {
+            if (i < rankNum.Count)
+            {
+                RankNumGo[i].SetActive(true);
+                RankNumGo[i].GetComponent<Image>().sprite = NumberImgs[rankNum[i]];
+            }
+            else
+            {
+                RankNumGo[i].SetActive(false);
+            }
+        }
+        return rank;
     }
 
     public void ShareSNGResult() 

@@ -558,7 +558,7 @@ public class Controller : MonoBehaviour {
 
             var SNGWinner = PoolMan.Spawn("SNGWinner");
             SNGWinner.GetComponent<DOPopup>().Show(closeOnClick: false);
-            SNGWinner.GetComponent<SNGWinner>().Init(coin, isEnd);
+            SNGWinner.GetComponent<SNGWinner>().Init(rank ,coin, isEnd);
         }).AddTo(this);
 
 		RxSubjects.ShowAudio.Where(isGuest).Subscribe((json) => {
