@@ -6,23 +6,30 @@ using UniRx;
 public class ModalHelper: MonoBehaviour {
 	private Action onClick;
 
-	public void Show(Transform parent, Action onClick, bool modalColor = false) {
+	public static Color DefaultColor = new Color(0, 0, 0, 80 / 255f);
+
+	public void Show(Transform parent, Action onClick) {
+		Show(parent, onClick, DefaultColor);
+	}
+
+	public void Show(Transform parent, Action onClick, Color modalColor) {
 		this.onClick = onClick;
 		
 		transform.SetParent(parent);
 		_.FillParent(gameObject);
 		
 		transform.SetAsLastSibling();
-
-		if (modalColor) {
-			GetComponent<Image>().color = new Color(0, 0, 0, 40 / 255f);
-        }
+		SetModalColor(modalColor);
 
 #if UNITY_EDITOR
 #else
 		    Commander.Shared.VoiceIconToggle(false);
 #endif
     }
+
+	public void SetModalColor(Color color) {
+		GetComponent<Image>().color = color;
+	}
 
 	void Awake()
 	{
