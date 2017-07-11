@@ -365,7 +365,7 @@ public class Controller : MonoBehaviour {
 		cardAnimQueue.Clear();
 		queueIsActive = false;
 
-		if (GameData.Shared.IsMatch() && GameData.Shared.GameStarted) {
+		if (GameData.Shared.IsMatch()) {
 			SNGBtn.SetActive(true);
 		} else {
 			SNGBtn.SetActive(false);

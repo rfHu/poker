@@ -71,7 +71,7 @@ namespace PokerPlayer {
 
             var go = GetComponentInChildren<ChipsGo>();
             if (go != null) {
-                go.Hide();
+                PoolMan.Despawn(go.transform);
             }
         } 
 
