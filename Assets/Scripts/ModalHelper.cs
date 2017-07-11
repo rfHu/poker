@@ -6,7 +6,7 @@ using UniRx;
 public class ModalHelper: MonoBehaviour {
 	private Action onClick;
 
-	public void Show(Transform parent, Action onClick = null, bool modalColor = false) {
+	public void Show(Transform parent, Action onClick, bool modalColor = false) {
 		this.onClick = onClick;
 		
 		transform.SetParent(parent);
@@ -31,8 +31,6 @@ public class ModalHelper: MonoBehaviour {
 			if (onClick != null) {
 				onClick();
 			}
-			
-			Despawn();	
 		}).AddTo(this);
 	}
 

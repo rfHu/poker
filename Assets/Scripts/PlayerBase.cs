@@ -26,11 +26,11 @@ namespace PokerPlayer {
         public Transform Circle;
         public GameObject WinStars;
         public Text WinNumber;
+        public Text RankText;
 
         public Player player;
         private ActionState lastState;
 	    private int actCardsNumber = 0;
-        private ChipsGo chipsGo;
 
         private Seat theSeat;
         CompositeDisposable disposables = new CompositeDisposable();
@@ -57,12 +57,6 @@ namespace PokerPlayer {
             addEvents();
         }
 
-        public void BackGame() {
-            Connect.Shared.Emit(new Dictionary<string, object>{
-                {"f", "ready"}
-            });
-        }
-
         void OnDespawned() {
             disposables.Clear();
 
@@ -73,10 +67,11 @@ namespace PokerPlayer {
             AllinGo.SetActive(false);
             Avt.GetComponent<CanvasGroup>().alpha = 1;
             Circle.gameObject.SetActive(true);
+            RankText.transform.parent.gameObject.SetActive(false);
 
-            if (chipsGo != null) {
-                PoolMan.Despawn(chipsGo.transform);
-                chipsGo = null;
+            var go = GetComponentInChildren<ChipsGo>();
+            if (go != null) {
+                go.Hide();
             }
         } 
 
@@ -247,10 +242,7 @@ namespace PokerPlayer {
                 myDelegate.MoveOut();
                 setPlayerActForce(false);
                 AllinGo.SetActive(false);
-
-                if (chipsGo != null) {
-                    chipsGo.Hide();
-                }
+                player.PrChips.Value = 0;
             }).AddTo(disposables);
 
             player.Cards.AsObservable().Where((cards) => {
@@ -278,6 +270,11 @@ namespace PokerPlayer {
 
                 myDelegate.HandOver(data);
             }).AddTo(disposables);
+
+            player.Rank.Where((rank) => rank > 0 && player.readyState == 0).Subscribe((rank) => {
+                RankText.transform.parent.gameObject.SetActive(true);
+                RankText.text  = string.Format("第<size=42>{0}</size>名", rank);
+            }).AddTo(this);
         }
 
         private bool isSelfJson(string jsonStr) {
@@ -287,16 +284,17 @@ namespace PokerPlayer {
 	    }
 
         private void setPrChips(int value) {
-            var chips = PoolMan.Spawn("UpChip");
-            chips.SetParent(transform, false);
-            chips.SetAsLastSibling();
+            var existChips = GetComponentInChildren<ChipsGo>();
 
-            if (chipsGo == null || !PoolMan.IsSpawned(chipsGo.transform)) {
-                chipsGo = chips.GetComponent<ChipsGo>();
-                chipsGo.Create(value, theSeat, player);
+            var newChips = PoolMan.Spawn("UpChip");
+            newChips.SetParent(transform, false);
+            newChips.SetAsLastSibling();
+
+            if (existChips == null) {
+                newChips.GetComponent<ChipsGo>().Create(value, theSeat, player);
             } else {
-                chips.GetComponent<ChipsGo>().AddMore(() => {
-                    chipsGo.SetChips(value);
+                newChips.GetComponent<ChipsGo>().AddMore(() => {
+                    existChips.SetChips(value);
                 }, theSeat, player);	
             }	
         }

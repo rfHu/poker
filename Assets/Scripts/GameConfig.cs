@@ -119,6 +119,8 @@ sealed public class Player {
 
     public ReactiveProperty<int> Rank = new ReactiveProperty<int>();
 
+	public int readyState = -1;
+
 	public void SetState(int state, int cd = 0) {
 		var st = (PlayerState)state;
 		PlayerStat.OnNext(st);
@@ -148,6 +150,7 @@ sealed public class Player {
 		Allin.Value = json.Bool("is_allin");
 		LastAct.Value = json.String("last_act");
         Rank.Value = json.Int("match_rank");
+		readyState = json.Int("is_ready");
 
 		if (Uid == GameData.Shared.Uid) {
 			GameData.SNGData.Rank.Value = Rank.Value;
