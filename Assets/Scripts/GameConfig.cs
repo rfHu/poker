@@ -758,73 +758,6 @@ sealed public class GameData {
 	
 	public ReactiveCollection<int> PublicCards = new ReactiveCollection<int>();
 
-	// 设置
-	private static string tagStr = "persist.txt?tag=";
-
-    // 语音设置
-    public bool talkSoundClose {
-        get {
-            if (ES2.Exists(tagStr + "talkSound"))
-            {
-                return ES2.Load<bool>(tagStr + "talkSound");
-            }
-            return false;
-        }
-
-        set {
-            ES2.Save(value, tagStr + "talkSound");
-        }
-    }
-
-    //游戏声音
-	public bool muted {
-		get {
-			if (ES2.Exists(tagStr + "mute")) {
-				return ES2.Load<bool>(tagStr + "mute");
-			}
-
-			return false;
-		}
-
-		set {
-			ES2.Save(value, tagStr + "mute");
-		}
-	}
-
-    // 文字气泡
-    public bool chatBubbleClose {
-        get
-        {
-            if (ES2.Exists(tagStr + "chatBubble"))
-            {
-                return ES2.Load<bool>(tagStr + "chatBubble");
-            }
-            return false;
-        }
-
-        set
-        {
-            ES2.Save(value, tagStr + "chatBubble");
-        }
-    }
-
-    //动态表情
-    public bool emoticonClose{
-        get
-        {
-            if (ES2.Exists(tagStr + "emoticonClose"))
-            {
-                return ES2.Load<bool>(tagStr + "emoticonClose");
-            }
-            return false;
-        }
-
-        set
-        {
-            ES2.Save(value, tagStr + "emoticonClose");
-        }
-    }
-
 	public class MyCmd {
 		public static bool Takecoin = false;
 		public static bool Unseat = false;
@@ -840,4 +773,71 @@ sealed public class GameData {
 			}
 		}
 	}
+}
+
+public class GameSetting {
+	// 设置
+	private static string tagStr = "persist.txt?tag=";
+
+	private static bool getValue(string tag) {
+		tag = tagStr + tag;
+
+		if (ES2.Exists(tag))
+		{
+			return ES2.Load<bool>(tag);
+		}
+		return false;	
+	}
+
+	private static void setValue(bool value, string tag) {
+		ES2.Save(value, tagStr + tag);	
+	}
+
+    // 语音设置
+    public static bool talkSoundClose {
+        get {
+			return getValue("talkSound");
+        }
+
+        set {
+            setValue(value, "talkSound");
+        }
+    }
+
+    //游戏声音
+	public static bool muted {
+		get {
+			return getValue("mute");	
+		}
+
+		set {
+			setValue(value, "mute");
+		}
+	}
+
+    // 文字气泡
+    public static bool chatBubbleClose {
+        get
+        {
+			return getValue("chatBubble");
+        }
+
+        set
+        {
+            setValue(value, "chatBubble");
+        }
+    }
+
+    //动态表情
+    public static bool emoticonClose{
+        get
+        {
+			return getValue("emoticonClose");
+        }
+
+        set
+        {
+            setValue(value, "emoticonClose");
+        }
+    }
 }

@@ -273,11 +273,11 @@ public class Controller : MonoBehaviour {
 	}
 
 	private void setOptions() {
-		if (GameData.Shared.muted) {
+		if (GameSetting.muted) {
 			MasterAudio.MuteEverything();
 		}
-        Commander.Shared.OptionToggle(!GameData.Shared.talkSoundClose, 2);
-        Commander.Shared.OptionToggle(!GameData.Shared.chatBubbleClose, 1);
+        Commander.Shared.OptionToggle(!GameSetting.talkSoundClose, 2);
+        Commander.Shared.OptionToggle(!GameSetting.chatBubbleClose, 1);
 	}
 
 	private void addGameInfo(string text) {
@@ -483,7 +483,7 @@ public class Controller : MonoBehaviour {
 
         RxSubjects.Emoticon.Subscribe((e) =>
         {
-            if (GameData.Shared.emoticonClose)
+            if (GameSetting.emoticonClose)
                 return;
 
             int fromSeatIndex = e.Data.Int("seat");

@@ -32,7 +32,7 @@ public class G {
 	private static Canvas dialogCanvas;
 
 	public static void PlaySound(string name) {
-		if (GameData.Shared.muted) {
+		if (GameSetting.muted) {
 			return ;
 		}
 

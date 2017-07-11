@@ -23,20 +23,20 @@ public class Option : MonoBehaviour {
             });
         }
 
-        Toggles[0].isOn = !GameData.Shared.talkSoundClose;
-        Toggles[1].isOn = !GameData.Shared.muted;
-        Toggles[2].isOn = !GameData.Shared.chatBubbleClose;
-        Toggles[3].isOn = !GameData.Shared.emoticonClose;
+        Toggles[0].isOn = !GameSetting.talkSoundClose;
+        Toggles[1].isOn = !GameSetting.muted;
+        Toggles[2].isOn = !GameSetting.chatBubbleClose;
+        Toggles[3].isOn = !GameSetting.emoticonClose;
 
         Toggles[0].onValueChanged.AddListener((isOn) => 
         {
             Commander.Shared.OptionToggle(isOn,2);
-            GameData.Shared.talkSoundClose = !isOn;
+            GameSetting.talkSoundClose = !isOn;
         });
 
         Toggles[1].onValueChanged.AddListener((isOn) => 
         {
-            if (GameData.Shared.muted)
+            if (GameSetting.muted)
             {
                 MasterAudio.UnmuteEverything();
             }
@@ -45,18 +45,18 @@ public class Option : MonoBehaviour {
                 MasterAudio.MuteEverything();
             }
 
-            GameData.Shared.muted = !isOn;
+            GameSetting.muted = !isOn;
         });
 
         Toggles[2].onValueChanged.AddListener((isOn) => 
         {
             Commander.Shared.OptionToggle(isOn, 1);
-            GameData.Shared.chatBubbleClose = !isOn;
+            GameSetting.chatBubbleClose = !isOn;
         });
 
         Toggles[3].onValueChanged.AddListener((isOn) => 
         {
-            GameData.Shared.emoticonClose = !isOn;
+            GameSetting.emoticonClose = !isOn;
         });
 
     }
