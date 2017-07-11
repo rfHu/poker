@@ -153,7 +153,7 @@ public class UIManager : MonoBehaviour {
 
         if (GameData.Shared.Type == GameType.SNG)
         {
-            str += "SNG" + GameData.SNGData.Type;
+            str += "SNG" + GameData.SNGData.SngString;
         }
 
         if (!string.IsNullOrEmpty(GameData.Shared.GameCode))

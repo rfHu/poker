@@ -581,9 +581,9 @@ sealed public class GameData {
 	}
 
 	public class SNGData {
-		static public int Type;
+		public static int Type;
 
-		static string SngString {
+		public static string SngString {
 			get {
 				var map = new Dictionary<int, string>(){
 					{1, "快速赛"},
