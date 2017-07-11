@@ -29,6 +29,7 @@ public class DOPopup : MonoBehaviour {
 	private Action close = null;
 	private bool modal = true;
 	private bool singleton = true;  
+	private bool closeOnClick = true;
 
 	public Vector2 StartPosition;
 	public Vector2 EndPosition;
@@ -92,7 +93,9 @@ public class DOPopup : MonoBehaviour {
 					close();
 				}
 
-				Close();
+				if (closeOnClick) {
+					Close();
+				}				
 			});				
 			transform.SetAsLastSibling();
 		}
@@ -112,7 +115,7 @@ public class DOPopup : MonoBehaviour {
 		}
 	}
 	
-	public void Show(Action close = null, bool modal = true, bool singleton = true) {
+	public void Show(Action close = null, bool modal = true, bool singleton = true, bool closeOnClick = true) {
 		this.close = close;
 		this.modal = modal;
 		this.singleton = singleton;

@@ -465,15 +465,14 @@ public class Controller : MonoBehaviour {
 			// 关闭连接
 			Connect.Shared.CloseImmediate();
 
+			if (SNGWinner.IsSpawned) {
+				return ;
+			}
+
 			// 获取roomID，调用ExitCb后无法获取
 			var roomID = GameData.Shared.Room;
-
-            if (GameData.Shared.GetMyPlayer().Rank.Value == 1 || GameData.Shared.GetMyPlayer().Rank.Value == 2)
-                return;
-
 			// 清理
 			External.Instance.ExitCb(() => {
-				_.Log("Unity: Game End");
 				Commander.Shared.GameEnd(roomID, GameData.Shared.IsMatch() ? "record_sng.html" : "record.html");
 			});	
 		}).AddTo(this);
@@ -557,7 +556,7 @@ public class Controller : MonoBehaviour {
             var coin = json.Data.Int("coin");
 
             var SNGWinner = PoolMan.Spawn("SNGWinner");
-            SNGWinner.GetComponent<DOPopup>().Show();
+            SNGWinner.GetComponent<DOPopup>().Show(closeOnClick: false);
             SNGWinner.GetComponent<SNGWinner>().Init(coin, rank == 3);
         }).AddTo(this);
 
