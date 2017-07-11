@@ -63,11 +63,13 @@ public class UserDetail : MonoBehaviour {
     {
         this.Uid = Uid;
 
+        buttonInit(Uid);
+
         if (GameData.Shared.Type == GameType.Normal)
         {
             NormalPart.SetActive(true);
             SNGPart.SetActive(false);
-            normalInit(Uid);
+
         }
         else if (GameData.Shared.Type == GameType.SNG)
         {
@@ -89,9 +91,9 @@ public class UserDetail : MonoBehaviour {
         GetComponent<DOPopup>().Show();
     }
 
-    private void normalInit(string Uid)
+    private void buttonInit(string Uid)
     {
-        if (GameData.Shared.Owner)
+        if (GameData.Shared.Owner && !GameData.Shared.IsMatch())
         {
             GameOptionBtn.SetActive(true);
         }
@@ -137,6 +139,17 @@ public class UserDetail : MonoBehaviour {
             Name.text = profile.name;
             Avatar.GetComponent<Avatar>().SetImage(profile.avatar);
 
+            //玩家备注
+            remark = data.String("remark");
+            if (string.IsNullOrEmpty(remark))
+            {
+                RemarkText.text = "玩家备注";
+            }
+            else
+            {
+                RemarkText.text = remark;
+            }
+
             if (GameData.Shared.Type == GameType.Normal)
 	        {
 		        setNormalText(data, achieve);
@@ -181,16 +194,6 @@ public class UserDetail : MonoBehaviour {
 
     void setNormalText(Dictionary<string, object> data, AchieveModel achieve)
     {
-
-        remark = data.String("remark");
-        if (string.IsNullOrEmpty(remark))
-        {
-            RemarkText.text = "玩家备注";
-        }
-        else
-        {
-            RemarkText.text = remark;
-        }
 
         // 手数
         Hands.text = achieve.total_hand_count.ToString();
