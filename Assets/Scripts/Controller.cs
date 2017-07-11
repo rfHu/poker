@@ -554,10 +554,11 @@ public class Controller : MonoBehaviour {
         RxSubjects.MatchRank.Subscribe((json) => {
             var rank = json.Data.Int("rank");
             var coin = json.Data.Int("coin");
+            var isEnd = json.Data.Int("is_end") == 1;
 
             var SNGWinner = PoolMan.Spawn("SNGWinner");
             SNGWinner.GetComponent<DOPopup>().Show(closeOnClick: false);
-            SNGWinner.GetComponent<SNGWinner>().Init(coin, rank == 3);
+            SNGWinner.GetComponent<SNGWinner>().Init(coin, isEnd);
         }).AddTo(this);
 
 		RxSubjects.ShowAudio.Where(isGuest).Subscribe((json) => {
