@@ -123,11 +123,18 @@ namespace ScorePage {
                 var rowData = new List<Data>();
 
                 Hands.text = json.String("handid");
-                Pot.text = json.String("avg_pot");
                 Time.text = json.Int("hand_time").ToString() + "s";
-                Buy.text = json.String("avg_buy");
+
+                var PotParentText = Pot.transform.parent.GetComponent<Text>();
+                var BuyParentText = Buy.transform.parent.GetComponent<Text>();
 
                 if (GameData.Shared.IsMatch()) {
+                    PotParentText.text = "人数：";
+                    BuyParentText.text = "均筹：";
+
+                    Pot.text = json.String("left_count");
+                    Buy.text = json.String("avg_bankroll");
+
                     rowData.Add(new ScoreHeaderData() {
                         List = new List<string>() {
                             "昵称",
@@ -136,6 +143,12 @@ namespace ScorePage {
                         }
                     });
                 } else {
+                    PotParentText.text = "平均底池：";
+                    BuyParentText.text = "平均买入：";
+
+                    Pot.text = json.String("avg_pot");
+                    Buy.text = json.String("avg_buy");
+
                     rowData.Add(new ScoreHeaderData() {
                         List = new List<string>() {
                             "昵称",

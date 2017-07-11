@@ -68,6 +68,11 @@ namespace PokerPlayer {
             Avt.GetComponent<CanvasGroup>().alpha = 1;
             Circle.gameObject.SetActive(true);
             RankText.transform.parent.gameObject.SetActive(false);
+
+            var go = GetComponentInChildren<ChipsGo>();
+            if (go != null) {
+                go.Hide();
+            }
         } 
 
         private void addEvents() {
