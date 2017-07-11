@@ -22,6 +22,8 @@ public class SNGMsgPage : MonoBehaviour {
         PlayerNum.text = GameData.Shared.PlayerCount.Value.ToString();
         Time.text = data[GameData.SNGData.Type - 1][1].ToString() + "分钟";
 
+        SetCups();
+
         for (int i = 0; i < BlindLvParents.childCount; i++)
         {
             if (i == GameData.Shared.BlindLv)
