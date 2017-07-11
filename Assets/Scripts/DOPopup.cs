@@ -89,13 +89,11 @@ public class DOPopup : MonoBehaviour {
 			modalHelper = ModalHelper.Create();
 
 			modalHelper.Show(transform.parent, () => {
-				if (close != null) {
-					close();
-				}
+				if (!closeOnClick) {
+					return ;
+				}			
 
-				if (closeOnClick) {
-					Close();
-				}				
+				Close();
 			}, modalColor: true);				
 			transform.SetAsLastSibling();
 		}
@@ -155,6 +153,10 @@ public class DOPopup : MonoBehaviour {
 	public void Close() {
 		if (!hasShow) {
 			return ;
+		}
+
+		if (close != null) {
+			close();
 		}
 
 		var tween = Hide();	

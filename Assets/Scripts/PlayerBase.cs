@@ -281,7 +281,7 @@ namespace PokerPlayer {
                 myDelegate.HandOver(data);
             }).AddTo(disposables);
 
-            player.Rank.Subscribe((rank) => {
+            player.Rank.Where((rank) => rank > 0 && player.readyState == 0).Subscribe((rank) => {
                 RankText.transform.parent.gameObject.SetActive(true);
                 RankText.text  = string.Format("第<size=42>{0}</size>名", rank);
             }).AddTo(this);
