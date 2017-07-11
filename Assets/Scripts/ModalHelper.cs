@@ -6,7 +6,7 @@ using UniRx;
 public class ModalHelper: MonoBehaviour {
 	private Action onClick;
 
-	public static Color DefaultColor = new Color(0, 0, 0, 80 / 255f);
+	public static Color DefaultColor = new Color(0, 0, 0, 40 / 255f);
 
 	public void Show(Transform parent, Action onClick) {
 		Show(parent, onClick, DefaultColor);
