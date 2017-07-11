@@ -266,7 +266,7 @@ public sealed class Connect  {
 			// 公共错误处理
 			if (err == 403) {
 				PokerUI.ConflictAlert();	
-			} else if (err == 406) {
+			} else if (err == 406 && !SNGWinner.IsSpawned) { // 弹出获奖框时，不能提示
 				PokerUI.DisAlert("房间不存在！");
 			} else {
 				int seq = json.Int("seq");
