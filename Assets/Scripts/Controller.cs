@@ -392,15 +392,7 @@ public class Controller : MonoBehaviour {
 			LoadingModal.transform.SetAsLastSibling();
 			LoadingModal.SetActive(stat); 
 		}).AddTo(this);
-
-        GameData.Shared.Ante.Where((value) => value >= 0).Subscribe((value) => {
-            setBBText();
-        }).AddTo(this);
-
-        GameData.Shared.Straddle.Subscribe((value) => {
-            setBBText();
-        }).AddTo(this);
-
+       
 		Action<Player> showPlayer = (obj) => {
 			var parent = Seats[obj.Index].transform;
 
@@ -870,6 +862,14 @@ public class Controller : MonoBehaviour {
 				PokerUI.Alert("您已连续3次超时，先站起来休息下吧~");
 			}
 		}).AddTo(this);
+
+		 GameData.Shared.Ante.Subscribe((value) => {
+            setBBText();
+        }).AddTo(this);
+
+        GameData.Shared.Straddle.Subscribe((value) => {
+            setBBText();
+        }).AddTo(this);
 	}
 
 	private bool isGuest(string json) {

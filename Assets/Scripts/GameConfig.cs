@@ -603,7 +603,7 @@ sealed public class GameData {
     public bool BuryCard = false;
 	public DateTime CreateTime; 
 	public ReactiveProperty<long> LeftTime = new ReactiveProperty<long>(0);
-    public ReactiveProperty<int> Ante = new ReactiveProperty<int>(-1);
+    public ReactiveProperty<int> Ante = new ReactiveProperty<int>(0);
     public ReactiveProperty<bool> Straddle = new ReactiveProperty<bool>(false);
 
 	public ReactiveProperty<bool> OffScore = new ReactiveProperty<bool>(false);
