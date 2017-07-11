@@ -20,6 +20,18 @@ public class _ {
         return t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Dictionary<,>);
     }
 
+    private static int countDigits(float num) {
+        num = Mathf.Abs(num);
+
+        if (num >= 100) {
+            return 0;
+        } else if (num >= 10) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
     static public string Num2CnDigit<T>(T num, bool symbol = false) {
         var value = (float)Convert.ToDouble(num);
 
@@ -34,17 +46,11 @@ public class _ {
 
         if (Mathf.Abs(value) >= y) {
             var v = value / y;
-            if (Mathf.Abs(v) >= 100) {
-               digits = 0;
-            } 
-
+            digits = countDigits(v); 
             text = Math.Round(v, digits).ToString() + "亿";   
         } else if (Mathf.Abs(value) >= w) {
             var v = value / w;
-            if (Mathf.Abs(v) >= 100) {
-                digits = 0;
-            }
-
+            digits = countDigits(v);
             text = Math.Round(v, digits).ToString() + "万";
         } else {
             text = value.ToString();
