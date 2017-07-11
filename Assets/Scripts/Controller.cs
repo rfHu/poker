@@ -246,7 +246,7 @@ public class Controller : MonoBehaviour {
         }
 	}
 
-    private void setBBGoText()
+    private void setBBText()
     {
 
         var sb = GameData.Shared.SB;
@@ -371,7 +371,7 @@ public class Controller : MonoBehaviour {
 			SNGBtn.SetActive(false);
 		}
 
-		setBBGoText();
+		setBBText();
 	}
 
 	void registerRxEvents() {
@@ -394,11 +394,11 @@ public class Controller : MonoBehaviour {
 		}).AddTo(this);
 
         GameData.Shared.Ante.Where((value) => value >= 0).Subscribe((value) => {
-            setBBGoText();
+            setBBText();
         }).AddTo(this);
 
         GameData.Shared.Straddle.Subscribe((value) => {
-            setBBGoText();
+            setBBText();
         }).AddTo(this);
 
 		Action<Player> showPlayer = (obj) => {

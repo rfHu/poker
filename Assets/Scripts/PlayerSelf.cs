@@ -200,6 +200,12 @@ namespace PokerPlayer {
 		toggleEye(1);
 	}
 
+	public void BackGame() {
+		Connect.Shared.Emit(new Dictionary<string, object>{
+			{"f", "ready"}
+		});
+	}
+
     public void AutoCheckOrFold() {
 		toggleAutoBtns(0);	
 	}
