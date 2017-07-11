@@ -485,6 +485,10 @@ sealed public class GameData {
 			var ucd = e.Data.Int("unseat_countdown");
 			setState(uid, state, ucd);	
 		});
+
+        RxSubjects.RaiseBlind.Subscribe((e) => {
+            BlindLv = e.Data.Int("blind_lv");
+        });
 	}
 
 	private void setState(string uid, int state, int cd) {
@@ -567,6 +571,7 @@ sealed public class GameData {
 
     
     public GameType Type;
+    public int BlindLv;
 
 	public bool IsMatch() {
 		return Type != GameType.Normal;
@@ -671,6 +676,7 @@ sealed public class GameData {
         {
             SNGData.Type = options.Int("sub_type");
 			LeftTime.Value = json.Long("blind_countdown");
+            BlindLv = json.Int("blind_lv");
         } else {
 			LeftTime.Value = json.Long("left_time");
 		}

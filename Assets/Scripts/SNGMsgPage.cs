@@ -12,6 +12,10 @@ public class SNGMsgPage : MonoBehaviour {
     public GameObject[] Cups;
 
     private int[][] data = { new int[] { 200, 3 }, new int[] { 500, 5 }, new int[] { 1000, 10 }, new int[] { 2000, 10 } };
+    private Color normalCol = new Color(1,1,1,0.6f);
+
+    public Transform BlindLvParents;
+
 
     public void Init() 
     {
@@ -19,6 +23,18 @@ public class SNGMsgPage : MonoBehaviour {
         Time.text = data[GameData.SNGData.Type - 1][1].ToString() + "分钟";
 
         SetCups();
+
+        for (int i = 0; i < BlindLvParents.childCount; i++)
+        {
+            if (i == GameData.Shared.BlindLv)
+            {
+                BlindLvParents.GetChild(i).GetChild(1).GetComponent<Text>().color = MaterialUI.MaterialColor.cyanA200;
+            }
+            else 
+            {
+                BlindLvParents.GetChild(i).GetChild(1).GetComponent<Text>().color = normalCol;
+            }
+        }
     }
 
     private void SetCups()
