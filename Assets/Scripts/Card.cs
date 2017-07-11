@@ -36,6 +36,8 @@ public class Card : MonoBehaviour {
 			StartCoroutine(flipCard(index, complete));
 		} else {
 			image.sprite = Faces[index];
+			var rect = image.GetComponent<RectTransform>();
+			rect.localScale = new Vector2(1, 1);
 		}
 	}
 

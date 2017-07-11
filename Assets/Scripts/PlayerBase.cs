@@ -72,6 +72,7 @@ namespace PokerPlayer {
             setPlayerAct(false, false);
             AllinGo.SetActive(false);
             Avt.GetComponent<CanvasGroup>().alpha = 1;
+            Circle.gameObject.SetActive(true);
 
             if (chipsGo != null) {
                 PoolMan.Despawn(chipsGo.transform);
