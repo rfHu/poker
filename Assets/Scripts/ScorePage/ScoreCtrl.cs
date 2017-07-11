@@ -129,8 +129,8 @@ namespace ScorePage {
                 var BuyParentText = Buy.transform.parent.GetComponent<Text>();
 
                 if (GameData.Shared.IsMatch()) {
-                    PotParentText.text = "人数：";
-                    BuyParentText.text = "均筹：";
+                    PotParentText.text = "人  数：";
+                    BuyParentText.text = "均  筹：";
 
                     Pot.text = json.String("left_count");
                     Buy.text = json.String("avg_bankroll");
