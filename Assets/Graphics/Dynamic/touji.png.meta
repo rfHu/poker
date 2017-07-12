@@ -1,18 +1,14 @@
 fileFormatVersion: 2
-guid: 5f32e41306dcde14ab0f6ebb1d3dcdd6
-timeCreated: 1499074150
+guid: 5d00dbc50dff58a4eb5100dfb9d8cf03
+timeCreated: 1499072852
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
-    21300000: water_0
-    21300002: water_7
-    21300004: water_2
-    21300006: water_4
-    21300008: water_1
-    21300010: water_3
-    21300012: water_6
-    21300014: water_8
-    21300016: water_5
+    21300000: touji_0
+    21300002: touji_1
+    21300004: touji_3
+    21300006: touji_4
+    21300008: touji_5
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -64,7 +60,7 @@ TextureImporter:
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
-    crunchedCompression: 0
+    crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
   - buildTarget: Standalone
@@ -72,7 +68,7 @@ TextureImporter:
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
-    crunchedCompression: 0
+    crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
   - buildTarget: iPhone
@@ -80,7 +76,7 @@ TextureImporter:
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
-    crunchedCompression: 0
+    crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
   - buildTarget: Android
@@ -88,126 +84,74 @@ TextureImporter:
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
-    crunchedCompression: 0
+    crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: water_0
+      name: touji_0
       rect:
         serializedVersion: 2
-        x: 2
-        y: 180
-        width: 102
-        height: 112
+        x: 1
+        y: 25
+        width: 108
+        height: 200
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: water_7
+      name: touji_1
       rect:
         serializedVersion: 2
-        x: 121
-        y: 263
-        width: 218
-        height: 31
+        x: 112
+        y: 105
+        width: 107
+        height: 117
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: water_2
+      name: touji_3
       rect:
         serializedVersion: 2
-        x: 129
-        y: 226
-        width: 82
-        height: 29
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: water_4
-      rect:
-        serializedVersion: 2
-        x: 230
-        y: 150
-        width: 111
-        height: 104
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: water_1
-      rect:
-        serializedVersion: 2
-        x: 2
-        y: 166
-        width: 67
-        height: 11
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: water_3
-      rect:
-        serializedVersion: 2
-        x: 128
-        y: 151
-        width: 76
-        height: 66
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: water_6
-      rect:
-        serializedVersion: 2
-        x: 2
-        y: 5
-        width: 122
-        height: 147
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: water_8
-      rect:
-        serializedVersion: 2
-        x: 234
-        y: 123
-        width: 22
-        height: 20
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: water_5
-      rect:
-        serializedVersion: 2
-        x: 143
+        x: 223
         y: 11
-        width: 145
-        height: 92
+        width: 162
+        height: 215
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: touji_4
+      rect:
+        serializedVersion: 2
+        x: 389
+        y: 14
+        width: 163
+        height: 209
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: touji_5
+      rect:
+        serializedVersion: 2
+        x: 556
+        y: 5
+        width: 167
+        height: 199
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0

@@ -1,15 +1,18 @@
 fileFormatVersion: 2
-guid: b3f5374ea962887449dc6cd62da59201
-timeCreated: 1499134731
+guid: 916a48ba9a1b6b443afb714eb1b75ee6
+timeCreated: 1499074957
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Tomato_0
-    21300002: Tomato_1
-    21300004: Tomato_2
-    21300006: Tomato_3
-    21300008: Tomato_4
-    21300010: Tomato_5
+    21300000: dog_0
+    21300002: dog_8
+    21300004: dog_1
+    21300006: dog_2
+    21300008: dog_3
+    21300010: dog_4
+    21300012: dog_5
+    21300014: dog_7
+    21300016: dog_6
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -61,7 +64,7 @@ TextureImporter:
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
-    crunchedCompression: 0
+    crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
   - buildTarget: Standalone
@@ -69,7 +72,7 @@ TextureImporter:
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
-    crunchedCompression: 0
+    crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
   - buildTarget: iPhone
@@ -77,7 +80,7 @@ TextureImporter:
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
-    crunchedCompression: 0
+    crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
   - buildTarget: Android
@@ -85,85 +88,124 @@ TextureImporter:
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
-    crunchedCompression: 0
+    crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Tomato_0
+      name: dog_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 16
-        width: 130
-        height: 138
+        x: 8
+        y: 429
+        width: 184
+        height: 111
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Tomato_1
+      name: dog_8
       rect:
         serializedVersion: 2
-        x: 133
-        y: 16
-        width: 141
-        height: 130
+        x: 215
+        y: 407
+        width: 125
+        height: 133
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Tomato_2
+      name: dog_1
       rect:
         serializedVersion: 2
-        x: 275
-        y: 35
-        width: 92
-        height: 87
+        x: 384
+        y: 385
+        width: 191
+        height: 155
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Tomato_3
+      name: dog_2
       rect:
         serializedVersion: 2
-        x: 371
-        y: 0
-        width: 77
-        height: 119
+        x: 2
+        y: 223
+        width: 211
+        height: 159
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Tomato_4
+      name: dog_3
       rect:
         serializedVersion: 2
-        x: 451
-        y: 16
-        width: 142
-        height: 130
+        x: 231
+        y: 219
+        width: 191
+        height: 163
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Tomato_5
+      name: dog_4
       rect:
         serializedVersion: 2
-        x: 594
-        y: 16
-        width: 142
-        height: 130
+        x: 433
+        y: 223
+        width: 206
+        height: 154
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: dog_5
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 46
+        width: 204
+        height: 167
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: dog_7
+      rect:
+        serializedVersion: 2
+        x: 410
+        y: 10
+        width: 229
+        height: 188
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: dog_6
+      rect:
+        serializedVersion: 2
+        x: 209
+        y: 46
+        width: 202
+        height: 168
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}

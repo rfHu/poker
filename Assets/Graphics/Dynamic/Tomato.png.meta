@@ -1,34 +1,15 @@
 fileFormatVersion: 2
-guid: 9464d79a46b5045d295d5ac991f7ebde
-timeCreated: 1492083132
+guid: b3f5374ea962887449dc6cd62da59201
+timeCreated: 1499134731
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Shuffle_0
-    21300002: Shuffle_1
-    21300004: Shuffle_2
-    21300006: Shuffle_3
-    21300008: Shuffle_4
-    21300010: Shuffle_5
-    21300012: Shuffle_6
-    21300014: Shuffle_7
-    21300016: Shuffle_8
-    21300018: Shuffle_9
-    21300020: Shuffle_10
-    21300022: Shuffle_11
-    21300024: shuffle_0
-    21300026: shuffle_1
-    21300028: shuffle_2
-    21300030: shuffle_3
-    21300032: shuffle_4
-    21300034: shuffle_5
-    21300036: shuffle_6
-    21300038: shuffle_7
-    21300040: shuffle_8
-    21300042: shuffle_9
-    21300044: shuffle_10
-    21300046: shuffle_11
-    21300048: shuffle_12
+    21300000: Tomato_0
+    21300002: Tomato_1
+    21300004: Tomato_2
+    21300006: Tomato_3
+    21300008: Tomato_4
+    21300010: Tomato_5
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -52,7 +33,7 @@ TextureImporter:
   textureFormat: 1
   maxTextureSize: 2048
   textureSettings:
-    filterMode: 1
+    filterMode: -1
     aniso: -1
     mipBias: -1
     wrapMode: 1
@@ -111,80 +92,80 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: shuffle_0
+      name: Tomato_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 240
-        height: 180
+        y: 16
+        width: 130
+        height: 138
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: shuffle_1
+      name: Tomato_1
       rect:
         serializedVersion: 2
-        x: 240
-        y: 0
-        width: 240
-        height: 180
+        x: 133
+        y: 16
+        width: 141
+        height: 130
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: shuffle_2
+      name: Tomato_2
       rect:
         serializedVersion: 2
-        x: 480
-        y: 0
-        width: 240
-        height: 180
+        x: 275
+        y: 35
+        width: 92
+        height: 87
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: shuffle_3
+      name: Tomato_3
       rect:
         serializedVersion: 2
-        x: 720
+        x: 371
         y: 0
-        width: 240
-        height: 180
+        width: 77
+        height: 119
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: shuffle_4
+      name: Tomato_4
       rect:
         serializedVersion: 2
-        x: 960
-        y: 0
-        width: 240
-        height: 180
+        x: 451
+        y: 16
+        width: 142
+        height: 130
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: shuffle_5
+      name: Tomato_5
       rect:
         serializedVersion: 2
-        x: 1200
-        y: 0
-        width: 240
-        height: 180
+        x: 594
+        y: 16
+        width: 142
+        height: 130
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0

@@ -1,18 +1,15 @@
 fileFormatVersion: 2
-guid: 916a48ba9a1b6b443afb714eb1b75ee6
-timeCreated: 1499074957
+guid: e458ab0d75883f848bbeea9ff65895e5
+timeCreated: 1499072502
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
-    21300000: dog_0
-    21300002: dog_8
-    21300004: dog_1
-    21300006: dog_2
-    21300008: dog_3
-    21300010: dog_4
-    21300012: dog_5
-    21300014: dog_7
-    21300016: dog_6
+    21300000: dagger_0
+    21300002: dagger_1
+    21300004: dagger_2
+    21300006: dagger_5
+    21300008: dagger_7
+    21300010: dagger_8
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -64,7 +61,7 @@ TextureImporter:
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
-    crunchedCompression: 0
+    crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
   - buildTarget: Standalone
@@ -72,7 +69,7 @@ TextureImporter:
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
-    crunchedCompression: 0
+    crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
   - buildTarget: iPhone
@@ -80,7 +77,7 @@ TextureImporter:
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
-    crunchedCompression: 0
+    crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
   - buildTarget: Android
@@ -88,126 +85,87 @@ TextureImporter:
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
-    crunchedCompression: 0
+    crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: dog_0
+      name: dagger_0
       rect:
         serializedVersion: 2
-        x: 8
-        y: 429
-        width: 184
-        height: 111
+        x: 1
+        y: 149
+        width: 138
+        height: 162
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: dog_8
+      name: dagger_1
       rect:
         serializedVersion: 2
-        x: 215
-        y: 407
-        width: 125
-        height: 133
+        x: 140
+        y: 247
+        width: 129
+        height: 61
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: dog_1
+      name: dagger_2
       rect:
         serializedVersion: 2
-        x: 384
-        y: 385
-        width: 191
+        x: 270
+        y: 185
+        width: 165
+        height: 126
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: dagger_5
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 24
+        width: 127
+        height: 106
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: dagger_7
+      rect:
+        serializedVersion: 2
+        x: 133
+        y: 6
+        width: 185
+        height: 189
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: dagger_8
+      rect:
+        serializedVersion: 2
+        x: 326
+        y: 25
+        width: 175
         height: 155
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: dog_2
-      rect:
-        serializedVersion: 2
-        x: 2
-        y: 223
-        width: 211
-        height: 159
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: dog_3
-      rect:
-        serializedVersion: 2
-        x: 231
-        y: 219
-        width: 191
-        height: 163
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: dog_4
-      rect:
-        serializedVersion: 2
-        x: 433
-        y: 223
-        width: 206
-        height: 154
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: dog_5
-      rect:
-        serializedVersion: 2
-        x: 2
-        y: 46
-        width: 204
-        height: 167
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: dog_7
-      rect:
-        serializedVersion: 2
-        x: 410
-        y: 10
-        width: 229
-        height: 188
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: dog_6
-      rect:
-        serializedVersion: 2
-        x: 209
-        y: 46
-        width: 202
-        height: 168
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0

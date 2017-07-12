@@ -1,15 +1,18 @@
 fileFormatVersion: 2
-guid: e458ab0d75883f848bbeea9ff65895e5
-timeCreated: 1499072502
+guid: 5f32e41306dcde14ab0f6ebb1d3dcdd6
+timeCreated: 1499074150
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
-    21300000: dagger_0
-    21300002: dagger_1
-    21300004: dagger_2
-    21300006: dagger_5
-    21300008: dagger_7
-    21300010: dagger_8
+    21300000: water_0
+    21300002: water_7
+    21300004: water_2
+    21300006: water_4
+    21300008: water_1
+    21300010: water_3
+    21300012: water_6
+    21300014: water_8
+    21300016: water_5
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -61,7 +64,7 @@ TextureImporter:
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
-    crunchedCompression: 0
+    crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
   - buildTarget: Standalone
@@ -69,7 +72,7 @@ TextureImporter:
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
-    crunchedCompression: 0
+    crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
   - buildTarget: iPhone
@@ -77,7 +80,7 @@ TextureImporter:
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
-    crunchedCompression: 0
+    crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
   - buildTarget: Android
@@ -85,87 +88,126 @@ TextureImporter:
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
-    crunchedCompression: 0
+    crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: dagger_0
+      name: water_0
       rect:
         serializedVersion: 2
-        x: 1
-        y: 149
-        width: 138
-        height: 162
+        x: 2
+        y: 180
+        width: 102
+        height: 112
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: dagger_1
+      name: water_7
       rect:
         serializedVersion: 2
-        x: 140
-        y: 247
-        width: 129
-        height: 61
+        x: 121
+        y: 263
+        width: 218
+        height: 31
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: dagger_2
+      name: water_2
       rect:
         serializedVersion: 2
-        x: 270
-        y: 185
-        width: 165
-        height: 126
+        x: 129
+        y: 226
+        width: 82
+        height: 29
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: dagger_5
+      name: water_4
       rect:
         serializedVersion: 2
-        x: 1
-        y: 24
-        width: 127
-        height: 106
+        x: 230
+        y: 150
+        width: 111
+        height: 104
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: dagger_7
+      name: water_1
       rect:
         serializedVersion: 2
-        x: 133
-        y: 6
-        width: 185
-        height: 189
+        x: 2
+        y: 166
+        width: 67
+        height: 11
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: dagger_8
+      name: water_3
       rect:
         serializedVersion: 2
-        x: 326
-        y: 25
-        width: 175
-        height: 155
+        x: 128
+        y: 151
+        width: 76
+        height: 66
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: water_6
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 5
+        width: 122
+        height: 147
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: water_8
+      rect:
+        serializedVersion: 2
+        x: 234
+        y: 123
+        width: 22
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: water_5
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 11
+        width: 145
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
