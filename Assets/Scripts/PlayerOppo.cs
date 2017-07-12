@@ -205,5 +205,12 @@ namespace PokerPlayer {
             showTheCards(data.cards, true);
             showCardType(data.maxFiveRank);
         }
+
+        public void WinEnd() {
+            PlayerBase.DoFade(ShowCards[0].transform.parent.gameObject);
+            PlayerBase.DoFade(CardDesc.transform.parent.gameObject, () => {
+                NameLabel.gameObject.SetActive(true);
+            });
+        }
     }
 }

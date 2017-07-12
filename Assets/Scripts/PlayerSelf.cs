@@ -332,5 +332,9 @@ namespace PokerPlayer {
 				YouWin.SetActive(true);
 			}
 		}
+
+		public void WinEnd() {
+			PlayerBase.DoFade(YouWin);
+		}
     }
 }

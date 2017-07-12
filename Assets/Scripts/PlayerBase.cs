@@ -258,6 +258,7 @@ namespace PokerPlayer {
                 myDelegate.SeeCard(cards);
             }).AddTo(disposables);
 
+            IDisposable winEndDisposable = null;
             player.OverData.AsObservable().Where((data) => data != null).Subscribe((data) => {
                 var gain = data.Gain();
                 if (gain > 0) {
@@ -272,14 +273,55 @@ namespace PokerPlayer {
                 }
 
                 // 重新计算用户的bankroll                
-                player.Bankroll.Value = player.Bankroll.Value + gain;
+                player.Bankroll.Value = player.Bankroll.Value + data.prize;
                 myDelegate.HandOver(data);
+
+                // 4s后隐藏动画
+                winEndDisposable = Observable.Timer(TimeSpan.FromSeconds(4)).Subscribe((_) => {
+                    hideWinAnim();
+                }).AddTo(disposables);
+            }).AddTo(disposables);
+
+            RxSubjects.MatchRank.Subscribe((_) => {
+                if (winEndDisposable != null) {
+                    winEndDisposable.Dispose();
+                }
+
+                hideWinAnim();
             }).AddTo(disposables);
 
             player.Rank.Where((rank) => rank > 0 && player.readyState == 0).Subscribe((rank) => {
                 RankText.transform.parent.gameObject.SetActive(true);
                 RankText.text  = string.Format("第<size=42>{0}</size>名", rank);
             }).AddTo(this);
+        }
+
+        private void hideWinAnim() {
+            DoFade(WinStars, () => {
+                ScoreLabel.transform.parent.gameObject.SetActive(true);
+            });
+            DoFade(WinNumber.transform.parent.gameObject);
+            myDelegate.WinEnd();
+        }
+
+        public static void DoFade(GameObject go, Action callback = null) {
+            if (!go.activeSelf) {
+                return ;
+            }
+
+            var cvg = go.GetComponent<CanvasGroup>();
+            if (cvg == null) {
+                return ;
+            }
+            
+            cvg.DOFade(0, 0.3f).OnComplete(() => {
+                go.SetActive(false);
+                cvg.alpha = 1;
+
+                if (callback != null) {
+                    callback();
+                }
+            });
         }
 
         private bool isSelfJson(string jsonStr) {
@@ -354,5 +396,6 @@ namespace PokerPlayer {
         void Despawn();
         void SeeCard(List<int> cards);
         void HandOver(GameOverJson data);
+        void WinEnd();
     } 
 }
