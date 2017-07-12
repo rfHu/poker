@@ -40,6 +40,7 @@ namespace PokerPlayer {
 		void OnDespawned() {
 			disposables.Clear();	
 
+			RxSubjects.Seating.OnNext(false);
 			YouWin.SetActive(false);
 			CardDesc.transform.parent.gameObject.SetActive(false);
 			MyCards[0].parent.gameObject.SetActive(false);
