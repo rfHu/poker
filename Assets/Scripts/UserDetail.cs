@@ -21,6 +21,7 @@ public class UserDetail : MonoBehaviour {
 	public Text CBet;
     public GameObject GameOptionBtn;
     public GameObject EmoticonsTeam;
+    public GameObject EmoticonsList;
     public GameObject R1;
     public GameObject R2;
     public Button[] EmoticonButtons;
@@ -85,6 +86,7 @@ public class UserDetail : MonoBehaviour {
             GetComponent<VerticalLayoutGroup>().padding.bottom = 40;
         } else {
             EmoticonsTeam.SetActive(true);
+            EmoticonsList.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
             GetComponent<VerticalLayoutGroup>().padding.bottom = 0;
         }
 

@@ -72,14 +72,22 @@ public class Insurance : MonoBehaviour {
         myCoroutine = Timer(time);
         StartCoroutine(myCoroutine);
 
+        BuyTime.SetActive(true);
+        if (mustBuy && isBuyer)
+        {
+            ExitButton.gameObject.SetActive(true);
+        }
+        else 
+        {
+            ExitButton.gameObject.SetActive(false);
+        }
+
         //必须购买设置
-        ExitButton.gameObject.SetActive(!mustBuy);
         CheckAllToggle.gameObject.SetActive(!mustBuy);
 
         //区分观看者和购买者
         BuyerButtons.SetActive(isBuyer);
         WatcherText.SetActive(!isBuyer);
-        ExitButton.gameObject.SetActive(!isBuyer);
         CheckAllToggle.interactable = isBuyer;
         CASlider.interactable = isBuyer;
 

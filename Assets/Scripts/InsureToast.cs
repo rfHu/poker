@@ -74,6 +74,7 @@ public class InsureToast: MonoBehaviour {
                      ct, _.Num2CnDigit(amount), _.Num2CnDigit(pay));
                     break;
                 case 3:
+                    SeePage.SetActive(true);
                     text = cdText(time);
                     break;
                 case 11:
@@ -147,7 +148,6 @@ public class InsureToast: MonoBehaviour {
     }
 
     private string cdText(int time) {
-        SeePage.SetActive(true);
         return String.Format("玩家购买保险中<color=#18FFFFFF>{0}s</color>", time);
     }
 
