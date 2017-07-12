@@ -5,6 +5,12 @@ using System;
 public class PokerUI: MonoBehaviour {
 	static private DialogAlert dialogAlert;
 
+	static public void RemoveDialog() {
+		if (dialogAlert != null) {
+			dialogAlert.Hide();
+		}
+	}
+
 	static public DialogAlert ShowDialog(string text, Action yesAction, string yesText, Action cancelAction, string cancelText) {
 		if (dialogAlert != null) {
 			dialogAlert.Hide();

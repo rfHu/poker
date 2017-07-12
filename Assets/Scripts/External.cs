@@ -2,6 +2,7 @@
 using UnityEngine.SceneManagement;
 using System;
 using UniRx;
+using MaterialUI;
 
 // Unity提供方法给Native
 public class External : MonoBehaviour{
