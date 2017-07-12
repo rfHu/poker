@@ -514,6 +514,10 @@ public class Controller : MonoBehaviour {
             if (uid == GameData.Shared.Uid)
             {
                 parent = ExpressionButton.transform;
+                //有可能出现点击表情时，玩家已经站起的现象
+                if (!parent.gameObject.activeInHierarchy)
+                    return;
+                
             }
             else
             {
