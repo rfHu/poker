@@ -96,8 +96,8 @@ public class Commander {
         ic.OptionToggle(isOpen, type);
     }
 
-    public void ShareSNGResult() {
-        ic.ShareSNGResult();
+    public void ShareSNGResult(string picPath = "") {
+        ic.ShareSNGResult(picPath);
     }
 }
 
@@ -110,7 +110,7 @@ public interface ICommander {
 	void Chat();
     void ShareRecord(int handID);
     void ShareGameRoom(string shareText);
-    void ShareSNGResult();
+    void ShareSNGResult(string picPath);
     void VoiceIconToggle(bool isShowing);
 	void PauseUnity();
     void OptionToggle(bool isOpen, int type);
@@ -165,8 +165,8 @@ public class AndroidCommander: ICommander {
         getJo().Call("voiceIconToggle", isShowing);
     }
 
-    public void ShareSNGResult() {
-        getJo().Call("shareSNGResult");
+    public void ShareSNGResult(string picPath) {
+        getJo().Call("shareSNGResult", picPath);
     }
 
 	public void PauseUnity(){}
@@ -266,7 +266,7 @@ public class iOSCommander: ICommander {
         _ex_callVoiceIconState(isShowing);
     }
 
-    public void ShareSNGResult() {
+    public void ShareSNGResult(string picPath) {
         _ex_callShareSNGResult();
     }
 

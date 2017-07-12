@@ -124,7 +124,9 @@ public class SNGWinner : MonoBehaviour {
         string times = now.ToString();
         times = times.Trim();
         times = times.Replace("/", "-");
-        string filename = "Screenshot" + times + ".png";
+        times = times.Replace(" ", "-");
+        times = times.Replace(":", "-");
+        string filename = "poker" + times + ".png";
 
         //截取屏幕  
         Texture2D texture = new Texture2D(Screen.width, Screen.height, TextureFormat.ETC_RGB4, false);
@@ -133,7 +135,7 @@ public class SNGWinner : MonoBehaviour {
         //转为字节数组  
         byte[] bytes = texture.EncodeToPNG();
 
-        string destination = "/sdcard/DCIM/ARphoto";
+        string destination = "/sdcard/texas.poker.top/sharePhoto";
         //判断目录是否存在，不存在则会创建目录  
         if (!Directory.Exists(destination))
         {
@@ -143,5 +145,6 @@ public class SNGWinner : MonoBehaviour {
         //存图片  
         System.IO.File.WriteAllBytes(Path_save, bytes);
 
+        Commander.Shared.ShareSNGResult(Path_save);
     }
 }
