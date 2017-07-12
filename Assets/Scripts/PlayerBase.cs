@@ -75,6 +75,7 @@ namespace PokerPlayer {
             }
 
             Volume.SetActive(false);
+            ScoreLabel.gameObject.SetActive(true);
         } 
 
         private void addEvents() {
