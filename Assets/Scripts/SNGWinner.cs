@@ -129,7 +129,7 @@ public class SNGWinner : MonoBehaviour {
         string filename = "poker" + times + ".png";
 
         //截取屏幕  
-        Texture2D texture = new Texture2D(Screen.width, Screen.height, TextureFormat.ETC_RGB4, false);
+        Texture2D texture = new Texture2D(Screen.width, Screen.height, TextureFormat.RGBAHalf, false);
         texture.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
         texture.Apply();
         //转为字节数组  
