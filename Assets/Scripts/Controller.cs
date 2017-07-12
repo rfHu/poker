@@ -549,7 +549,7 @@ public class Controller : MonoBehaviour {
             var isEnd = json.Data.Int("is_end") == 1;
 
             var SNGWinner = PoolMan.Spawn("SNGWinner");
-            SNGWinner.GetComponent<DOPopup>().Show(closeOnClick: false);
+            SNGWinner.GetComponent<DOPopup>().ShowModal(new Color(0, 0, 0, 0.4f), closeOnClick: false);
             SNGWinner.GetComponent<SNGWinner>().Init(rank , score, isEnd);
         }).AddTo(this);
 
