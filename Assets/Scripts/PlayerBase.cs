@@ -73,6 +73,8 @@ namespace PokerPlayer {
             if (go != null) {
                 PoolMan.Despawn(go.transform);
             }
+
+            Volume.SetActive(false);
         } 
 
         private void addEvents() {
