@@ -68,7 +68,7 @@ public class OwnerPanel : MonoBehaviour {
     private void AnteSliderInit()
     {
         //清除原上标
-        for (int num = 0; num < AnteSuperscript.childCount; num++)
+        for (int num = AnteSuperscript.childCount - 1; num > -1; num--)
         {
             Destroy(AnteSuperscript.GetChild(num).gameObject);
         }
