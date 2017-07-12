@@ -484,6 +484,7 @@ public class Insurance : MonoBehaviour {
         }
 
         foreach(Transform child in OutsCardsParent) {
+            Debug.Log(22222222);
             PoolMan.Despawn(child);
         }
     }
