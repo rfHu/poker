@@ -477,15 +477,18 @@ public class Insurance : MonoBehaviour {
     {
         disposables.Clear();
 
-        foreach(Transform child in AllinPlayersParent) {
-            if (PoolMan.Contains(child)) {
+        for (int i = AllinPlayersParent.childCount - 1; i > -1; i--)
+        {
+            var child = AllinPlayersParent.GetChild(i);
+            if (PoolMan.Contains(child))
+            {
                 PoolMan.Despawn(child);
             }
         }
 
-        foreach(Transform child in OutsCardsParent) {
-            Debug.Log(22222222);
-            PoolMan.Despawn(child);
+        for (int i = OutsCardsParent.childCount - 1; i > -1; i--)
+        {
+            PoolMan.Despawn(OutsCardsParent.GetChild(i));
         }
     }
 }

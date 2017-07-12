@@ -2,6 +2,7 @@
 using UnityEngine.SceneManagement;
 using System;
 using UniRx;
+using MaterialUI;
 
 // Unity提供方法给Native
 public class External : MonoBehaviour{
@@ -87,6 +88,14 @@ public class External : MonoBehaviour{
 		GameData.Shared.Room = "";
 
 		PoolMan.DespawnAll();
+
+		// 清楚MaterialUI弹框
+		PokerUI.RemoveDialog();
+		var toast = FindObjectOfType<ToastManager>();
+		if (toast != null) {
+			Destroy(toast.gameObject);
+		}
+
 
 		SceneManager.LoadScene("GameLoading");
 		// 延时执行突出逻辑

@@ -63,7 +63,7 @@ namespace PokerPlayer {
             WinStars.SetActive(false);
             WinNumber.transform.parent.gameObject.SetActive(false);
             ScoreLabel.transform.parent.gameObject.SetActive(true);
-            setPlayerAct(false, false);
+            PlayerAct.SetActive(false, false);
             AllinGo.SetActive(false);
             Avt.GetComponent<CanvasGroup>().alpha = 1;
             Circle.gameObject.SetActive(true);
@@ -210,13 +210,13 @@ namespace PokerPlayer {
             
             	if (uid == Uid) {
             		myDelegate.TurnTo(e.Data, GameData.Shared.ThinkTime);
-            		setPlayerAct(false, false);
+            		setPlayerActive(false, false);
             	} else {
             		myDelegate.MoveOut();
 
             		// 刚发了牌
             		if (dc == 1 || GameData.Shared.PublicCards.Count != actCardsNumber) {
-            			setPlayerAct(false);
+            			setPlayerActive(false);
             		}
             	}
 
@@ -243,7 +243,7 @@ namespace PokerPlayer {
 
             RxSubjects.GameOver.Subscribe((e) => {
                 myDelegate.MoveOut();
-                setPlayerActForce(false);
+                PlayerAct.SetActive(false);
                 AllinGo.SetActive(false);
                 player.PrChips.Value = 0;
             }).AddTo(disposables);
@@ -311,7 +311,7 @@ namespace PokerPlayer {
             return lastState == ActionState.Allin || lastState == ActionState.Fold;
         }
 
-        private void setPlayerAct(bool active, bool anim = true) {
+        private void setPlayerActive(bool active, bool anim = true) {
             if (!active && isPersisState()) {
                 return ;
             }
@@ -319,14 +319,10 @@ namespace PokerPlayer {
             PlayerAct.SetActive(active, anim); 
         }
 
-        private void setPlayerActForce(bool active) {
-            PlayerAct.SetActive(active, true);
-        }
-
         private void dealAct(ActionState state) {
             lastState = state;
 
-            setPlayerAct(true);
+            setPlayerActive(true);
             PlayerAct.SetAct(state);
 
             if (state == ActionState.Allin) {
