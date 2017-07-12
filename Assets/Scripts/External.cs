@@ -89,6 +89,14 @@ public class External : MonoBehaviour{
 
 		PoolMan.DespawnAll();
 
+		// 清楚MaterialUI弹框
+		PokerUI.RemoveDialog();
+		var toast = FindObjectOfType<ToastManager>();
+		if (toast != null) {
+			Destroy(toast.gameObject);
+		}
+
+
 		SceneManager.LoadScene("GameLoading");
 		// 延时执行突出逻辑
 		Observable.Timer(TimeSpan.FromMilliseconds(90)).AsObservable().Subscribe((_) => {
