@@ -100,9 +100,13 @@ public class Seat : MonoBehaviour {
 					{"position_x", pos[0]}, 
 					{"position_y", pos[1]} 
 				}}
-			}, (data) => {
-				var err  = data.Int("err");
+			}, (data, e) => {
+				if (e != 0) {
+					PokerUI.Alert("无法入座");
+					return ;
+				}
 
+				var err  = data.Int("err");
 				if (err == 0) {
 					return ;
 				}
