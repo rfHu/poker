@@ -142,6 +142,7 @@ namespace PokerPlayer {
 						if (OPTransform != null) {
 							PoolMan.Despawn(OPTransform);
 						}
+						Base.Circle.gameObject.SetActive(true);
                         break;
                     case PlayerState.Reserve:
                         BackGameBtn.SetActive(true);

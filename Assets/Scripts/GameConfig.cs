@@ -152,12 +152,6 @@ sealed public class Player {
         Rank.Value = json.Int("match_rank");
 		readyState = json.Int("is_ready");
 
-		if (Uid == GameData.Shared.Uid) {
-			GameData.Shared.Rank.Value = Rank.Value;
-		} else {
-			GameData.Shared.Rank.Value = 0;
-		}
-
 		var showValue = Convert.ToString(json.Int("showcard"), 2);
 
 		if (showValue.Length < 2) {
@@ -609,7 +603,7 @@ sealed public class GameData {
     public bool BuryCard = false;
 	public DateTime CreateTime; 
 	public ReactiveProperty<long> LeftTime = new ReactiveProperty<long>(0);
-    public ReactiveProperty<int> Ante = new ReactiveProperty<int>(-1);
+    public ReactiveProperty<int> Ante = new ReactiveProperty<int>(0);
     public ReactiveProperty<bool> Straddle = new ReactiveProperty<bool>(false);
 
 	public ReactiveProperty<bool> OffScore = new ReactiveProperty<bool>(false);
@@ -721,11 +715,13 @@ sealed public class GameData {
 		}
 
 		var mySeat = MySeat;
-
-		if (mySeat != -1 && Players.ContainsKey(mySeat)) {
-			AuditCD.OnNext(Players[mySeat].AuditCD);
+		if (mySeat != -1) {
+			var player = Players[mySeat];
+			AuditCD.OnNext(player.AuditCD);
+			GameData.Shared.Rank.Value = player.Rank.Value;
 		} else {
 			AuditCD.OnNext(0);
+			GameData.Shared.Rank.Value = 0;
 		}
 
 		GameInfoReady.OnNext(true);
