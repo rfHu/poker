@@ -84,11 +84,11 @@ public class SNGWinner : MonoBehaviour {
 #if UNITY_IOS
 		Commander.Shared.ShareSNGResult();
 #elif UNITY_ANDROID
-        SharePicforAndroid();
+        CaptureByUnity("test");
 #else
 				return null;
 #endif
-        
+
     }
 
     public void LeftRoom() 
@@ -117,16 +117,23 @@ public class SNGWinner : MonoBehaviour {
         }
     }
 
-    public void SharePicforAndroid()
+    private void CaptureByUnity(string mFileName)
     {
         //获取系统时间并命名相片名  
         System.DateTime now = System.DateTime.Now;
         string times = now.ToString();
         times = times.Trim();
         times = times.Replace("/", "-");
-        times = times.Replace(" ", "-");
-        times = times.Replace(":", "-");
         string filename = "poker" + times + ".png";
+
+        Application.CaptureScreenshot(mFileName, 0);
+        Debug.Log(Application.persistentDataPath);
+        Commander.Shared.ShareSNGResult(Application.persistentDataPath + "/" + filename);
+    }  
+
+    private void SharePicforAndroid()
+    {
+
 
         //截取屏幕  
         Texture2D texture = new Texture2D(Screen.width, Screen.height, TextureFormat.RGBAHalf, false);
@@ -135,16 +142,14 @@ public class SNGWinner : MonoBehaviour {
         //转为字节数组  
         byte[] bytes = texture.EncodeToPNG();
 
-        string destination = "/sdcard/texas.poker.top/sharePhoto";
-        //判断目录是否存在，不存在则会创建目录  
-        if (!Directory.Exists(destination))
-        {
-            Directory.CreateDirectory(destination);
-        }
-        string Path_save = destination + "/" + filename;
+        //string destination = "/sdcard/texas.poker.top/sharePhoto";
+        ////判断目录是否存在，不存在则会创建目录  
+        //if (!Directory.Exists(destination))
+        //{
+        //    Directory.CreateDirectory(destination);
+        //}
+        //string Path_save = destination + "/" + filename;
         //存图片  
-        System.IO.File.WriteAllBytes(Path_save, bytes);
-
-        Commander.Shared.ShareSNGResult(Path_save);
+        //System.IO.File.WriteAllBytes(Path_save, bytes);
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using UnityEngine.UI.ProceduralImage;
 using MaterialUI;
 using UniRx;
+using System.Collections;
 
 [RequireComponent(typeof(DOPopup))]
 public class UserDetail : MonoBehaviour {
@@ -267,4 +268,14 @@ public class UserDetail : MonoBehaviour {
         var transform = PoolMan.Spawn("UserRemark");
         transform.GetComponent<UserRemark>().Show(Uid, remark);
     }
+
+    //IEnumerator bgAlphaChange(Transform lastEmo) 
+    //{
+    //    //if (PoolMan.IsSpawned(PoolMan.g))
+    //    //{
+    //    //    yield return new WaitForFixedUpdate();
+    //    //}
+
+    //    GetComponent<ProceduralImage>().color += new Color(0,0,0,1);
+    //}
 }
