@@ -88,9 +88,12 @@ public class SNGWinner : MonoBehaviour {
         GetComponent<DOPopup>().Close();
         if (gameEnd)
         {
+            // 获取roomID，调用ExitCb后无法获取
+            var room = GameData.Shared.Room;
+
             External.Instance.ExitCb(() =>
             {
-                Commander.Shared.GameEnd(GameData.Shared.Room, "record_sng.html");
+                Commander.Shared.GameEnd(room, "record_sng.html");
             });
         }
         else{
