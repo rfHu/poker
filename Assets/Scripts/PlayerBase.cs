@@ -271,6 +271,8 @@ namespace PokerPlayer {
                     ScoreLabel.transform.parent.gameObject.SetActive(false);
                 }
 
+                // 重新计算用户的bankroll                
+                player.Bankroll.Value = player.Bankroll.Value + gain;
                 myDelegate.HandOver(data);
             }).AddTo(disposables);
 
