@@ -16,7 +16,7 @@ namespace PokerPlayer {
 		public GameObject YouWin;
 		public GameObject BackGameBtn;
         
-        private Transform OPTransform;
+        private OP OPMono;
 		private CompositeDisposable disposables = new CompositeDisposable();
 
         private Player player {
@@ -140,9 +140,7 @@ namespace PokerPlayer {
 				switch(state) {
                     case PlayerState.Hanging:
 						BackGameBtn.SetActive(true);
-						if (OPTransform != null) {
-							PoolMan.Despawn(OPTransform);
-						}
+						OP.Despawn();
 						Base.Circle.gameObject.SetActive(true);
                         break;
                     case PlayerState.Reserve:
@@ -221,17 +219,14 @@ namespace PokerPlayer {
 		MyCards[1].GetComponent<Card>().Darken();
 	}
 
-	private OP showOP(Dictionary<string, object> data, int left, int buyTimeCost = 10) {
+	private void showOP(Dictionary<string, object> data, int left, int buyTimeCost = 10) {
 		if (!PoolMan.IsSpawned(transform)) {
-			return null;
+			return ;
 		}
 
-		OPTransform = OP.Spawn();
-		var op = OPTransform.GetComponent<OP>();
-		op.StartWithCmds(data, left, buyTimeCost);
+		OPMono = OP.Spawn().GetComponent<OP>();
+		OPMono.StartWithCmds(data, left, buyTimeCost);
 		Base.Circle.gameObject.SetActive(false);
-
-		return op;
 	}
 
 	private void turnTo(Dictionary<string, object> dict, int left, bool restore = false,int buyTimeCost = 10) {
@@ -241,7 +236,7 @@ namespace PokerPlayer {
 			var callNum = player.Trust.CallNumber.Value;
 
 			if (flag == "10") { // 选中左边
-				PoolMan.Despawn(OPTransform);	
+				OP.Despawn();
 				var check = dict.Dict("cmds").Bool("check");
 
 				if (check) {
@@ -255,7 +250,7 @@ namespace PokerPlayer {
 				var check = data.Bool("check");
 
 				if (callNum == -1 || (callNum == 0 && check) || (callNum == call && call != 0)) {
-					PoolMan.Despawn(OPTransform);
+					OP.Despawn();
 
 					if (callNum == 0) {
 						delayCall(OP.OPS.Check);
@@ -296,10 +291,7 @@ namespace PokerPlayer {
 		}
 
         public void MoveOut() {
-            if (OPTransform != null) {
-                PoolMan.Despawn(OPTransform);
-            }
-
+			OP.Despawn();
             Base.Circle.gameObject.SetActive(true); // 显示头像
         }
 
@@ -308,7 +300,10 @@ namespace PokerPlayer {
         }
 
         public void ResetTime(int total) {
-            OPTransform.GetComponent<OP>().Reset(total);
+			if (OPMono == null) {
+				return ;
+			}
+            OPMono.Reset(total);
         }
 
 		public void Despawn() {

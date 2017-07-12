@@ -81,7 +81,7 @@ public class OP : MonoBehaviour {
 			}
 		}
 
-		return instance;			
+		return instance;		
 	}
 	
 	public void StartWithCmds(Dictionary<string, object> data, int left, int buyTimeCost = 10) {
