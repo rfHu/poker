@@ -51,8 +51,6 @@ public class Insurance : MonoBehaviour {
     List<Toggle> OUTSCards = new List<Toggle>();
     List<int> isoffToggles = new List<int>();
 
-    int closeFlag = 0;
-
     IEnumerator myCoroutine;
 
 
@@ -376,8 +374,7 @@ public class Insurance : MonoBehaviour {
 
 			});
 
-        closeFlag = 1;
-        RPCRsyncInsurance();
+        RPCRsyncInsurance(1);
         GetComponent<DOPopup>().Close();
     }
 
@@ -389,8 +386,7 @@ public class Insurance : MonoBehaviour {
                 {"f", "noinsurance"},
             });
 
-            closeFlag = 1;
-            RPCRsyncInsurance();
+            RPCRsyncInsurance(1);
         }
 
         GetComponent<DOPopup>().Close();
@@ -463,7 +459,7 @@ public class Insurance : MonoBehaviour {
         GetComponent<DOPopup>().Close();
     }
 
-    void RPCRsyncInsurance() 
+    void RPCRsyncInsurance(int closeFlag = 0)
     {
         var data = new Dictionary<string, object>(){
 			        {"isoff", isoffToggles},
@@ -474,9 +470,7 @@ public class Insurance : MonoBehaviour {
         Connect.Shared.Emit(new Dictionary<string, object>() {
 				{"f", "rsyncinsurance"},
 				{"args", data}
-
 		});
-
     }
 
     void OnDespawned() 
