@@ -436,6 +436,11 @@ public class Controller : MonoBehaviour {
 			LoadingModal.transform.SetAsLastSibling();
 			LoadingModal.SetActive(stat); 
 		}).AddTo(this);
+
+		RxSubjects.Seating.Subscribe((action) => 
+        {
+             ExpressionButton.SetActive(action);
+        }).AddTo(this);
        
 	   	subsPublicCards();
 		subsPlayer();
@@ -618,11 +623,6 @@ public class Controller : MonoBehaviour {
 
 			PokerUI.Toast(string.Format("下一手盲注将升至{0}/{1}", bb / 2, bb));			
 		}).AddTo(this);
-
-        RxSubjects.Seating.Subscribe((action) => 
-        {
-             ExpressionButton.SetActive(action);
-        }).AddTo(this);
 
 		RxSubjects.OffScore.Subscribe((e) => {
 			var type = e.Data.Int("type");
