@@ -12,11 +12,11 @@ public class Expression: MonoBehaviour {
         var rect = GetComponent<RectTransform>();
         var prect = parent.GetComponent<RectTransform>();
 
+        transform.SetParent(G.UICvs.transform, false);
         rect.anchorMax = prect.anchorMax;
         rect.anchorMin = prect.anchorMin;
         rect.pivot = prect.pivot;
         rect.position = parent.position;
-        transform.SetParent(G.UICvs.transform, false);
 
         var animator = Face.GetComponent<Animator>();
         animator.Play(name);
