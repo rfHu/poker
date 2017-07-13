@@ -28,6 +28,8 @@ namespace PokerPlayer {
 
         void Awake()
         {
+            Base = PlayerBase.LoadPrefab(transform);            
+
             Countdown.gameObject.SetActive(false);                        
             Countdown.SetParent(Base.Circle, false);
             Countdown.SetAsFirstSibling();

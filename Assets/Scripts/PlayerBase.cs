@@ -57,6 +57,10 @@ namespace PokerPlayer {
             addEvents();
         }
 
+        void Awake() {
+            GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
+        }
+
         void OnDespawned() {
             disposables.Clear();
 
@@ -388,6 +392,13 @@ namespace PokerPlayer {
 			var rect = target.GetComponent<RectTransform>(); 
             rect.anchoredPosition = new Vector2(0, 0);
             rect.localScale = new Vector2(1, 1);
+        }
+
+        static public PlayerBase LoadPrefab(Transform parent) {
+            var go = (GameObject)Instantiate(Resources.Load("Prefab/PlayerBase"));
+            var transform = go.GetComponent<Transform>();
+           	transform.SetParent(parent);			
+			return transform.GetComponent<PlayerBase>();
         }
     }
 

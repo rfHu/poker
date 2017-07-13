@@ -37,6 +37,11 @@ namespace PokerPlayer {
             RxSubjects.Seating.OnNext(true);
         }
 
+		void Awake()
+		{
+			Base = PlayerBase.LoadPrefab(transform);
+		}
+
 		void OnDespawned() {
 			disposables.Clear();	
 
