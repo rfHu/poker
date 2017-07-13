@@ -88,9 +88,18 @@ public class Controller : MonoBehaviour {
 	}
 
 	public void load() {
-		registerRxEvents();
-		setupDealer();
-		setOptions();
+		var infoShow = false;
+		GameData.Shared.GameInfoReady.Where((ready) => ready && !infoShow).Subscribe((_) => {
+			infoShow = true;
+
+			showGameInfo();
+            SNGSetting();
+			gameReload();
+			registerEvents();
+			setupDealer();
+			setOptions();
+		}).AddTo(this);
+		
 		#if UNITY_EDITOR
 		#else
 				Commander.Shared.VoiceIconToggle(true);
@@ -297,6 +306,7 @@ public class Controller : MonoBehaviour {
 		foreach(var seat in seats) {
 			PoolMan.Despawn(seat.transform);
 		}
+		Seats.Clear();
 		
 		anchorPositions = getVectors (numberOfPlayers);
 
@@ -378,18 +388,69 @@ public class Controller : MonoBehaviour {
 		setBBText();
 	}
 
-	void registerRxEvents() {
-		GameData.Shared.PlayerCount.Where((value) => value > 0).Subscribe((value) => {
-			setupSeats(value);
+	private void registerEvents() {
+		GameData.Shared.LeftTime.Subscribe((value) => {
+			if (!GameData.Shared.GameStarted) {
+				setText(TimeLeftGo, "未开始");
+				return;
+			}
+
+			setText(TimeLeftGo, secToStr(value));
+
+			if (GameData.Shared.Type != GameType.Normal) {
+				return ;
+			}
+
+			if (value > 5 * 60) {
+				hasShowEnding = false;
+			} else {
+				if (!hasShowEnding) {
+					PokerUI.Toast("牌局将在5分钟内结束");
+				}
+
+				hasShowEnding = true;
+			}
+
 		}).AddTo(this);
 
-		var infoShow = false;
-		GameData.Shared.GameInfoReady.Where((ready) => ready && !infoShow).Subscribe((_) => {
-			showGameInfo();
-			infoShow = true;
-            addReadyEvents();
-            SNGSetting();
-			gameReload();
+		GameData.Shared.Paused.Subscribe((pause) => {
+			if (!GameData.Shared.GameStarted) {
+				setNotStarted();
+				return ;
+			}
+
+			// 服务器升级
+			if (pause == 5) {
+				PokerUI.DisAlert("服务器升级中…");
+				return ;
+			} 
+
+			PauseGame.transform.Find("Text").GetComponent<Text>().text = "房主已暂停游戏";
+
+			if (pause > 0 && !GameData.Shared.InGame) {
+				PauseGame.SetActive(true);
+			} else {
+				PauseGame.SetActive(false);
+			}
+		}).AddTo(this);
+
+		RxSubjects.UnSeat.AsObservable().Subscribe((e) => {
+			var uid = e.Data.String("uid");
+			if (uid == GameData.Shared.Uid && e.Data.Int("type") == 2) {
+				PokerUI.Alert("您已连续3次超时，先站起来休息下吧~");
+			}
+		}).AddTo(this);
+
+		 GameData.Shared.Ante.Subscribe((value) => {
+            setBBText();
+        }).AddTo(this);
+
+        GameData.Shared.Straddle.Subscribe((value) => {
+            setBBText();
+        }).AddTo(this);
+
+		GameData.Shared.PlayerCount.Where((value) => value > 0).Subscribe((value) => {
+			setupSeats(value);
 		}).AddTo(this);
 
 		RxSubjects.Connecting.Subscribe((stat) => {
@@ -611,7 +672,7 @@ public class Controller : MonoBehaviour {
 		RxSubjects.SomeOneSeeCard.Subscribe((e) => {
 			var name = e.Data.String("name");
 
-			var go = (GameObject)GameObject.Instantiate(SeeCardTips);
+			var go = (GameObject)GameObject.Instantiate(SeeCardTips, G.UICvs.transform);
 			var cvg = go.GetComponent<CanvasGroup>(); 
 			var text = go.transform.Find("Text").GetComponent<Text>();
 
@@ -817,68 +878,6 @@ public class Controller : MonoBehaviour {
 				Commander.Shared.VoiceIconToggle(!limit);
 #endif
     }
-
-	private void addReadyEvents() {
-		GameData.Shared.LeftTime.Subscribe((value) => {
-			if (!GameData.Shared.GameStarted) {
-				setText(TimeLeftGo, "未开始");
-				return;
-			}
-
-			setText(TimeLeftGo, secToStr(value));
-
-			if (GameData.Shared.Type != GameType.Normal) {
-				return ;
-			}
-
-			if (value > 5 * 60) {
-				hasShowEnding = false;
-			} else {
-				if (!hasShowEnding) {
-					PokerUI.Toast("牌局将在5分钟内结束");
-				}
-
-				hasShowEnding = true;
-			}
-
-		}).AddTo(this);
-
-		GameData.Shared.Paused.Subscribe((pause) => {
-			if (!GameData.Shared.GameStarted) {
-				setNotStarted();
-				return ;
-			}
-
-			// 服务器升级
-			if (pause == 5) {
-				PokerUI.DisAlert("服务器升级中…");
-				return ;
-			} 
-
-			PauseGame.transform.Find("Text").GetComponent<Text>().text = "房主已暂停游戏";
-
-			if (pause > 0 && !GameData.Shared.InGame) {
-				PauseGame.SetActive(true);
-			} else {
-				PauseGame.SetActive(false);
-			}
-		}).AddTo(this);
-
-		RxSubjects.UnSeat.AsObservable().Subscribe((e) => {
-			var uid = e.Data.String("uid");
-			if (uid == GameData.Shared.Uid && e.Data.Int("type") == 2) {
-				PokerUI.Alert("您已连续3次超时，先站起来休息下吧~");
-			}
-		}).AddTo(this);
-
-		 GameData.Shared.Ante.Subscribe((value) => {
-            setBBText();
-        }).AddTo(this);
-
-        GameData.Shared.Straddle.Subscribe((value) => {
-            setBBText();
-        }).AddTo(this);
-	}
 
 	private bool isGuest(string json) {
 		var N = JSON.Parse(json);

@@ -28,8 +28,19 @@ public class G {
 		}
 	} 
 
+	public static Canvas MaterialCvs {
+		get {
+			if (materialCanvas == null) {
+				materialCanvas = GameObject.FindGameObjectWithTag("MaterialCanvas").GetComponent<Canvas>();
+			}
+
+			return materialCanvas;
+		}
+	}
+
 	private static Canvas uiCanvas;
 	private static Canvas dialogCanvas;
+	private static Canvas materialCanvas;
 
 	public static void PlaySound(string name) {
 		if (GameSetting.muted) {
@@ -44,6 +55,10 @@ public class G {
 
 
 public class PoolMan {
+	public static bool IsReady() {
+		return PoolManager.Pools.ContainsKey("Shared");
+	}
+
 	public static Transform Spawn(string name) {
 		return Spawn(name, null);	
 	}

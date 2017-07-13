@@ -11,6 +11,8 @@ public class Emoticon : MonoBehaviour {
 
     public void Init(Vector2 fromSeat, GameObject toSeat, bool isToMe) 
     {
+        transform.SetParent(G.DialogCvs.transform, false);
+
         var _rectTransform = GetComponent<RectTransform>();
         //transform.SetParent(G.UICvs.transform, false);
         _rectTransform.anchoredPosition = fromSeat;

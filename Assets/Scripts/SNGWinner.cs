@@ -19,7 +19,7 @@ public class SNGWinner : MonoBehaviour {
 
     public static bool IsSpawned {
         get {
-            return PoolMan.IsSpawned(instance);
+            return PoolMan.IsReady() && PoolMan.IsSpawned(instance);
         }
     }
 
