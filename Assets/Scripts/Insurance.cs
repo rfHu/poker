@@ -75,11 +75,11 @@ public class Insurance : MonoBehaviour {
         BuyTime.SetActive(true);
         if (mustBuy && isBuyer)
         {
-            ExitButton.gameObject.SetActive(true);
+            ExitButton.gameObject.SetActive(false);
         }
         else 
         {
-            ExitButton.gameObject.SetActive(false);
+            ExitButton.gameObject.SetActive(true);
         }
 
         //必须购买设置
