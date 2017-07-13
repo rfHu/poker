@@ -97,9 +97,15 @@ public class Seat : MonoBehaviour {
 		Index = index;
 		transform.SetParent (G.UICvs.transform, false);
 		GetComponent<RectTransform>().anchoredPosition = vector;
-		GetComponent<Image>().enabled = true;
+		Show();
 
 		SeatPos.Value = GetPos();
+
+		if (GameData.Shared.Type == GameType.SNG) {
+			ButtonText.text = "参赛";
+		} else {
+			ButtonText.text = "坐下";
+		}
 	}
 
 	private void takeSeat(float[] pos) {

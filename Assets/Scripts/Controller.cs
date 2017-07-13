@@ -408,11 +408,11 @@ public class Controller : MonoBehaviour {
 				go.GetComponent<PokerPlayer.PlayerOppo>().Init(obj, parent);
 			}
 
-			parent.GetComponent<Image>().enabled = false;
+			parent.GetComponent<Seat>().Hide();
 		};
 
 		Action<int> enableSeat = (index) => {
-			Seats[index].GetComponent<Image>().enabled = true;
+			Seats[index].GetComponent<Seat>().Show();
 		};
 
 		RxSubjects.ChangeVectorsByIndex.AsObservable().DistinctUntilChanged().Subscribe((index) => {

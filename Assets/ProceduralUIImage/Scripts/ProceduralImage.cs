@@ -26,15 +26,15 @@ namespace UnityEngine.UI.ProceduralImage {
 			}
 		}
 
-		public float FalloffDistance {
-			get {
-				return falloffDistance;
-			}
-			set {
-				falloffDistance = value;
-				this.SetMaterialDirty();
-			}
-		}
+		// public float FalloffDistance {
+		// 	get {
+		// 		return falloffDistance;
+		// 	}
+		// 	set {
+		// 		// falloffDistance = value;
+		// 		this.SetMaterialDirty();
+		// 	}
+		// }
 
 		protected ProceduralImageModifier Modifier {
 			get {
