@@ -175,8 +175,13 @@ public class Insurance : MonoBehaviour {
                 }
             }).AddTo(disposables);
 
-            if (mustBuy || !isBuyer){
+            if (mustBuy || !isBuyer)
+            {
                 card.GetComponent<Toggle>().interactable = false;
+            }
+            else 
+            {
+                card.GetComponent<Toggle>().interactable = true;
             }
         }
     }
