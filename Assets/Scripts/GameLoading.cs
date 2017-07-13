@@ -12,7 +12,7 @@ public class GameLoading : MonoBehaviour {
 			external.SetProxy("http://localhost:8888");
 			// external.SetSid("s%3ASuOxhyXR0wmfu1xIZZUmFFdAq8Cd5xsD.h6RldH4l7niXxoZG0QyYnlt36QayIW0rtY0Z8GmorV0");
             // external.SetRoomID("5950a958cfb1ed3a3860c871");
-                        external.SetRoomID("59670b7e9a1fba542267af4c");
+                        external.SetRoomID("596768f43d52ea5f9b4d9744");
 
             external.SetSid("s%3AZrouZrFvN6GjVZVl-abHqdTvphzcTOUm.VY%2Bp4v4qoS7hr79tzXdBsaJ0xdnFPsV6k37WF5428%2F4");
 

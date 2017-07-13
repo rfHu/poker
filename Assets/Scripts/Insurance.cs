@@ -149,6 +149,7 @@ public class Insurance : MonoBehaviour {
     }
 
     private void setupOutsCards() {
+        OUTSCards.Clear();
 
         foreach (var cardNum in outsCardArray)
         {
@@ -213,21 +214,18 @@ public class Insurance : MonoBehaviour {
             int CASlidernum = e.Data.Int("CASlidernum");
             List<int> isoff = e.Data.IL("isoff");
 
-            for (int i = 0; i < OUTSCards.Count; i++)
-            {
-                if (isoff.Contains(i) && isoff.Count != 0)
-                {
-                    OUTSCards[i].isOn = false;
-                    isoff.Remove(i);
+            var idx = 0;
+            foreach(var card in OUTSCards) {
+                if (isoff.Contains(idx)) {
+                    card.isOn = false;
+                } else {
+                    card.isOn = true;
                 }
-                else 
-                {
-                    OUTSCards[i].isOn = true;
-                }
+
+                idx++;
             }
 
             CASlider.value = CASlidernum;
-
         }).AddTo(disposables);
 
         ExitButton.OnClickAsObservable().Subscribe((_) => {
