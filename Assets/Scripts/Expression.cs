@@ -12,7 +12,7 @@ public class Expression: MonoBehaviour {
         var rect = GetComponent<RectTransform>();
         var prect = parent.GetComponent<RectTransform>();
 
-        transform.SetParent(G.UICvs.transform, false);
+        transform.SetParent(G.DialogCvs.transform, false);
 
         rect.anchorMax = prect.anchorMax;
         rect.anchorMin = prect.anchorMin;
@@ -23,7 +23,7 @@ public class Expression: MonoBehaviour {
         animator.Play(name);
 
         Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe((__) => {
-            PoolMan.Despawn(transform);
+            // PoolMan.Despawn(transform);
         }).AddTo(this);
     }
 

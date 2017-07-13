@@ -74,8 +74,10 @@ public class DOPopup : MonoBehaviour {
 
 		// 暂时兼容的写法
 		if (contentSizeFitter != null && contentSizeFitter.enabled && Animate == AnimType.Up2Down) {
+			// 移出屏幕外
+			GetComponent<RectTransform>().anchoredPosition = new Vector2(-3000, 0);	
+
 			Observable.TimerFrame(2, FrameCountType.EndOfFrame).Subscribe((_) => {
-				gameObject.SetActive(true);
 				animateIn();
 			}).AddTo(this);
 		} else {
