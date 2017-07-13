@@ -541,6 +541,7 @@ public class Controller : MonoBehaviour {
 
         RxSubjects.Award27.Subscribe((e) => {
             var win27Emo = PoolMan.Spawn("Win27Emo");
+            win27Emo.transform.SetParent(G.DialogCvs.transform, false);
             win27Emo.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
         }).AddTo(this);
 
