@@ -128,6 +128,8 @@ public class DOPopup : MonoBehaviour {
 		this.singleton = singleton;
 		this.closeOnClick = closeOnClick;
 
+		transform.SetParent(G.DialogCvs.transform, false);
+
 		// 该字段只在内部使用
 		if (!_configModalColor) {
 			this.modalColor = ModalHelper.DefaultColor;
