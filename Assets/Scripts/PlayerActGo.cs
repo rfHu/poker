@@ -23,7 +23,7 @@ public class PlayerActGo: MonoBehaviour {
             {ActionState.Check, MaterialUI.MaterialColor.cyanA200},
             {ActionState.Raise, _.HexColor("#FFAB40")},
             {ActionState.Call, _.HexColor("#40C4FF")},
-            {ActionState.Allin, _.HexColor("#FFFF00")}
+            {ActionState.Allin, _.HexColor("#FFAB40")}
         };
 
         return map[act];
