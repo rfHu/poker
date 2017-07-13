@@ -24,6 +24,8 @@ public class Supplement : MonoBehaviour {
 		}).Subscribe((e) => {
 			GetComponent<DOPopup>().Close();
 		}).AddTo(this);
+
+		slider.onValueChanged.AddListener(OnChange);
 	}
 
 	void OnSpawned() {
@@ -51,10 +53,10 @@ public class Supplement : MonoBehaviour {
 
 		smax = Mathf.CeilToInt((max - bankroll) / (float)bb100) * bb100;
 
-		OnChange(smin);
 		slider.minValue = smin;
 		slider.maxValue = smax;
-		slider.onValueChanged.AddListener(OnChange);
+
+		OnChange(smin);
 	}
 
 	public void OnChange(float value) {

@@ -146,7 +146,7 @@ namespace MaterialUI
 					m_CallbackHideAnimationOver();
 				}
 				
-				if (m_DestroyOnHide)
+				if (m_DestroyOnHide && gameObject != null)
 				{
 					Destroy(gameObject);
 				}

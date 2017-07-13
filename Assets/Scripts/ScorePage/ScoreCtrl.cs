@@ -57,7 +57,7 @@ namespace ScorePage {
                 if (data is InsuranceRowData || data is PlayerRowData || data is Data27) {
                     return 90f;
                 } else if (data is GuestHeadData || data is ScoreHeaderData) {
-                    return 60f;
+                    return 80f;
                 } else if (data is LeaveIconData) {
                     return 44f;
                 } 

@@ -34,6 +34,10 @@ namespace PokerPlayer {
 
             Cardfaces.SetParent(Base.Circle, false);
             Cardfaces.SetSiblingIndex(3);
+
+            var p = ShowCards[0].transform.parent;
+            p.SetParent(Base.Circle, false);
+            p.SetAsLastSibling();
         }
 
         void OnDespawned() {
@@ -204,6 +208,13 @@ namespace PokerPlayer {
         public void HandOver(GameOverJson data) {
             showTheCards(data.cards, true);
             showCardType(data.maxFiveRank);
+        }
+
+        public void WinEnd() {
+            PlayerBase.DoFade(ShowCards[0].transform.parent.gameObject);
+            PlayerBase.DoFade(CardDesc.transform.parent.gameObject, () => {
+                NameLabel.gameObject.SetActive(true);
+            });
         }
     }
 }

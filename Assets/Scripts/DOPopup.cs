@@ -26,7 +26,7 @@ public class DOPopup : MonoBehaviour {
 
 	private ModalHelper modalHelper;   
 
-	private Action close = null;
+	private Action onClickModal = null;
 	private bool modal = true;
 	private bool singleton = true;  
 	private bool closeOnClick = true;
@@ -74,7 +74,8 @@ public class DOPopup : MonoBehaviour {
 
 		// 暂时兼容的写法
 		if (contentSizeFitter != null && contentSizeFitter.enabled && Animate == AnimType.Up2Down) {
-			Observable.TimerFrame(1, FrameCountType.EndOfFrame).Subscribe((_) => {
+			Observable.TimerFrame(2, FrameCountType.EndOfFrame).Subscribe((_) => {
+				gameObject.SetActive(true);
 				animateIn();
 			}).AddTo(this);
 		} else {
@@ -90,11 +91,13 @@ public class DOPopup : MonoBehaviour {
 			modalHelper = ModalHelper.Create();
 
 			modalHelper.Show(transform.parent, () => {
-				if (!closeOnClick) {
-					return ;
-				}			
+				if (onClickModal != null) {
+					onClickModal();
+				}
 
-				Close();
+				if (closeOnClick) {
+					Close();
+				}			
 			});				
 			transform.SetAsLastSibling();
 		}
@@ -114,13 +117,13 @@ public class DOPopup : MonoBehaviour {
 		}
 	}
 
-	public void ShowModal(Color color, Action close = null, bool closeOnClick = true) {
+	public void ShowModal(Color color, Action onClickModal = null, bool closeOnClick = true) {
 		this.modalColor = color;
-		Show(close, true, true, closeOnClick, true);		
+		Show(onClickModal, true, true, closeOnClick, true);		
 	}
 
-	public void Show(Action close = null, bool modal = true, bool singleton = true, bool closeOnClick = true, bool _configModalColor = false) {
-		this.close = close;
+	public void Show(Action onClickModal = null, bool modal = true, bool singleton = true, bool closeOnClick = true, bool _configModalColor = false) {
+		this.onClickModal = onClickModal;
 		this.modal = modal;
 		this.singleton = singleton;
 		this.closeOnClick = closeOnClick;
@@ -164,10 +167,6 @@ public class DOPopup : MonoBehaviour {
 	public void Close() {
 		if (!hasShow) {
 			return ;
-		}
-
-		if (close != null) {
-			close();
 		}
 
 		var tween = Hide();	
