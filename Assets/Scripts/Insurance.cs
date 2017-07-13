@@ -154,6 +154,7 @@ public class Insurance : MonoBehaviour {
         {
             var card = PoolMan.Spawn("InsureCard",OutsCardsParent.transform);
             card.GetComponent<Card>().Show(cardNum);
+            card.GetComponent<Toggle>().isOn = true;
             OUTSCards.Add(card.GetComponent<Toggle>());
 
             var toggle = card.GetComponent<Toggle>();
