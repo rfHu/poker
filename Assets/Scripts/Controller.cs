@@ -58,7 +58,7 @@ public class Controller : MonoBehaviour {
 	public Camera FXCam;
 
 	void Awake () {
-		ObjectsPool.Setup();
+		ObjectsPool.Shared.SetCamera(FXCam);
 
 		if (Instance != null) {
 			PoolMan.DespawnAll();

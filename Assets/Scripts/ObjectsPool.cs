@@ -1,23 +1,32 @@
 using UnityEngine;
 
 public class ObjectsPool : MonoBehaviour {
-    private static bool exists = false;
+    public static ObjectsPool Shared {
+        get {
+            if (shared == null) {
+                shared = initPool();
+            }
 
-    private static Canvas canvas;
-
-    public static void Setup() {
-        if (exists) {
-            // canvas.worldCamera = cam;
-            return ;
+            return shared;
         }
+    }
 
-        exists = true;
+    private static ObjectsPool shared;
 
+    private static ObjectsPool initPool() {
         GameObject go = (GameObject)Instantiate(Resources.Load("Prefab/PoolManager"));
         go.SetActive(true);
         UnityEngine.Object.DontDestroyOnLoad(go);
 
-        // canvas = go.GetComponent<Canvas>();
-        // canvas.worldCamera = cam;
+        return go.GetComponent<ObjectsPool>(); 
+    }
+
+
+    public void SetCamera(Camera camera) {
+        // var rootCanvas = GetComponent<Canvas>();
+        // rootCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+        // rootCanvas.worldCamera = camera;
+        // rootCanvas.sortingLayerName = "AboveParticle";
+        // rootCanvas.sortingOrder = 2; 
     }
 }
