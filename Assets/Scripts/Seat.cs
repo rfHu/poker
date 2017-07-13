@@ -18,7 +18,19 @@ public class Seat : MonoBehaviour {
 
 	public ReactiveProperty<SeatPosition> SeatPos  = new ReactiveProperty<SeatPosition>();
 
+	public Text ButtonText;
+
+	public GameObject Container;
+
 	private Vector2 realVector;
+
+	public void Hide() {
+		Container.SetActive(false);
+	}
+
+	public void Show() {
+		Container.SetActive(true);
+	}
 
 	public void OnClick() {
 		if (GameData.MyCmd.Unseat) {
