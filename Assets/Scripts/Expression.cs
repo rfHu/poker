@@ -12,8 +12,7 @@ public class Expression: MonoBehaviour {
         var rect = GetComponent<RectTransform>();
         var prect = parent.GetComponent<RectTransform>();
 
-        transform.SetParent(G.DialogCvs.transform, false);
-        transform.SetAsFirstSibling();
+        transform.SetParent(G.UICvs.transform, false);
 
         rect.anchorMax = prect.anchorMax;
         rect.anchorMin = prect.anchorMin;

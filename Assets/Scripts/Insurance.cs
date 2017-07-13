@@ -48,8 +48,8 @@ public class Insurance : MonoBehaviour {
     private bool isFlop = false;
     bool isBuyer;
     HashSet<int> selectedCards; 
-    List<Toggle> OUTSCards = new List<Toggle>();
-    List<int> isoffToggles = new List<int>();
+    List<Toggle> OUTSCards;
+    List<int> isoffToggles;
 
     IEnumerator myCoroutine;
 
@@ -66,7 +66,8 @@ public class Insurance : MonoBehaviour {
         isFlop = (data.Int("room_state") == 4);
         List<object> allinPlayers = data.List("outs_count");
         selectedCards = new HashSet<int>(outsCardArray.ToList());
-        isoffToggles.Clear();
+        isoffToggles = new List<int>();
+        OUTSCards = new List<Toggle>();
 
         var time = data.Int("time");
         myCoroutine = Timer(time);
@@ -149,18 +150,25 @@ public class Insurance : MonoBehaviour {
     }
 
     private void setupOutsCards() {
-        OUTSCards.Clear();
-
         foreach (var cardNum in outsCardArray)
         {
             var card = PoolMan.Spawn("InsureCard",OutsCardsParent.transform);
             card.GetComponent<Card>().Show(cardNum);
             card.GetComponent<Toggle>().isOn = true;
-            OUTSCards.Add(card.GetComponent<Toggle>());
 
             var toggle = card.GetComponent<Toggle>();
+            OUTSCards.Add(toggle);
 
-            toggle.OnValueChangedAsObservable().Subscribe((bool value) => 
+            if (mustBuy || !isBuyer)
+            {
+                card.GetComponent<Toggle>().interactable = false;
+            }
+            else 
+            {
+                card.GetComponent<Toggle>().interactable = true;
+            }
+
+             toggle.OnValueChangedAsObservable().Subscribe((bool value) => 
             {
                 SelectedChanged(value, cardNum, toggle);
                 if (isBuyer)
@@ -176,15 +184,6 @@ public class Insurance : MonoBehaviour {
                     RPCRsyncInsurance();
                 }
             }).AddTo(disposables);
-
-            if (mustBuy || !isBuyer)
-            {
-                card.GetComponent<Toggle>().interactable = false;
-            }
-            else 
-            {
-                card.GetComponent<Toggle>().interactable = true;
-            }
         }
     }
 
