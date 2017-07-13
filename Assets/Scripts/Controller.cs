@@ -55,7 +55,11 @@ public class Controller : MonoBehaviour {
 
 	public static Vector2 LogoVector;
 
+	public Camera FXCam;
+
 	void Awake () {
+		ObjectsPool.Setup();
+
 		if (Instance != null) {
 			PoolMan.DespawnAll();
 			Destroy(Instance);

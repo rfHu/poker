@@ -105,7 +105,12 @@ public class Avatar : MonoBehaviour {
 			ClickObject = gameObject;
 		}
 
-		var btn = ClickObject.AddComponent<Button>();
+		var btn = ClickObject.GetComponent<Button>();
+
+		if (btn == null) {
+			btn = ClickObject.AddComponent<Button>();
+		}
+
         btn.onClick.AddListener(onClick);
 	}
 

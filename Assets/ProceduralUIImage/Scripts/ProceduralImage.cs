@@ -14,7 +14,9 @@ namespace UnityEngine.UI.ProceduralImage {
 		[SerializeField]private float borderWidth;
 		private ProceduralImageModifier modifier;
 		private Material materialInstance;
-		[SerializeField]private float falloffDistance = 1;
+
+		// [SerializeField]
+		private float falloffDistance = 0;
 
 		public float BorderWidth {
 			get {
@@ -26,15 +28,15 @@ namespace UnityEngine.UI.ProceduralImage {
 			}
 		}
 
-		public float FalloffDistance {
-			get {
-				return falloffDistance;
-			}
-			set {
-				falloffDistance = value;
-				this.SetMaterialDirty();
-			}
-		}
+		// public float FalloffDistance {
+		// 	get {
+		// 		return falloffDistance;
+		// 	}
+		// 	set {
+		// 		falloffDistance = value;
+		// 		this.SetMaterialDirty();
+		// 	}
+		// }
 
 		protected ProceduralImageModifier Modifier {
 			get {

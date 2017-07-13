@@ -274,6 +274,11 @@ namespace PokerPlayer {
 
                 // 重新计算用户的bankroll                
                 player.Bankroll.Value = player.Bankroll.Value + data.prize;
+
+                if (player.Uid == GameData.Shared.Uid) {
+                    GameData.Shared.Bankroll.Value = player.Bankroll.Value;
+                }
+                
                 myDelegate.HandOver(data);
 
                 // 4s后隐藏动画
