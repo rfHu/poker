@@ -119,11 +119,12 @@ public class SNGWinner : MonoBehaviour {
 
     private void CaptureByUnity()
     {
-        //获取系统时间并命名相片名  
-        int now = System.DateTime.Now.Millisecond;
-        string filename = "poker" + now + ".png";
-        Application.CaptureScreenshot(filename, 0);
+        //图片名
+        string filename = "pokerScreen.png";
 
         Commander.Shared.ShareSNGResult(Application.persistentDataPath + "/" + filename);
+
+        Application.CaptureScreenshot(filename, 0);
+
     }  
 }
