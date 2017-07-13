@@ -273,13 +273,9 @@ public class Insurance : MonoBehaviour {
         CASlider.minValue = minValue;
         CASlider.maxValue = maxValue;
 
-        if (eqValue > maxValue) {
-            EqualButton.interactable = false;
-        }
-
-        if (beValue > maxValue) {
-            BreakEventButton.interactable = false;
-        }
+        EqualButton.interactable = !(eqValue > maxValue) ;
+        BreakEventButton.interactable = !(beValue > maxValue);
+        
     }
 
     private void SetOdds()
