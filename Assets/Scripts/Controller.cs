@@ -413,27 +413,6 @@ public class Controller : MonoBehaviour {
 
 		}).AddTo(this);
 
-		GameData.Shared.Paused.Subscribe((pause) => {
-			if (!GameData.Shared.GameStarted) {
-				setNotStarted();
-				return ;
-			}
-
-			// 服务器升级
-			if (pause == 5) {
-				PokerUI.DisAlert("服务器升级中…");
-				return ;
-			} 
-
-			PauseGame.transform.Find("Text").GetComponent<Text>().text = "房主已暂停游戏";
-
-			if (pause > 0 && !GameData.Shared.InGame) {
-				PauseGame.SetActive(true);
-			} else {
-				PauseGame.SetActive(false);
-			}
-		}).AddTo(this);
-
 		RxSubjects.UnSeat.AsObservable().Subscribe((e) => {
 			var uid = e.Data.String("uid");
 			if (uid == GameData.Shared.Uid && e.Data.Int("type") == 2) {
@@ -458,85 +437,9 @@ public class Controller : MonoBehaviour {
 			LoadingModal.SetActive(stat); 
 		}).AddTo(this);
        
-		Action<Player> showPlayer = (obj) => {
-			var parent = Seats[obj.Index].transform;
-
-			if (obj.Uid == GameData.Shared.Uid) {
-				var go = PoolMan.Spawn("PlayerSelf");
-				go.GetComponent<PokerPlayer.PlayerSelf>().Init(obj, parent);
-			} else {
-				var go = PoolMan.Spawn("PlayerOppo");
-				go.GetComponent<PokerPlayer.PlayerOppo>().Init(obj, parent);
-			}
-
-			parent.GetComponent<Seat>().Hide();
-		};
-
-		Action<int> enableSeat = (index) => {
-			Seats[index].GetComponent<Seat>().Show();
-		};
-
-		RxSubjects.ChangeVectorsByIndex.AsObservable().DistinctUntilChanged().Subscribe((index) => {
-			changePositions(index);
-		}).AddTo(this);
-
-		GameData.Shared.Players.ObserveReplace().Subscribe((data) => {
-			data.OldValue.Destroy();
-			enableSeat(data.OldValue.Index);
-			showPlayer(data.NewValue);	
-		}).AddTo(this);
-
-		GameData.Shared.Players.ObserveAdd().Subscribe((data) => {
-			showPlayer(data.Value);
-		}).AddTo(this);
-
-		GameData.Shared.Players.ObserveRemove().Subscribe((data) => {
-			enableSeat(data.Value.Index);
-			data.Value.Destroy();
-		}).AddTo(this);
-
-		GameData.Shared.Players.ObserveReset().Subscribe((data) => {
-            // Skip
-		}).AddTo(this);
-
-		GameData.Shared.PublicCards.ObserveAdd().Subscribe((e) => {
-			if (GameData.Shared.PublicCardAnimState) {
-				G.PlaySound("fapai");
-				cardAnimQueue.Enqueue(new KeyValuePair<int, int>(e.Index, e.Value));
-				startQueue();
-			} else {
-				getCardFrom(e.Index).Show(e.Value, false);
-			}
-		}).AddTo(this);
-
-		GameData.Shared.PublicCards.ObserveReset().Subscribe((_) => {
-			resetAllCards();
-		}).AddTo(this);
-
-        GameData.Shared.TalkLimit.Subscribe((limit) => 
-        {
-            TalkLimit(limit);
-        }).AddTo(this);
-
-		RxSubjects.GameEnd.Subscribe((e) => {
-			// 关闭连接
-			Connect.Shared.CloseImmediate();
-
-			if (SNGWinner.IsSpawned) {
-				return ;
-			}
-
-			// 获取roomID，调用ExitCb后无法获取
-			var roomID = GameData.Shared.Room;
-			// 清理
-			External.Instance.ExitCb(() => {
-				Commander.Shared.GameEnd(roomID, GameData.Shared.IsMatch() ? "record_sng.html" : "record.html");
-			});	
-		}).AddTo(this);
-
-		RxSubjects.Ending.Subscribe((e) => {
-			PokerUI.Toast("房主提前结束牌局");	
-		}).AddTo(this);
+	   	subsPublicCards();
+		subsPlayer();
+		subsRoomSetting();
 
         RxSubjects.Emoticon.Subscribe((e) =>
         {
@@ -691,6 +594,150 @@ public class Controller : MonoBehaviour {
 			});	
 		}).AddTo(this);
 
+		RxSubjects.ToInsurance.Subscribe((e) =>
+        {
+            var InsurancePopup = PoolMan.Spawn("Insurance");
+            InsurancePopup.GetComponent<DOPopup>().Show();
+            InsurancePopup.GetComponent<Insurance>().Init(e.Data, true);
+        }).AddTo(this);
+
+        RxSubjects.ShowInsurance.Subscribe((e) =>
+        {
+            var InsurancePopup = PoolMan.Spawn("Insurance");
+            InsurancePopup.GetComponent<DOPopup>().Show();
+            InsurancePopup.GetComponent<Insurance>().Init(e.Data, false);
+        }).AddTo(this);
+
+		RxSubjects.RaiseBlind.Subscribe((e) => {
+			var bb = e.Data.Int("big_blind");
+			var cd = e.Data.Int("blind_countdown");
+
+			GameData.Shared.BB = bb;
+			GameData.Shared.LeftTime.Value = cd;
+
+			PokerUI.Toast(string.Format("下一手盲注将升至{0}/{1}", bb / 2, bb));			
+		}).AddTo(this);
+
+        RxSubjects.Seating.Subscribe((action) => 
+        {
+             ExpressionButton.SetActive(action);
+        }).AddTo(this);
+
+		RxSubjects.OffScore.Subscribe((e) => {
+			var type = e.Data.Int("type");
+			if (type == 0) {
+				PokerUI.Toast("您已提前下分，将在本局结束后结算");
+				return ;
+			} 
+
+			if (type != 1) {
+				return ;
+			}
+
+			var name = e.Data.String("name");
+			var avatar = e.Data.String("avatar");
+
+			var dt = e.Data.Dict("data");
+			var takecoin = dt.Int("takecoin");
+			var profit = dt.Int("bankroll") - takecoin;
+
+			PoolMan.Spawn("OffScore").GetComponent<OffScore>().Show(avatar, takecoin, profit);
+
+			// 已下分，bankroll为0
+			GameData.Shared.Bankroll.Value = 0;
+		}).AddTo(this);
+
+		RxSubjects.GameEnd.Subscribe((e) => {
+			// 关闭连接
+			Connect.Shared.CloseImmediate();
+
+			if (SNGWinner.IsSpawned) {
+				return ;
+			}
+
+			// 获取roomID，调用ExitCb后无法获取
+			var roomID = GameData.Shared.Room;
+			// 清理
+			External.Instance.ExitCb(() => {
+				Commander.Shared.GameEnd(roomID, GameData.Shared.IsMatch() ? "record_sng.html" : "record.html");
+			});	
+		}).AddTo(this);
+	}
+
+	private void subsPlayer() {
+		Action<Player> showPlayer = (obj) => {
+			var parent = Seats[obj.Index].transform;
+
+			if (obj.Uid == GameData.Shared.Uid) {
+				var go = PoolMan.Spawn("PlayerSelf");
+				go.GetComponent<PokerPlayer.PlayerSelf>().Init(obj, parent);
+			} else {
+				var go = PoolMan.Spawn("PlayerOppo");
+				go.GetComponent<PokerPlayer.PlayerOppo>().Init(obj, parent);
+			}
+
+			parent.GetComponent<Seat>().Hide();
+		};
+
+		Action<int> enableSeat = (index) => {
+			Seats[index].GetComponent<Seat>().Show();
+		};
+
+		RxSubjects.ChangeVectorsByIndex.AsObservable().DistinctUntilChanged().Subscribe((index) => {
+			changePositions(index);
+		}).AddTo(this);
+
+		GameData.Shared.Players.ObserveReplace().Subscribe((data) => {
+			data.OldValue.Destroy();
+			enableSeat(data.OldValue.Index);
+			showPlayer(data.NewValue);	
+		}).AddTo(this);
+
+		GameData.Shared.Players.ObserveAdd().Subscribe((data) => {
+			showPlayer(data.Value);
+		}).AddTo(this);
+
+		GameData.Shared.Players.ObserveRemove().Subscribe((data) => {
+			enableSeat(data.Value.Index);
+			data.Value.Destroy();
+		}).AddTo(this);
+
+		GameData.Shared.Players.ObserveReset().Subscribe((data) => {
+            // Skip
+		}).AddTo(this);
+
+		// 第一次手动初始化
+		foreach(var player in GameData.Shared.Players.ToList()) {
+			showPlayer(player.Value);
+		}	
+	}
+
+	private void subsRoomSetting() {
+		RxSubjects.Ending.Subscribe((e) => {
+			PokerUI.Toast("房主提前结束牌局");	
+		}).AddTo(this);
+
+		GameData.Shared.Paused.Subscribe((pause) => {
+			if (!GameData.Shared.GameStarted) {
+				setNotStarted();
+				return ;
+			}
+
+			// 服务器升级
+			if (pause == 5) {
+				PokerUI.DisAlert("服务器升级中…");
+				return ;
+			} 
+
+			PauseGame.transform.Find("Text").GetComponent<Text>().text = "房主已暂停游戏";
+
+			if (pause > 0 && !GameData.Shared.InGame) {
+				PauseGame.SetActive(true);
+			} else {
+				PauseGame.SetActive(false);
+			}
+		}).AddTo(this);
+
 		RxSubjects.Pausing.Subscribe((e) => {
 			var type = e.Data.Int("type");
 			var text = "";
@@ -789,6 +836,11 @@ public class Controller : MonoBehaviour {
             }
         }).AddTo(this);
 
+		GameData.Shared.TalkLimit.Subscribe((limit) => 
+        {
+            TalkLimit(limit);
+        }).AddTo(this);
+
         RxSubjects.NoTalking.Subscribe((e) => 
         {
             string Uid = e.Data.String("uid");
@@ -805,59 +857,29 @@ public class Controller : MonoBehaviour {
             PokerUI.Toast(str);
 
         }).AddTo(this);
+	}
 
-		RxSubjects.ToInsurance.Subscribe((e) =>
-        {
-            var InsurancePopup = PoolMan.Spawn("Insurance");
-            InsurancePopup.GetComponent<DOPopup>().Show();
-            InsurancePopup.GetComponent<Insurance>().Init(e.Data, true);
-        }).AddTo(this);
-
-        RxSubjects.ShowInsurance.Subscribe((e) =>
-        {
-            var InsurancePopup = PoolMan.Spawn("Insurance");
-            InsurancePopup.GetComponent<DOPopup>().Show();
-            InsurancePopup.GetComponent<Insurance>().Init(e.Data, false);
-        }).AddTo(this);
-
-		RxSubjects.RaiseBlind.Subscribe((e) => {
-			var bb = e.Data.Int("big_blind");
-			var cd = e.Data.Int("blind_countdown");
-
-			GameData.Shared.BB = bb;
-			GameData.Shared.LeftTime.Value = cd;
-
-			PokerUI.Toast(string.Format("下一手盲注将升至{0}/{1}", bb / 2, bb));			
-		}).AddTo(this);
-
-        RxSubjects.Seating.Subscribe((action) => 
-        {
-             ExpressionButton.SetActive(action);
-        }).AddTo(this);
-
-		RxSubjects.OffScore.Subscribe((e) => {
-			var type = e.Data.Int("type");
-			if (type == 0) {
-				PokerUI.Toast("您已提前下分，将在本局结束后结算");
-				return ;
-			} 
-
-			if (type != 1) {
-				return ;
+	private void subsPublicCards() {
+		GameData.Shared.PublicCards.ObserveAdd().Subscribe((e) => {
+			if (GameData.Shared.PublicCardAnimState) {
+				G.PlaySound("fapai");
+				cardAnimQueue.Enqueue(new KeyValuePair<int, int>(e.Index, e.Value));
+				startQueue();
+			} else {
+				getCardFrom(e.Index).Show(e.Value, false);
 			}
-
-			var name = e.Data.String("name");
-			var avatar = e.Data.String("avatar");
-
-			var dt = e.Data.Dict("data");
-			var takecoin = dt.Int("takecoin");
-			var profit = dt.Int("bankroll") - takecoin;
-
-			PoolMan.Spawn("OffScore").GetComponent<OffScore>().Show(avatar, takecoin, profit);
-
-			// 已下分，bankroll为0
-			GameData.Shared.Bankroll.Value = 0;
 		}).AddTo(this);
+
+		GameData.Shared.PublicCards.ObserveReset().Subscribe((_) => {
+			resetAllCards();
+		}).AddTo(this);
+
+		// 第一次手动初始化
+		var list = GameData.Shared.PublicCards.ToList();
+
+		for (var i = 0; i < list.Count; i++) {
+			getCardFrom(i).Show(list[i], false);	
+		}
 	}
 
     private void SNGSetting()
