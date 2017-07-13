@@ -5,6 +5,7 @@ using UnityEngine.UI.ProceduralImage;
 using System.Text.RegularExpressions;
 using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 
 // [RequireComponent(typeof(RawImage))]
 public class Avatar : MonoBehaviour {
@@ -100,7 +101,7 @@ public class Avatar : MonoBehaviour {
 		});		
 	}
 	
-	void Awake() {
+	void Start() {
 		if (ClickObject == null) {
 			ClickObject = gameObject;
 		}
@@ -111,7 +112,9 @@ public class Avatar : MonoBehaviour {
 			btn = ClickObject.AddComponent<Button>();
 		}
 
-        btn.onClick.AddListener(onClick);
+		btn.OnClickAsObservable().Subscribe((_) => {
+			onClick();
+		}).AddTo(this);
 	}
 
     public void SetAlpha(bool isInRoom) 
