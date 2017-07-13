@@ -18,7 +18,19 @@ public class Seat : MonoBehaviour {
 
 	public ReactiveProperty<SeatPosition> SeatPos  = new ReactiveProperty<SeatPosition>();
 
+	public Text ButtonText;
+
+	public GameObject Container;
+
 	private Vector2 realVector;
+
+	public void Hide() {
+		Container.SetActive(false);
+	}
+
+	public void Show() {
+		Container.SetActive(true);
+	}
 
 	public void OnClick() {
 		if (GameData.MyCmd.Unseat) {
@@ -85,9 +97,15 @@ public class Seat : MonoBehaviour {
 		Index = index;
 		transform.SetParent (G.UICvs.transform, false);
 		GetComponent<RectTransform>().anchoredPosition = vector;
-		GetComponent<Image>().enabled = true;
+		Show();
 
 		SeatPos.Value = GetPos();
+
+		if (GameData.Shared.Type == GameType.SNG) {
+			ButtonText.text = "参赛";
+		} else {
+			ButtonText.text = "坐下";
+		}
 	}
 
 	private void takeSeat(float[] pos) {

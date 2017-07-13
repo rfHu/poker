@@ -14,9 +14,8 @@ namespace UnityEngine.UI.ProceduralImage {
 		[SerializeField]private float borderWidth;
 		private ProceduralImageModifier modifier;
 		private Material materialInstance;
-
-		// [SerializeField]
-		private float falloffDistance = 0;
+		private float _falloffDistance = 0.01f;
+		[SerializeField]private float falloffDistance = 0.01f; 
 
 		public float BorderWidth {
 			get {
@@ -27,16 +26,6 @@ namespace UnityEngine.UI.ProceduralImage {
 				this.SetMaterialDirty();
 			}
 		}
-
-		// public float FalloffDistance {
-		// 	get {
-		// 		return falloffDistance;
-		// 	}
-		// 	set {
-		// 		falloffDistance = value;
-		// 		this.SetMaterialDirty();
-		// 	}
-		// }
 
 		protected ProceduralImageModifier Modifier {
 			get {
@@ -151,7 +140,7 @@ namespace UnityEngine.UI.ProceduralImage {
 			var r = GetPixelAdjustedRect();
 			var v = new Vector4(r.x, r.y, r.x + r.width, r.y + r.height);
 			var uv = new Vector4 (0,0,1,1);
-			float aa = falloffDistance/2f;
+			float aa = _falloffDistance/2f;
 			var color32 = this.color;
 			vh.Clear();
 			vh.AddVert(new Vector3(v.x-aa, v.y-aa), color32, new Vector2(uv.x, uv.y));
@@ -172,11 +161,12 @@ namespace UnityEngine.UI.ProceduralImage {
 			Vector3[] corners = new Vector3[4];
 			rectTransform.GetWorldCorners (corners);
 			float pixelSize = Vector3.Distance (corners [1], corners [2]) / rect.width;
-			pixelSize = pixelSize/falloffDistance;
+			pixelSize = pixelSize/_falloffDistance;
 
 			Vector4 radius = FixRadius (Modifier.CalculateRadius (rect));
-			Material m = MaterialHelper.SetMaterialValues (new ProceduralImageMaterialInfo(rect.width+falloffDistance,rect.height+falloffDistance,Mathf.Max(pixelSize,0),radius,Mathf.Max(borderWidth,0)),baseMaterial);
-			return base.GetModifiedMaterial (m);
+			Material m = base.GetModifiedMaterial (baseMaterial);
+			m = MaterialHelper.SetMaterialValues (new ProceduralImageMaterialInfo (rect.width + _falloffDistance, rect.height + _falloffDistance, Mathf.Max (pixelSize, 0), radius, Mathf.Max (borderWidth, 0)), m);
+			return m;
 		}
 	}
 }

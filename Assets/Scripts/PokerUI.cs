@@ -59,7 +59,7 @@ public class PokerUI: MonoBehaviour {
 	}
 
 	static public void Toast(string msg, float seconds = 2) {
-		var canvasHierarchy = G.DialogCvs.transform.Find("Toast");
+		var canvasHierarchy = G.DialogCvs.transform.Find("MaterialUI");
 		ToastManager.Show(msg, seconds, _.HexColor("#212932"), new Color(1, 1, 1, 1), 39, canvasHierarchy);
 	}
 }
