@@ -53,9 +53,9 @@ public class Supplement : MonoBehaviour {
 
 		smax = Mathf.CeilToInt((max - bankroll) / (float)bb100) * bb100;
 
-		slider.value = 0;
-		slider.minValue = smin;
+        slider.value = slider.maxValue = slider.minValue = 0;
 		slider.maxValue = smax;
+		slider.minValue = smin;
 
 		OnChange(smin);
 	}
