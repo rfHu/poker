@@ -59,6 +59,7 @@ public class Controller : MonoBehaviour {
 
 	void Awake () {
 		ObjectsPool.Shared.SetCamera(FXCam);
+		MaterialUI.DialogManager.SetParentCanvas(G.MaterialCvs);
 
 		if (Instance != null) {
 			PoolMan.DespawnAll();
