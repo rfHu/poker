@@ -271,6 +271,7 @@ namespace PokerPlayer {
                 PlayerAct.SetActive(false);
                 AllinGo.SetActive(false);
                 player.PrChips.Value = 0;
+                OP.Despawn();
             }).AddTo(disposables);
 
             player.Cards.AsObservable().Where((cards) => {

@@ -70,6 +70,18 @@ public class External : MonoBehaviour{
 		Connect.Setup();
 	}
 
+	public void InitGame(string gameInfo) {
+		var info = gameInfo.Split("&".ToCharArray());
+		if (gameInfo.Length < 2) {
+			return ;
+		}
+
+		GameData.Shared.Room = info[0].ToString();
+		GameData.Shared.Sid = info[1].ToString();
+
+		Connect.Setup();
+	}
+
 	public void SetProxy(string proxy) {
 		Connect.Proxy = proxy;		
 	}

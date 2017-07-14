@@ -5,6 +5,7 @@ using BestHTTP.SocketIO.Transports;
 using UnityEngine;
 using BestHTTP;
 using UniRx;
+using UnityEngine.SceneManagement;
 
 public sealed class Connect  {
 	public static string Proxy;
@@ -222,6 +223,11 @@ public sealed class Connect  {
 	private static Connect instance;
 
 	static public void Setup() {
+		// 如果出现调用，强制切回GameLoading
+		if (SceneManager.GetActiveScene().name == "PokerGame") {
+			SceneManager.LoadScene("GameLoading");	
+		}
+
 		if (string.IsNullOrEmpty(GameData.Shared.Sid) || string.IsNullOrEmpty(GameData.Shared.Room)) {
 			return ;
 		}
