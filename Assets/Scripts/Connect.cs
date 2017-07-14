@@ -222,15 +222,22 @@ public sealed class Connect  {
 
 	private static Connect instance;
 
-	static public void Setup() {
-		// 如果出现调用，强制切回GameLoading
-		if (SceneManager.GetActiveScene().name == "PokerGame") {
-			SceneManager.LoadScene("GameLoading");	
-		}
+	private static string cacheRoom;
 
+	static public void Setup() {
 		if (string.IsNullOrEmpty(GameData.Shared.Sid) || string.IsNullOrEmpty(GameData.Shared.Room)) {
 			return ;
 		}
+
+		// roomID不同，强制切回GameLoading
+		if (!string.IsNullOrEmpty(cacheRoom) && cacheRoom != GameData.Shared.Room) {
+			if (SceneManager.GetActiveScene().name == "PokerGame") {
+				PoolMan.DespawnAll();
+				SceneManager.LoadScene("GameLoading");	
+			}
+		}
+
+		cacheRoom = GameData.Shared.Room;	
 
 		_.Log("Unity: SID、RoomID设置成功，准备建立连接");
 
