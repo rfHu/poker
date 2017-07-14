@@ -7,6 +7,8 @@ using System.IO;
 
 public class SNGWinner : MonoBehaviour {
 
+    public GameObject coinImg;
+
     public Text coinNum;
 
     public GameObject StayInRoom;
@@ -40,14 +42,9 @@ public class SNGWinner : MonoBehaviour {
     public void Init(int rank, int score, bool gameEnd) 
     {
         this.gameEnd = gameEnd;
-        if (score != 0)
-        {
-            coinNum.text = score.ToString();
-        }
-        else 
-        {
-            coinNum.text = "没奖不可怕，调整心态再接再厉吧！";
-        }
+
+        coinImg.SetActive(score != 0);
+        coinNum.text = (score != 0)? score.ToString():"没奖不可怕，调整心态再接再厉吧！";
 
         StayInRoom.SetActive(!gameEnd);
 
