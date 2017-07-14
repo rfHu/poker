@@ -4,6 +4,7 @@ using DG.Tweening;
 using DarkTonic.MasterAudio;
 using UnityEngine.UI;
 using UnityEngine.UI.ProceduralImage;
+using System;
 
 public class ChipsGrp : MonoBehaviour {
 	public List<GameObject> Chips;
@@ -20,25 +21,28 @@ public class ChipsGrp : MonoBehaviour {
 		PotText.enabled = false;
 	}
 
-	public void ToParent(Transform target) {
+	public void ToParent(Transform target, Action onComplete) {
 		this.target = target;
 
 		doAnim(Chips[0], 0);	
 		doAnim(Chips[1], 0.05f);	
 		doAnim(Chips[2], 0.1f);	
 		doAnim(Chips[3], 0.15f);	
-		doAnim(Chips[4], 0.2f);	
+		doAnim(Chips[4], 0.2f, onComplete);	
 
 		G.PlaySound("chipfly");
 
 		Destroy(gameObject);
 	} 
 
-	private void doAnim(GameObject go, float delay) {
+	private void doAnim(GameObject go, float delay, Action cb = null) {
 		go.transform.SetParent(target, true);
 		go.GetComponent<Image>().DOFade(0.3f, 0.3f).SetDelay(delay);
 		go.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0, 0), 0.3f).SetDelay(delay).OnComplete(() => {
 			Destroy(go);
+			if (cb != null) {
+				cb();
+			}
 		});	
 	}
 }

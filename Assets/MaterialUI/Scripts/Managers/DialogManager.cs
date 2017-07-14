@@ -39,7 +39,11 @@ namespace MaterialUI
         /// The parent canvas.
         /// </summary>
         [SerializeField]
-        private Canvas m_ParentCanvas;
+        private static Canvas m_ParentCanvas;
+
+        public static void SetParentCanvas(Canvas canvas) {
+            m_ParentCanvas = canvas;
+        }
 
         /// <summary>
         /// The rect transform of the manager.
