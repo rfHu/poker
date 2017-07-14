@@ -19,12 +19,14 @@ namespace PokerPlayer {
         public SpkTextGo SpkText;
 	    public GameObject Volume;
 	    public Text ScoreLabel;
+        public GameObject ScoreParent;
         public PlayerActGo PlayerAct;
         public Text StateLabel;
 	    public GameObject HandGo;
         public GameObject AllinGo;
         public Transform Circle;
         public GameObject WinStars;
+        public Transform WinCq; 
         public Text WinNumber;
         public Text RankText;
         public ParticleSystem chipsParticle;
@@ -59,6 +61,8 @@ namespace PokerPlayer {
         }
 
         void Awake() {
+            WinCq = WinNumber.transform.parent;
+            ScoreParent = ScoreLabel.transform.parent.gameObject;
             GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
         }
 
@@ -67,8 +71,8 @@ namespace PokerPlayer {
 
             chipsParticle.gameObject.SetActive(false);
             WinStars.SetActive(false);
-            WinNumber.transform.parent.gameObject.SetActive(false);
-            ScoreLabel.transform.parent.gameObject.SetActive(true);
+            WinCq.gameObject.SetActive(false);
+            ScoreParent.SetActive(true);
             PlayerAct.SetActive(false, false);
             AllinGo.SetActive(false);
             Avt.GetComponent<CanvasGroup>().alpha = 1;
@@ -208,6 +212,14 @@ namespace PokerPlayer {
                         return ;
                     } 
 
+                    if (chipsParticle.isPlaying) {
+                        return ;
+                    }
+
+                    if (player.OverData.Value.Gain() <= 0) {
+                        return ;
+                    }
+
                     chipsParticle.gameObject.SetActive(true);
                     chipsParticle.Play(false);
                 });
@@ -280,9 +292,17 @@ namespace PokerPlayer {
 
                 // 收回大于0，展示盈亏
                 if (data.prize > 0) {
-                    WinNumber.transform.parent.gameObject.SetActive(true); 
+                    var cvg = WinCq.GetComponent<CanvasGroup>();
+                    cvg.alpha = 0;
+                    cvg.DOFade(1, 0.3f);
+
+                    var rect = WinCq.GetComponent<RectTransform>();
+                    rect.anchoredPosition = new Vector2(0, -300);
+                    rect.DOAnchorPos(new Vector2(0, -224), 0.3f);
+
+                    WinCq.gameObject.SetActive(true); 
                     WinNumber.text = _.Number2Text(gain);
-                    ScoreLabel.transform.parent.gameObject.SetActive(false);
+                    ScoreParent.SetActive(false);
                 }
 
                 // 重新计算用户的bankroll                
@@ -315,10 +335,10 @@ namespace PokerPlayer {
         }
 
         private void hideWinAnim() {
-            DoFade(WinStars, () => {
-                ScoreLabel.transform.parent.gameObject.SetActive(true);
+            WinStars.SetActive(false);
+            DoFade(WinCq.gameObject, () => {
+                ScoreParent.SetActive(true);
             });
-            DoFade(WinNumber.transform.parent.gameObject);
             myDelegate.WinEnd();
         }
 

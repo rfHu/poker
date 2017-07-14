@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System;
 using UniRx;
 using UnityEngine.UI.ProceduralImage;
+using DG.Tweening;
 
 namespace PokerPlayer {
     public class PlayerSelf: MonoBehaviour, PlayerDelegate {
@@ -14,6 +15,7 @@ namespace PokerPlayer {
         public List<Transform> MyCards;
 		public Text CardDesc;
 		public GameObject YouWin;
+		public ParticleSystem WinParticle;
 		public GameObject BackGameBtn;
         
         private OP OPMono;
@@ -47,6 +49,7 @@ namespace PokerPlayer {
 
 			RxSubjects.Seating.OnNext(false);
 			YouWin.SetActive(false);
+			WinParticle.Stop(true);
 			CardDesc.transform.parent.gameObject.SetActive(false);
 			MyCards[0].parent.gameObject.SetActive(false);
 			MyCards[0].GetComponent<Card>().Turnback();
@@ -333,9 +336,18 @@ namespace PokerPlayer {
 		}	
 
 		public void HandOver(GameOverJson data) {
-			if (data.Gain() > 0) {
-				YouWin.SetActive(true);
+			if (data.Gain() <= 0) {
+				return ;
 			}
+
+			var rect = YouWin.GetComponent<RectTransform>();
+			rect.localScale = new Vector2(0, 0);
+			YouWin.SetActive(true);
+
+			var ease = Ease.OutBounce;
+			rect.DOScale(new Vector2(1, 1), 0.5f).SetEase(ease);
+
+			WinParticle.Play(true);				
 		}
 
 		public void WinEnd() {
