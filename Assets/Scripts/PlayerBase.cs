@@ -27,6 +27,7 @@ namespace PokerPlayer {
         public GameObject WinStars;
         public Text WinNumber;
         public Text RankText;
+        public ParticleSystem chipsParticle;
 
         public Player player;
         private ActionState lastState;
@@ -64,6 +65,7 @@ namespace PokerPlayer {
         void OnDespawned() {
             disposables.Clear();
 
+            chipsParticle.gameObject.SetActive(false);
             WinStars.SetActive(false);
             WinNumber.transform.parent.gameObject.SetActive(false);
             ScoreLabel.transform.parent.gameObject.SetActive(true);
@@ -201,7 +203,14 @@ namespace PokerPlayer {
             }).AddTo(disposables);
 
             RxSubjects.GainChip.Where((gainChip) => gainChip.Uid == Uid).Subscribe((gainChip) => {
-                gainChip.Grp.ToParent(transform);
+                gainChip.Grp.ToParent(transform, () => {
+                    if (!gameObject.activeSelf) {
+                        return ;
+                    } 
+
+                    chipsParticle.gameObject.SetActive(true);
+                    chipsParticle.Play(false);
+                });
             }).AddTo(disposables);
 
             player.Bankroll.Subscribe((value) => {
