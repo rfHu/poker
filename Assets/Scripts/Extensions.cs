@@ -22,6 +22,14 @@ using System.Text.RegularExpressions;
 
          public static int StepValue(this float value, int step)
         {
+            if (value <= 0) {
+                return 0;
+            }
+
+            if (step <= 0) {
+                return (int)value;
+            }
+
             int temp1 = Mathf.FloorToInt(value / step) * step;
             int temp2 = Mathf.CeilToInt(value / step) * step;
             int newValue;
