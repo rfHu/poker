@@ -41,7 +41,7 @@ public class OP : MonoBehaviour {
 
 	public Text BuyTimeCost; 
 
-	private CompositeDisposable disposables = new CompositeDisposable();
+	private CompositeDisposable slidDisposables = new CompositeDisposable();
 
 	void OnSpawned()
 	{	
@@ -52,7 +52,7 @@ public class OP : MonoBehaviour {
 	void OnDespawned()
 	{	
 		hideModal();
-		disposables.Clear();
+		slidDisposables.Clear();
 	}
 
 	void OnDestroy()
@@ -282,9 +282,11 @@ public class OP : MonoBehaviour {
 	}
 
 	public void OnRaiseClick() {
+		slidDisposables.Clear();
+		
 		Slid.gameObject.SetActive(true);
-		Slid.value = Slid.minValue = range[0];
 		Slid.maxValue = range[1];
+		Slid.value = Slid.minValue = range[0];
 		Slid.wholeNumbers = true;
 		MaxText.text = _.Num2CnDigit(range[1]);
 
@@ -303,6 +305,11 @@ public class OP : MonoBehaviour {
 				newValue = value.StepValue(GameData.Shared.BB);
 			}
 
+			// 解决赋值循环导致崩溃		
+			if (newValue > Slid.maxValue) {
+				return ;
+			}
+
 			Slid.value = newValue;			
 
 			if (newValue < range[1]) {
@@ -318,7 +325,7 @@ public class OP : MonoBehaviour {
 			
 			RaiseNumber.text = _.Num2CnDigit(newValue);
 			TipsText.text = _.Num2CnDigit(newValue);
-		}).AddTo(disposables);
+		}).AddTo(slidDisposables);
 
 		Slid.OnPointerDownAsObservable().Subscribe((pointerEvt) => {
 			var rect = Slid.GetComponent<RectTransform>();
@@ -326,17 +333,17 @@ public class OP : MonoBehaviour {
 			changeTipsPosition(rect, pointerEvt.position, pointerEvt.pressEventCamera);
 			pointerDown = true;
 			RoundTipsGo.SetActive(true);
-		}).AddTo(disposables);
+		}).AddTo(slidDisposables);
 
 		Slid.OnDragAsObservable().Subscribe((dragEvt) => {
 			var rect = Slid.GetComponent<RectTransform>();
 			changeTipsPosition(rect, dragEvt.position, dragEvt.pressEventCamera);
-		}).AddTo(disposables);
+		}).AddTo(slidDisposables);
 
 		Slid.OnPointerUpAsObservable().Subscribe((_) => {
 			pointerDown = false;
 			RoundTipsGo.SetActive(false);
-		}).AddTo(disposables);
+		}).AddTo(slidDisposables);
 
 		// 展示遮罩
 		modal = ModalHelper.Create();

@@ -63,9 +63,13 @@ public class Supplement : MonoBehaviour {
 	public void OnChange(float value) {
 		int step = GameData.Shared.BB * 100; 
 		int newValue = value.StepValue(step);
-		
-		slider.value = newValue;
 
+		// 解决赋值循环导致崩溃		
+		if (newValue > slider.maxValue) {
+			return ;
+		}
+
+		slider.value = newValue;
 		Score.text = newValue.ToString();
 		Pay.text = (newValue * GameData.Shared.Rake).ToString();
 	}
