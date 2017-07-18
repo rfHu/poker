@@ -1201,7 +1201,7 @@ namespace PathologicalGames
         /// <summary>
         /// The number of instances to preload
         /// </summary>
-        public int preloadAmount = 1;
+        public int preloadAmount = 0;
 
         /// <summary>
         /// Displays the 'preload over time' options

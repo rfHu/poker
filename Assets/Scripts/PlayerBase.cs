@@ -19,17 +19,17 @@ namespace PokerPlayer {
         public SpkTextGo SpkText;
 	    public GameObject Volume;
 	    public Text ScoreLabel;
-        public GameObject ScoreParent;
+        private GameObject ScoreParent;
         public PlayerActGo PlayerAct;
         public Text StateLabel;
 	    public GameObject HandGo;
-        public GameObject AllinGo;
         public Transform Circle;
-        public GameObject WinStars;
-        public Transform WinCq; 
+        [SerializeField] private ParticleSystem winParticle;
+        private Transform WinCq; 
         public Text WinNumber;
         public Text RankText;
-        public ParticleSystem chipsParticle;
+        [SerializeField] private ParticleSystem chipsParticle;
+        [SerializeField] ParticleSystem allinParticle;
 
         public Player player;
         private ActionState lastState;
@@ -66,15 +66,32 @@ namespace PokerPlayer {
             GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
         }
 
+        private void playParticle(ParticleSystem particle) {
+            particle.gameObject.SetActive(true);
+            particle.Play(true);
+        }
+
+        private void stopParticle(ParticleSystem particle) {
+            particle.gameObject.SetActive(false);
+            particle.Stop(true);
+        }
+
+        void Update() {
+            if (winParticle.gameObject.activeSelf && winParticle.isStopped) {
+                winParticle.Play(true);
+            }
+        }
+
         void OnDespawned() {
             disposables.Clear();
 
-            chipsParticle.gameObject.SetActive(false);
-            WinStars.SetActive(false);
+            stopParticle(chipsParticle);
+            stopParticle(allinParticle);
+            stopParticle(winParticle);
+
             WinCq.gameObject.SetActive(false);
             ScoreParent.SetActive(true);
             PlayerAct.SetActive(false, false);
-            AllinGo.SetActive(false);
             Avt.GetComponent<CanvasGroup>().alpha = 1;
             Circle.gameObject.SetActive(true);
             RankText.transform.parent.gameObject.SetActive(false);
@@ -220,8 +237,7 @@ namespace PokerPlayer {
                         return ;
                     }
 
-                    chipsParticle.gameObject.SetActive(true);
-                    chipsParticle.Play(false);
+                    playParticle(chipsParticle);
                 });
             }).AddTo(disposables);
 
@@ -269,7 +285,7 @@ namespace PokerPlayer {
             RxSubjects.GameOver.Subscribe((e) => {
                 myDelegate.MoveOut();
                 PlayerAct.SetActive(false);
-                AllinGo.SetActive(false);
+                stopParticle(allinParticle);
                 player.PrChips.Value = 0;
                 OP.Despawn();
             }).AddTo(disposables);
@@ -288,7 +304,7 @@ namespace PokerPlayer {
             player.OverData.AsObservable().Where((data) => data != null).Subscribe((data) => {
                 var gain = data.Gain();
                 if (gain > 0) {
-                    WinStars.SetActive(true);
+                    playParticle(winParticle);
                 }
 
                 // 收回大于0，展示盈亏
@@ -336,7 +352,7 @@ namespace PokerPlayer {
         }
 
         private void hideWinAnim() {
-            WinStars.SetActive(false);
+            stopParticle(winParticle);
             DoFade(WinCq.gameObject, () => {
                 ScoreParent.SetActive(true);
             });
@@ -409,7 +425,7 @@ namespace PokerPlayer {
             PlayerAct.SetAct(state);
 
             if (state == ActionState.Allin) {
-                AllinGo.SetActive(true);
+                playParticle(allinParticle);
             }
         }
 
