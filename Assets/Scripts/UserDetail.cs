@@ -26,7 +26,6 @@ public class UserDetail : MonoBehaviour {
     public GameObject R2;
     public Button[] EmoticonButtons;
     public Button StandUpButton;
-    public Text[] EmoticonPrice;
     public GameObject UserRemark;
     public Text CoinsNumber;
     public GameObject NormalPart;
@@ -164,15 +163,25 @@ public class UserDetail : MonoBehaviour {
 
 
             // 动态表情
-            var emotion = data.List("emoticon");
+            var emoticon = data.List("emoticon");
 
-            for (int i = 0; i < emotion.Count && i < EmoticonPrice.Length; i++)
+            foreach (var item in EmoticonButtons)
             {
-                var dict = emotion[i] as Dictionary<string, object>;
-                EmoticonPrice[i].text = "" + dict.Int("coin");
+                item.GetComponent<Button>().interactable = false;
+                item.GetComponentInChildren<Text>().text = "-";
             }
 
+            foreach (var item in emoticon)
+            {
+                var dict = item as Dictionary<string, object>;
+                var pid = dict.Int("pid") - 1;
 
+                if (GameData.Shared.Coins < dict.Int("coin"))
+                    return;
+                    
+                EmoticonButtons[pid].GetComponent<Button>().interactable = true;
+                EmoticonButtons[pid].GetComponentInChildren<Text>().text = dict.Int("coin").ToString();
+            }
         });
 	}
 
