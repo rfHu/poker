@@ -95,6 +95,12 @@ public class ChipsGo : MonoBehaviour {
 
 			Hide();
 		}).AddTo(disposables);
+
+		// player.Destroyed.Subscribe((destroy) => {
+		// 	if (destroy && gameObject.activeSelf) {
+		// 		Hide();
+		// 	}
+		// }).AddTo(disposables);
 	}
 	
 	private Tweener doTween() {

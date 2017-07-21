@@ -474,10 +474,10 @@ public sealed class Connect  {
 public class HTTP {
 	public static string APIDomain = "https://api.poker.top";
 
-	public static void Post(string url, Dictionary<string, object> data, Action<string> cb = null) {
+	public static void Request(string url, HTTPMethods method, Dictionary<string, object> data, Action<string> cb = null) {
 		url = string.Format("{0}{1}", APIDomain, url);
 
-		HTTPRequest request = new HTTPRequest(new Uri(url), HTTPMethods.Post, (req, res) => {
+		HTTPRequest request = new HTTPRequest(new Uri(url), method, (req, res) => {
 			if (cb != null) {
 				cb(res.DataAsText);
 			}
@@ -490,6 +490,14 @@ public class HTTP {
 		request.Cookies.Add(new BestHTTP.Cookies.Cookie("connect.sid", GameData.Shared.Sid));
 
 		request.Send();
+	}
+
+	public static void Post(string url, Dictionary<string, object> data, Action<string> cb = null) {
+		Request(url, HTTPMethods.Post, data, cb);
+	}
+
+	public static void Get(string url, Dictionary<string, object> data, Action<string> cb = null) {
+		Request(url, HTTPMethods.Get, data, cb);	
 	}
 }
 
