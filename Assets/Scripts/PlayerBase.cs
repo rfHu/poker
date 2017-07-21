@@ -60,6 +60,8 @@ namespace PokerPlayer {
             addEvents();
         }
 
+        // public 
+
         void Awake() {
             WinCq = WinNumber.transform.parent;
             ScoreParent = ScoreLabel.transform.parent.gameObject;
@@ -96,9 +98,9 @@ namespace PokerPlayer {
             Circle.gameObject.SetActive(true);
             RankText.transform.parent.gameObject.SetActive(false);
 
-            var go = GetComponentInChildren<ChipsGo>();
-            if (go != null) {
-                PoolMan.Despawn(go.transform);
+            var cgo = theSeat.GetComponentInChildren<ChipsGo>();
+            if (cgo != null) {
+                PoolMan.Despawn(cgo.transform);
             }
 
             Volume.SetActive(false);
@@ -386,10 +388,10 @@ namespace PokerPlayer {
 	    }
 
         private void setPrChips(int value) {
-            var existChips = GetComponentInChildren<ChipsGo>();
+            var existChips = theSeat.GetComponentInChildren<ChipsGo>();
 
             var newChips = PoolMan.Spawn("UpChip");
-            newChips.SetParent(transform, false);
+            newChips.SetParent(theSeat.transform, false);
             newChips.SetAsLastSibling();
 
             if (existChips == null) {
@@ -430,7 +432,7 @@ namespace PokerPlayer {
         }
 
         public void SetFolded() {
-		    Avt.GetComponent<CanvasGroup>().alpha = 0.6f;
+		    Avt.GetComponent<CanvasGroup>().alpha = 0.5f;
         }
 
         static public void SetInParent(Transform target, Transform parent) {
