@@ -23,7 +23,7 @@ public class MTTWaiting : MonoBehaviour {
 		ts = data.Int("left_time");
 		setTime();
 
-		Observable.Interval(TimeSpan.FromSeconds(1)).Where((_) => ts > 0).Subscribe((_) => {
+		disposable = Observable.Interval(TimeSpan.FromSeconds(1)).Where((_) => ts > 0).Subscribe((_) => {
 			ts--;
 			setTime();
 

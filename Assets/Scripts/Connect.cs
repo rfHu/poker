@@ -317,13 +317,18 @@ public sealed class Connect  {
 				return ;
 			}
 
+			var e  = json.String("e");
 			var rid = json.String("roomid");			
+			var argsDict = json.Dict("args");
+
+			// 换房间了，更新Room
+			if (e == "look" && argsDict.Int("is_enter_look") == 1) {
+				GameData.Shared.Room = rid;
+			}
+
 			if (!string.IsNullOrEmpty(rid) && rid != GameData.Shared.Room) {
 				return ;
 			}
-
-			var argsDict = json.Dict("args");
-			var e  = json.String("e");
 
 			if (argsDict.ContainsKey("cmds")) {
 				var cmds = argsDict.Dict("cmds");

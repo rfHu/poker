@@ -2,6 +2,8 @@
 using UnityEngine.UI;
 using System;
 using UniRx;
+using System.Collections;
+using System.Collections.Generic;
 
 public class GameLoading : MonoBehaviour {
 	// Use this for initialization
@@ -12,7 +14,7 @@ public class GameLoading : MonoBehaviour {
 			external.SetSocket("https://socket.dev.poker.top");
 			external.SetProxy("http://localhost:8888");
 
-			var rid = "5973009f3b075026baaea0d6";
+			var rid = "597314d4611a1b2ed5bd94b4";
 			var sid = "s%3AwdfdpGbADhpU2XxeiannLMG-yc3hd5U5.JzRohKYOnQ2jVHhpVjOWXHSmBuQbF55mpcS73nJAcXQ";
 
 			// 外网登录态
@@ -42,6 +44,21 @@ public class GameLoading : MonoBehaviour {
 
 	private void registerEvents() {
 		RxSubjects.MatchLook.Subscribe((e) => {
+			var roomid = e.Data.Dict("myself").String("roomid");
+
+			if (!string.IsNullOrEmpty(roomid)) {
+				Connect.Shared.Emit(new Dictionary<string, object>{
+					{"f", "entergame"},
+					{"args", new Dictionary<string, object> {
+						{"roomid", roomid},
+						{"ver", Application.version},
+						{"matchid", GameData.Shared.MatchID}
+					}}
+				});
+
+				return ;
+			}
+
 			Loading.SetActive(false);
 			MTT.SetActive(true);
 			MTT.GetComponent<MTTWaiting>().Init(e.Data);

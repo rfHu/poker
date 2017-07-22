@@ -85,6 +85,10 @@ public class Avatar : MonoBehaviour {
 	}
 
 	public void SetImage(string url) {
+		if (string.IsNullOrEmpty(url)) {
+			return ;
+		}
+
 		// @FIXME: 后台返回对应的尺寸
         string pattern = @"/w/(\d)+/h/(\d)+/format/jpg";
 		Regex rgx = new Regex(pattern);
