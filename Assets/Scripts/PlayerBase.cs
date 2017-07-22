@@ -98,6 +98,7 @@ namespace PokerPlayer {
             // 取消所有动画
             DOTween.Pause(AnimID);
 
+            lastState = ActionState.None;
             WinCq.gameObject.SetActive(false);
             ScoreParent.SetActive(true);
             PlayerAct.SetActive(false, false);
@@ -115,6 +116,16 @@ namespace PokerPlayer {
         } 
 
         private void addEvents() {
+            RxSubjects.ShowCard.Subscribe((e) => {
+                var uid = e.Data.String("uid");
+                if (uid != player.Uid) {
+                    return ;
+                }
+
+                // var cards = e.Data.IL("cards");
+                // showTheCards(cards, true);
+            }).AddTo(disposables);
+
             RxSubjects.ShowAudio.Where(isSelfJson).Subscribe((jsonStr) => {
                 Volume.SetActive(true);
                 ScoreLabel.gameObject.SetActive(false);
