@@ -136,14 +136,16 @@ public class UIManager : MonoBehaviour {
 
         if (GameData.Shared.Type == GameType.SNG)
         {
-            str += "SNG" + GameData.SNGData.SngString;
+            str += "SNG" + GameData.MatchData.MatchString;
+        } else if (GameData.Shared.Type == GameType.MTT) {
+            str += "MTT" + GameData.MatchData.MatchString;
         }
 
         if (!string.IsNullOrEmpty(GameData.Shared.GameCode))
             str += "，邀请码[" + GameData.Shared.GameCode + "]";
 
 
-        if (GameData.Shared.Type == GameType.Normal)
+        if (!GameData.Shared.IsMatch())
         {
             str += "，盲注[";
 

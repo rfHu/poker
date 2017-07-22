@@ -20,7 +20,7 @@ public class SNGMsgPage : MonoBehaviour {
     public void Init() 
     {
         PlayerNum.text = GameData.Shared.PlayerCount.Value.ToString();
-        Time.text = data[GameData.SNGData.Type - 1][1].ToString() + "分钟";
+        Time.text = data[GameData.MatchData.Type - 1][1].ToString() + "分钟";
 
         SetCups();
 
@@ -41,7 +41,7 @@ public class SNGMsgPage : MonoBehaviour {
     {
         int[] coinArr = new int[0];
         var seats = GameData.Shared.PlayerCount.Value;
-        var factor = data[GameData.SNGData.Type - 1][0] * seats;
+        var factor = data[GameData.MatchData.Type - 1][0] * seats;
 
         switch (seats)
         {   

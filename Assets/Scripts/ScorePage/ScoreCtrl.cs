@@ -221,7 +221,7 @@ namespace ScorePage {
                     return bb.Score - aa.Score;
                 });
 
-                if (GameData.Shared.Type == GameType.SNG) {
+                if (GameData.Shared.IsMatch()) {
                     for (var i = 0; i < playerList.Count; i++) {
                         // SNG换成是排名
                         var dt = playerList[i] as PlayerRowData;

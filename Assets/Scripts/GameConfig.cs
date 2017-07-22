@@ -574,10 +574,10 @@ sealed public class GameData {
 		return Type != GameType.Normal;
 	}
 
-	public class SNGData {
+	public class MatchData {
 		public static int Type;
 
-		public static string SngString {
+		public static string MatchString {
 			get {
 				var map = new Dictionary<int, string>(){
 					{1, "快速赛"},
@@ -668,9 +668,9 @@ sealed public class GameData {
 		Pots.Value = json.DL("pots");
 
         Type = string2GameType(json.String("type"));
-        if (Type == GameType.SNG)
+        if (IsMatch())
         {
-            SNGData.Type = options.Int("sub_type");
+            MatchData.Type = options.Int("sub_type");
 			LeftTime.Value = json.Long("blind_countdown");
             BlindLv = json.Int("blind_lv");
         } else {
@@ -734,6 +734,8 @@ sealed public class GameData {
 	}
 
 	public static GameData Shared = new GameData();
+
+	public string MatchID;
 
 	public ReactiveDictionary<int, Player> Players = new ReactiveDictionary<int, Player>(); 
 

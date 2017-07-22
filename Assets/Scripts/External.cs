@@ -57,18 +57,6 @@ public class External : MonoBehaviour{
 			Commander.Shared.Exit();
 		});
 	}
-	
-	public void SetSid(string sid) {
-		_.Log("Unity: Sid=" + sid);
-		GameData.Shared.Sid = sid;
-		Connect.Setup();		
-	}
-
-	public void SetRoomID(string roomID) {
-		_.Log("Unity: roomID=" + roomID);
-		GameData.Shared.Room = roomID;
-		Connect.Setup();
-	}
 
 	public void InitGame(string gameInfo) {
 		var info = gameInfo.Split("&".ToCharArray());
@@ -79,7 +67,19 @@ public class External : MonoBehaviour{
 		GameData.Shared.Room = info[0].ToString();
 		GameData.Shared.Sid = info[1].ToString();
 
-		Connect.Setup();
+		Connect.SetupRoom();
+	}
+
+	public void InitMatch(string gameInfo) {
+		var info = gameInfo.Split("&".ToCharArray());
+		if (gameInfo.Length < 2) {
+			return ;
+		}
+
+		GameData.Shared.MatchID = info[0].ToString();
+		GameData.Shared.Sid = info[1].ToString();
+
+		Connect.SetupMatch();
 	}
 
 	public void SetProxy(string proxy) {
@@ -132,7 +132,7 @@ public class External : MonoBehaviour{
 			Connect.Shared.CloseImmediate();
 		} else {
 			_.Log("Unity: 游戏恢复");
-			Connect.Setup();
+			Connect.SetupRoom();
 		}
 	}
 
