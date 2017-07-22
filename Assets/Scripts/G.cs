@@ -93,6 +93,12 @@ public class PoolMan {
 	}
 
 	public static void DespawnAll() {
-		PoolManager.Pools["Shared"].DespawnAll();
+		var pool  = PoolManager.Pools["Shared"];
+
+		if (pool == null) {
+			return ;
+		} 
+
+		pool.DespawnAll();
 	}
 }

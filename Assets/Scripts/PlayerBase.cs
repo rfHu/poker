@@ -60,7 +60,11 @@ namespace PokerPlayer {
             addEvents();
         }
 
-        // public 
+        public int AnimID {
+            get {
+                return gameObject.GetInstanceID(); 
+            }
+        } 
 
         void Awake() {
             WinCq = WinNumber.transform.parent;
@@ -90,6 +94,9 @@ namespace PokerPlayer {
             stopParticle(chipsParticle);
             stopParticle(allinParticle);
             stopParticle(winParticle);
+
+            // 取消所有动画
+            DOTween.Pause(AnimID);
 
             WinCq.gameObject.SetActive(false);
             ScoreParent.SetActive(true);
@@ -313,11 +320,11 @@ namespace PokerPlayer {
                 if (data.prize > 0) {
                     var cvg = WinCq.GetComponent<CanvasGroup>();
                     cvg.alpha = 0;
-                    cvg.DOFade(1, 0.3f);
+                    cvg.DOFade(1, 0.3f).SetId(AnimID);
 
                     var rect = WinCq.GetComponent<RectTransform>();
                     rect.anchoredPosition = new Vector2(0, -300);
-                    rect.DOAnchorPos(new Vector2(0, -224), 0.3f);
+                    rect.DOAnchorPos(new Vector2(0, -224), 0.3f).SetId(AnimID);
 
                     WinCq.gameObject.SetActive(true); 
                     WinNumber.text = _.Number2Text(gain);
@@ -361,7 +368,7 @@ namespace PokerPlayer {
             myDelegate.WinEnd();
         }
 
-        public static void DoFade(GameObject go, Action callback = null) {
+        public void DoFade(GameObject go, Action callback = null) {
             if (!go.activeSelf) {
                 return ;
             }
@@ -371,7 +378,7 @@ namespace PokerPlayer {
                 return ;
             }
             
-            cvg.DOFade(0, 0.3f).OnComplete(() => {
+            cvg.DOFade(0, 0.3f).SetId(AnimID).OnComplete(() => {
                 go.SetActive(false);
                 cvg.alpha = 1;
 
