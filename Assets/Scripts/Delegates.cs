@@ -59,6 +59,7 @@ public class RxSubjects {
 	public static Subject<RxData> OffScore = new Subject<RxData>();
     public static Subject<RxData> MatchRank = new Subject<RxData>();
 	public static Subject<RxData> RaiseBlind = new Subject<RxData>();
+	public static Subject<RxData> MatchLook = new Subject<RxData>();
 
 	// 跟网络无关事件
 	public static Subject<int> ChangeVectorsByIndex = new Subject<int>();

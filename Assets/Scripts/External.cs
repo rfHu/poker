@@ -95,9 +95,10 @@ public class External : MonoBehaviour{
 	}
 
 	private void close(Action callback) {
-		// 清空两个关键数据
+		// 清空关键数据
 		GameData.Shared.Sid = "";
 		GameData.Shared.Room = "";
+		GameData.Shared.MatchID = "";
 
 		PoolMan.DespawnAll();
 

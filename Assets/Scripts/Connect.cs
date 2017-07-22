@@ -84,10 +84,21 @@ public sealed class Connect  {
 	}
 
 	private void enterGame() {
+		string gameType;
+		string gameID;
+
+		if (!string.IsNullOrEmpty(GameData.Shared.Room)) {
+			gameType = "roomid";
+			gameID = GameData.Shared.Room;
+		} else {
+			gameType = "matchid";
+			gameID = GameData.Shared.MatchID;
+		}
+
 		Emit(new Dictionary<string, object>{
 			{"f", "entergame"},
 			{"args", new Dictionary<string, object> {
-				{"roomid", GameData.Shared.Room},
+				{gameType, gameID},
 				{"ver", Application.version}
 			}}
 		}, (json) => {
@@ -227,6 +238,9 @@ public sealed class Connect  {
 			return ;
 		}
 
+		// 以防万一，先把MatchID废弃置空
+		GameData.Shared.MatchID = "";
+
 		_.Log("Unity: SID、RoomID设置成功，准备建立连接");
 
 		setup();	
@@ -236,6 +250,9 @@ public sealed class Connect  {
 		if (string.IsNullOrEmpty(GameData.Shared.Sid) || string.IsNullOrEmpty(GameData.Shared.MatchID)) {
 			return ;
 		}
+
+		// 以防万一，先把Room废弃置空	
+		GameData.Shared.Room = "";
 
 		setup();	
 	}
@@ -457,6 +474,9 @@ public sealed class Connect  {
 				case "raise_blind":
 					RxSubjects.RaiseBlind.OnNext(rxdata);
 					break; 
+				case "match_look":
+					RxSubjects.MatchLook.OnNext(rxdata);
+					break;
 				default:
 					break;
 			}
