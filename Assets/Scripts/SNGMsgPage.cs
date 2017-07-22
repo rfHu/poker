@@ -12,7 +12,7 @@ public class SNGMsgPage : MonoBehaviour {
     public GameObject[] Cups;
 
     private int[][] data = { new int[] { 200, 3 }, new int[] { 500, 5 }, new int[] { 1000, 10 }, new int[] { 2000, 10 } };
-    private Color normalCol = new Color(1,1,1,0.6f);
+    private Color normalCol = new Color(1,1,1,0.7f);
 
     public Transform BlindLvParents;
 

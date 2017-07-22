@@ -6,6 +6,14 @@ using UniRx;
 public class ModalHelper: MonoBehaviour {
 	private Action onClick;
 
+	static public int ModalCount {
+		get {
+			return _modalCount;
+		}
+	}
+
+	static private int _modalCount = 0;
+
 	public static Color DefaultColor = new Color(0, 0, 0, 40 / 255f);
 
 	public void Show(Transform parent, Action onClick) {
@@ -41,18 +49,14 @@ public class ModalHelper: MonoBehaviour {
 		}).AddTo(this);
 	}
 
+	void OnSpawned() {
+		_modalCount++;
+	}
+
 	void OnDespawned() {
-		var modals = GameObject.FindObjectsOfType<ModalHelper>();
-		var hasModal = false;
+		_modalCount--;
 
-		for (var i  = 0; i < modals.Length; i++) {
-			if (modals[i].gameObject.activeSelf) {
-				hasModal = true;
-				break;
-			}
-		}
-
-		if (hasModal && !GameData.Shared.TalkLimit.Value) {
+		if (_modalCount <= 0 && !GameData.Shared.TalkLimit.Value) {
 			_.Log("Show Native Voice Button");
 			#if UNITY_EDITOR 
 			#else

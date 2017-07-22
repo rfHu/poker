@@ -329,7 +329,7 @@ public class Controller : MonoBehaviour {
 			startButton.SetActive(false);
 			PauseGame.SetActive(true);
 
-			var text = GameData.Shared.Type == GameType.Normal ? "等待房主开始游戏" : "报名中";
+			var text = GameData.Shared.Type == GameType.Normal ? "等待房主开始游戏" : "比赛报名中";
 			PauseGame.transform.Find("Text").GetComponent<Text>().text = text;
 		}
 	}

@@ -37,12 +37,14 @@ public class Insurance : MonoBehaviour {
 
     private CompositeDisposable disposables = new CompositeDisposable();
 
-    float OddsNum;
+    float odds;
     float[] OddsNums = { 30, 16, 10, 8, 6, 5, 4, 3.5f, 3, 2.5f, 2.2f, 2, 1.7f, 1.5f, 1.3f, 1.1f, 1, 0.8f, 0.6f, 0.5f };
 
     private List<int> outsCardArray;
     private int potValue;
     int cost;
+
+    // scope是赔付额
     List<int> scope;
     bool mustBuy = false;
     private bool isFlop = false;
@@ -252,10 +254,10 @@ public class Insurance : MonoBehaviour {
     private void SetCASlider()
     {
         // 最小值向上取整
-        var minValue = (int)Math.Ceiling(scope[0] / OddsNum);
+        var minValue = Mathf.CeilToInt(scope[0] / odds);
 
-        // 最大值向下取整
-        var maxValue = (int)Math.Floor(scope[1] / OddsNum);
+        // 最大值向下取整且不能超过底池
+        var maxValue = Mathf.Min(Mathf.FloorToInt(scope[1] / odds), scope[1]);
 
         if (maxValue < minValue) {
             BuyButton.interactable = false;
@@ -290,8 +292,8 @@ public class Insurance : MonoBehaviour {
             num = 0;
         }
 
-        OddsNum = OddsNums[num];
-        Odds.text = OddsNum.ToString();
+        odds = OddsNums[num];
+        Odds.text = odds.ToString();
         BreakEventButton.transform.Find("Text").GetComponent<Text>().text = beValue.ToString();
         EqualButton.transform.Find("Text").GetComponent<Text>().text = eqValue.ToString();
         SetCASlider();
@@ -332,7 +334,7 @@ public class Insurance : MonoBehaviour {
 
     private void DependOnClaimAmount() {
         var c = int.Parse(ClaimAmount.text);
-        var buyValue = (int)Math.Round(c / OddsNum); 
+        var buyValue = (int)Math.Round(c / odds); 
     
         CASlider.value = buyValue;
         OnCASliderChange();
@@ -340,19 +342,19 @@ public class Insurance : MonoBehaviour {
 
     private int claimAmountValue {
         get {
-            return (int)Math.Ceiling(CASlider.value * OddsNum);
+            return (int)Math.Ceiling(CASlider.value * odds);
         }
     }
    
     private int beValue {
         get {
-            return (int)Math.Ceiling(cost / OddsNum);
+            return (int)Math.Ceiling(cost / odds);
         }
     }
 
     private int eqValue {
         get {
-            return (int)Math.Ceiling(potValue / (OddsNum + 1));
+            return (int)Math.Ceiling(potValue / (odds + 1));
         }
     }
 

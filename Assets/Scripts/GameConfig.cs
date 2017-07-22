@@ -277,7 +277,7 @@ sealed public class GameData {
 			// 保存最新游戏数据
 			jsonData = json;
 
-			byJson(json);
+			byJson(json, true);
 		});
 	
 		RxSubjects.Look.Subscribe((e) => {
@@ -637,7 +637,7 @@ sealed public class GameData {
 		return GameType.Normal;	
 	}
 
-	private void byJson(Dictionary<string, object> json) {
+	private void byJson(Dictionary<string, object> json, bool gameStart = false) {
 		var options = json.Dict("options");
 		var gamers = json.Dict("gamers");
 
@@ -711,6 +711,12 @@ sealed public class GameData {
 
 			var index = Convert.ToInt32(entry.Key);
 			var player = new Player(dict, index);
+
+			// 大小盲
+			if (gameStart && player.PrChips.Value != 0) {
+				player.ChipsChange = true;
+			}
+
 			Players[index] = player;
 		}
 

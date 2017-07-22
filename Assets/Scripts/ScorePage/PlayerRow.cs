@@ -44,13 +44,13 @@ namespace ScorePage {
             }
 
             if (GameData.Shared.IsMatch() && dt.Score == 0) {
-                cvg.alpha = 0.6f;                
+                cvg.alpha = 0.7f;                
                 image.enabled = false;
             } else if (dt.HasSeat) {
                 cvg.alpha = 1;
                 image.enabled = false;
             } else {
-                cvg.alpha = 0.6f;  
+                cvg.alpha = 0.7f;  
                 image.enabled = true;
             }
         }

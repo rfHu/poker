@@ -46,8 +46,8 @@ public class MenuPopup : MonoBehaviour {
 
     private void CommonSetting()
     {
-        StandCG.alpha = GameData.MyCmd.Unseat ? 1 : 0.6f;
-        SuppCG.alpha = GameData.MyCmd.Takecoin ? 1 : 0.6f;
+        StandCG.alpha = GameData.MyCmd.Unseat ? 1 : 0.5f;
+        SuppCG.alpha = GameData.MyCmd.Takecoin ? 1 : 0.5f;
 
         // 可下分  
         if (GameData.Shared.Bankroll.Value > 0 && GameData.Shared.OffScore.Value)
