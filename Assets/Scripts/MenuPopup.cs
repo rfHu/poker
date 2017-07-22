@@ -36,7 +36,7 @@ public class MenuPopup : MonoBehaviour {
 
     private void SNGSetting()
     {
-        var active = GameData.Shared.Type == GameType.Normal;
+        var active = !GameData.Shared.IsMatch();
 
         foreach (var item in SNGHideGos)
         {
@@ -69,7 +69,7 @@ public class MenuPopup : MonoBehaviour {
         {
             HangGo.SetActive(true);
 
-            if (GameData.Shared.Type == GameType.Normal) {
+            if (!GameData.Shared.IsMatch()) {
                 ReserveGo.SetActive(true);
             }
         }

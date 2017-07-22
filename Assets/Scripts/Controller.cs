@@ -74,7 +74,7 @@ public class Controller : MonoBehaviour {
 
     void Start() 
     {
-        if (GameData.Shared.Type == GameType.SNG)
+        if (GameData.Shared.IsMatch())
         {
             OwnerButton.SetActive(false);
         } else {
@@ -322,14 +322,14 @@ public class Controller : MonoBehaviour {
 	}
 
 	private void setNotStarted() {
-		if (GameData.Shared.Owner && GameData.Shared.Type == GameType.Normal) {
+		if (GameData.Shared.Owner && !GameData.Shared.IsMatch()) {
 			startButton.SetActive(true);
             PauseGame.SetActive(false);
 		} else {
 			startButton.SetActive(false);
 			PauseGame.SetActive(true);
 
-			var text = GameData.Shared.Type == GameType.Normal ? "等待房主开始游戏" : "比赛报名中";
+			var text = GameData.Shared.IsMatch() ? "比赛报名中" : "等待房主开始游戏";
 			PauseGame.transform.Find("Text").GetComponent<Text>().text = text;
 		}
 	}
@@ -398,7 +398,7 @@ public class Controller : MonoBehaviour {
 
 			setText(TimeLeftGo, secToStr(value));
 
-			if (GameData.Shared.Type != GameType.Normal) {
+			if (GameData.Shared.IsMatch()) {
 				return ;
 			}
 
@@ -552,7 +552,7 @@ public class Controller : MonoBehaviour {
         }).AddTo(this);
 
         RxSubjects.GameOver.Subscribe((e) =>{
-			if (GameData.Shared.Type != GameType.Normal) {
+			if (GameData.Shared.IsMatch()) {
 				return ;
 			}
 
@@ -574,7 +574,7 @@ public class Controller : MonoBehaviour {
 			if (GameData.Shared.InGame) {
 				PokerUI.Toast("记分牌带入成功（下局生效）");
 			} else {
-				var text = GameData.Shared.Type == GameType.Normal ? "记分牌带入成功" : "报名成功";
+				var text = GameData.Shared.IsMatch() ?  "报名成功" : "记分牌带入成功";
 				PokerUI.Toast(text);
 			}
 		}).AddTo(this);
@@ -886,10 +886,10 @@ public class Controller : MonoBehaviour {
 
     private void SNGSetting()
     {
-		if (GameData.Shared.Type == GameType.Normal) {
-			SNGGo.SetActive(false);
-		} else {
+		if (GameData.Shared.IsMatch()) {
 			SNGGo.SetActive(true);
+		} else {
+			SNGGo.SetActive(false);
 		}
     }
 

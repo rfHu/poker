@@ -8,7 +8,7 @@ public class AuditMsg : MonoBehaviour {
     void OnSpawned() 
     {
         Text text = transform.Find("Text").GetComponent<Text>();
-        if (GameData.Shared.Type == GameType.SNG)
+        if (GameData.Shared.IsMatch())
             text.text = "报名审核";
         else 
             text.text = "带入审核";

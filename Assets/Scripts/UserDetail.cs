@@ -66,16 +66,15 @@ public class UserDetail : MonoBehaviour {
 
         buttonInit(Uid);
 
-        if (GameData.Shared.Type == GameType.Normal)
-        {
-            NormalPart.SetActive(true);
-            SNGPart.SetActive(false);
-
-        }
-        else if (GameData.Shared.Type == GameType.SNG)
+        if (GameData.Shared.IsMatch())
         {
             NormalPart.SetActive(false);
             SNGPart.SetActive(true);
+        }
+        else
+        {
+            NormalPart.SetActive(true);
+            SNGPart.SetActive(false);
         }
 
         //动态表情
@@ -152,13 +151,13 @@ public class UserDetail : MonoBehaviour {
                 RemarkText.text = remark;
             }
 
-            if (GameData.Shared.Type == GameType.Normal)
-	        {
-		        setNormalText(data, achieve);
-	        }
-            else if (GameData.Shared.Type == GameType.SNG)
+            if (GameData.Shared.IsMatch())
 	        {
                 setSNGText(achieve);
+	        }
+            else
+	        {
+		        setNormalText(data, achieve);
 	        }
 
 

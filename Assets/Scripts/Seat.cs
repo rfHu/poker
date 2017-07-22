@@ -101,7 +101,7 @@ public class Seat : MonoBehaviour {
 
 		SeatPos.Value = GetPos();
 
-		if (GameData.Shared.Type == GameType.SNG) {
+		if (GameData.Shared.IsMatch()) {
 			ButtonText.text = "参赛";
 		} else {
 			ButtonText.text = "坐下";

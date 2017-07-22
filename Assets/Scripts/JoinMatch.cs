@@ -17,7 +17,7 @@ public class JoinMatch : MonoBehaviour {
 
     void OnSpawned() 
     {
-        int type = GameData.SNGData.Type - 1;
+        int type = GameData.MatchData.Type - 1;
 
         EntryFee.text = data[type][0].ToString();
         InitialScoreboard.text = "初始记分牌：" + data[type][1];
