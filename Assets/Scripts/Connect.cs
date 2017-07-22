@@ -238,11 +238,6 @@ public sealed class Connect  {
 			return ;
 		}
 
-		// 以防万一，先把MatchID废弃置空
-		GameData.Shared.MatchID = "";
-
-		_.Log("Unity: SID、RoomID设置成功，准备建立连接");
-
 		setup();	
 	}
 
@@ -250,9 +245,6 @@ public sealed class Connect  {
 		if (string.IsNullOrEmpty(GameData.Shared.Sid) || string.IsNullOrEmpty(GameData.Shared.MatchID)) {
 			return ;
 		}
-
-		// 以防万一，先把Room废弃置空	
-		GameData.Shared.Room = "";
 
 		setup();	
 	}
@@ -323,10 +315,10 @@ public sealed class Connect  {
 
 			// 换房间了，更新Room
 			if (e == "look" && argsDict.Int("is_enter_look") == 1) {
+				// 更新比赛、房间ID 
+				GameData.Shared.MatchID = argsDict.String("matchid");
 				GameData.Shared.Room = rid;
-			}
-
-			if (!string.IsNullOrEmpty(rid) && rid != GameData.Shared.Room) {
+			} else if (!string.IsNullOrEmpty(rid) && rid != GameData.Shared.Room) {
 				return ;
 			}
 

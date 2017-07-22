@@ -133,7 +133,12 @@ public class External : MonoBehaviour{
 			Connect.Shared.CloseImmediate();
 		} else {
 			_.Log("Unity: 游戏恢复");
-			Connect.SetupRoom();
+
+			if (!string.IsNullOrEmpty(GameData.Shared.MatchID)) {
+				Connect.SetupMatch();
+			} else {
+				Connect.SetupRoom();
+			}
 		}
 	}
 
