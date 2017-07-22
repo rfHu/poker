@@ -12,29 +12,12 @@ public class UIManager : MonoBehaviour {
 	}
 
 	public void OnSwipe(Gesture gesture) {
-		var go = gesture.pickedUIElement;
-
-		if (go == null) {
-			return ;
-		}
-
 		if (gesture.swipeLength < 200) {
 			return ;
 		}
 
-		var cvs = go.GetComponentInParent<Canvas>();
-
-		if (cvs == null) {
-			return ;
-		}
-
-		if (cvs.gameObject.tag != "UICanvas") {
-			return ;
-		}
-
 		// 有遮罩的情况下不触发手势
-		var modal = cvs.transform.GetComponentInChildren<ModalHelper>();
-		if (modal != null) {
+		if (ModalHelper.ModalCount > 0) {
 			return ;
 		}
 		
