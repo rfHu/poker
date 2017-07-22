@@ -159,16 +159,16 @@ namespace PokerPlayer {
             var duration = 0.5f;
 
             Ease ease = Ease.Flash;
-            Cardfaces.DOMove(Controller.LogoVector, duration).SetEase(ease);
+            Cardfaces.DOMove(Controller.LogoVector, duration).SetEase(ease).SetId(Base.AnimID);
 
             var image = Cardfaces.GetComponent<Image>();
             Tween tween; 
 
             if (image != null) {
-                tween = image.DOFade(0.2f, duration).SetEase(ease);
+                tween = image.DOFade(0.2f, duration).SetEase(ease).SetId(Base.AnimID);
             } else {
                 var canvasGrp = Cardfaces.GetComponent<CanvasGroup>();
-                tween = canvasGrp.DOFade(0.2f, duration).SetEase(ease);
+                tween = canvasGrp.DOFade(0.2f, duration).SetEase(ease).SetId(Base.AnimID);
             }
 
             tween.OnComplete(() => {
@@ -213,8 +213,8 @@ namespace PokerPlayer {
         }
 
         public void WinEnd() {
-            PlayerBase.DoFade(ShowCards[0].transform.parent.gameObject);
-            PlayerBase.DoFade(CardDesc.transform.parent.gameObject, () => {
+            Base.DoFade(ShowCards[0].transform.parent.gameObject);
+            Base.DoFade(CardDesc.transform.parent.gameObject, () => {
                 NameLabel.gameObject.SetActive(true);
             });
         }

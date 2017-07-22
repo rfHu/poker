@@ -345,13 +345,13 @@ namespace PokerPlayer {
 			YouWin.SetActive(true);
 
 			var ease = Ease.OutBounce;
-			rect.DOScale(new Vector2(1, 1), 0.5f).SetEase(ease);
+			rect.DOScale(new Vector2(1, 1), 0.5f).SetEase(ease).SetId(Base.AnimID);
 
 			WinParticle.Play(true);				
 		}
 
 		public void WinEnd() {
-			PlayerBase.DoFade(YouWin);
+			Base.DoFade(YouWin);
 		}
     }
 }
