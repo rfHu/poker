@@ -464,7 +464,7 @@ public class OP : MonoBehaviour {
 				return ;
 			}
 
-			if (flag) {
+			if (flag && GameData.Shared.Uid == PokerPlayer.PlayerBase.CurrentUid) {
 				OP.Spawn();	
 			} else {
 				PoolMan.Despawn(instance);

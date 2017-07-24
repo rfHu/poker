@@ -15,6 +15,8 @@ namespace PokerPlayer {
             }   
         } 
 
+        public static string CurrentUid; 
+
         public Avatar Avt;
         public SpkTextGo SpkText;
 	    public GameObject Volume;
@@ -269,6 +271,8 @@ namespace PokerPlayer {
             	var uid = e.Data.String("uid");
             	var dc = e.Data.Int("deal_card");
             
+                CurrentUid = uid;
+
             	if (uid == Uid) {
             		myDelegate.TurnTo(e.Data, GameData.Shared.ThinkTime);
             		setPlayerActive(false, false);
