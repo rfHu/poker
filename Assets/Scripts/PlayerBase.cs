@@ -122,8 +122,8 @@ namespace PokerPlayer {
                     return ;
                 }
 
-                // var cards = e.Data.IL("cards");
-                // showTheCards(cards, true);
+                 var cards = e.Data.IL("cards");
+                 myDelegate.ShowCard(cards);
             }).AddTo(disposables);
 
             RxSubjects.ShowAudio.Where(isSelfJson).Subscribe((jsonStr) => {
@@ -310,14 +310,11 @@ namespace PokerPlayer {
                 OP.Despawn();
             }).AddTo(disposables);
 
-            player.Cards.AsObservable().Where((cards) => {
-                if (cards != null && cards.Count == 2) {
-                    return cards[0] > 0 && cards[1] > 0;
+            player.Cards.AsObservable().Subscribe((cards) => {
+                if (cards.Count < 2) {
+                    return ;
                 }
-
-                return false;
-            }).Subscribe((cards) => {
-                myDelegate.SeeCard(cards);
+                myDelegate.ShowCard(cards);
             }).AddTo(disposables);
 
             IDisposable winEndDisposable = null;
@@ -476,7 +473,7 @@ namespace PokerPlayer {
         void SetFolded();
         void ResetTime(int time);
         void Despawn();
-        void SeeCard(List<int> cards);
+        void ShowCard(List<int> cards);
         void HandOver(GameOverJson data);
         void WinEnd();
     } 

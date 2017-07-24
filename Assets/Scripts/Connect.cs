@@ -100,7 +100,7 @@ public sealed class Connect  {
 
 			RxSubjects.Connecting.OnNext(false);
 		}, () => {
-			PokerUI.DisAlert("连接服务器超时");
+			// PokerUI.DisAlert("连接服务器超时");
 		});
 	}
 

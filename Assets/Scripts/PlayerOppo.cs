@@ -193,7 +193,7 @@ namespace PokerPlayer {
             PoolMan.Despawn(transform);
         }
 
-        public void SeeCard(List<int> cards) {
+        public void ShowCard(List<int> cards) {
             showTheCards(cards, player.SeeCardAnim);
         }
 
