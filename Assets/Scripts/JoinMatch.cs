@@ -20,7 +20,7 @@ public class JoinMatch : MonoBehaviour {
         int type = GameData.SNGData.Type - 1;
 
         EntryFee.text = data[type][0].ToString();
-        InitialScoreboard.text = "初始记分牌：" + data[type][1];
+        InitialScoreboard.text = string.Format("初始记分牌：<color=#fff>{0}</color>", data[type][1]);
         Charge.text = data[type][2].ToString();
 
         Coins.text = _.Num2CnDigit(GameData.Shared.Coins);
