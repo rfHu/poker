@@ -14,8 +14,8 @@ public class GameLoading : MonoBehaviour {
 			external.SetSocket("https://socket.dev.poker.top");
 			external.SetProxy("http://localhost:8888");
 
-			var rid = "597314d4611a1b2ed5bd94b4";
-			var sid = "s%3AwdfdpGbADhpU2XxeiannLMG-yc3hd5U5.JzRohKYOnQ2jVHhpVjOWXHSmBuQbF55mpcS73nJAcXQ";
+            var rid = "5973289cfcf04d33c0c2e836";
+            var sid = "s%3ADolQzrZlQAQsDdUWULxW7NQsW0MQ5_PQ.1txQEdGER%2FZpMFGokP9fbkCWViF19InO%2BpoggQbqHbM";
 
 			// 外网登录态
 			// var sid = "s%3AHlY6SR0V3m8oM2oofbX_yl5R7f6v6Q7R.PK%2FqqIiSZHB0zLgH%2BwV52Yesi3CcsTPJFC3JPb7tjSQ";
@@ -44,6 +44,9 @@ public class GameLoading : MonoBehaviour {
 
 	private void registerEvents() {
 		RxSubjects.MatchLook.Subscribe((e) => {
+
+            GameData.MatchData.ID = e.Data.String("id");
+
 			var roomid = e.Data.Dict("myself").String("roomid");
 
 			if (!string.IsNullOrEmpty(roomid)) {

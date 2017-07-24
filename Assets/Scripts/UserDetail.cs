@@ -173,7 +173,7 @@ public class UserDetail : MonoBehaviour {
             foreach (var item in emoticon)
             {
                 var dict = item as Dictionary<string, object>;
-                var pid = dict.Int("pid") - 1;
+                var pid = dict.Int("id") - 1;
 
                 if (GameData.Shared.Coins < dict.Int("coin"))
                     return;

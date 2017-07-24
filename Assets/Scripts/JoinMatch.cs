@@ -13,15 +13,12 @@ public class JoinMatch : MonoBehaviour {
 
     private DialogAlert payDialog;
 
-    private int[][] data = { new int[] { 200, 2000, 20 }, new int[] { 500, 4000, 50 }, new int[] { 1000, 4000, 100 }, new int[] { 2000, 8000, 200 } };
-
     void OnSpawned() 
     {
-        int type = GameData.MatchData.Type - 1;
 
-        EntryFee.text = data[type][0].ToString();
-        InitialScoreboard.text = "初始记分牌：" + data[type][1];
-        Charge.text = data[type][2].ToString();
+        EntryFee.text = GameData.MatchData.Data[0].ToString();
+        InitialScoreboard.text = "初始记分牌：" + GameData.MatchData.Data[1];
+        Charge.text = GameData.MatchData.Data[2].ToString();
 
         Coins.text = _.Num2CnDigit(GameData.Shared.Coins);
     }

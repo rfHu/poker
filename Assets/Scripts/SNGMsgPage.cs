@@ -11,7 +11,6 @@ public class SNGMsgPage : MonoBehaviour {
 
     public GameObject[] Cups;
 
-    private int[][] data = { new int[] { 200, 3 }, new int[] { 500, 5 }, new int[] { 1000, 10 }, new int[] { 2000, 10 } };
     private Color normalCol = new Color(1,1,1,0.7f);
 
     public Transform BlindLvParents;
@@ -20,7 +19,8 @@ public class SNGMsgPage : MonoBehaviour {
     public void Init() 
     {
         PlayerNum.text = GameData.Shared.PlayerCount.Value.ToString();
-        Time.text = data[GameData.MatchData.Type - 1][1].ToString() + "分钟";
+
+        Time.text = GameData.MatchData.Data[3].ToString() + "分钟";
 
         SetCups();
 
@@ -41,7 +41,7 @@ public class SNGMsgPage : MonoBehaviour {
     {
         int[] coinArr = new int[0];
         var seats = GameData.Shared.PlayerCount.Value;
-        var factor = data[GameData.MatchData.Type - 1][0] * seats;
+        var factor = GameData.MatchData.Data[0] * seats;
 
         switch (seats)
         {   
