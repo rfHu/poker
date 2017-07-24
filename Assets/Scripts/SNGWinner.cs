@@ -13,6 +13,8 @@ public class SNGWinner : MonoBehaviour {
 
     public GameObject StayInRoom;
 
+    public GameObject SharePicBtn;
+
     public GameObject[] RankNumGo;
 
     public Sprite[] NumberImgs;
@@ -44,6 +46,7 @@ public class SNGWinner : MonoBehaviour {
         this.gameEnd = gameEnd;
 
         coinImg.SetActive(score != 0);
+        SharePicBtn.SetActive(score != 0);
         coinNum.text = (score != 0)? score.ToString():"没奖不可怕，调整心态再接再厉吧！";
 
         StayInRoom.SetActive(!gameEnd);
