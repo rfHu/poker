@@ -4,41 +4,49 @@ using System.Collections;
 using System;
 
 namespace ScorePage {
-    public class PlayerRow : CellView
+    public class RankRow : CellView
     {
         private Text nickText;
-        private Text takeCoinText;
         private Text scoreText;
-        private RawImage image;
         private CanvasGroup cvg;
+
+        private SNGRank1 rank1;
+        private GameObject rank2;
+        private Text rankText;
 
 
         override public void SetData(Data data)
         {
             base.SetData(data);
-            var dt = data as PlayerRowData;
+            var dt = data as RankRowData;
             var white = new Color(1 ,1, 1);
             var yellow = _.HexColor("#ffd028");
 
             if (GameData.Shared.Uid == dt.Uid) {
                 nickText.color = yellow;
-                takeCoinText.color = yellow;
+                scoreText.color = yellow;
             } else {
                 nickText.color = white;
-                takeCoinText.color = white;
+                scoreText.color = white;
             }           
 
             nickText.text = dt.Nick;
-            takeCoinText.text = _.Num2CnDigit(dt.TakeCoin);
-            scoreText.color = _.GetTextColor(dt.Score);
-            scoreText.text = _.Number2Text(dt.Score); 
-
-            if (dt.HasSeat) {
+            scoreText.text = _.Num2CnDigit(dt.Score);
+            
+            if (dt.Score > 0) {
                 cvg.alpha = 1;
-                image.enabled = false;
             } else {
                 cvg.alpha = 0.7f;  
-                image.enabled = true;
+            }
+
+            if (dt.Rank <= 3) {
+                rank1.gameObject.SetActive(true);
+                rank2.gameObject.SetActive(false);
+                rank1.SetRank(dt.Rank);
+            } else {
+                rank1.gameObject.SetActive(false);
+                rank2.gameObject.SetActive(true);
+                rankText.text = dt.Rank.ToString();
             }
         }
 
@@ -46,10 +54,11 @@ namespace ScorePage {
             base.CollectViews();
 
             nickText = root.Find("Name").GetComponent<Text>();
-            takeCoinText = root.Find("Total").GetComponent<Text>();
             scoreText = root.Find("Score").GetComponent<Text>();
+            rank1 = root.Find("Rank1").GetComponent<SNGRank1>();
+            rank2 = root.Find("Rank2").gameObject;
+            rankText = rank2.transform.Find("Text").GetComponent<Text>();
 
-            image = root.GetComponent<RawImage>();
             cvg = root.GetComponent<CanvasGroup>();
         }
 
