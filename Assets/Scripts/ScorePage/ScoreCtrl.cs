@@ -137,8 +137,8 @@ namespace ScorePage {
 
                     rowData.Add(new ScoreHeaderData() {
                         List = new List<string>() {
-                            "昵称",
                             "排名",
+                            "昵称",
                             "记分牌"
                         }
                     });

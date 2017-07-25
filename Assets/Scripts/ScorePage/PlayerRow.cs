@@ -30,23 +30,11 @@ namespace ScorePage {
 
             nickText.text = dt.Nick;
             takeCoinText.text = _.Num2CnDigit(dt.TakeCoin);
+            
+            scoreText.color = _.GetTextColor(dt.Score);
+            scoreText.text = _.Number2Text(dt.Score); 
 
-            if (GameData.Shared.IsMatch()) {
-                if (GameData.Shared.Uid == dt.Uid) {
-                    scoreText.color = yellow;
-                } else {
-                    scoreText.color = white;
-                }
-                scoreText.text = dt.Score.ToString(); 
-            } else {
-                scoreText.color = _.GetTextColor(dt.Score);
-                scoreText.text = _.Number2Text(dt.Score); 
-            }
-
-            if (GameData.Shared.IsMatch() && dt.Score == 0) {
-                cvg.alpha = 0.7f;                
-                image.enabled = false;
-            } else if (dt.HasSeat) {
+            if (dt.HasSeat) {
                 cvg.alpha = 1;
                 image.enabled = false;
             } else {
