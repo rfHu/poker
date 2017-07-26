@@ -509,12 +509,12 @@ public class HTTP {
 		request.Send();
 	}
 
-	public static void Post(string url, Dictionary<string, object> data, Action<string> cb = null) {
+	public static void Post(string url, Dictionary<string, object> data = null, Action<string> cb = null) {
 		Request(url, HTTPMethods.Post, data, cb);
 	}
 
-	public static void Get(string url, Dictionary<string, object> data, Action<string> cb = null) {
-		Request(url, HTTPMethods.Get, data, cb);	
+	public static void Get(string url, Action<string> cb = null) {
+		Request(url, HTTPMethods.Get, null, cb);	
 	}
 }
 
