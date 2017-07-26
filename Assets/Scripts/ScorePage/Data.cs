@@ -26,6 +26,13 @@ namespace ScorePage
         public string Uid;
     }
 
+    public class RankRowData: Data {
+        public int Score;
+        public string Nick;
+        public string Uid;
+        public int Rank;
+    }
+
     public class GuestHeadData: Data {
         public int Number;
     }

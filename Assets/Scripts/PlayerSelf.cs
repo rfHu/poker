@@ -21,6 +21,8 @@ namespace PokerPlayer {
         private OP OPMono;
 		private CompositeDisposable disposables = new CompositeDisposable();
 
+		private bool hasShowCard = false;
+
         private Player player {
 			get {
 				return Base.player;
@@ -47,6 +49,7 @@ namespace PokerPlayer {
 		void OnDespawned() {
 			disposables.Clear();	
 
+			hasShowCard = false;
 			RxSubjects.Seating.OnNext(false);
 			YouWin.SetActive(false);
 			WinParticle.Stop(true);
@@ -287,6 +290,18 @@ namespace PokerPlayer {
 		}).AddTo(disposables);
 	}
 
+	private void reShow(Card card, int index) {
+		if (index <= 0) {
+			return ;
+		}
+
+		if (!hasShowCard) {
+			card.ShowWithSound(index, player.SeeCardAnim);
+		} else if (index > 0) {
+			card.ReShow();
+		}
+	}
+
         // ===== Delegate =====
 
         public void Fold() {
@@ -318,24 +333,34 @@ namespace PokerPlayer {
 			PoolMan.Despawn(transform);
         }
 
-		public void SeeCard(List<int> cards) {
+		public void ShowCard(List<int> cards) {
 			MyCards[0].parent.gameObject.SetActive(true);
 
-			var state = player.SeeCardAnim;
-
-			if (state) {
-				MyCards[0].GetComponent<Card>().ShowWithSound(cards[0], state);
-
-				Observable.Timer(TimeSpan.FromSeconds(0.3)).Subscribe((_) => {
-					MyCards[1].GetComponent<Card>().ShowWithSound(cards[1], state);
-				}).AddTo(disposables);
+			if (player.SeeCardAnim) {
+				var c1 = MyCards[0].GetComponent<Card>();
+				var c2 = MyCards[1].GetComponent<Card>();
+				
+				if (hasShowCard) { // 同时开牌
+					reShow(c1, cards[0]);
+					reShow(c2, cards[1]);
+				} else { // 间隔开牌
+					reShow(c1, cards[0]);
+					Observable.Timer(TimeSpan.FromSeconds(0.3)).Subscribe((_) => {
+						reShow(c2, cards[1]);	
+						hasShowCard = true;
+					}).AddTo(disposables);
+				}
 			} else {
-				MyCards[0].GetComponent<Card>().Show(cards[0], state);
-				MyCards[1].GetComponent<Card>().Show(cards[1], state);
+				MyCards[0].GetComponent<Card>().Show(cards[0]);
+				MyCards[1].GetComponent<Card>().Show(cards[1]);
+				hasShowCard = true;
 			}
 		}	
 
 		public void HandOver(GameOverJson data) {
+			player.SeeCardAnim = true;
+			ShowCard(data.cards);
+
 			if (data.Gain() <= 0) {
 				return ;
 			}

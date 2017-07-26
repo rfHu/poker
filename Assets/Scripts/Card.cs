@@ -14,6 +14,8 @@ public class Card : MonoBehaviour {
 
 	public static float TurnCardDuration = 0.3f;
 
+	private bool hasReShow = false;
+
 	void Awake() {
 		var img = GetComponent<Image>();
 		img.sprite = CardBack;
@@ -64,6 +66,20 @@ public class Card : MonoBehaviour {
 
 		var realIndex = Card.CardIndex(index);
 		show(realIndex, anim, complete);
+	}
+
+	public void ReShow() {
+		if (hasReShow) {
+			return ;
+		}
+
+		hasReShow = true;
+		StartCoroutine(flipCard(_index, null));
+		G.PlaySound("fapai_1");
+	}
+
+	void OnDisable() {
+		hasReShow = false;
 	}
 
 	public void ShowWithSound(int index, bool anim = false) {

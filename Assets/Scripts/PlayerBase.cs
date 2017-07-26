@@ -15,6 +15,8 @@ namespace PokerPlayer {
             }   
         } 
 
+        public static string CurrentUid; 
+
         public Avatar Avt;
         public SpkTextGo SpkText;
 	    public GameObject Volume;
@@ -98,6 +100,7 @@ namespace PokerPlayer {
             // 取消所有动画
             DOTween.Pause(AnimID);
 
+            lastState = ActionState.None;
             WinCq.gameObject.SetActive(false);
             ScoreParent.SetActive(true);
             PlayerAct.SetActive(false, false);
@@ -115,6 +118,16 @@ namespace PokerPlayer {
         } 
 
         private void addEvents() {
+            RxSubjects.ShowCard.Subscribe((e) => {
+                var uid = e.Data.String("uid");
+                if (uid != player.Uid) {
+                    return ;
+                }
+
+                 var cards = e.Data.IL("cards");
+                 myDelegate.ShowCard(cards);
+            }).AddTo(disposables);
+
             RxSubjects.ShowAudio.Where(isSelfJson).Subscribe((jsonStr) => {
                 Volume.SetActive(true);
                 ScoreLabel.gameObject.SetActive(false);
@@ -258,6 +271,8 @@ namespace PokerPlayer {
             	var uid = e.Data.String("uid");
             	var dc = e.Data.Int("deal_card");
             
+                CurrentUid = uid;
+
             	if (uid == Uid) {
             		myDelegate.TurnTo(e.Data, GameData.Shared.ThinkTime);
             		setPlayerActive(false, false);
@@ -299,14 +314,11 @@ namespace PokerPlayer {
                 OP.Despawn();
             }).AddTo(disposables);
 
-            player.Cards.AsObservable().Where((cards) => {
-                if (cards != null && cards.Count == 2) {
-                    return cards[0] > 0 && cards[1] > 0;
+            player.Cards.AsObservable().Subscribe((cards) => {
+                if (cards.Count < 2) {
+                    return ;
                 }
-
-                return false;
-            }).Subscribe((cards) => {
-                myDelegate.SeeCard(cards);
+                myDelegate.ShowCard(cards);
             }).AddTo(disposables);
 
             IDisposable winEndDisposable = null;
@@ -465,7 +477,7 @@ namespace PokerPlayer {
         void SetFolded();
         void ResetTime(int time);
         void Despawn();
-        void SeeCard(List<int> cards);
+        void ShowCard(List<int> cards);
         void HandOver(GameOverJson data);
         void WinEnd();
     } 

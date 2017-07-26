@@ -17,7 +17,7 @@ public class JoinMatch : MonoBehaviour {
     {
 
         EntryFee.text = GameData.MatchData.Data[0].ToString();
-        InitialScoreboard.text = "初始记分牌：" + GameData.MatchData.Data[1];
+        InitialScoreboard.text = string.Format("初始记分牌：<color=#fff>{0}</color>", GameData.MatchData.Data[1]);
         Charge.text = GameData.MatchData.Data[2].ToString();
 
         Coins.text = _.Num2CnDigit(GameData.Shared.Coins);
