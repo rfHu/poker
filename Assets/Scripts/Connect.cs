@@ -84,21 +84,11 @@ public sealed class Connect  {
 	}
 
 	private void enterGame() {
-		string gameType;
-		string gameID;
-
-		if (!string.IsNullOrEmpty(GameData.Shared.Room)) {
-			gameType = "roomid";
-			gameID = GameData.Shared.Room;
-		} else {
-			gameType = "matchid";
-			gameID = GameData.Shared.MatchID;
-		}
-
 		Emit(new Dictionary<string, object>{
 			{"f", "entergame"},
 			{"args", new Dictionary<string, object> {
-				{gameType, gameID},
+				{"matchid", GameData.Shared.MatchID},
+				{"roomid", GameData.Shared.Room},
 				{"ver", Application.version}
 			}}
 		}, (json) => {
@@ -487,6 +477,9 @@ public sealed class Connect  {
                 case "to_rebuy":
                     RxSubjects.Rebuy.OnNext(rxdata);
                     break;
+				case "mtt_match":
+					RxSubjects.MTTMatch.OnNext(rxdata);
+					break;
 				default:
 					break;
 			}

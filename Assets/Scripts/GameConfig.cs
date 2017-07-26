@@ -152,7 +152,7 @@ sealed public class Player {
 		Coins = json.Int("coins");
 		Allin.Value = json.Bool("is_allin");
 		LastAct.Value = json.String("last_act");
-        Rank.Value = json.Int("match_rank");
+        Rank.Value = GameData.Shared.Type == GameType.MTT ? json.Int("rank") : json.Int("match_rank");
 		readyState = json.Int("is_ready");
 
         if (GameData.Shared.IsMatch())
@@ -573,7 +573,7 @@ sealed public class GameData {
 	}
 	public int BB = 0;
 	public string RoomName = "";
-
+	public int TableNumber = -1; // MTT牌桌号 
     
     public GameType Type;
     public int BlindLv;
@@ -691,7 +691,6 @@ sealed public class GameData {
 		
         NeedInsurance = options.Int("need_insurance") == 1;
 		DealerSeat.Value = json.Int("dealer_seat");
-		RoomName = json.String("name");
 		Pot.Value = json.Int("pot");
 		Pots.Value = json.DL("pots");
 
@@ -707,6 +706,9 @@ sealed public class GameData {
         } else {
 			LeftTime.Value = json.Long("left_time");
 		}
+
+		RoomName = GameData.Shared.Type == GameType.MTT ? json.String("match_name") : json.String("name");
+		TableNumber = json.Int("name"); // MTT的牌桌名称就是牌桌号
 		
 		InGame = json.Bool("is_ingame");
 		MaxFiveRank.Value = json.Int("maxFiveRank");
