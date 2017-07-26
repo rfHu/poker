@@ -708,7 +708,9 @@ sealed public class GameData {
 		}
 
 		RoomName = GameData.Shared.Type == GameType.MTT ? json.String("match_name") : json.String("name");
-		TableNumber = json.Int("name"); // MTT的牌桌名称就是牌桌号
+		if (GameData.Shared.Type == GameType.MTT) {
+			TableNumber = json.Int("name"); // MTT的牌桌名称就是牌桌号
+		}
 		
 		InGame = json.Bool("is_ingame");
 		MaxFiveRank.Value = json.Int("maxFiveRank");

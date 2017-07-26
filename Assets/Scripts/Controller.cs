@@ -14,6 +14,7 @@ public class Controller : MonoBehaviour {
 	public GameObject startButton;
 
 	public List<GameObject> PublicCards;
+	[SerializeField]private Text[] gameInfoTexts;
 
 	public List<GameObject> Seats;	
 
@@ -237,23 +238,32 @@ public class Controller : MonoBehaviour {
 		}
 
 		var roomName = GameData.Shared.RoomName;
-		// addGameInfo(string.Format("[ {0} ]", roomName));
+		gameInfoTexts[0].text = string.Format("[ {0} ]", roomName);
 
-		var ipLimit = GameData.Shared.IPLimit;
-		var gpsLimit = GameData.Shared.GPSLimit;
+		if (GameData.Shared.Type == GameType.MTT) {
+			var num = GameData.Shared.TableNumber; 
+			if (num == 0) {
+				gameInfoTexts[1].text = "牌桌" + num;
+			} else {
+				gameInfoTexts[1].text = "决赛桌";
+			}
+		} else {
+			var ipLimit = GameData.Shared.IPLimit;
+			var gpsLimit = GameData.Shared.GPSLimit;
 
-		if (ipLimit && gpsLimit) {
-			// addGameInfo("IP 及 GPS 限制");
-		} else if (gpsLimit) {
-			// addGameInfo("GPS 限制");
-		} else if (ipLimit) {
-			// addGameInfo("IP 限制");
+			if (ipLimit && gpsLimit) {
+				gameInfoTexts[1].text = "IP 及 GPS 限制";
+			} else if (gpsLimit) {
+				gameInfoTexts[1].text = "GPS 限制";
+			} else if (ipLimit) {
+				gameInfoTexts[1].text = "IP 限制";
+			}
+
+			if (GameData.Shared.NeedInsurance)
+			{
+				gameInfoTexts[2].text = "保险模式";
+			}
 		}
-
-        if (GameData.Shared.NeedInsurance)
-        {
-            // addGameInfo("保险模式");
-        }
 	}
 
     private void setBBText()
@@ -756,7 +766,7 @@ public class Controller : MonoBehaviour {
                 {
                     case "bankroll_multiple":
                         GameData.Shared.BankrollMul = data.IL("bankroll_multiple");
-                        str = "房主将记分牌带入倍数改为：" + GameData.Shared.BankrollMul[0] + "-" + GameData.Shared.BankrollMul[1];
+                        str = "房主将记分牌倍数改为：" + GameData.Shared.BankrollMul[0] + "-" + GameData.Shared.BankrollMul[1];
                         PokerUI.Toast(str);
                     	break;
 
@@ -778,7 +788,7 @@ public class Controller : MonoBehaviour {
 
                     case "ante":
                         GameData.Shared.Ante.Value = data.Int("ante");
-                        str = "房主将底注改为：" + GameData.Shared.Ante.Value; 
+                        str = "房主将前注改为：" + GameData.Shared.Ante.Value; 
                         PokerUI.Toast(str);
                         break;
 

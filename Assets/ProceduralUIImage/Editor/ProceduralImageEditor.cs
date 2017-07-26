@@ -19,7 +19,7 @@ namespace UnityEditor.UI
 			attrList = ModifierUtility.GetAttributeList ();
 
 			m_borderWidth = serializedObject.FindProperty("borderWidth");
-			m_falloffDist = serializedObject.FindProperty("falloffDistance");
+			m_falloffDist = serializedObject.FindProperty("fallDistance");
 
 			if((target as ProceduralImage).GetComponent<ProceduralImageModifier> ()!=null){
 				selectedId = attrList.IndexOf(((ModifierID[])(target as ProceduralImage).GetComponent<ProceduralImageModifier> ().GetType ().GetCustomAttributes(typeof(ModifierID),false))[0]);

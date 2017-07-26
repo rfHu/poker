@@ -14,14 +14,14 @@ public class GameLoading : MonoBehaviour {
 			external.SetSocket("https://socket.dev.poker.top");
 			external.SetProxy("http://localhost:8888");
 
-            var rid = "597880e1ee11ea5cee494e2f";
-            var sid = "s%3AAXcstdojUCt5sCIy5bJyW6bsVpDe9o7O.EY9VRHoEzYDrZZplwLd1kUM64mMsGeQK3jV1nAUshdY";
+            var rid = "5978cea0600a6c6384baf600";
+            var sid = "s%3Ab0niVjevWCbAb8sGrerW5LrmhmkR_PaZ.9TMkzNmDE8%2FuGJEtG%2ByczM%2BreC%2FTuZKBhqQjp57p4kM";
 
 			// 外网登录态
 			// var sid = "s%3AHlY6SR0V3m8oM2oofbX_yl5R7f6v6Q7R.PK%2FqqIiSZHB0zLgH%2BwV52Yesi3CcsTPJFC3JPb7tjSQ";
 
-            // external.InitGame(rid + "&" + sid);
-			external.InitMatch(rid + "&" + sid);
+            external.InitGame(rid + "&" + sid);
+			// external.InitMatch(rid + "&" + sid);
 		#endif
 
 		// 开启SDK的日志打印，发布版本请务必关闭

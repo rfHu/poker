@@ -155,7 +155,7 @@ public class UIManager : MonoBehaviour {
             str += GameData.Shared.SB + "/" + GameData.Shared.BB + "]";
 
             if (GameData.Shared.Ante.Value > 0)
-                str += "，底注[" + GameData.Shared.Ante + "]";           
+                str += "，前注[" + GameData.Shared.Ante + "]";           
         }
         
         
