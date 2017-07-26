@@ -316,7 +316,7 @@ public sealed class Connect  {
 			// 换房间了，更新Room
 			if (e == "look" && argsDict.Int("is_enter_look") == 1) {
 				// 更新比赛、房间ID 
-				GameData.Shared.MatchID = argsDict.String("matchid");
+				GameData.Shared.MatchID = argsDict.Dict("options").String("matchid");
 				GameData.Shared.Room = rid;
 			} else if (!string.IsNullOrEmpty(rid) && rid != GameData.Shared.Room) {
 				return ;
@@ -474,6 +474,12 @@ public sealed class Connect  {
 				case "match_look":
 					RxSubjects.MatchLook.OnNext(rxdata);
 					break;
+                case "to_addon" :
+                    RxSubjects.AddOn.OnNext(rxdata);
+                    break;
+                case "to_rebuy":
+                    RxSubjects.Rebuy.OnNext(rxdata);
+                    break;
 				default:
 					break;
 			}
@@ -489,7 +495,7 @@ public sealed class Connect  {
 }
 
 public class HTTP {
-	public static string APIDomain = "https://api.poker.top";
+	public static string APIDomain = "https://api.dev.poker.top";
 
 	public static void Request(string url, HTTPMethods method, Dictionary<string, object> data, Action<string> cb = null) {
 		url = string.Format("{0}{1}", APIDomain, url);

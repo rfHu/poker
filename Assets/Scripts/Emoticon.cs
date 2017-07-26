@@ -6,15 +6,11 @@ using UnityEngine.UI;
 
 public class Emoticon : MonoBehaviour {
 
-    void Awake() {
-    }
-
     public void Init(Vector2 fromSeat, GameObject toSeat, bool isToMe) 
     {
         transform.SetParent(G.UICvs.transform, false);
 
         var _rectTransform = GetComponent<RectTransform>();
-        //transform.SetParent(G.UICvs.transform, false);
         _rectTransform.anchoredPosition = fromSeat;
 
         if (toSeat.GetComponent<Seat>().GetPos() == SeatPosition.Left)
@@ -35,5 +31,6 @@ public class Emoticon : MonoBehaviour {
 
         Tween tween = _rectTransform.DOLocalMove(aimSeat, 0.6f).SetEase(Ease.OutQuad);
         tween.Play();
+
     }
 }

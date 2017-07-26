@@ -449,7 +449,7 @@ public class Insurance : MonoBehaviour {
         var img = CheckAllToggle.transform.Find("Background").GetComponent<ProceduralImage>();
 
         if (isOn) {
-            img.color = MaterialUI.MaterialColor.cyanA200;            
+            img.color = MaterialUI.MaterialColor.cyanA200;
         } else {
             img.color = MaterialUI.MaterialColor.grey400;
         }

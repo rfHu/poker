@@ -5,9 +5,19 @@ using UnityEngine.UI.ProceduralImage;
 
 public class SNGBtn: MonoBehaviour {
     public void OnClick() {
-        var SNGMsgPage = PoolMan.Spawn("SNGMsgPage");
-        SNGMsgPage.GetComponent<DOPopup>().Show();
-        SNGMsgPage.GetComponent<SNGMsgPage>().Init();
+        if (GameData.Shared.Type == GameType.SNG)
+        {
+            var SNGMsgPage = PoolMan.Spawn("SNGMsgPage");
+            SNGMsgPage.GetComponent<DOPopup>().Show();
+            SNGMsgPage.GetComponent<SNGMsgPage>().Init();
+        }
+        else if (GameData.Shared.Type == GameType.MTT)
+        {
+            var MTTMsgPage = PoolMan.Spawn("MTTMsg");
+            MTTMsgPage.GetComponent<DOPopup>().Show();
+            MTTMsgPage.GetComponent<MTTMsg>().Init();
+        }
+
     }
 
     private CompositeDisposable disposables = new CompositeDisposable();

@@ -576,6 +576,7 @@ sealed public class GameData {
 
 	public class MatchData {
 		public static int Type;
+        public static int LimitLv;
 
 		public static string MatchString {
 			get {
@@ -589,6 +590,21 @@ sealed public class GameData {
 				return map[Type];
 			}
 		}
+
+        public static int[] Data
+        {
+            get {
+                int[][] data = { 
+                                  new int[] { 200, 2000, 20, 3 },
+                                  new int[] { 500, 4000, 50, 5 }, 
+                                  new int[] { 1000, 4000, 100, 10 },
+                                  new int[] { 2000, 8000, 200, 10 }
+                              };
+
+                    return data[Type - 1]; 
+            }
+        }
+
 	}
 
 	// 游戏是否已经开始，跟暂停状态无关
@@ -671,6 +687,7 @@ sealed public class GameData {
         if (IsMatch())
         {
             MatchData.Type = options.Int("sub_type");
+            MatchData.LimitLv = options.Int("limit_level");
 			LeftTime.Value = json.Long("blind_countdown");
             BlindLv = json.Int("blind_lv");
         } else {
