@@ -11,8 +11,6 @@ using DG.Tweening;
 public class Controller : MonoBehaviour {
 	public GameObject LoadingModal;
 
-	public GameObject gameInfo;
-	public GameObject gameInfoWrapper;
 	public GameObject startButton;
 
 	public List<GameObject> PublicCards;
@@ -239,26 +237,22 @@ public class Controller : MonoBehaviour {
 		}
 
 		var roomName = GameData.Shared.RoomName;
-		if (String.IsNullOrEmpty(roomName)) {
-			roomName = "佚名";
-		}
-
-		addGameInfo(string.Format("[ {0} ]", roomName));
+		// addGameInfo(string.Format("[ {0} ]", roomName));
 
 		var ipLimit = GameData.Shared.IPLimit;
 		var gpsLimit = GameData.Shared.GPSLimit;
 
 		if (ipLimit && gpsLimit) {
-			addGameInfo("IP 及 GPS 限制");
+			// addGameInfo("IP 及 GPS 限制");
 		} else if (gpsLimit) {
-			addGameInfo("GPS 限制");
+			// addGameInfo("GPS 限制");
 		} else if (ipLimit) {
-			addGameInfo("IP 限制");
+			// addGameInfo("IP 限制");
 		}
 
         if (GameData.Shared.NeedInsurance)
         {
-            addGameInfo("保险模式");
+            // addGameInfo("保险模式");
         }
 	}
 
@@ -294,13 +288,6 @@ public class Controller : MonoBehaviour {
 		}
         Commander.Shared.OptionToggle(!GameSetting.talkSoundClose, 2);
         Commander.Shared.OptionToggle(!GameSetting.chatBubbleClose, 1);
-	}
-
-	private void addGameInfo(string text) {
-		GameObject label = Instantiate(gameInfo);
-		label.SetActive(true);
-		label.GetComponent<Text>().text = text;
-		label.transform.SetParent(gameInfoWrapper.transform, false);
 	}
 
 	private void setupSeats(int numberOfPlayers) {
