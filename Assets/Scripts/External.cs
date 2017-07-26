@@ -7,6 +7,7 @@ using MaterialUI;
 // Unity提供方法给Native
 public class External : MonoBehaviour{
 	private static External instance;
+	private static bool statePaused = false;
 	
 	public static External Instance {
 		get {
@@ -125,6 +126,8 @@ public class External : MonoBehaviour{
 	void OnApplicationPause(bool pauseStatus)
 	{
 		if (pauseStatus) {
+			statePaused = true;
+
 			_.Log("Unity: 游戏暂停");
 			if (Connect.Shared == null) {
 				return ;
@@ -133,6 +136,12 @@ public class External : MonoBehaviour{
 			Connect.Shared.CloseImmediate();
 		} else {
 			_.Log("Unity: 游戏恢复");
+			var lastPaused = statePaused;
+			statePaused = false;
+
+			if (!lastPaused) {
+				return ;	
+			}
 
 			if (!string.IsNullOrEmpty(GameData.Shared.MatchID)) {
 				Connect.SetupMatch();

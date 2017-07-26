@@ -15,6 +15,16 @@ public class MTTWaiting : MonoBehaviour {
 
 	private int ts;
 
+	void Awake()
+	{
+		RxSubjects.MTTMatch.Subscribe((e) => {
+			var type = e.Data.Int("type");
+			if (type == 2) {
+				PokerUI.Alert("报名人数不足，无法开赛");
+			}
+		}).AddTo(this);		
+	}
+
 	public void Init(Dictionary<string, object> data) {
 		avatar.SetImage(GameData.Shared.Avatar);
 		var dt = data.Dict("myself");
@@ -22,6 +32,10 @@ public class MTTWaiting : MonoBehaviour {
 
 		ts = data.Int("left_time");
 		setTime();
+
+		if (disposable != null) {
+			disposable.Dispose();
+		}
 
 		disposable = Observable.Interval(TimeSpan.FromSeconds(1)).Where((_) => ts > 0).Subscribe((_) => {
 			ts--;

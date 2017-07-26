@@ -482,6 +482,9 @@ public sealed class Connect  {
                 case "to_rebuy":
                     RxSubjects.Rebuy.OnNext(rxdata);
                     break;
+				case "mtt_match":
+					RxSubjects.MTTMatch.OnNext(rxdata);
+					break;
 				default:
 					break;
 			}
