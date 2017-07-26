@@ -21,6 +21,8 @@ public class MenuPopup : MonoBehaviour {
 
     public GameObject[] SNGHideGos;
 
+    public GameObject RebuyAddonGo;
+
 	public void Supplement() {
 		if (!GameData.MyCmd.Takecoin) {
 			return ;
@@ -32,6 +34,12 @@ public class MenuPopup : MonoBehaviour {
 	{
         SNGSetting();
         CommonSetting();
+
+        RebuyAddonGo.SetActive(GameData.Shared.Type == GameType.MTT);
+        if (GameData.Shared.BlindLv < GameData.MatchData.LimitLv && )
+        {
+            
+        }
 	}
 
     private void SNGSetting()

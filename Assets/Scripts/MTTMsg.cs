@@ -67,7 +67,7 @@ public class MTTMsg : MonoBehaviour {
                 return;
             
 
-            HTTP.Post("/match-rooms", new Dictionary<string, object> {
+            HTTP.Get("/match-rooms", new Dictionary<string, object> {
                 {"match_id", GameData.Shared.MatchID },
             }, (data) =>
                 {

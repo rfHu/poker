@@ -99,6 +99,10 @@ public class Commander {
     public void ShareSNGResult(string pic = null) {
         ic.ShareSNGResult(pic);
     }
+
+    public void InitHx(string chatRoomId) {
+        ic.InitHx(chatRoomId);
+    }
 }
 
 public interface ICommander {
@@ -114,6 +118,7 @@ public interface ICommander {
     void VoiceIconToggle(bool isShowing);
 	void PauseUnity();
     void OptionToggle(bool isOpen, int type);
+    void InitHx(string chatRoomId);
 }
 
 #if UNITY_ANDROID
@@ -178,6 +183,11 @@ public class AndroidCommander: ICommander {
 	        getJo().Call("gameMessageIsShowToggle", isOpen, type);
 		#endif
     }
+
+    public void InitHx(string chatRoomId)
+    {
+        getJo().Call("initHx", chatRoomId);
+    }
 }
 #endif
 
@@ -218,6 +228,9 @@ public class iOSCommander: ICommander {
 
 	[DllImport("__Internal")]
 	private static extern void _ex_callShareSNGResult();
+
+    [DllImport("__Internal")]
+    private static extern void _ex_callInitHx(string chatRoomId);
 
 	public void Exit() {
 		_ex_callExitGame();
@@ -275,6 +288,10 @@ public class iOSCommander: ICommander {
 #else
         	_ex_callOptionToggle(isOpen, type);
 #endif
+    }
+
+    public void InitHx(string chatRoomId) {
+        _ex_callInitHx(chatRoomId);
     }
 }
 #endif

@@ -578,6 +578,8 @@ sealed public class GameData {
 		public static int Type;
         public static int LimitLv;
 
+        public 
+
 		public static string MatchString {
 			get {
 				var map = new Dictionary<int, string>(){
