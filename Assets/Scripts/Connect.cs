@@ -502,26 +502,41 @@ public class HTTP {
 	public static void Request(string url, HTTPMethods method, Dictionary<string, object> data, Action<string> cb = null) {
 		url = string.Format("{0}{1}", APIDomain, url);
 
-		HTTPRequest request = new HTTPRequest(new Uri(url), method, (req, res) => {
+		if (method == HTTPMethods.Get) {
+			var uriBuilder = new UriBuilder(url);
+			var queryList = new List<string>();
+
+			foreach(KeyValuePair<string, object> item in data) {
+				queryList.Add(
+					WWW.EscapeURL(item.Key) + "=" + WWW.EscapeURL(item.Value.ToString())
+				);
+			}
+
+			uriBuilder.Query = string.Join("&", queryList.ToArray());
+			url = uriBuilder.ToString();
+		} 
+
+		HTTPRequest request	= new HTTPRequest(new Uri(url), method, (req, res) => {
 			if (cb != null) {
 				cb(res.DataAsText);
 			}
-		});
-
-		foreach(KeyValuePair<string, object> item in data) {
-			request.AddField(item.Key, item.Value.ToString());
+		});;
+		
+		if (method == HTTPMethods.Post) {
+			foreach(KeyValuePair<string, object> item in data) {
+				request.AddField(item.Key, item.Value.ToString());
+			}
 		}
 
 		request.Cookies.Add(new BestHTTP.Cookies.Cookie("connect.sid", GameData.Shared.Sid));
-
 		request.Send();
 	}
 
-	public static void Post(string url, Dictionary<string, object> data, Action<string> cb = null) {
+	public static void Post(string url, Dictionary<string, object> data = null, Action<string> cb = null) {
 		Request(url, HTTPMethods.Post, data, cb);
 	}
 
-	public static void Get(string url, Dictionary<string, object> data, Action<string> cb = null) {
+	public static void Get(string url, Dictionary<string, object> data = null,  Action<string> cb = null) {
 		Request(url, HTTPMethods.Get, data, cb);	
 	}
 }
