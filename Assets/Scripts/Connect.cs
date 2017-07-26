@@ -316,7 +316,7 @@ public sealed class Connect  {
 			// 换房间了，更新Room
 			if (e == "look" && argsDict.Int("is_enter_look") == 1) {
 				// 更新比赛、房间ID 
-				GameData.Shared.MatchID = argsDict.String("matchid");
+				GameData.Shared.MatchID = argsDict.Dict("options").String("matchid");
 				GameData.Shared.Room = rid;
 			} else if (!string.IsNullOrEmpty(rid) && rid != GameData.Shared.Room) {
 				return ;
