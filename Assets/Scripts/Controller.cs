@@ -26,6 +26,8 @@ public class Controller : MonoBehaviour {
 	public GameObject TimeLeftGo;
 	public GameObject Logo;
 	public GameObject SNGGo;
+	[SerializeField]private GameObject MTTGo; 
+
 	public GameObject SNGBtn;
 
     public GameObject SeeLeftCard;
@@ -886,10 +888,13 @@ public class Controller : MonoBehaviour {
 
     private void SNGSetting()
     {
-		if (GameData.Shared.IsMatch()) {
-			SNGGo.SetActive(true);
-		} else {
-			SNGGo.SetActive(false);
+		SNGGo.SetActive(false);
+		MTTGo.SetActive(false);
+
+		if (GameData.Shared.Type == GameType.MTT) {
+			MTTGo.SetActive(true);
+		} else if (GameData.Shared.Type == GameType.SNG) {
+			SNGGo.SetActive(true);	
 		}
     }
 
