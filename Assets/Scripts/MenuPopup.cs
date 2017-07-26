@@ -35,12 +35,31 @@ public class MenuPopup : MonoBehaviour {
         SNGSetting();
         CommonSetting();
 
-        RebuyAddonGo.SetActive(GameData.Shared.Type == GameType.MTT);
-        // if (GameData.Shared.BlindLv < GameData.MatchData.LimitLv && )
-        // {
-            
-        // }
+        RebuyAddonSetting();
 	}
+
+    private void RebuyAddonSetting()
+    {
+        RebuyAddonGo.SetActive(GameData.Shared.Type == GameType.MTT);
+        if (!RebuyAddonGo.activeInHierarchy)
+            return;
+
+        var isInteractable = false;
+
+        if (GameData.Shared.BlindLv < GameData.MatchData.LimitLv)
+        {
+            RebuyAddonGo.GetComponentInChildren<Text>().text = "重购";
+            isInteractable = GameData.Shared.GetMyPlayer().RebuyCount < GameData.MatchData.Rebuy && GameData.Shared.Bankroll.Value < GameData.MatchData.Data[1];
+        }
+        else if (GameData.Shared.BlindLv == GameData.MatchData.LimitLv)
+        {
+            RebuyAddonGo.GetComponentInChildren<Text>().text = "增购";
+            isInteractable = GameData.Shared.GetMyPlayer().AddonCount < GameData.MatchData.Addon;
+        }
+
+        RebuyAddonGo.GetComponent<CanvasGroup>().alpha = (isInteractable) ? 1 : 0.5f;
+        RebuyAddonGo.GetComponent<Button>().interactable = isInteractable;
+    }
 
     private void SNGSetting()
     {
@@ -187,5 +206,12 @@ public class MenuPopup : MonoBehaviour {
         }, null);
 
         GetComponent<DOPopup>().Close();
+    }
+
+    public void OnRebuyAddon() 
+    {
+        var go = PoolMan.Spawn("RebuyOrAddon");
+        go.GetComponent<DOPopup>().Show();
+        go.GetComponent<RebuyOrAddon>().Init(GameData.Shared.BlindLv < GameData.MatchData.LimitLv);
     }
 }

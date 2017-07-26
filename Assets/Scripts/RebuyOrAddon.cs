@@ -16,14 +16,18 @@ public class RebuyOrAddon : MonoBehaviour {
 
     public Text LimitLv;
 
+    public Text EnterText;
+
     private DialogAlert payDialog;
     private int Type;
 
-    public void Init(Dictionary<string,object> data, bool Rebuy = true) 
+    public void Init(bool Rebuy = true) 
     {
         Type = Rebuy ? 1 : 2;
 
         Title.text = Rebuy? "重购":"增购";
+
+        EnterText.text = Rebuy ? "重购" : "增购";
 
         Message.text = string.Format("{0}<color=#ffd028>{1}</color>倍的初始记分牌，继续参与赛事", Title.text, Rebuy ? "1" : "1.5");
 

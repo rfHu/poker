@@ -119,6 +119,9 @@ sealed public class Player {
 
     public ReactiveProperty<int> Rank = new ReactiveProperty<int>();
 
+    public int AddonCount;
+    public int RebuyCount;
+
 	public int readyState = -1;
 
 	public void SetState(int state, int cd = 0) {
@@ -151,6 +154,12 @@ sealed public class Player {
 		LastAct.Value = json.String("last_act");
         Rank.Value = GameData.Shared.Type == GameType.MTT ? json.Int("rank") : json.Int("match_rank");
 		readyState = json.Int("is_ready");
+
+        if (GameData.Shared.IsMatch())
+        {
+            AddonCount = json.Int("add_on");
+            RebuyCount = json.Int("rebuy_count");
+        }
 
 		var showValue = Convert.ToString(json.Int("showcard"), 2);
 
@@ -578,7 +587,8 @@ sealed public class GameData {
 		public static int Type;
         public static int LimitLv;
 
-        // public 
+        public static int Addon;
+        public static int Rebuy;
 
 		public static string MatchString {
 			get {
@@ -689,6 +699,8 @@ sealed public class GameData {
         {
             MatchData.Type = options.Int("sub_type");
             MatchData.LimitLv = options.Int("limit_level");
+            MatchData.Rebuy = options.Int("rebuy_count");
+            MatchData.Addon = options.Int("add_on");
 			LeftTime.Value = json.Long("blind_countdown");
             BlindLv = json.Int("blind_lv");
         } else {
