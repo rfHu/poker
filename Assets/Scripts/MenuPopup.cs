@@ -207,4 +207,11 @@ public class MenuPopup : MonoBehaviour {
 
         GetComponent<DOPopup>().Close();
     }
+
+    public void OnRebuyAddon() 
+    {
+        var go = PoolMan.Spawn("RebuyOrAddon");
+        go.GetComponent<DOPopup>().Show();
+        go.GetComponent<RebuyOrAddon>().Init(GameData.Shared.BlindLv < GameData.MatchData.LimitLv);
+    }
 }

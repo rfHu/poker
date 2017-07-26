@@ -33,9 +33,13 @@ public class MTTMsg : MonoBehaviour {
     public Text IPLimit;
 
     //P2页面
-    public Text JackpotType;
+    public Text JackpotTotal;
+    public Text Count;
+    public GameObject AwardPre;
+    public Transform P2GoParent;
 
     //P4页面
+    public Transform P4GoParent;
     public GameObject RoomMsgPre;
 
     public Toggle[] Toggles;
@@ -61,22 +65,63 @@ public class MTTMsg : MonoBehaviour {
             });
         }
 
+        Toggles[1].onValueChanged.AddListener((isOn) => 
+        {
+            if (!isOn)
+                return;
+
+            HTTP.Get("/match-award", new Dictionary<string, object> {
+                {"match_id", GameData.Shared.MatchID },
+            }, (data) =>
+            {
+                var awardMsg = Json.Decode(data) as Dictionary<string,object>;
+
+                JackpotTotal.text = awardMsg.Int("total").ToString();
+                Count.text = awardMsg.Int("count").ToString();
+
+                for (int i = P2GoParent.childCount - 1; i > -1; i--)
+                {
+                    Destroy(P2GoParent.GetChild(i).gameObject);
+                }
+
+                var roomsMsg = awardMsg.List("list");
+
+                foreach (var item in roomsMsg)
+                {
+                    var msg = item as Dictionary<string, object>;
+
+                    GameObject go = Instantiate(AwardPre, P2GoParent);
+                    go.SetActive(true);
+                    go.transform.GetChild(0).GetComponentInChildren<Text>().text = msg.Int("rank").ToString();
+                    go.transform.GetChild(1).GetComponentInChildren<Text>().text = msg.String("award");
+                }
+            });
+        });
+
         Toggles[3].onValueChanged.AddListener((isOn) => 
         {
             if (!isOn)
                 return;
             
 
+
             HTTP.Get("/match-rooms", new Dictionary<string, object> {
                 {"match_id", GameData.Shared.MatchID },
             }, (data) =>
                 {
+                    for (int i = P4GoParent.childCount - 1; i > -1; i--)
+                    {
+                        Destroy(P4GoParent.GetChild(i).gameObject);
+                    }
+
                     var roomsMsg = Json.Decode(data) as List<object>;
+
                     foreach (var item in roomsMsg)
                     {
                         var msg = item as Dictionary<string, object>;
 
-                        GameObject go = Instantiate(RoomMsgPre);
+                        GameObject go = Instantiate(RoomMsgPre, P4GoParent);
+                        go.SetActive(true);
                         go.transform.GetChild(0).GetComponentInChildren<Text>().text = msg.Int("num").ToString();
                         go.transform.GetChild(1).GetComponentInChildren<Text>().text = msg.Int("gamers_count").ToString();
                         go.transform.GetChild(2).GetComponentInChildren<Text>().text = msg.Int("min") + "/" + msg.Int("max");
@@ -94,7 +139,7 @@ public class MTTMsg : MonoBehaviour {
             }
 
             timer = timer + 1;
-
+            TimePassed.text = "已进行：" + secToStr(timer);
         });
     }
 
@@ -131,7 +176,7 @@ public class MTTMsg : MonoBehaviour {
             //p1信息
             TableNum.text = roomsData.Int("table_num").ToString();
             RoomPlayerNum.text = roomsData.Int("max_seats").ToString();
-            RoomNum.text = "";
+            RoomNum.text = roomsData.Int("table_count").ToString();
             Rebuy.text = roomsData.Int("rebuy_count").ToString();
             AddOn.text = roomsData.Int("add_on").ToString();
             CreatorName.text = roomsData.String("creator_name");
