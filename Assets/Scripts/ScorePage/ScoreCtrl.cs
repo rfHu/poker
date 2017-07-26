@@ -44,6 +44,7 @@ namespace ScorePage {
             public RectTransform LeaveIconPrefab;
             public RectTransform Award27Prefab;
             public RectTransform ScoreHeaderPrefab;
+            public RectTransform RankPrefab;
 
             public List<Data> rowData = new List<Data>();
         }
@@ -54,7 +55,7 @@ namespace ScorePage {
             { 
                 var data = _Params.rowData[index];
 
-                if (data is InsuranceRowData || data is PlayerRowData || data is Data27) {
+                if (data is InsuranceRowData || data is PlayerRowData || data is Data27 || data is RankRowData) {
                     return 90f;
                 } else if (data is GuestHeadData || data is ScoreHeaderData) {
                     return 80f;
@@ -92,6 +93,9 @@ namespace ScorePage {
                 } else if (data is ScoreHeaderData) {
                     instance = new ScoreHeader();
                     instance.Init(_Params.ScoreHeaderPrefab, itemIndex);
+                } else if (data is RankRowData) {
+                    instance =  new RankRow();
+                    instance.Init(_Params.RankPrefab, itemIndex);
                 } else  {
                     instance = new GuestRow();    
                     instance.Init(_Params.GuestPrefab, itemIndex);
@@ -137,8 +141,8 @@ namespace ScorePage {
 
                     rowData.Add(new ScoreHeaderData() {
                         List = new List<string>() {
-                            "昵称",
                             "排名",
+                            "昵称",
                             "记分牌"
                         }
                     });
@@ -171,88 +175,109 @@ namespace ScorePage {
                     });
                 }
 
-                var playerList = new List<Data>();
-                var offScoreList = new List<Data>();
                 var guestList = new List<PlayerModel>();
 
-                foreach(object item in json.List("list")) {
-                    var dict = item as Dictionary<string, object>;
-                    if (dict == null) {
-                        continue;
+                if (!GameData.Shared.IsMatch()) {
+                    var playerList = new List<Data>();
+                    var offScoreList = new List<Data>();
+
+                    foreach(object item in json.List("list")) {
+                        var dict = item as Dictionary<string, object>;
+                        if (dict == null) {
+                            continue;
+                        }
+
+                        var model = dict.ToObject<PlayerModel>();
+
+                        if (model.takecoin > 0) {
+                            var data = new PlayerRowData() {
+                                TakeCoin = model.takecoin,
+                                Nick = model.name,
+                                Score = model.bankroll - model.takecoin,
+                                HasSeat = model.seat >= 0,
+                                Uid = model.uid
+                            };
+                            playerList.Add(data);
+                        }
+
+                        if (model.seat < 0) {
+                            guestList.Add(model);
+                        }
+
+                        var list = dict.List("off_scores");
+                        foreach(var o in list) {
+                            var dd = o as Dictionary<string, object>;
+                            offScoreList.Add(new PlayerRowData() {
+                                TakeCoin = dd.Int("takecoin"),
+                                Nick = model.name,
+                                Score = dd.Int("bankroll") - dd.Int("takecoin"),
+                                HasSeat = false
+                            });
+                        }
                     }
 
-                    var model = dict.ToObject<PlayerModel>();
-
-                    if (model.takecoin > 0) {
-                        var data = new PlayerRowData() {
-                            TakeCoin = model.takecoin,
-                            Nick = model.name,
-                            Score = GameData.Shared.IsMatch() ? model.bankroll : model.bankroll - model.takecoin,
-                            HasSeat = GameData.Shared.IsMatch() ? true : (model.seat >= 0),
-                            Uid = model.uid
-                        };
-                        playerList.Add(data);
-                    }
-
-                    if (model.seat < 0) {
-                        guestList.Add(model);
-                    }
-
-                    var list = dict.List("off_scores");
-                    foreach(var o in list) {
-                        var dd = o as Dictionary<string, object>;
-                        offScoreList.Add(new PlayerRowData() {
-                            TakeCoin = dd.Int("takecoin"),
-                            Nick = model.name,
-                            Score = dd.Int("bankroll") - dd.Int("takecoin"),
-                            HasSeat = false
-                        });
-                    }
-                }
-
-                playerList.Sort((a, b) => {
-                    var aa = a as PlayerRowData;
-                    var bb = b as PlayerRowData;
-
-                    if (aa.HasSeat != bb.HasSeat) {
-                        return bb.HasSeat ? 1 : -1;
-                    }
-
-                    return bb.Score - aa.Score;
-                });
-
-                if (GameData.Shared.IsMatch()) {
-                    for (var i = 0; i < playerList.Count; i++) {
-                        // SNG换成是排名
-                        var dt = playerList[i] as PlayerRowData;
-                        dt.TakeCoin = i + 1;
-                    }
-                }
-
-                // 离开座位且排在第一位的显示已离桌标志
-                var index = playerList.FindIndex((dt) => {
-                    var data = dt as PlayerRowData;
-                    return !data.HasSeat; 
-                });
-
-                if (index >= 0) {
-                    playerList.Insert(index, new LeaveIconData() {
-                        Label = "已离桌"
-                    });
-                }
-
-                rowData.AddRange(playerList);
-
-                if (offScoreList.Count > 0) {
-                    rowData.Add(new LeaveIconData(){
-                        Label = "已下分"
-                    });
-                    offScoreList.Sort((a, b) => {
+                    playerList.Sort((a, b) => {
                         var aa = a as PlayerRowData;
                         var bb = b as PlayerRowData;
+
+                        if (aa.HasSeat != bb.HasSeat) {
+                            return bb.HasSeat ? 1 : -1;
+                        }
+
                         return bb.Score - aa.Score;
                     });
-                    rowData.AddRange(offScoreList);
+
+                    // 离开座位且排在第一位的显示已离桌标志
+                    var index = playerList.FindIndex((dt) => {
+                        var data = dt as PlayerRowData;
+                        return !data.HasSeat; 
+                    });
+
+                    if (index >= 0) {
+                        playerList.Insert(index, new LeaveIconData() {
+                            Label = "已离桌"
+                        });
+                    }
+
+                    rowData.AddRange(playerList);
+
+                    if (offScoreList.Count > 0) {
+                        rowData.Add(new LeaveIconData(){
+                            Label = "已下分"
+                        });
+                        offScoreList.Sort((a, b) => {
+                            var aa = a as PlayerRowData;
+                            var bb = b as PlayerRowData;
+                            return bb.Score - aa.Score;
+                        });
+                        rowData.AddRange(offScoreList);
+                    }
+                } else {
+                    var rankList = new List<Data>();
+
+                    foreach(object item in json.List("list")) {
+                        var dict = item as Dictionary<string, object>;
+                        if (dict == null) {
+                            continue;
+                        }
+
+                        var model = dict.ToObject<PlayerModel>(); 
+                        
+                        rankList.Add(new RankRowData() {
+                            Score = model.bankroll - model.takecoin,
+                            Nick = model.name,
+                            Uid = model.uid,
+                            Rank = model.match_rank
+                        });
+                    }
+
+                    rankList.Sort((a , b) => {
+                        var aa = a as RankRowData;
+                        var bb = b as RankRowData;
+                        return aa.Rank - bb.Rank;
+                    });
+
+                    rowData.AddRange(rankList);
                 }
                 
                 rowData.Add(new GuestHeadData() {

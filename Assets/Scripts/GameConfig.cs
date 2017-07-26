@@ -107,7 +107,7 @@ sealed public class Player {
 
 	public Subject<ActionState> ActState = new Subject<ActionState>();
 
-	public ReactiveProperty<List<int>> Cards = new ReactiveProperty<List<int>>();
+	public BehaviorSubject<List<int>> Cards = new BehaviorSubject<List<int>>(new List<int>());
 
 	public bool SeeCardAnim = false;
 
@@ -185,7 +185,7 @@ sealed public class Player {
 		}
 
 		var cards = json.IL("cards");
-		Cards.Value = cards;
+		Cards.OnNext(cards);
 
 		var state = json.Int("gamer_state");
 		var ucd = json.Int("unseat_countdown");
@@ -340,7 +340,7 @@ sealed public class GameData {
 
 					var player = Players[k];
 					player.SeeCardAnim = true;
-					player.Cards.Value = list;
+					player.Cards.OnNext(list);
 				}
 			}
 
@@ -430,7 +430,7 @@ sealed public class GameData {
 			if (Players.ContainsKey(index)) {
 				var player = Players[index];
 				player.SeeCardAnim = true;
-				player.Cards.Value = cards;
+				player.Cards.OnNext(cards);
 			}
 		});
 

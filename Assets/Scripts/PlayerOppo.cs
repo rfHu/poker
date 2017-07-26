@@ -71,16 +71,6 @@ namespace PokerPlayer {
         }
 
         private void addEvents() {
-            RxSubjects.ShowCard.Subscribe((e) => {
-                var uid = e.Data.String("uid");
-                if (uid != player.Uid) {
-                    return ;
-                }
-
-                var cards = e.Data.IL("cards");
-                showTheCards(cards, true);
-            }).AddTo(disposables);
-
             // 中途复原行动
             player.Countdown.AsObservable().Where((obj) => obj.seconds > 0).Subscribe((obj) => {
                 TurnTo(null, obj.seconds);
@@ -203,7 +193,7 @@ namespace PokerPlayer {
             PoolMan.Despawn(transform);
         }
 
-        public void SeeCard(List<int> cards) {
+        public void ShowCard(List<int> cards) {
             showTheCards(cards, player.SeeCardAnim);
         }
 

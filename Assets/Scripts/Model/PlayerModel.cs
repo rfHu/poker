@@ -8,4 +8,5 @@ public class PlayerModel
     public string uid;
     public bool in_room;
     public int seat;
+    public int match_rank;
 }

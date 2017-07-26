@@ -572,7 +572,7 @@ public class Controller : MonoBehaviour {
 
 		RxSubjects.Pass.Subscribe((_) => {
 			if (GameData.Shared.InGame) {
-				PokerUI.Toast("记分牌带入成功（下局生效）");
+				PokerUI.Toast("记分牌带入成功（下一手生效）");
 			} else {
 				var text = GameData.Shared.IsMatch() ?  "报名成功" : "记分牌带入成功";
 				PokerUI.Toast(text);
