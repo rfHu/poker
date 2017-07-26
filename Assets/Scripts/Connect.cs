@@ -482,6 +482,12 @@ public sealed class Connect  {
 				case "match_look":
 					RxSubjects.MatchLook.OnNext(rxdata);
 					break;
+                case "to_addon" :
+                    RxSubjects.AddOn.OnNext(rxdata);
+                    break;
+                case "to_rebuy":
+                    RxSubjects.Rebuy.OnNext(rxdata);
+                    break;
 				default:
 					break;
 			}
@@ -497,7 +503,7 @@ public sealed class Connect  {
 }
 
 public class HTTP {
-	public static string APIDomain = "https://api.poker.top";
+	public static string APIDomain = "https://api.dev.poker.top";
 
 	public static void Request(string url, HTTPMethods method, Dictionary<string, object> data, Action<string> cb = null) {
 		url = string.Format("{0}{1}", APIDomain, url);

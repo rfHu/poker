@@ -576,8 +576,7 @@ sealed public class GameData {
 
 	public class MatchData {
 		public static int Type;
-
-        public static string ID;
+        public static int LimitLv;
 
 		public static string MatchString {
 			get {
@@ -688,6 +687,7 @@ sealed public class GameData {
         if (IsMatch())
         {
             MatchData.Type = options.Int("sub_type");
+            MatchData.LimitLv = options.Int("limit_level");
 			LeftTime.Value = json.Long("blind_countdown");
             BlindLv = json.Int("blind_lv");
         } else {
