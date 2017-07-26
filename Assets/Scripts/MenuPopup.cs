@@ -36,10 +36,10 @@ public class MenuPopup : MonoBehaviour {
         CommonSetting();
 
         RebuyAddonGo.SetActive(GameData.Shared.Type == GameType.MTT);
-        if (GameData.Shared.BlindLv < GameData.MatchData.LimitLv && )
-        {
+        // if (GameData.Shared.BlindLv < GameData.MatchData.LimitLv && )
+        // {
             
-        }
+        // }
 	}
 
     private void SNGSetting()

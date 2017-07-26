@@ -578,7 +578,7 @@ sealed public class GameData {
 		public static int Type;
         public static int LimitLv;
 
-        public 
+        // public 
 
 		public static string MatchString {
 			get {
