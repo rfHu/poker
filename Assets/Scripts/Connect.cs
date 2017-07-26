@@ -84,21 +84,11 @@ public sealed class Connect  {
 	}
 
 	private void enterGame() {
-		string gameType;
-		string gameID;
-
-		if (!string.IsNullOrEmpty(GameData.Shared.Room)) {
-			gameType = "roomid";
-			gameID = GameData.Shared.Room;
-		} else {
-			gameType = "matchid";
-			gameID = GameData.Shared.MatchID;
-		}
-
 		Emit(new Dictionary<string, object>{
 			{"f", "entergame"},
 			{"args", new Dictionary<string, object> {
-				{gameType, gameID},
+				{"matchid", GameData.Shared.MatchID},
+				{"roomid", GameData.Shared.Room},
 				{"ver", Application.version}
 			}}
 		}, (json) => {
@@ -316,8 +306,9 @@ public sealed class Connect  {
 			// 换房间了，更新Room
 			if (e == "look" && argsDict.Int("is_enter_look") == 1) {
 				// 更新比赛、房间ID 
-				GameData.Shared.MatchID = argsDict.Dict("option").String("matchid");
+				GameData.Shared.MatchID = argsDict.Dict("options").String("matchid");
 				GameData.Shared.Room = rid;
+
                 //传给应用环信需要
                 Commander.Shared.InitHx(rid);
 			} else if (!string.IsNullOrEmpty(rid) && rid != GameData.Shared.Room) {
