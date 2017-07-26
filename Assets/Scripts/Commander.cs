@@ -101,6 +101,9 @@ public class Commander {
     }
 
     public void InitHx(string chatRoomId) {
+		#if UNITY_EDITOR
+			return ;
+		#endif
         ic.InitHx(chatRoomId);
     }
 }
