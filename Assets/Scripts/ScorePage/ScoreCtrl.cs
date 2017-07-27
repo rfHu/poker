@@ -264,6 +264,7 @@ namespace ScorePage {
                         var model = dict.ToObject<PlayerModel>(); 
 
                         if (model.seat < 0) {
+                            guestList.Add(model);
                             continue;
                         }
                         
