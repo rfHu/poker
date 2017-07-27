@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UI.ProceduralImage;
 
 public class MTTMsg : MonoBehaviour {
 
@@ -86,14 +87,18 @@ public class MTTMsg : MonoBehaviour {
 
                 var roomsMsg = awardMsg.List("list");
 
-                foreach (var item in roomsMsg)
+                for (int i = 0; i < roomsMsg.Count; i++)
                 {
-                    var msg = item as Dictionary<string, object>;
+                    var msg = roomsMsg[i] as Dictionary<string, object>;
 
                     GameObject go = Instantiate(AwardPre, P2GoParent);
                     go.SetActive(true);
                     go.transform.GetChild(0).GetComponentInChildren<Text>().text = msg.Int("rank").ToString();
                     go.transform.GetChild(1).GetComponentInChildren<Text>().text = msg.String("award");
+                    if ((i + 1) % 2 == 1)
+                    {
+                        go.AddComponent<ProceduralImage>().color = new Color(0, 0, 0, 0.2f);
+                    }
                 }
             });
         });
@@ -116,15 +121,19 @@ public class MTTMsg : MonoBehaviour {
 
                     var roomsMsg = Json.Decode(data) as List<object>;
 
-                    foreach (var item in roomsMsg)
+                    for (int i = 0; i < roomsMsg.Count; i++)
                     {
-                        var msg = item as Dictionary<string, object>;
+                        var msg = roomsMsg[i] as Dictionary<string, object>;
 
                         GameObject go = Instantiate(RoomMsgPre, P4GoParent);
                         go.SetActive(true);
                         go.transform.GetChild(0).GetComponentInChildren<Text>().text = msg.Int("num").ToString();
                         go.transform.GetChild(1).GetComponentInChildren<Text>().text = msg.Int("gamers_count").ToString();
                         go.transform.GetChild(2).GetComponentInChildren<Text>().text = msg.Int("min") + "/" + msg.Int("max");
+                        if ((i+1)%2 == 1)
+                        {
+                            go.AddComponent<ProceduralImage>().color = new Color(0, 0, 0, 0.2f);
+                        }
                     }
             });
         });
@@ -192,6 +201,8 @@ public class MTTMsg : MonoBehaviour {
             IPLimit.text = roomsData.Int("ip_limit") == 1 ? "开启" : "关闭";
             IPLimit.color = roomsData.Int("ip_limit") == 1 ? openCol : Color.white;
         });
+
+        Toggles[0].isOn = true;
     }
 
     private string secToStr(long seconds)
