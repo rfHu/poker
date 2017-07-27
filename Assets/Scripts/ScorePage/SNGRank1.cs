@@ -12,7 +12,7 @@ namespace ScorePage {
                 return ;
             }
 
-            GetComponent<RawImage>().texture = textures[rank];
+            GetComponent<RawImage>().texture = textures[rank - 1];
         }
     }
 }

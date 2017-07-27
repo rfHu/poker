@@ -33,10 +33,10 @@ namespace ScorePage {
             nickText.text = dt.Nick;
             scoreText.text = _.Num2CnDigit(dt.Score);
             
-            if (dt.Score > 0) {
-                cvg.alpha = 1;
+            if (dt.Score == 0) {
+                cvg.alpha = 0.7f;
             } else {
-                cvg.alpha = 0.7f;  
+                cvg.alpha = 1;  
             }
 
             if (dt.Rank <= 3) {
