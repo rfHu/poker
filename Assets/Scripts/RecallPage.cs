@@ -33,6 +33,10 @@ public class RecallPage : MonoBehaviour {
         request();
     }
 
+    void OnDespawned() {
+        requesting = false;
+    }
+
 	public void request(int num = 0) {
         if (requesting) {
             return ;
