@@ -62,7 +62,7 @@ namespace ScorePage {
             cvg = root.GetComponent<CanvasGroup>();
         }
 
-        public override bool CanPresentModelType(Type modelType) { return modelType == typeof(PlayerRowData); }
+        public override bool CanPresentModelType(Type modelType) { return modelType == typeof(RankRowData); }
     }
 }
  
