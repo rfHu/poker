@@ -93,6 +93,10 @@ public class PoolMan {
 	}
 
 	public static void DespawnAll() {
+		if (!PoolManager.Pools.ContainsKey("Shared")) {
+			return ;
+		}
+
 		var pool  = PoolManager.Pools["Shared"];
 
 		if (pool == null) {
