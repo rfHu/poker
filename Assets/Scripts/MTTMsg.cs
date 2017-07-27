@@ -6,6 +6,7 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UI.ProceduralImage;
+using DG.Tweening;
 
 public class MTTMsg : MonoBehaviour {
 
@@ -48,9 +49,12 @@ public class MTTMsg : MonoBehaviour {
     private Color selectCol = new Color(33 / 255, 41 / 255, 50 / 255);
     private Color openCol = new Color(24 / 255, 1, 1);
     private long timer = 0;
+    private RectTransform _rectTransform;
 
     void Awake()
     {
+        _rectTransform = GetComponent<RectTransform>();
+
         foreach (var item in Toggles)
         {
             item.onValueChanged.AddListener((isOn) => 
@@ -65,6 +69,14 @@ public class MTTMsg : MonoBehaviour {
                 }
             });
         }
+
+        Toggles[0].onValueChanged.AddListener((isOn) => 
+        {
+            if (!isOn)
+                return;
+
+            setGoSize(false);
+        });
 
         Toggles[1].onValueChanged.AddListener((isOn) => 
         {
@@ -87,6 +99,8 @@ public class MTTMsg : MonoBehaviour {
 
                 var roomsMsg = awardMsg.List("list");
 
+                setGoSize(roomsMsg.Count > 5);
+
                 for (int i = 0; i < roomsMsg.Count; i++)
                 {
                     var msg = roomsMsg[i] as Dictionary<string, object>;
@@ -103,13 +117,21 @@ public class MTTMsg : MonoBehaviour {
             });
         });
 
+
+        Toggles[2].onValueChanged.AddListener((isOn) =>
+        {
+            if (!isOn)
+                return;
+
+            setGoSize(true);
+        });
+
+
         Toggles[3].onValueChanged.AddListener((isOn) => 
         {
             if (!isOn)
                 return;
             
-
-
             HTTP.Get("/match-rooms", new Dictionary<string, object> {
                 {"match_id", GameData.Shared.MatchID },
             }, (data) =>
@@ -120,6 +142,8 @@ public class MTTMsg : MonoBehaviour {
                     }
 
                     var roomsMsg = Json.Decode(data) as List<object>;
+
+                    setGoSize(roomsMsg.Count > 8);
 
                     for (int i = 0; i < roomsMsg.Count; i++)
                     {
@@ -231,5 +255,17 @@ public class MTTMsg : MonoBehaviour {
     {
         TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
         return Convert.ToInt64(ts.TotalSeconds);
-    } 
+    }
+
+    private void setGoSize(bool addHeight) 
+    {
+        if (addHeight && _rectTransform.sizeDelta.y != 1286)
+        {
+            _rectTransform.DOSizeDelta(new Vector2(860, 1286), 0.3f);
+        }
+        else if (!addHeight && _rectTransform.sizeDelta.y != 1010) 
+        {
+            _rectTransform.DOSizeDelta(new Vector2(860, 1010), 0.3f);
+        }
+    }
 }
