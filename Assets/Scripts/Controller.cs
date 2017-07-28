@@ -110,7 +110,8 @@ public class Controller : MonoBehaviour {
 
 	public void OnStartClick() {
 		Connect.Shared.Emit(new Dictionary<string, object>(){
-			{"f", "start"}
+			{"f", "start"},
+            {"for_match", 1},
 		}, (data, err) => {
 			if (err == 0) {
 				startButton.SetActive(false);
@@ -124,7 +125,7 @@ public class Controller : MonoBehaviour {
 
         Connect.Shared.Emit(new Dictionary<string, object>() {
 				{"f", "seecard"},
-                {"args", null}
+                {"for_match", 1},
         }, (data, err) => {
             if (err != 0)
             {
@@ -242,7 +243,7 @@ public class Controller : MonoBehaviour {
 
 		if (GameData.Shared.Type == GameType.MTT) {
 			var num = GameData.Shared.TableNumber; 
-			if (num == 0) {
+			if (num != 0) {
 				gameInfoTexts[1].text = "牌桌" + num;
 			} else {
 				gameInfoTexts[1].text = "决赛桌";
@@ -658,9 +659,30 @@ public class Controller : MonoBehaviour {
 
 			// 获取roomID，调用ExitCb后无法获取
 			var roomID = GameData.Shared.Room;
+            var matchID = GameData.Shared.MatchID;
+            var ID = "";
+            var page = "";
 			// 清理
 			External.Instance.ExitCb(() => {
-				Commander.Shared.GameEnd(roomID, GameData.Shared.IsMatch() ? "record_sng.html" : "record.html");
+                switch (GameData.Shared.Type)
+                {
+                    case GameType.Normal:
+                        ID = roomID;
+                        page = "record.html";
+                        break;
+                    case GameType.SNG:
+                        ID = roomID;
+                        page = "record_sng.html";
+                        break;
+                    case GameType.MTT:
+                        ID = matchID;
+                        page = "record_mtt.html";
+                        break;
+                    default:
+                        break;
+                }
+
+				Commander.Shared.GameEnd(ID, page);
 			});	
 		}).AddTo(this);
 	}
