@@ -440,7 +440,15 @@ public class Controller : MonoBehaviour {
 
 		RxSubjects.Seating.Subscribe((action) => 
         {
-             ExpressionButton.SetActive(action);
+			foreach(var go in Seats) {
+				var seat = go.GetComponent<Seat>();
+				if (action) {
+					seat.Hide();
+				} else if (seat.Index >= 0) {
+					seat.Show();
+				}
+			}
+            ExpressionButton.SetActive(action);
         }).AddTo(this);
        
 	   	subsPublicCards();

@@ -14,7 +14,13 @@ public enum SeatPosition {
 }
 
 public class Seat : MonoBehaviour {
-	public int Index;
+	public int Index {
+		get {
+			return _index;
+		}
+	}
+
+	private int _index = -1;
 
 	public ReactiveProperty<SeatPosition> SeatPos  = new ReactiveProperty<SeatPosition>();
 
@@ -52,6 +58,10 @@ public class Seat : MonoBehaviour {
 		} else {
 			takeSeat(new float[]{0, 0});
 		}
+	}
+
+	void OnDespawned() {
+		_index = -1;	
 	}
 
 	public SeatPosition GetPos() {
@@ -98,10 +108,9 @@ public class Seat : MonoBehaviour {
 
 	public void Init(int index, Vector2 vector) {
 		realVector = vector;
-		Index = index;
+		_index = index;
 		transform.SetParent (G.UICvs.transform, false);
 		GetComponent<RectTransform>().anchoredPosition = vector;
-		Show();
 
 		SeatPos.Value = GetPos();
 
@@ -110,6 +119,12 @@ public class Seat : MonoBehaviour {
 		} else {
 			ButtonText.text = "坐下";
 		}
+
+		if (GameData.Shared.Type == GameType.MTT) {
+			Hide();
+ 		} else {
+			Show();
+		 }
 	}
 
 	private void takeSeat(float[] pos) {
