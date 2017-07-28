@@ -39,7 +39,10 @@ namespace ScorePage {
                 cvg.alpha = 1;  
             }
 
-            if (dt.Rank <= 3) {
+            if (dt.Rank <= 0) {
+                rank1.gameObject.SetActive(false);
+                rank2.gameObject.SetActive(false);
+            } else if (dt.Rank <= 3) {
                 rank1.gameObject.SetActive(true);
                 rank2.gameObject.SetActive(false);
                 rank1.SetRank(dt.Rank);
@@ -62,7 +65,7 @@ namespace ScorePage {
             cvg = root.GetComponent<CanvasGroup>();
         }
 
-        public override bool CanPresentModelType(Type modelType) { return modelType == typeof(PlayerRowData); }
+        public override bool CanPresentModelType(Type modelType) { return modelType == typeof(RankRowData); }
     }
 }
  

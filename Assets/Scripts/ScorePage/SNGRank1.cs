@@ -8,11 +8,13 @@ namespace ScorePage {
         [SerializeField]private Texture[] textures;
 
         public void SetRank(int rank) {
+            var img = GetComponent<RawImage>();
+
             if (rank > 3 || rank <= 0) {
                 return ;
             }
 
-            GetComponent<RawImage>().texture = textures[rank - 1];
+            img.texture = textures[rank - 1];
         }
     }
 }
