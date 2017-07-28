@@ -262,7 +262,7 @@ namespace ScorePage {
                         }
 
                         var model = dict.ToObject<PlayerModel>(); 
-
+                    
                         if (model.seat < 0) {
                             guestList.Add(model);
                             continue;
@@ -272,7 +272,8 @@ namespace ScorePage {
                             Score = model.bankroll,
                             Nick = model.name,
                             Uid = model.uid,
-                            Rank = model.match_rank
+                            // SNG未开赛都是0，强制转为1
+                            Rank = model.match_rank == 0 ? 1 : model.match_rank
                         });
                     }
 
