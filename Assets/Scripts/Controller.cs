@@ -441,7 +441,15 @@ public class Controller : MonoBehaviour {
 
 		RxSubjects.Seating.Subscribe((action) => 
         {
-             ExpressionButton.SetActive(action);
+			foreach(var go in Seats) {
+				var seat = go.GetComponent<Seat>();
+				if (action) {
+					seat.Hide();
+				} else if (seat.Index >= 0) {
+					seat.Show();
+				}
+			}
+            ExpressionButton.SetActive(action);
         }).AddTo(this);
        
 	   	subsPublicCards();
@@ -699,6 +707,15 @@ public class Controller : MonoBehaviour {
 				Commander.Shared.GameEnd(ID, page);
 			});	
 		}).AddTo(this);
+
+		RxSubjects.MTTMatch.Subscribe((e) => {
+			var type = e.Data.Int("type");
+
+			if (type == 3) {
+				GameData.Shared.Room = e.Data.String("data");
+				Connect.Shared.EnterGame();
+			}
+		}).AddTo(this);
 	}
 
 	private void subsPlayer() {
@@ -762,7 +779,7 @@ public class Controller : MonoBehaviour {
 
 			// 服务器升级
 			if (pause == 5) {
-				PokerUI.DisAlert("服务器升级中…");
+				PokerUI.ToastThenExit("服务器升级中…");
 				return ;
 			} 
 

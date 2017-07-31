@@ -6,13 +6,13 @@ using System;
 namespace ScorePage {
     public class RankRow : CellView
     {
-        private Text nickText;
-        private Text scoreText;
-        private CanvasGroup cvg;
+        protected Text nickText;
+        protected Text scoreText;
+        protected CanvasGroup cvg;
 
-        private SNGRank1 rank1;
-        private GameObject rank2;
-        private Text rankText;
+        protected SNGRank1 rank1;
+        protected GameObject rank2;
+        protected Text rankText;
 
 
         override public void SetData(Data data)

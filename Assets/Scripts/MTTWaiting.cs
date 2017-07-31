@@ -20,7 +20,7 @@ public class MTTWaiting : MonoBehaviour {
 		RxSubjects.MTTMatch.Subscribe((e) => {
 			var type = e.Data.Int("type");
 			if (type == 2) {
-				PokerUI.Alert("报名人数不足，无法开赛");
+				PokerUI.ToastThenExit("报名人数不足，无法开赛");
 			}
 		}).AddTo(this);		
 	}

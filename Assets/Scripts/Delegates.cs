@@ -72,6 +72,7 @@ public class RxSubjects {
     public static Subject<bool> Seating = new Subject<bool>();
 	public static Subject<bool> Connecting = new Subject<bool>();
 	public static Subject<GainChip> GainChip = new Subject<GainChip>();
+	public static Subject<int> MTTChangeTabIndex = new Subject<int>();
 }
 
 public struct GainChip {

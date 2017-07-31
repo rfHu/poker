@@ -60,7 +60,7 @@ public sealed class Connect  {
 			saveUserInfo(json);
 
 			// 进入房间
-			enterGame();
+			EnterGame();
 		});
 	}
 
@@ -83,7 +83,7 @@ public sealed class Connect  {
 		_.Log("Connect Error");
 	}
 
-	private void enterGame() {
+	public void EnterGame() {
 		Emit(new Dictionary<string, object>{
 			{"f", "entergame"},
 			{"args", new Dictionary<string, object> {
@@ -279,7 +279,7 @@ public sealed class Connect  {
 			if (err == 403) {
 				PokerUI.ConflictAlert();	
 			} else if (err == 406 && !SNGWinner.IsSpawned) { // 弹出获奖框时，不能提示
-				PokerUI.DisAlert("房间不存在！");
+				PokerUI.ToastThenExit("牌局不存在！");
 			} else {
 				int seq = json.Int("seq");
 				if (instance.successCallbacks.ContainsKey(seq)) {
@@ -310,12 +310,12 @@ public sealed class Connect  {
 				GameData.Shared.Room = rid;
 
                 //传给应用环信需要
-                if (argsDict.Dict("options").String("matchid") != "")
+                if (!string.IsNullOrEmpty(GameData.Shared.MatchID))
                 {
                     Commander.Shared.InitHx(rid);
                 }
 
-			} else if (!string.IsNullOrEmpty(rid) && rid != GameData.Shared.Room) {
+			} else if (!string.IsNullOrEmpty(rid) && rid != GameData.Shared.Room) { // 收到异常包，忽略
 				return ;
 			}
 

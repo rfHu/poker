@@ -33,6 +33,16 @@ namespace ScorePage
         public int Rank;
     }
 
+    public class MTTRankRowData: Data {
+        public RankRowData RankData;
+        public int HeadCount;
+        public int HeadAward;
+    }
+
+    public class MTTTabData: Data {
+        public int SelectedIndex;
+    }
+
     public class GuestHeadData: Data {
         public int Number;
     }
