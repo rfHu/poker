@@ -16,7 +16,7 @@ public class GameLoading : MonoBehaviour {
 			external.SetSocket("https://socket.dev.poker.top");
 			external.SetProxy("http://localhost:8888");
 
-            var rid = "597ed6712255dc73c41a3a09";
+            var rid = "597f2fad33c846046b4e54cc";
             var sid = "s%3AReC8BS0bg6Z2N9Ne3ZOjYTmJq3Y62dv2.3XPJXBpbSXuzBU3OaJSglWVYqRJweaPKTWXVoGJmfy0";
 
 			// 外网登录态
@@ -46,19 +46,10 @@ public class GameLoading : MonoBehaviour {
 
 	private void registerEvents() {
 		RxSubjects.MatchLook.Subscribe((e) => {
+			var state = e.Data.Int("match_state");			
 
-			var roomid = e.Data.Dict("myself").String("roomid");
-
-			if (!string.IsNullOrEmpty(roomid)) {
-				Connect.Shared.Emit(new Dictionary<string, object>{
-					{"f", "entergame"},
-					{"args", new Dictionary<string, object> {
-						{"roomid", roomid},
-						{"ver", Application.version},
-						{"matchid", GameData.Shared.MatchID}
-					}}
-				});
-
+			if (state >= 10) {
+				PokerUI.ToastThenExit("牌局不存在！");
 				return ;
 			}
 

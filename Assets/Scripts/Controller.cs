@@ -693,6 +693,15 @@ public class Controller : MonoBehaviour {
 				Commander.Shared.GameEnd(ID, page);
 			});	
 		}).AddTo(this);
+
+		RxSubjects.MTTMatch.Subscribe((e) => {
+			var type = e.Data.Int("type");
+
+			if (type == 3) {
+				GameData.Shared.Room = e.Data.String("data");
+				Connect.Shared.EnterGame();
+			}
+		}).AddTo(this);
 	}
 
 	private void subsPlayer() {

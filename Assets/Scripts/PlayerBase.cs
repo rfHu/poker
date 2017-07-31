@@ -121,7 +121,7 @@ namespace PokerPlayer {
         } 
 
         private void setScoreText(int number) {
-            if (number == 0) {
+            if (number == 0 && player.InGame) {
                 ScoreLabel.text = "等待";
             } else {
                 ScoreLabel.text = _.Num2CnDigit(number);

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using frame8.Logic.Misc.Visual.UI.ScrollRectItemsAdapter;
 using frame8.ScrollRectItemsAdapter.Util;
 using System;
+using UniRx;
 
 namespace ScorePage {
 
@@ -14,11 +15,32 @@ namespace ScorePage {
         public MyParams adapterParams;
 
         MyScrollRectAdapter _Adapter; 
+        private int currentIndex = 0;
+        private List<PlayerModel> guestList;
+        private ScoreHeaderData headerData = new ScoreHeaderData() {
+            List = new List<string>() {
+                "昵称",
+                "人头数",
+                "记分牌"
+            } 
+        };
 
         void Start()
         {
             _Adapter = new MyScrollRectAdapter();
             _Adapter.Init(adapterParams);
+
+            RxSubjects.MTTChangeTabIndex.Subscribe((idx) => {
+                if (currentIndex == idx) {
+                    return ;
+                }
+
+                if (idx == 0) {
+
+                } else {
+
+                }
+           }).AddTo(this);
         }
 
           void OnDestroy()
@@ -33,6 +55,7 @@ namespace ScorePage {
             public RectTransform GuestPrefab;
             public RectTransform ScoreHeaderPrefab;
             public RectTransform RankPrefab;
+            public RectTransform TabPrefab;
 
             public List<Data> rowData = new List<Data>();
         }
@@ -44,7 +67,11 @@ namespace ScorePage {
                 var data = _Params.rowData[index];
 
                 if (data is MTTRankRowData) {
-                    return 90f;
+                    if (GameData.MatchData.IsHunter) {
+                        return 128f;
+                    } else {
+                        return 90f;
+                    }
                 } else if (data is GuestHeadData || data is ScoreHeaderData) {
                     return 80f;
                 } 
@@ -68,8 +95,10 @@ namespace ScorePage {
                     instance = new ScoreHeader();
                     instance.Init(_Params.ScoreHeaderPrefab, itemIndex);
                 } else if (data is MTTRankRowData) {
-                    instance =  new RankRow();
+                    instance =  new MTTRankRow();
                     instance.Init(_Params.RankPrefab, itemIndex);
+                } else if (data is MTTTabData) {
+                    instance = new MTTTabRow();
                 } else  {
                     instance = new GuestRow();    
                     instance.Init(_Params.GuestPrefab, itemIndex);
@@ -93,14 +122,51 @@ namespace ScorePage {
             requestData();
         }
 
+        void OnDespawned() {
+            currentIndex = 0;
+        }
+
+        private void requestTop20() {
+            Connect.Shared.Emit(new Dictionary<string, object>(){
+                {"f", "gamerrank"}
+            }, (json) => {
+                var rowData = new List<Data>();
+                rowData.Add(headerData);
+
+                var list = json.DL("list");
+                foreach(var item in list) {
+                    rowData.Add(new MTTRankRowData() {
+                        RankData = new RankRowData() 
+                        {
+                            Score = item.Int("bankroll"),
+                            Rank = item.Int("rank"),
+                            Uid = item.String("uid"),
+                            Nick = item.Dict("profile").String("name")
+                        },
+
+                        HeadCount = item.Int("head_count"),
+                        HeadAward = item.Int("award_value") 
+                    });
+                }
+
+                rowData.AddRange(getLeftData(1));
+                adapterParams.rowData.Clear();
+                adapterParams.rowData.AddRange(rowData);
+                _Adapter.ChangeItemCountTo(rowData.Count);
+            });
+        }
+
         private void requestData() {
             Connect.Shared.Emit(new Dictionary<string, object>(){
                 {"f", "gamerlist"}
             }, (json) =>
             {
                 var rowData = new List<Data>();
-                var guestList = new List<PlayerModel>();
+                guestList = new List<PlayerModel>();
+
                 var rankList = new List<Data>();
+
+                rowData.Add(headerData);
 
                 foreach(object item in json.List("list")) {
                     var dict = item as Dictionary<string, object>;
@@ -135,23 +201,33 @@ namespace ScorePage {
                 });
 
                 rowData.AddRange(rankList);
-                
-                rowData.Add(new GuestHeadData() {
-                    Number = guestList.Count
-                });
-
-                var chunkList = guestList.ChunkBy(4);
-                foreach(var list in chunkList) {
-                    rowData.Add(new GuestRowData() {
-                        PlayerList = list
-                    });
-                }
+                rowData.AddRange(getLeftData(0));               
 
                 adapterParams.rowData.Clear();
                 adapterParams.rowData.AddRange(rowData);
-
                 _Adapter.ChangeItemCountTo(rowData.Count);
             });
+        }
+
+        private List<Data> getLeftData(int selecetdIndex) {
+            var rowList = new List<Data>();
+
+            rowList.Add(new MTTTabData() {
+                SelectedIndex = selecetdIndex
+            });
+
+            rowList.Add(new GuestHeadData() {
+                Number = guestList.Count
+            });
+
+            var chunkList = guestList.ChunkBy(4);
+            foreach(var list in chunkList) {
+                rowList.Add(new GuestRowData() {
+                    PlayerList = list
+                });
+            }
+
+            return rowList;
         }
     }
 }

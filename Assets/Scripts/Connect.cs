@@ -60,7 +60,7 @@ public sealed class Connect  {
 			saveUserInfo(json);
 
 			// 进入房间
-			enterGame();
+			EnterGame();
 		});
 	}
 
@@ -83,7 +83,7 @@ public sealed class Connect  {
 		_.Log("Connect Error");
 	}
 
-	private void enterGame() {
+	public void EnterGame() {
 		Emit(new Dictionary<string, object>{
 			{"f", "entergame"},
 			{"args", new Dictionary<string, object> {

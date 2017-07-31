@@ -39,6 +39,10 @@ namespace ScorePage
         public int HeadAward;
     }
 
+    public class MTTTabData: Data {
+        public int SelectedIndex;
+    }
+
     public class GuestHeadData: Data {
         public int Number;
     }
