@@ -63,7 +63,8 @@ public class RebuyOrAddon : MonoBehaviour {
     public void Enter()
     {
         Connect.Shared.Emit(new Dictionary<string, object>(){
-			{"f", gameType == 1? "rebuy": "addon"}
+			{"f", gameType == 1? "rebuy": "addon"},
+            {"for_match", 1}
 		}, (json, err) =>
         {
             if (err == 1201)
