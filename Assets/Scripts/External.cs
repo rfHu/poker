@@ -80,6 +80,10 @@ public class External : MonoBehaviour{
 		GameData.Shared.MatchID = info[0].ToString();
 		GameData.Shared.Sid = info[1].ToString();
 
+		if (info.Length >= 3) {
+			GameData.Shared.Room = info[2].ToString(); 
+		}
+
 		Connect.SetupMatch();
 	}
 
