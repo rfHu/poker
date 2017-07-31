@@ -649,6 +649,19 @@ public class Controller : MonoBehaviour {
 			GameData.Shared.Bankroll.Value = 0;
 		}).AddTo(this);
 
+        RxSubjects.ToAddOn.Subscribe((e) => {
+            var go = PoolMan.Spawn("RebuyOrAddon");
+            go.GetComponent<DOPopup>().Show();
+            go.GetComponent<RebuyOrAddon>().Init(false, true);
+        }).AddTo(this);
+
+        RxSubjects.ToRebuy.Subscribe((e) =>
+        {
+            var go = PoolMan.Spawn("RebuyOrAddon");
+            go.GetComponent<DOPopup>().Show();
+            go.GetComponent<RebuyOrAddon>().Init(true,true);
+        }).AddTo(this);
+
 		RxSubjects.GameEnd.Subscribe((e) => {
 			// 关闭连接
 			Connect.Shared.CloseImmediate();

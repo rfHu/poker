@@ -40,6 +40,9 @@ public class MTTMsg : MonoBehaviour {
     public GameObject AwardPre;
     public Transform P2GoParent;
 
+    //P3页面
+    public Transform P3GoParent;
+
     //P4页面
     public Transform P4GoParent;
     public GameObject RoomMsgPre;
@@ -50,6 +53,8 @@ public class MTTMsg : MonoBehaviour {
     private Color openCol = new Color(24 / 255, 1, 1);
     private long timer = 0;
     private RectTransform _rectTransform;
+
+    private int highLightLevel;
 
     void Awake()
     {
@@ -124,6 +129,16 @@ public class MTTMsg : MonoBehaviour {
                 return;
 
             setGoSize(true);
+
+            Transform turnNormal = P2GoParent.GetChild(highLightLevel);
+            turnNormal.GetChild(1).GetComponentInChildren<Text>().color = new Color(1, 1, 1, 0.6f);
+            turnNormal.GetChild(2).GetComponentInChildren<Text>().color = new Color(1, 1, 1, 0.6f);
+
+            highLightLevel = GameData.Shared.BlindLv - 1;
+            Transform highLight = P2GoParent.GetChild(highLightLevel);
+            highLight.GetChild(1).GetComponentInChildren<Text>().color = selectCol;
+            highLight.GetChild(2).GetComponentInChildren<Text>().color = selectCol;
+
         });
 
 
@@ -196,7 +211,7 @@ public class MTTMsg : MonoBehaviour {
 
             //底部相关
             ButtomText.text = "延时报名至第" + roomsData.Int("limit_level") + "级别";
-            timer = GetTimeStamp() - roomsData.Long("begin_time");
+            timer = roomsData.Long("spent");
             if (timer > 0)
             {
                 TimePassed.text = "已进行：" + secToStr(timer);
@@ -249,12 +264,6 @@ public class MTTMsg : MonoBehaviour {
             return "0" + str;
         }
         return str;
-    }
-
-    private long GetTimeStamp()
-    {
-        TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
-        return Convert.ToInt64(ts.TotalSeconds);
     }
 
     private void setGoSize(bool addHeight) 
