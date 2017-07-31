@@ -472,10 +472,10 @@ public sealed class Connect  {
 					RxSubjects.MatchLook.OnNext(rxdata);
 					break;
                 case "to_addon" :
-                    RxSubjects.AddOn.OnNext(rxdata);
+                    RxSubjects.ToAddOn.OnNext(rxdata);
                     break;
                 case "to_rebuy":
-                    RxSubjects.Rebuy.OnNext(rxdata);
+                    RxSubjects.ToRebuy.OnNext(rxdata);
                     break;
 				case "mtt_match":
 					RxSubjects.MTTMatch.OnNext(rxdata);
