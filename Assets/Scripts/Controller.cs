@@ -756,7 +756,7 @@ public class Controller : MonoBehaviour {
 
 			// 服务器升级
 			if (pause == 5) {
-				PokerUI.DisAlert("服务器升级中…");
+				PokerUI.ToastThenExit("服务器升级中…");
 				return ;
 			} 
 
