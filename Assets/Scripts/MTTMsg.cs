@@ -130,14 +130,14 @@ public class MTTMsg : MonoBehaviour {
 
             setGoSize(true);
 
-            Transform turnNormal = P2GoParent.GetChild(highLightLevel);
-            turnNormal.GetChild(1).GetComponentInChildren<Text>().color = new Color(1, 1, 1, 0.6f);
-            turnNormal.GetChild(2).GetComponentInChildren<Text>().color = new Color(1, 1, 1, 0.6f);
+            Transform turnNormal = P3GoParent.GetChild(highLightLevel);
+            turnNormal.GetChild(1).GetComponent<Text>().color = new Color(1, 1, 1, 0.6f);
+            turnNormal.GetChild(2).GetComponent<Text>().color = new Color(1, 1, 1, 0.6f);
 
             highLightLevel = GameData.Shared.BlindLv;
-            Transform highLight = P2GoParent.GetChild(highLightLevel);
-            highLight.GetChild(1).GetComponentInChildren<Text>().color = selectCol;
-            highLight.GetChild(2).GetComponentInChildren<Text>().color = selectCol;
+            Transform highLight = P3GoParent.GetChild(highLightLevel);
+            highLight.GetChild(1).GetComponent<Text>().color = selectCol;
+            highLight.GetChild(2).GetComponent<Text>().color = selectCol;
 
         });
 
