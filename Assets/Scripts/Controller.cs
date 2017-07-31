@@ -248,23 +248,24 @@ public class Controller : MonoBehaviour {
 			} else {
 				gameInfoTexts[1].text = "决赛桌";
 			}
-		} else {
-			var ipLimit = GameData.Shared.IPLimit;
-			var gpsLimit = GameData.Shared.GPSLimit;
-
-			if (ipLimit && gpsLimit) {
-				gameInfoTexts[1].text = "IP 及 GPS 限制";
-			} else if (gpsLimit) {
-				gameInfoTexts[1].text = "GPS 限制";
-			} else if (ipLimit) {
-				gameInfoTexts[1].text = "IP 限制";
-			}
-
-			if (GameData.Shared.NeedInsurance)
-			{
-				gameInfoTexts[2].text = "保险模式";
-			}
 		}
+
+		var ipLimit = GameData.Shared.IPLimit;
+		var gpsLimit = GameData.Shared.GPSLimit;
+
+		if (ipLimit && gpsLimit) {
+			gameInfoTexts[1].text = "IP 及 GPS 限制";
+		} else if (gpsLimit) {
+			gameInfoTexts[1].text = "GPS 限制";
+		} else if (ipLimit) {
+			gameInfoTexts[1].text = "IP 限制";
+		}
+
+		if (GameData.Shared.NeedInsurance)
+		{
+			gameInfoTexts[2].text = "保险模式";
+		}
+		
 	}
 
     private void setBBText()
