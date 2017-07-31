@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using MaterialUI;
 using System;
+using UniRx;
 
 public class PokerUI: MonoBehaviour {
 	static private DialogAlert dialogAlert;
@@ -61,5 +62,12 @@ public class PokerUI: MonoBehaviour {
 	static public void Toast(string msg, float seconds = 2) {
 		var canvasHierarchy = G.MaterialCvs.transform.Find("MaterialUI");
 		ToastManager.Show(msg, seconds, _.HexColor("#2196F3FF"), new Color(1, 1, 1, 1), 39, canvasHierarchy);
+	}
+
+	static public void ToastThenExit(string msg) {
+		Toast(msg);
+		Observable.Timer(TimeSpan.FromSeconds(2)).Subscribe((_) => {
+			External.Instance.Exit();					
+		});
 	}
 }

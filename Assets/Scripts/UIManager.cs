@@ -31,8 +31,15 @@ public class UIManager : MonoBehaviour {
 	}
 
 	public void ScorePage() {
-		var score = PoolMan.Spawn("ScorePage");
-		score.GetComponent<DOPopup>().Show();	
+        Transform target;
+
+        if (GameData.Shared.Type == GameType.MTT) {
+            target = PoolMan.Spawn("MTTScorePage");
+        } else {
+            target = PoolMan.Spawn("ScorePage");
+        }
+
+		target.GetComponent<DOPopup>().Show();	
 	}
 
 	public void OnShowRecalls() {

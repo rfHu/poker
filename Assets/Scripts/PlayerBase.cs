@@ -37,6 +37,8 @@ namespace PokerPlayer {
         private ActionState lastState;
 	    private int actCardsNumber = 0;
 
+        [SerializeField]private Text hunterAward;
+
         private Seat theSeat;
         CompositeDisposable disposables = new CompositeDisposable();
 
@@ -47,7 +49,7 @@ namespace PokerPlayer {
             this.theSeat = theSeat;
             this.myDelegate = myDelegate;
             SpkText.Uid = player.Uid;
-		    ScoreLabel.text = _.Num2CnDigit<int>(player.Bankroll.Value);
+		    setScoreText(player.Bankroll.Value);
             GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
 
             var avatar = Avt.GetComponent<Avatar>();
@@ -100,6 +102,7 @@ namespace PokerPlayer {
             // 取消所有动画
             DOTween.Pause(AnimID);
 
+            hunterAward.transform.parent.gameObject.SetActive(false);
             lastState = ActionState.None;
             WinCq.gameObject.SetActive(false);
             ScoreParent.SetActive(true);
@@ -117,7 +120,22 @@ namespace PokerPlayer {
             ScoreLabel.gameObject.SetActive(true);
         } 
 
+        private void setScoreText(int number) {
+            if (number == 0) {
+                ScoreLabel.text = "等待";
+            } else {
+                ScoreLabel.text = _.Num2CnDigit(number);
+            }
+        }
+
         private void addEvents() {
+            player.HeadValue.Subscribe((value) => {
+                if (value > 0) {
+                    hunterAward.transform.parent.gameObject.SetActive(true);
+                    hunterAward.text = _.Num2CnDigit(value);
+                }
+            }).AddTo(disposables);
+
             RxSubjects.ShowCard.Subscribe((e) => {
                 var uid = e.Data.String("uid");
                 if (uid != player.Uid) {
@@ -168,9 +186,6 @@ namespace PokerPlayer {
                 stateGo.SetActive(false);
 
                 switch(state) {
-                    case PlayerState.Waiting: case PlayerState.Auditing:
-                        ScoreLabel.text = "<size=28>等待</size>";
-                        break;
                     case PlayerState.Hanging:
                         HandGo.SetActive(true);
                         break;
@@ -264,7 +279,7 @@ namespace PokerPlayer {
             }).AddTo(disposables);
 
             player.Bankroll.Subscribe((value) => {
-                ScoreLabel.text = _.Num2CnDigit(value);
+                setScoreText(value);
             }).AddTo(disposables);
 
             RxSubjects.MoveTurn.Subscribe((e) => {
@@ -369,7 +384,7 @@ namespace PokerPlayer {
             player.Rank.Where((rank) => rank > 0 && player.readyState == 0).Subscribe((rank) => {
                 RankText.transform.parent.gameObject.SetActive(true);
                 RankText.text  = string.Format("第<size=42>{0}</size>名", rank);
-            }).AddTo(this);
+            }).AddTo(disposables);
         }
 
         private void hideWinAnim() {

@@ -310,12 +310,12 @@ public sealed class Connect  {
 				GameData.Shared.Room = rid;
 
                 //传给应用环信需要
-                if (argsDict.Dict("options").String("matchid") != "")
+                if (!string.IsNullOrEmpty(GameData.Shared.MatchID))
                 {
                     Commander.Shared.InitHx(rid);
                 }
 
-			} else if (!string.IsNullOrEmpty(rid) && rid != GameData.Shared.Room) {
+			} else if (!string.IsNullOrEmpty(rid) && rid != GameData.Shared.Room) { // 收到异常包，忽略
 				return ;
 			}
 

@@ -9,4 +9,6 @@ public class PlayerModel
     public bool in_room;
     public int seat;
     public int match_rank;
+    public int head_count;
+    public int award_value;
 }

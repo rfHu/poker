@@ -100,6 +100,7 @@ sealed public class Player {
 
 	public bool ActStateTrigger = true;
 
+	public ReactiveProperty<int> HeadValue = new ReactiveProperty<int>();
 	public AutoDeposit Trust = new AutoDeposit(); 
 	public ReactiveProperty<string> ShowCard = new ReactiveProperty<string>();
 
@@ -154,6 +155,7 @@ sealed public class Player {
 		LastAct.Value = json.String("last_act");
         Rank.Value = GameData.Shared.Type == GameType.MTT ? json.Int("rank") : json.Int("match_rank");
 		readyState = json.Int("is_ready");
+		HeadValue.Value = json.Int("head_value");
 
         if (GameData.Shared.IsMatch())
         {
@@ -589,6 +591,7 @@ sealed public class GameData {
 
         public static int Addon;
         public static int Rebuy;
+		public static bool IsHunter;
 
 		public static string MatchString {
 			get {
@@ -701,6 +704,7 @@ sealed public class GameData {
             MatchData.LimitLv = options.Int("limit_level");
             MatchData.Rebuy = options.Int("rebuy_count");
             MatchData.Addon = options.Int("add_on");
+			MatchData.IsHunter = options.Int("reward_ratio") > 0;
 			LeftTime.Value = json.Long("blind_countdown");
             BlindLv = json.Int("blind_lv");
         } else {
