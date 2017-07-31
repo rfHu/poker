@@ -23,14 +23,16 @@ public class RecallPage : MonoBehaviour {
 	private int currentNumber;
     private string favhand_id;
 
-    private List<RecallUser> Users = new List<RecallUser>();
-
     private bool requesting = false;
 
     void OnSpawned() {
         SBBB.text = GameData.Shared.SB + "/" + GameData.Shared.BB;
         GetComponent<DOPopup>().Show();
         request();
+    }
+
+    void OnDespawned() {
+        requesting = false;
     }
 
 	public void request(int num = 0) {
@@ -75,29 +77,28 @@ public class RecallPage : MonoBehaviour {
 		var comCards = ret.Dict("community").IL("cards");
 
 		var list = ret.List("list");
+        var users = Rect.GetComponentsInChildren<RecallUser>();
         for (int num = 0; num < 9; num++)
         {   
-            if (list.Count > num) {
+            if (list.Count > num) { // 复用的部分
                 var dt = list[num] as Dictionary<string, object>;
                 var tag = findTag(list, num);
 
                 RecallUser user;
 
-                if (num < Users.Count) {
-                    user = Users[num];
-                    user.transform.SetParent(Rect.transform, false);
+                if (num < users.Length) {
+                    user = users[num];
                     user.gameObject.SetActive(true);
                 } else {
                     user = PoolMan.Spawn("RecallUser", Rect.transform).GetComponent<RecallUser>();
                     user.transform.SetParent(Rect.transform, false);
-                    Users.Add(user);
                 }
 
                 user.Show(dt);
                 user.SetComCard(comCards);
                 user.SetTag(tag);
-            } else if (Users.Count > num) {
-                Users[num].gameObject.SetActive(false);
+            } else if (users.Length > num) { // 超出的部分隐藏
+                users[num].gameObject.SetActive(false);
             }
         }
 

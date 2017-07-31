@@ -8,6 +8,8 @@ using System.Collections.Generic;
 public class GameLoading : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
+		Application.targetFrameRate = 60;
+
 		var external = External.Instance;
 
 		#if UNITY_EDITOR  

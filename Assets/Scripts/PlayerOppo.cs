@@ -46,7 +46,7 @@ namespace PokerPlayer {
             disposables.Clear();
             CardDesc.transform.parent.gameObject.SetActive(false);
             Cardfaces.GetComponent<RectTransform>().anchoredPosition = new Vector2(40, -20);
-            Cardfaces.GetComponent<Image>().color = new Color(1, 1, 1);
+            Cardfaces.GetComponent<CanvasGroup>().alpha = 1;
 
             MoveOut();
             ShowCards[0].Turnback();
