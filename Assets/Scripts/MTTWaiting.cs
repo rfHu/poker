@@ -37,11 +37,13 @@ public class MTTWaiting : MonoBehaviour {
 		RoomName.text = GameData.Shared.Room;
 
 		var codeGo = inviteCode.transform.parent.gameObject;
-		if (string.IsNullOrEmpty(GameData.Shared.GameCode)) {
+		var code = GameData.Shared.GameCode.Value;
+
+		if (string.IsNullOrEmpty(code)) {
 			codeGo.SetActive(false);
 		} else {
 			codeGo.SetActive(true);
-			inviteCode.text = GameData.Shared.GameCode;
+			inviteCode.text = code;
 		}
 
 		if (disposable != null) {

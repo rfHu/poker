@@ -574,8 +574,8 @@ sealed public class GameData {
 		}
 	}
 	public int BB = 0;
-	public string RoomName = "";
-	public int TableNumber = -1; // MTT牌桌号 
+	public ReactiveProperty<string> RoomName = new ReactiveProperty<string>();
+	public ReactiveProperty<int> TableNumber = new ReactiveProperty<int>(-1) ; // MTT牌桌号 
     
     public GameType Type;
     public int BlindLv;
@@ -627,9 +627,9 @@ sealed public class GameData {
 	public float Rake = 0;
 	public int Duration = 0;
 	public bool NeedAudit = false;
-	public bool IPLimit = false;
-	public bool GPSLimit = false;
-    public bool NeedInsurance = false;
+	public ReactiveProperty<bool> IPLimit = new ReactiveProperty<bool>(false);
+	public ReactiveProperty<bool> GPSLimit = new ReactiveProperty<bool>(false);
+    public ReactiveProperty<bool> NeedInsurance = new ReactiveProperty<bool>(false);
     public bool Award27 = false;
     public bool BuryCard = false;
 	public DateTime CreateTime; 
@@ -644,7 +644,7 @@ sealed public class GameData {
 	public ReactiveProperty<List<Dictionary<string, object>>> Pots = new ReactiveProperty<List<Dictionary<string, object>>>(); 
 
 	public BehaviorSubject<int> Paused = new BehaviorSubject<int>(0);
-	public string GameCode = "";
+	public ReactiveProperty<string> GameCode = new ReactiveProperty<string>();
 	public ReactiveProperty<int> MaxFiveRank = new ReactiveProperty<int>();
 
 	public ReactiveProperty<int> DealerSeat = new ReactiveProperty<int>();
@@ -683,16 +683,16 @@ sealed public class GameData {
 		Rake = options.Float("rake_percent");
 		Duration = options.Int("time_limit");
 		NeedAudit = options.Int("need_audit") == 1;
-		GPSLimit = options.Int("gps_limit") > 0;
-		IPLimit = options.Int("ip_limit") == 1;
+		GPSLimit.Value = options.Int("gps_limit") > 0;
+		IPLimit.Value = options.Int("ip_limit") == 1;
         Award27 = options.Int("award_27") == 1;
         BuryCard = options.Int("bury_card") == 1;
-		GameCode = options.String("code");
+		GameCode.Value = options.String("code");
 		Straddle.Value = options.Int("straddle") == 1;
         SettingThinkTime = ThinkTime = options.Int("turn_countdown");
 		OffScore.Value = options.Int("off_score") == 1;
 		
-        NeedInsurance = options.Int("need_insurance") == 1;
+        NeedInsurance.Value = options.Int("need_insurance") == 1;
 		DealerSeat.Value = json.Int("dealer_seat");
 		Pot.Value = json.Int("pot");
 		Pots.Value = json.DL("pots");
@@ -711,9 +711,11 @@ sealed public class GameData {
 			LeftTime.Value = json.Int("left_time");
 		}
 
-		RoomName = GameData.Shared.Type == GameType.MTT ? json.String("match_name") : json.String("name");
+		RoomName.Value = GameData.Shared.Type == GameType.MTT ? json.String("match_name") : json.String("name");
 		if (GameData.Shared.Type == GameType.MTT) {
-			TableNumber = json.Int("name"); // MTT的牌桌名称就是牌桌号
+			TableNumber.Value = json.Int("name"); // MTT的牌桌名称就是牌桌号
+		} else {
+			TableNumber.Value = -1;
 		}
 		
 		InGame = json.Bool("is_ingame");

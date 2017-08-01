@@ -827,6 +827,12 @@ namespace PathologicalGames
         /// <param name="item">The transform of the gameobject to process</param>
         public void Despawn(Transform instance)
         {
+            // @FIXME: instance不应该被destroy
+            if (instance == null) {
+                this._spawned.Remove(instance);
+                return ;
+            }
+
             var worldPositionStays = !(instance is RectTransform);
             instance.SetParent(this.group, worldPositionStays);
 

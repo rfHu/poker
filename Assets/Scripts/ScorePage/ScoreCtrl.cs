@@ -162,7 +162,7 @@ namespace ScorePage {
                     });
                 }
 
-                if (GameData.Shared.NeedInsurance) {
+                if (GameData.Shared.NeedInsurance.Value) {
                     rowData.Add(
                         new InsuranceRowData() {Number = json.Dict("insurance").Int("pay")}
                     );
