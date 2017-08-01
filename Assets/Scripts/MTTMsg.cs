@@ -187,7 +187,7 @@ public class MTTMsg : MonoBehaviour {
             }
 
             timer = timer + 1;
-            TimePassed.text = "已进行：" + secToStr(timer);
+            TimePassed.text = "已进行：" + G.SecToStr(timer);
         });
     }
 
@@ -214,7 +214,7 @@ public class MTTMsg : MonoBehaviour {
             timer = roomsData.Long("spent");
             if (timer > 0)
             {
-                TimePassed.text = "已进行：" + secToStr(timer);
+                TimePassed.text = "已进行：" +  G.SecToStr(timer);
             }
             else 
             {
@@ -231,39 +231,12 @@ public class MTTMsg : MonoBehaviour {
             BlindLv.text = roomsData.Int("blind_lv").ToString();
             LimitLevel.text = roomsData.Int("limit_level").ToString();
 
-            HalfBreak.text = roomsData.Int("half_break") == 1 ? "开启" : "关闭";
-            HalfBreak.color = roomsData.Int("half_break") == 1 ? openCol : Color.white;
-
-            GPSLimit.text = roomsData.Int("gps_limit") == 1 ? "开启" : "关闭";
-            GPSLimit.color = roomsData.Int("gps_limit") == 1 ? openCol : Color.white;
-
-            IPLimit.text = roomsData.Int("ip_limit") == 1 ? "开启" : "关闭";
-            IPLimit.color = roomsData.Int("ip_limit") == 1 ? openCol : Color.white;
+            G.SetMesText(roomsData.Int("half_break") == 1, HalfBreak);
+            G.SetMesText(roomsData.Int("gps_limit") == 1, GPSLimit);
+            G.SetMesText(roomsData.Int("ip_limit") == 1, IPLimit);
         });
 
         Toggles[0].isOn = true;
-    }
-
-    private string secToStr(long seconds)
-    {
-        var hs = 3600;
-        var ms = 60;
-
-        var h = Mathf.FloorToInt(seconds / hs);
-        var m = Mathf.FloorToInt(seconds % hs / ms);
-        var s = (seconds % ms);
-
-        return string.Format("{0}:{1}:{2}", fix(h), fix(m), fix(s));
-    }
-
-    private string fix<T>(T num)
-    {
-        var str = num.ToString();
-        if (str.Length < 2)
-        {
-            return "0" + str;
-        }
-        return str;
     }
 
     private void setGoSize(bool addHeight) 
