@@ -2,6 +2,7 @@
 using System.Linq;
 using DarkTonic.MasterAudio;
 using PathologicalGames;
+using UnityEngine.UI;
 
 public class G {
 	public static Canvas UICvs {
@@ -51,8 +52,8 @@ public class G {
 	}
 
 	public static Color Black = new Color(0, 0, 0, 0.9f);
-}
 
+}
 
 public class PoolMan {
 	public static bool IsReady() {

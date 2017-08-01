@@ -9,10 +9,6 @@ using MaterialUI;
 [RequireComponent(typeof(DOPopup))]
 public class RoomMessage : MonoBehaviour {
 
-    private string open = "开启";
-    private Color openColor = new Color(0.09375f, 1, 1);
-    string close = "关闭";
-
     public Text OwnerName;
     public Text LeftTime;
     public Text StartTime;
@@ -44,7 +40,6 @@ public class RoomMessage : MonoBehaviour {
                 setText(LeftTime, "暂未开始");
                 return;
             }
-
             setText(LeftTime, _.SecondStr(value));
         }).AddTo(this);
 
@@ -72,13 +67,13 @@ public class RoomMessage : MonoBehaviour {
         Large.text = GameData.Shared.BankrollMul[1] * 100 + "BB";
         ThinkTime.text = GameData.Shared.ThinkTime + "s";
 
-        setMesText(GameData.Shared.NeedInsurance.Value, Insurance);
-        setMesText(GameData.Shared.Straddle.Value, Straddle);
-        setMesText(GameData.Shared.NeedAudit, NeedAudit);
-        setMesText(GameData.Shared.GPSLimit.Value, GPSMes);
-        setMesText(GameData.Shared.IPLimit.Value, IPMes);
-        setMesText(GameData.Shared.Award27, Award27Mes);
-        setMesText(GameData.Shared.BuryCard, BuryCardMes);
+        _.SetMsgText(GameData.Shared.NeedInsurance.Value, Insurance);
+        _.SetMsgText(GameData.Shared.Straddle.Value, Straddle);
+        _.SetMsgText(GameData.Shared.NeedAudit, NeedAudit);
+        _.SetMsgText(GameData.Shared.GPSLimit.Value, GPSMes);
+        _.SetMsgText(GameData.Shared.IPLimit.Value, IPMes);
+        _.SetMsgText(GameData.Shared.Award27, Award27Mes);
+        _.SetMsgText(GameData.Shared.BuryCard, BuryCardMes);
         
         foreach (var item in Buttons)
         {
@@ -86,25 +81,10 @@ public class RoomMessage : MonoBehaviour {
         }
 	}
 
-    private void setMesText(bool isOpen, Text text) 
-    {
-        if (isOpen)
-        {
-            text.text = open;
-            text.color = openColor;
-        }
-        else 
-        {
-            text.text = close;
-            text.color = Color.white;
-        }
-    }
-
     private void setText(Text go, String text)
     {
         go.text = text;
     }
-
     public void Stop()
     {
         GetComponent<DOPopup>().Close();

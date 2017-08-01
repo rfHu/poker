@@ -106,6 +106,10 @@ public class Commander {
 		#endif
         ic.InitHx(chatRoomId);
     }
+
+    public void CanAudioPlay(bool canPlay) {
+        ic.CanAudioPlay(canPlay);
+    }
 }
 
 public interface ICommander {
@@ -122,6 +126,7 @@ public interface ICommander {
 	void PauseUnity();
     void OptionToggle(bool isOpen, int type);
     void InitHx(string chatRoomId);
+    void CanAudioPlay(bool canPlay);
 }
 
 #if UNITY_ANDROID
@@ -190,6 +195,11 @@ public class AndroidCommander: ICommander {
     public void InitHx(string chatRoomId)
     {
         getJo().Call("initHx", chatRoomId);
+    }
+
+    public void CanAudioPlay(bool canPlay)
+    {
+        getJo().Call("canAudioPlay", canPlay);
     }
 }
 #endif

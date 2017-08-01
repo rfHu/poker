@@ -42,8 +42,6 @@ public class RebuyOrAddon : MonoBehaviour {
         LeftTimes.SetActive(isPush);
         if (!isPush)
         {
- 
-
             Money.text = GameData.Shared.Coins.ToString();
 
             Fee.text = GameData.MatchData.Data[0].ToString();

@@ -78,7 +78,7 @@ public class _ {
         string[] colors = new string[]{
 		    "#ff1744",
 		    "#646464",
-		    "#00c853"
+		    "#00c853",
 	    };
         
         return getColor(colors, num);
@@ -88,7 +88,7 @@ public class _ {
         string[] colors = new string[]{
 		    "#ff1744",
 		    "#ffffff",
-		    "#00c853"
+		    "#00c853",
 	    };
 
         return getColor(colors, num);
@@ -182,4 +182,20 @@ public class _ {
 		}
 		return str;
 	}
+
+    public static void SetMsgText(bool isOpen, Text text)
+    {
+        if (isOpen)
+        {
+            text.text = "开启";
+            Color col = new Color();
+            ColorUtility.TryParseHtmlString("#18ffff", out col);
+            text.color = col;
+        }
+        else
+        {
+            text.text = "关闭";
+            text.color = Color.white;
+        }
+    }
 }

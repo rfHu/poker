@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UniRx;
 using System.IO;
 
-public class SNGWinner : MonoBehaviour {
+public class MatchWinner : MonoBehaviour {
 
     public GameObject coinImg;
 
@@ -96,12 +96,21 @@ public class SNGWinner : MonoBehaviour {
         GetComponent<DOPopup>().Close();
         if (gameEnd)
         {
-            // 获取roomID，调用ExitCb后无法获取
-            var room = GameData.Shared.Room;
+            // 获取ID，调用ExitCb后无法获取
+            var id = "";
+            var toPage = "";
+
+            switch (GameData.Shared.Type) 
+            {
+                case GameType.MTT: id = GameData.Shared.MatchID; toPage = "record_mtt.html"; break;
+                case GameType.SNG: id = GameData.Shared.Room; toPage = "record_sng.html"; break;
+                default:
+                    break;
+            }
 
             External.Instance.ExitCb(() =>
             {
-                Commander.Shared.GameEnd(room, "record_sng.html");
+                Commander.Shared.GameEnd(id, toPage);
             });
         }
         else{

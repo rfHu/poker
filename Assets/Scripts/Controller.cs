@@ -492,7 +492,7 @@ public class Controller : MonoBehaviour {
 
             var SNGWinner = PoolMan.Spawn("SNGWinner");
             SNGWinner.GetComponent<DOPopup>().ShowModal(new Color(0, 0, 0, 0.7f), closeOnClick: false);
-            SNGWinner.GetComponent<SNGWinner>().Init(rank , score, isEnd);
+            SNGWinner.GetComponent<MatchWinner>().Init(rank , score, isEnd);
         }).AddTo(this);
 
 		RxSubjects.ShowAudio.Where(isGuest).Subscribe((json) => {
@@ -630,7 +630,7 @@ public class Controller : MonoBehaviour {
 			// 关闭连接
 			Connect.Shared.CloseImmediate();
 
-			if (SNGWinner.IsSpawned) {
+			if (MatchWinner.IsSpawned) {
 				return ;
 			}
 

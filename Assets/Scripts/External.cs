@@ -95,6 +95,10 @@ public class External : MonoBehaviour{
 		HTTP.APIDomain = domain;
 	}
 
+    public void CanPlay(string uid) {
+        Commander.Shared.CanAudioPlay(GameData.Shared.FindPlayerIndex(uid) != -1);
+    }
+
 	private void close(Action callback) {
 		// 清空关键数据
 		GameData.Shared.Sid = "";
