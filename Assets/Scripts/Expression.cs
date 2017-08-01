@@ -8,6 +8,8 @@ public class Expression: MonoBehaviour {
     public Transform Face;
     public Sprite FaceImage;
 
+    private IDisposable disposable;
+
     public void SetTrigger(string name, Transform parent) {
         var rect = GetComponent<RectTransform>();
         var prect = parent.GetComponent<RectTransform>();
@@ -22,7 +24,11 @@ public class Expression: MonoBehaviour {
         var animator = Face.GetComponent<Animator>();
         animator.Play(name);
 
-        Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe((__) => {
+        if (disposable != null) {
+            disposable.Dispose();
+        }
+
+        disposable = Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe((__) => {
             PoolMan.Despawn(transform);
         }).AddTo(this);
     }
@@ -33,5 +39,6 @@ public class Expression: MonoBehaviour {
         } 
 
         Face.GetComponent<Image>().sprite = FaceImage;
+        disposable.Dispose();
     }
 }
