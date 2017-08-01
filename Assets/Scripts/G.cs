@@ -53,23 +53,6 @@ public class G {
 
 	public static Color Black = new Color(0, 0, 0, 0.9f);
 
-    //显示开启关闭
-    private static string open = "开启";
-    private static Color openColor = new Color(0.09375f, 1, 1);
-    private static string close = "关闭";
-    public static void SetMesText(bool isOpen, Text text)
-    {
-        if (isOpen)
-        {
-            text.text = open;
-            text.color = openColor;
-        }
-        else
-        {
-            text.text = close;
-            text.color = Color.white;
-        }
-    }
 }
 
 public class PoolMan {
