@@ -35,6 +35,8 @@ namespace ScorePage {
                     return ;
                 }
 
+                currentIndex = idx;
+
                 if (idx == 0) {
                     requestData();
                 } else {
