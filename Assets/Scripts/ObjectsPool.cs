@@ -1,26 +1,27 @@
 using UnityEngine;
+using PathologicalGames;
 
 public class ObjectsPool : MonoBehaviour {
-    public static ObjectsPool Shared {
-        get {
-            if (shared == null) {
-                shared = initPool();
-            }
+    private static bool hasInit = false;
+    private static GameObject shared;
 
+    public static void Init() {
+        if (hasInit) {
+            return ;
+        }
+
+        shared = new GameObject();
+        shared.name = "PoolManager";
+        UnityEngine.Object.DontDestroyOnLoad(shared);
+        PoolManager.Pools.Create("Shared", shared);
+        hasInit = true;
+    }
+
+    public static GameObject Shared {
+        get {
             return shared;
         }
     }
-
-    private static ObjectsPool shared;
-
-    private static ObjectsPool initPool() {
-        GameObject go = (GameObject)Instantiate(Resources.Load("Prefab/PoolManager"));
-        go.SetActive(true);
-        UnityEngine.Object.DontDestroyOnLoad(go);
-
-        return go.GetComponent<ObjectsPool>(); 
-    }
-
 
     public void SetCamera(Camera camera) {
         // var rootCanvas = GetComponent<Canvas>();

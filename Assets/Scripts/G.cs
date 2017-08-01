@@ -3,6 +3,7 @@ using System.Linq;
 using DarkTonic.MasterAudio;
 using PathologicalGames;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class G {
 	public static Canvas UICvs {
@@ -56,6 +57,8 @@ public class G {
 }
 
 public class PoolMan {
+	// static private Dictionary<string, GameObject> resources = new Dictionary<string, GameObject>();
+
 	public static bool IsReady() {
 		return PoolManager.Pools.ContainsKey("Shared");
 	}
@@ -66,8 +69,15 @@ public class PoolMan {
 
 	public static Transform Spawn(string name, Transform parent) {
 		var pool = PoolManager.Pools["Shared"];
-		Transform prefab = pool.prefabs[name];
-		return pool.Spawn(prefab, parent);
+
+		if (!pool.prefabs.ContainsKey(name)) {
+			var path = "Prefab/" + name;
+			var go = Resources.Load<GameObject>(path);
+			var prefabPool = new PrefabPool(go.transform);
+			pool.CreatePrefabPool(prefabPool);
+		}
+		
+		return pool.Spawn(pool.prefabs[name], parent);
 	}
 
 	public static void Despawn(Transform transform) {
