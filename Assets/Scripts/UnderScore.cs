@@ -183,7 +183,7 @@ public class _ {
 		return str;
 	}
 
-    public static void SetMesText(bool isOpen, Text text)
+    public static void SetMsgText(bool isOpen, Text text)
     {
         if (isOpen)
         {

@@ -67,13 +67,13 @@ public class RoomMessage : MonoBehaviour {
         Large.text = GameData.Shared.BankrollMul[1] * 100 + "BB";
         ThinkTime.text = GameData.Shared.ThinkTime + "s";
 
-        _.SetMesText(GameData.Shared.NeedInsurance, Insurance);
-        _.SetMesText(GameData.Shared.Straddle.Value, Straddle);
-        _.SetMesText(GameData.Shared.NeedAudit, NeedAudit);
-        _.SetMesText(GameData.Shared.GPSLimit, GPSMes);
-        _.SetMesText(GameData.Shared.IPLimit, IPMes);
-        _.SetMesText(GameData.Shared.Award27, Award27Mes);
-        _.SetMesText(GameData.Shared.BuryCard, BuryCardMes);
+        _.SetMsgText(GameData.Shared.NeedInsurance, Insurance);
+        _.SetMsgText(GameData.Shared.Straddle.Value, Straddle);
+        _.SetMsgText(GameData.Shared.NeedAudit, NeedAudit);
+        _.SetMsgText(GameData.Shared.GPSLimit, GPSMes);
+        _.SetMsgText(GameData.Shared.IPLimit, IPMes);
+        _.SetMsgText(GameData.Shared.Award27, Award27Mes);
+        _.SetMsgText(GameData.Shared.BuryCard, BuryCardMes);
         
         foreach (var item in Buttons)
         {

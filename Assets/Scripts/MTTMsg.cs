@@ -136,8 +136,8 @@ public class MTTMsg : MonoBehaviour {
 
             highLightLevel = GameData.Shared.BlindLv;
             Transform highLight = P2GoParent.GetChild(highLightLevel);
-            highLight.GetChild(1).GetComponentInChildren<Text>().color = selectCol;
-            highLight.GetChild(2).GetComponentInChildren<Text>().color = selectCol;
+            highLight.GetChild(1).GetComponentInChildren<Text>().color = openCol;
+            highLight.GetChild(2).GetComponentInChildren<Text>().color = openCol;
 
         });
 
@@ -195,7 +195,6 @@ public class MTTMsg : MonoBehaviour {
     {
         //标题信息
         MatchName.text = GameData.Shared.RoomName;
-        PlayerNum.text = GameData.Shared.Players.Count + "/" + GameData.Shared.PlayerCount;
 
         //p1信息
         var matchData = GameData.MatchData.Data;
@@ -208,6 +207,7 @@ public class MTTMsg : MonoBehaviour {
         }, (data) =>
         {
             var roomsData = Json.Decode(data) as Dictionary<string, object>;
+            PlayerNum.text = roomsData.Int("valid_gamers") + "/" + roomsData.Int("ready_gamers");
 
             //底部相关
             ButtomText.text = "延时报名至第" + roomsData.Int("limit_level") + "级别";
@@ -231,14 +231,9 @@ public class MTTMsg : MonoBehaviour {
             BlindLv.text = roomsData.Int("blind_lv").ToString();
             LimitLevel.text = roomsData.Int("limit_level").ToString();
 
-            HalfBreak.text = roomsData.Int("half_break") == 1 ? "开启" : "关闭";
-            HalfBreak.color = roomsData.Int("half_break") == 1 ? openCol : Color.white;
-
-            GPSLimit.text = roomsData.Int("gps_limit") == 1 ? "开启" : "关闭";
-            GPSLimit.color = roomsData.Int("gps_limit") == 1 ? openCol : Color.white;
-
-            IPLimit.text = roomsData.Int("ip_limit") == 1 ? "开启" : "关闭";
-            IPLimit.color = roomsData.Int("ip_limit") == 1 ? openCol : Color.white;
+            _.SetMsgText(roomsData.Int("half_break") == 1, HalfBreak);
+            _.SetMsgText(roomsData.Int("gps_limit") == 1, GPSLimit);
+            _.SetMsgText(roomsData.Int("ip_limit") == 1, IPLimit);
         });
 
         Toggles[0].isOn = true;
