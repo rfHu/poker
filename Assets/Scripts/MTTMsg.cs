@@ -51,7 +51,7 @@ public class MTTMsg : MonoBehaviour {
 
     private Color selectCol = new Color(33 / 255, 41 / 255, 50 / 255);
     private Color openCol = new Color(24 / 255, 1, 1);
-    private long timer = 0;
+    private int timer = 0;
     private RectTransform _rectTransform;
 
     private int highLightLevel;
@@ -178,7 +178,7 @@ public class MTTMsg : MonoBehaviour {
         });
 
         // 倒计时
-        Observable.Interval(TimeSpan.FromSeconds(1)).AsObservable().Subscribe((_) =>
+        Observable.Interval(TimeSpan.FromSeconds(1)).AsObservable().Subscribe((__) =>
         {
             // 游戏未开始，不需要修改
             if (!GameData.Shared.GameStarted || !gameObject.activeInHierarchy)
@@ -187,7 +187,7 @@ public class MTTMsg : MonoBehaviour {
             }
 
             timer = timer + 1;
-            TimePassed.text = "已进行：" + secToStr(timer);
+            TimePassed.text = "已进行：" + _.SecondStr(timer);  
         });
     }
 
@@ -211,10 +211,10 @@ public class MTTMsg : MonoBehaviour {
 
             //底部相关
             ButtomText.text = "延时报名至第" + roomsData.Int("limit_level") + "级别";
-            timer = roomsData.Long("spent");
+            timer = roomsData.Int("spent");
             if (timer > 0)
             {
-                TimePassed.text = "已进行：" + secToStr(timer);
+                TimePassed.text = "已进行：" + _.SecondStr(timer);
             }
             else 
             {
@@ -242,28 +242,6 @@ public class MTTMsg : MonoBehaviour {
         });
 
         Toggles[0].isOn = true;
-    }
-
-    private string secToStr(long seconds)
-    {
-        var hs = 3600;
-        var ms = 60;
-
-        var h = Mathf.FloorToInt(seconds / hs);
-        var m = Mathf.FloorToInt(seconds % hs / ms);
-        var s = (seconds % ms);
-
-        return string.Format("{0}:{1}:{2}", fix(h), fix(m), fix(s));
-    }
-
-    private string fix<T>(T num)
-    {
-        var str = num.ToString();
-        if (str.Length < 2)
-        {
-            return "0" + str;
-        }
-        return str;
     }
 
     private void setGoSize(bool addHeight) 

@@ -36,9 +36,9 @@ namespace ScorePage {
                 }
 
                 if (idx == 0) {
-
+                    requestData();
                 } else {
-
+                    requestTop20();
                 }
            }).AddTo(this);
         }
@@ -74,7 +74,9 @@ namespace ScorePage {
                     }
                 } else if (data is GuestHeadData || data is ScoreHeaderData) {
                     return 80f;
-                } 
+                } else if (data is MTTTabData) {
+                    return 128f;
+                }
                 else {
                     return 220f;
                 }
@@ -99,6 +101,7 @@ namespace ScorePage {
                     instance.Init(_Params.RankPrefab, itemIndex);
                 } else if (data is MTTTabData) {
                     instance = new MTTTabRow();
+                    instance.Init(_Params.TabPrefab, itemIndex);
                 } else  {
                     instance = new GuestRow();    
                     instance.Init(_Params.GuestPrefab, itemIndex);
@@ -128,7 +131,8 @@ namespace ScorePage {
 
         private void requestTop20() {
             Connect.Shared.Emit(new Dictionary<string, object>(){
-                {"f", "gamerrank"}
+                {"f", "gamerrank"},
+                {"for_match", 1}
             }, (json) => {
                 var rowData = new List<Data>();
                 rowData.Add(headerData);

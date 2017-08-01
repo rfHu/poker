@@ -625,7 +625,7 @@ sealed public class GameData {
 	// 游戏是否已经开始，跟暂停状态无关
 	public bool GameStarted = false; 
 	public float Rake = 0;
-	public long Duration = 0;
+	public int Duration = 0;
 	public bool NeedAudit = false;
 	public bool IPLimit = false;
 	public bool GPSLimit = false;
@@ -633,7 +633,7 @@ sealed public class GameData {
     public bool Award27 = false;
     public bool BuryCard = false;
 	public DateTime CreateTime; 
-	public ReactiveProperty<long> LeftTime = new ReactiveProperty<long>(0);
+	public ReactiveProperty<int> LeftTime = new ReactiveProperty<int>(0);
     public ReactiveProperty<int> Ante = new ReactiveProperty<int>(0);
     public ReactiveProperty<bool> Straddle = new ReactiveProperty<bool>(false);
 
@@ -681,7 +681,7 @@ sealed public class GameData {
 		Ante.Value = options.Int("ante");
 		PlayerCount.Value = options.Int("max_seats");
 		Rake = options.Float("rake_percent");
-		Duration = options.Long("time_limit");
+		Duration = options.Int("time_limit");
 		NeedAudit = options.Int("need_audit") == 1;
 		GPSLimit = options.Int("gps_limit") > 0;
 		IPLimit = options.Int("ip_limit") == 1;
@@ -705,10 +705,10 @@ sealed public class GameData {
             MatchData.Rebuy = options.Int("rebuy_count");
             MatchData.Addon = options.Int("add_on");
 			MatchData.IsHunter = options.Int("reward_ratio") > 0;
-			LeftTime.Value = json.Long("blind_countdown");
+			LeftTime.Value = json.Int("blind_countdown");
             BlindLv = json.Int("blind_lv");
         } else {
-			LeftTime.Value = json.Long("left_time");
+			LeftTime.Value = json.Int("left_time");
 		}
 
 		RoomName = GameData.Shared.Type == GameType.MTT ? json.String("match_name") : json.String("name");

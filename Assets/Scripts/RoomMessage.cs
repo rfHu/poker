@@ -45,7 +45,7 @@ public class RoomMessage : MonoBehaviour {
                 return;
             }
 
-            setText(LeftTime, secToStr(value));
+            setText(LeftTime, _.SecondStr(value));
         }).AddTo(this);
 
          GameData.Shared.Paused.Where((_) => GameData.Shared.GameStarted).Subscribe((pause) => {
@@ -103,28 +103,6 @@ public class RoomMessage : MonoBehaviour {
     private void setText(Text go, String text)
     {
         go.text = text;
-    }
-
-    private string secToStr(long seconds)
-    {
-        var hs = 3600;
-        var ms = 60;
-
-        var h = Mathf.FloorToInt(seconds / hs);
-        var m = Mathf.FloorToInt(seconds % hs / ms);
-        var s = (seconds % ms);
-
-        return string.Format("{0}:{1}:{2}", fix(h), fix(m), fix(s));
-    }
-
-    private string fix<T>(T num)
-    {
-        var str = num.ToString();
-        if (str.Length < 2)
-        {
-            return "0" + str;
-        }
-        return str;
     }
 
     public void Stop()

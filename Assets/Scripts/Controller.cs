@@ -95,7 +95,7 @@ public class Controller : MonoBehaviour {
 			infoShow = true;
 
 			showGameInfo();
-            SNGSetting();
+            MatchSetting();
 			gameReload();
 			registerEvents();
 			setupDealer();
@@ -248,24 +248,25 @@ public class Controller : MonoBehaviour {
 			} else {
 				gameInfoTexts[1].text = "决赛桌";
 			}
-		}
 
-		var ipLimit = GameData.Shared.IPLimit;
-		var gpsLimit = GameData.Shared.GPSLimit;
+			gameInfoTexts[2].text = "";
+		} else {
+			var ipLimit = GameData.Shared.IPLimit;
+			var gpsLimit = GameData.Shared.GPSLimit;
 
-		if (ipLimit && gpsLimit) {
-			gameInfoTexts[1].text = "IP 及 GPS 限制";
-		} else if (gpsLimit) {
-			gameInfoTexts[1].text = "GPS 限制";
-		} else if (ipLimit) {
-			gameInfoTexts[1].text = "IP 限制";
-		}
+			if (ipLimit && gpsLimit) {
+				gameInfoTexts[1].text = "IP 及 GPS 限制";
+			} else if (gpsLimit) {
+				gameInfoTexts[1].text = "GPS 限制";
+			} else if (ipLimit) {
+				gameInfoTexts[1].text = "IP 限制";
+			}
 
-		if (GameData.Shared.NeedInsurance)
-		{
-			gameInfoTexts[2].text = "保险模式";
+			if (GameData.Shared.NeedInsurance)
+			{
+				gameInfoTexts[2].text = "保险模式";
+			}
 		}
-		
 	}
 
     private void setBBText()
@@ -335,25 +336,6 @@ public class Controller : MonoBehaviour {
 		}
 	}
 
-	private string secToStr(long seconds) {
-		var hs = 3600;
-		var ms = 60;
-
-		var h = Mathf.FloorToInt(seconds / hs);		
-		var m = Mathf.FloorToInt(seconds % hs / ms);
-		var s = (seconds % ms);
-
-		return string.Format("{0}:{1}:{2}", fix(h), fix(m), fix(s));	
-	}
-
-	private string fix<T>(T num) {
-		var str = num.ToString();
-		if (str.Length < 2) {
-			return "0" + str;
-		}
-		return str;
-	}
-
 	private bool queueIsActive = false;
 	private Queue<KeyValuePair<int, int>> cardAnimQueue = new Queue<KeyValuePair<int, int>>();
 	private void startQueue()  {
@@ -397,7 +379,7 @@ public class Controller : MonoBehaviour {
 				return;
 			}
 
-			setText(TimeLeftGo, secToStr(value));
+			setText(TimeLeftGo, _.SecondStr(value));
 
 			if (GameData.Shared.IsMatch()) {
 				return ;
@@ -824,8 +806,9 @@ public class Controller : MonoBehaviour {
                     	break;
 
                     case "time_limit": 
-                        GameData.Shared.Duration += data.Long("time_limit");
-                        GameData.Shared.LeftTime.Value += data.Long("time_limit");
+						var timeLimit = data.Int("time_limit");
+                        GameData.Shared.Duration += timeLimit;
+                        GameData.Shared.LeftTime.Value += timeLimit;
 
 						var time = data.Long("time_limit") / 3600f;
 						var digit = "小时";
@@ -936,7 +919,7 @@ public class Controller : MonoBehaviour {
 		}
 	}
 
-    private void SNGSetting()
+    private void MatchSetting()
     {
 		SNGGo.SetActive(false);
 		MTTGo.SetActive(false);

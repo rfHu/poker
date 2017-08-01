@@ -11,7 +11,7 @@ namespace ScorePage {
          override public void CollectViews() {
             base.CollectViews();
             headCount = root.Find("HeadCount").GetComponent<Text>();
-            headAward = root.Find("Hunter").Find("HeadAward").GetComponent<Text>();
+            headAward = root.Find("Hunter").GetComponent<Text>();
         }
 
         override public void SetData(Data data) {
@@ -20,7 +20,7 @@ namespace ScorePage {
 
             headCount.text = dt.HeadCount.ToString();
 
-            var go = headAward.transform.parent.gameObject;
+            var go = headAward.gameObject;
             var rect = scoreText.GetComponent<RectTransform>();
 
             if (GameData.MatchData.IsHunter) {
