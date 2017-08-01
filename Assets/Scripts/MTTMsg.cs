@@ -194,7 +194,8 @@ public class MTTMsg : MonoBehaviour {
     public void Init() 
     {
         //标题信息
-        MatchName.text = GameData.Shared.RoomName;
+        MatchName.text = GameData.Shared.RoomName.Value;
+        PlayerNum.text = GameData.Shared.Players.Count + "/" + GameData.Shared.PlayerCount;
 
         //p1信息
         var matchData = GameData.MatchData.Data;

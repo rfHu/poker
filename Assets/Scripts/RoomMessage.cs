@@ -67,11 +67,11 @@ public class RoomMessage : MonoBehaviour {
         Large.text = GameData.Shared.BankrollMul[1] * 100 + "BB";
         ThinkTime.text = GameData.Shared.ThinkTime + "s";
 
-        _.SetMsgText(GameData.Shared.NeedInsurance, Insurance);
+        _.SetMsgText(GameData.Shared.NeedInsurance.Value, Insurance);
         _.SetMsgText(GameData.Shared.Straddle.Value, Straddle);
         _.SetMsgText(GameData.Shared.NeedAudit, NeedAudit);
-        _.SetMsgText(GameData.Shared.GPSLimit, GPSMes);
-        _.SetMsgText(GameData.Shared.IPLimit, IPMes);
+        _.SetMsgText(GameData.Shared.GPSLimit.Value, GPSMes);
+        _.SetMsgText(GameData.Shared.IPLimit.Value, IPMes);
         _.SetMsgText(GameData.Shared.Award27, Award27Mes);
         _.SetMsgText(GameData.Shared.BuryCard, BuryCardMes);
         

@@ -148,7 +148,7 @@ public class UIManager : MonoBehaviour {
             str += "MTT" + GameData.MatchData.MatchString;
         }
 
-        if (!string.IsNullOrEmpty(GameData.Shared.GameCode))
+        if (!string.IsNullOrEmpty(GameData.Shared.GameCode.Value))
             str += "，邀请码[" + GameData.Shared.GameCode + "]";
 
 

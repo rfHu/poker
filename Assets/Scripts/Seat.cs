@@ -55,7 +55,7 @@ public class Seat : MonoBehaviour {
 			return ;
 		}
 
-		if (GameData.Shared.GPSLimit) {
+		if (GameData.Shared.GPSLimit.Value) {
 			StartCoroutine(Commander.Shared.Location(takeSeat, () => {
 				PokerUI.Alert("为保证公平竞技，请在设置—隐私—定位服务中开启位置权限");	
 			}));	 

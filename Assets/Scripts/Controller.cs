@@ -94,7 +94,6 @@ public class Controller : MonoBehaviour {
 		GameData.Shared.GameInfoReady.Where((ready) => ready && !infoShow).Subscribe((_) => {
 			infoShow = true;
 
-			showGameInfo();
             MatchSetting();
 			gameReload();
 			registerEvents();
@@ -230,42 +229,16 @@ public class Controller : MonoBehaviour {
 		go.transform.Find("Value").GetComponent<Text>().text = text;
 	}
 
-	void showGameInfo() {
-		if (!String.IsNullOrEmpty(GameData.Shared.GameCode)) {
-			InviteCodeGo.SetActive(true);
-			setText(InviteCodeGo, String.Format("{0}", GameData.Shared.GameCode));
-		} else {
-			InviteCodeGo.SetActive(false);
-		}
+	void ipgpsText() {
+		var ipLimit = GameData.Shared.IPLimit.Value;
+		var gpsLimit = GameData.Shared.GPSLimit.Value;
 
-		var roomName = GameData.Shared.RoomName;
-		gameInfoTexts[0].text = string.Format("[ {0} ]", roomName);
-
-		if (GameData.Shared.Type == GameType.MTT) {
-			var num = GameData.Shared.TableNumber; 
-			if (num != 0) {
-				gameInfoTexts[1].text = "牌桌" + num;
-			} else {
-				gameInfoTexts[1].text = "决赛桌";
-			}
-
-			gameInfoTexts[2].text = "";
-		} else {
-			var ipLimit = GameData.Shared.IPLimit;
-			var gpsLimit = GameData.Shared.GPSLimit;
-
-			if (ipLimit && gpsLimit) {
-				gameInfoTexts[1].text = "IP 及 GPS 限制";
-			} else if (gpsLimit) {
-				gameInfoTexts[1].text = "GPS 限制";
-			} else if (ipLimit) {
-				gameInfoTexts[1].text = "IP 限制";
-			}
-
-			if (GameData.Shared.NeedInsurance)
-			{
-				gameInfoTexts[2].text = "保险模式";
-			}
+		if (ipLimit && gpsLimit) {
+			gameInfoTexts[1].text = "IP 及 GPS 限制";
+		} else if (gpsLimit) {
+			gameInfoTexts[1].text = "GPS 限制";
+		} else if (ipLimit) {
+			gameInfoTexts[1].text = "IP 限制";
 		}
 	}
 
@@ -751,6 +724,43 @@ public class Controller : MonoBehaviour {
 	private void subsRoomSetting() {
 		RxSubjects.Ending.Subscribe((e) => {
 			PokerUI.Toast("房主提前结束牌局");	
+		}).AddTo(this);
+
+		GameData.Shared.IPLimit.Where((flag) => flag).Subscribe((_) => {
+			ipgpsText();
+		}).AddTo(this);
+
+		GameData.Shared.GPSLimit.Where((flag) => flag).Subscribe((_) => {
+			ipgpsText();
+		}).AddTo(this);
+
+		GameData.Shared.NeedInsurance.Subscribe((flag) => {
+			if (flag) {
+				gameInfoTexts[2].text = "保险模式";
+			}
+		}).AddTo(this);
+
+		GameData.Shared.RoomName.Subscribe((name) => {
+			gameInfoTexts[0].text = string.Format("[ {0} ]", name);
+		}).AddTo(this);
+
+		GameData.Shared.GameCode.Subscribe((code) => {
+			if (!String.IsNullOrEmpty(code)) {
+				InviteCodeGo.SetActive(true);
+				setText(InviteCodeGo, String.Format("{0}", GameData.Shared.GameCode));
+			} else {
+				InviteCodeGo.SetActive(false);
+			}
+		}).AddTo(this);
+
+		GameData.Shared.TableNumber.Where((_) => GameData.Shared.Type == GameType.MTT).Subscribe((num) => {
+			if (num != 0) {
+				gameInfoTexts[1].text = "牌桌" + num;
+			} else {
+				gameInfoTexts[1].text = "决赛桌";
+			}
+
+			gameInfoTexts[2].text = "";
 		}).AddTo(this);
 
 		GameData.Shared.Paused.Subscribe((pause) => {
