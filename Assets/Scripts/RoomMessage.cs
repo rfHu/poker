@@ -40,7 +40,7 @@ public class RoomMessage : MonoBehaviour {
                 setText(LeftTime, "暂未开始");
                 return;
             }
-            setText(LeftTime, G.SecToStr(value));
+            setText(LeftTime, _.SecondStr(value));
         }).AddTo(this);
 
          GameData.Shared.Paused.Where((_) => GameData.Shared.GameStarted).Subscribe((pause) => {

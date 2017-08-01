@@ -25,9 +25,9 @@ namespace ScorePage {
 
         override public void CollectViews() {
             base.CollectViews();
-            var tab = root.Find("Tab");
-            tabs.Add(tab.Find("Room"));
-            tabs.Add(tab.Find("Top20"));
+            tabs = new List<Transform>();
+            tabs.Add(root.Find("Room"));
+            tabs.Add(root.Find("Top20"));
 
             var btn1 = tabs[0].GetComponent<Button>();
             var btn2 = tabs[1].GetComponent<Button>();

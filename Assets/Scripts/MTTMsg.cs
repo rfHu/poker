@@ -51,7 +51,7 @@ public class MTTMsg : MonoBehaviour {
 
     private Color selectCol = new Color(33 / 255, 41 / 255, 50 / 255);
     private Color openCol = new Color(24 / 255, 1, 1);
-    private long timer = 0;
+    private int timer = 0;
     private RectTransform _rectTransform;
 
     private int highLightLevel;
@@ -130,14 +130,14 @@ public class MTTMsg : MonoBehaviour {
 
             setGoSize(true);
 
-            Transform turnNormal = P3GoParent.GetChild(highLightLevel);
-            turnNormal.GetChild(1).GetComponent<Text>().color = new Color(1, 1, 1, 0.6f);
-            turnNormal.GetChild(2).GetComponent<Text>().color = new Color(1, 1, 1, 0.6f);
+            Transform turnNormal = P2GoParent.GetChild(highLightLevel);
+            turnNormal.GetChild(1).GetComponentInChildren<Text>().color = new Color(1, 1, 1, 0.6f);
+            turnNormal.GetChild(2).GetComponentInChildren<Text>().color = new Color(1, 1, 1, 0.6f);
 
             highLightLevel = GameData.Shared.BlindLv;
-            Transform highLight = P3GoParent.GetChild(highLightLevel);
-            highLight.GetChild(1).GetComponent<Text>().color = selectCol;
-            highLight.GetChild(2).GetComponent<Text>().color = selectCol;
+            Transform highLight = P2GoParent.GetChild(highLightLevel);
+            highLight.GetChild(1).GetComponentInChildren<Text>().color = selectCol;
+            highLight.GetChild(2).GetComponentInChildren<Text>().color = selectCol;
 
         });
 
@@ -178,7 +178,7 @@ public class MTTMsg : MonoBehaviour {
         });
 
         // 倒计时
-        Observable.Interval(TimeSpan.FromSeconds(1)).AsObservable().Subscribe((_) =>
+        Observable.Interval(TimeSpan.FromSeconds(1)).AsObservable().Subscribe((__) =>
         {
             // 游戏未开始，不需要修改
             if (!GameData.Shared.GameStarted || !gameObject.activeInHierarchy)
@@ -187,7 +187,7 @@ public class MTTMsg : MonoBehaviour {
             }
 
             timer = timer + 1;
-            TimePassed.text = "已进行：" + G.SecToStr(timer);
+            TimePassed.text = "已进行：" + _.SecondStr(timer);  
         });
     }
 
@@ -211,10 +211,10 @@ public class MTTMsg : MonoBehaviour {
 
             //底部相关
             ButtomText.text = "延时报名至第" + roomsData.Int("limit_level") + "级别";
-            timer = roomsData.Long("spent");
+            timer = roomsData.Int("spent");
             if (timer > 0)
             {
-                TimePassed.text = "已进行：" +  G.SecToStr(timer);
+                TimePassed.text = "已进行：" + _.SecondStr(timer);
             }
             else 
             {
@@ -231,9 +231,14 @@ public class MTTMsg : MonoBehaviour {
             BlindLv.text = roomsData.Int("blind_lv").ToString();
             LimitLevel.text = roomsData.Int("limit_level").ToString();
 
-            G.SetMesText(roomsData.Int("half_break") == 1, HalfBreak);
-            G.SetMesText(roomsData.Int("gps_limit") == 1, GPSLimit);
-            G.SetMesText(roomsData.Int("ip_limit") == 1, IPLimit);
+            HalfBreak.text = roomsData.Int("half_break") == 1 ? "开启" : "关闭";
+            HalfBreak.color = roomsData.Int("half_break") == 1 ? openCol : Color.white;
+
+            GPSLimit.text = roomsData.Int("gps_limit") == 1 ? "开启" : "关闭";
+            GPSLimit.color = roomsData.Int("gps_limit") == 1 ? openCol : Color.white;
+
+            IPLimit.text = roomsData.Int("ip_limit") == 1 ? "开启" : "关闭";
+            IPLimit.color = roomsData.Int("ip_limit") == 1 ? openCol : Color.white;
         });
 
         Toggles[0].isOn = true;

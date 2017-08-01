@@ -8,8 +8,9 @@ using UniRx;
 public class MTTWaiting : MonoBehaviour {
 	[SerializeField]private Avatar avatar;
 	[SerializeField]private Text coins;
-	[SerializeField]private Text cdMin;
-	[SerializeField]private Text cdSec;
+	[SerializeField]private Text inviteCode;
+	[SerializeField]private Text cdText;
+	[SerializeField]private Text RoomName;
 
 	private IDisposable disposable;
 
@@ -33,6 +34,16 @@ public class MTTWaiting : MonoBehaviour {
 		ts = data.Int("left_time");
 		setTime();
 
+		RoomName.text = GameData.Shared.Room;
+
+		var codeGo = inviteCode.transform.parent.gameObject;
+		if (string.IsNullOrEmpty(GameData.Shared.GameCode)) {
+			codeGo.SetActive(false);
+		} else {
+			codeGo.SetActive(true);
+			inviteCode.text = GameData.Shared.GameCode;
+		}
+
 		if (disposable != null) {
 			disposable.Dispose();
 		}
@@ -49,15 +60,6 @@ public class MTTWaiting : MonoBehaviour {
 
 	private void setTime() {
 		var dateTime = _.DateTimeFromTimeStamp(ts);
-		cdMin.text = fix(dateTime.Minute);
-		cdSec.text = fix(dateTime.Second);
-	}
-
-	private string fix(int num) {
-		if (num < 10) {
-			return "0" + num.ToString();
-		} 
-
-		return num.ToString();
+		cdText.text = string.Format("{0}:{1}", _.Fix(dateTime.Minute), _.Fix(dateTime.Second));
 	}
 }
