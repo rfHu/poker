@@ -593,6 +593,8 @@ sealed public class GameData {
         public static int Rebuy;
 		public static bool IsHunter;
 
+		public static ReactiveProperty<int> MatchRoomStatus = new ReactiveProperty<int>(1);
+
 		public static string MatchString {
 			get {
 				var map = new Dictionary<int, string>(){
@@ -698,6 +700,8 @@ sealed public class GameData {
 		Pots.Value = json.DL("pots");
 
         Type = string2GameType(json.String("type"));
+
+		MatchData.MatchRoomStatus.Value = json.Int("match_room_status");
         if (IsMatch())
         {
             MatchData.Type = options.Int("sub_type");
