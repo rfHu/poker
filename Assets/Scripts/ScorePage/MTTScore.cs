@@ -182,8 +182,11 @@ namespace ScorePage {
 
                     var model = dict.ToObject<PlayerModel>(); 
                 
-                    if (model.seat < 0 && model.in_room) {
-                        guestList.Add(model);
+                    // 小于0不应该展示在排行榜
+                    if (model.seat < 0) {
+                        if (model.in_room) { // 在线的游客才展示
+                            guestList.Add(model);
+                        }
                         continue;
                     }
                     

@@ -27,6 +27,9 @@ public class MTTWaiting : MonoBehaviour {
 	}
 
 	public void Init(Dictionary<string, object> data) {
+		var code = GameData.Shared.GameCode.Value = data.String("code");
+		var name = GameData.Shared.RoomName.Value = data.String("name");
+
 		avatar.SetImage(GameData.Shared.Avatar);
 		var dt = data.Dict("myself");
 		coins.text = _.Num2CnDigit(dt.Int("bankroll"));
@@ -34,10 +37,9 @@ public class MTTWaiting : MonoBehaviour {
 		ts = data.Int("left_time");
 		setTime();
 
-		RoomName.text = GameData.Shared.Room.Value;
+		RoomName.text = name;
 
 		var codeGo = inviteCode.transform.parent.gameObject;
-		var code = GameData.Shared.GameCode.Value;
 
 		if (string.IsNullOrEmpty(code)) {
 			codeGo.SetActive(false);
