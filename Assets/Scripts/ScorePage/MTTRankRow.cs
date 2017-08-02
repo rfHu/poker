@@ -23,6 +23,9 @@ namespace ScorePage {
             var go = headAward.gameObject;
             var rect = scoreText.GetComponent<RectTransform>();
 
+            var white = new Color(1 ,1, 1);
+            var yellow = _.HexColor("#ffd028");
+
             if (GameData.MatchData.IsHunter) {
                 go.SetActive(true); 
                 headAward.text = _.Num2CnDigit(dt.HeadAward);
@@ -30,6 +33,14 @@ namespace ScorePage {
             } else {
                 go.SetActive(false);
                 rect.anchoredPosition = new Vector2(-32, 0);
+            }
+
+            if (dt.RankData.Uid == GameData.Shared.Uid) {
+                headAward.color = yellow;
+                headCount.color = yellow;
+            } else {
+                headAward.color = white;
+                headCount.color = white;
             }
         }
 
