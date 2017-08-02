@@ -17,5 +17,7 @@ namespace MTTMsgPage
         }
 
         public abstract bool CanPresentModelType(Type modelType);
+
+
     }
 }

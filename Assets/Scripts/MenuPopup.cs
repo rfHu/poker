@@ -59,6 +59,8 @@ public class MenuPopup : MonoBehaviour {
             isInteractable = GameData.Shared.GetMyPlayer().AddonCount < GameData.MatchData.Addon;
         }
 
+        isInteractable = isInteractable && GameData.Shared.FindPlayerIndex(GameData.Shared.Uid) != -1;
+
         RebuyAddonGo.GetComponent<CanvasGroup>().alpha = (isInteractable) ? 1 : 0.5f;
         RebuyAddonGo.GetComponent<Button>().interactable = isInteractable;
     }
