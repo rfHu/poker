@@ -18,4 +18,12 @@ namespace MTTMsgPage
         public int Rank;
         public string Award;
     }
+
+    public class TableListGoData : MTTPageData
+    {
+        public int Num;
+        public int gamersCount;
+        public int Min;
+        public int Max;
+    }
 }

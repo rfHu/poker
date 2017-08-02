@@ -706,7 +706,7 @@ sealed public class GameData {
             MatchData.Addon = options.Int("add_on");
 			MatchData.IsHunter = options.Int("reward_ratio") > 0;
 			LeftTime.Value = json.Int("blind_countdown");
-            BlindLv = json.Int("blind_lv");
+            BlindLv = json.Int("blind_lv") + 1;
         } else {
 			LeftTime.Value = json.Int("left_time");
 		}

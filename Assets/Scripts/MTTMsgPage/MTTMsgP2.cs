@@ -19,13 +19,13 @@ namespace MTTMsgPage
 
         MyScrollRectAdapter _Adapter;
 
-        void Start()
+        void OnEnable()
         {
             _Adapter = new MyScrollRectAdapter();
             _Adapter.Init(adapterParams);
         }
 
-        void OnDestroy()
+        void OnDisable()
         {
             if (_Adapter != null)
                 _Adapter.Dispose();
@@ -83,7 +83,7 @@ namespace MTTMsgPage
 
                 var roomsMsg = awardMsg.List("list");
 
-                //setGoSize(roomsMsg.Count > 5);
+                transform.parent.parent.GetComponent<MTTMsg>().SetGoSize(roomsMsg.Count > 5);
 
                 for (int i = 0; i < roomsMsg.Count; i++)
                 {
@@ -99,7 +99,6 @@ namespace MTTMsgPage
 
                 adapterParams.rowData.Clear();
                 adapterParams.rowData.AddRange(rowData);
-
                 _Adapter.ChangeItemCountTo(rowData.Count);
             });
         }

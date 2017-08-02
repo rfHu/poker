@@ -84,7 +84,7 @@ namespace MTTMsgPage
                 if (!isOn)
                     return;
 
-                setGoSize(false);
+                SetGoSize(false);
             });
 
             Toggles[1].onValueChanged.AddListener((isOn) =>
@@ -101,7 +101,7 @@ namespace MTTMsgPage
                 if (!isOn)
                     return;
 
-                setGoSize(true);
+                SetGoSize(true);
 
                 Transform turnNormal = P3GoParent.GetChild(highLightLevel);
                 turnNormal.GetChild(1).GetComponentInChildren<Text>().color = new Color(1, 1, 1, 0.6f);
@@ -120,34 +120,7 @@ namespace MTTMsgPage
                 if (!isOn)
                     return;
 
-                HTTP.Get("/match-rooms", new Dictionary<string, object> {
-                {"match_id", GameData.Shared.MatchID },
-            }, (data) =>
-                    {
-                        for (int i = P4GoParent.childCount - 1; i > -1; i--)
-                        {
-                            Destroy(P4GoParent.GetChild(i).gameObject);
-                        }
-
-                        var roomsMsg = Json.Decode(data) as List<object>;
-
-                        setGoSize(roomsMsg.Count > 8);
-
-                        for (int i = 0; i < roomsMsg.Count; i++)
-                        {
-                            var msg = roomsMsg[i] as Dictionary<string, object>;
-
-                            GameObject go = Instantiate(RoomMsgPre, P4GoParent);
-                            go.SetActive(true);
-                            go.transform.GetChild(0).GetComponentInChildren<Text>().text = msg.Int("num").ToString();
-                            go.transform.GetChild(1).GetComponentInChildren<Text>().text = msg.Int("gamers_count").ToString();
-                            go.transform.GetChild(2).GetComponentInChildren<Text>().text = msg.Int("min") + "/" + msg.Int("max");
-                            if ((i + 1) % 2 == 1)
-                            {
-                                go.AddComponent<ProceduralImage>().color = new Color(0, 0, 0, 0.2f);
-                            }
-                        }
-                    });
+                P4GoParent.GetComponent<MTTMsgP4>().requestData();
             });
 
             // 倒计时
@@ -184,7 +157,7 @@ namespace MTTMsgPage
                 PlayerNum.text = roomsData.Int("valid_gamers") + "/" + roomsData.Int("ready_gamers");
 
                 //底部相关
-                ButtomText.text = "延时报名至第" + roomsData.Int("limit_level") + "级别";
+                ButtomText.text =  roomsData.Int("blind_lv") <= roomsData.Int("limit_level")? "延时报名至第" + roomsData.Int("limit_level") + "级别" : "以截止报名";
                 timer = roomsData.Int("spent");
                 if (timer > 0)
                 {
@@ -196,7 +169,7 @@ namespace MTTMsgPage
                 }
 
                 //p1信息
-                TableNum.text = roomsData.Int("table_num").ToString();
+                TableNum.text = roomsData.Int("table_num") == 0 ? "决赛桌" : roomsData.Int("table_num").ToString();
                 RoomPlayerNum.text = roomsData.Int("max_seats").ToString();
                 RoomNum.text = roomsData.Int("table_count").ToString();
                 Rebuy.text = roomsData.Int("rebuy_count").ToString();
@@ -213,7 +186,7 @@ namespace MTTMsgPage
             Toggles[0].isOn = true;
         }
 
-        private void setGoSize(bool addHeight)
+        public void SetGoSize(bool addHeight)
         {
             if (addHeight && _rectTransform.sizeDelta.y != 1286)
             {
