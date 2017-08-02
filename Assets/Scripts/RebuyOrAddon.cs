@@ -52,7 +52,7 @@ public class RebuyOrAddon : MonoBehaviour {
         }
         else
         {
-            LeftTimes.GetComponentInChildren<Text>().text = (Rebuy ? (GameData.MatchData.Rebuy - GameData.Shared.GetMyPlayer().RebuyCount) : 1) + "次";
+            LeftTimes.transform.Find("Text").GetComponent<Text>().text = (Rebuy ? (GameData.MatchData.Rebuy - GameData.Shared.GetMyPlayer().RebuyCount) : 1) + "次";
             myCoroutine = Timer(15);
             StartCoroutine(myCoroutine);
         }

@@ -8,247 +8,221 @@ using UnityEngine.UI;
 using UnityEngine.UI.ProceduralImage;
 using DG.Tweening;
 
-public class MTTMsg : MonoBehaviour {
+namespace MTTMsgPage
+{
 
-    //标题内信息
-    public Text MatchName;
-    public Text PlayerNum;
-
-    //底部
-    public Text TimePassed;
-    public Text ButtomText;
-
-    //P1页面
-    public Text EntryFee;
-    public Text LvUpTime;
-    public Text InitalScore;
-    public Text TableNum;
-    public Text RoomPlayerNum;
-    public Text RoomNum;
-    public Text Rebuy;
-    public Text AddOn;
-    public Text CreatorName;
-    public Text BlindLv;
-    public Text LimitLevel;
-    public Text HalfBreak;
-    public Text GPSLimit;
-    public Text IPLimit;
-
-    //P2页面
-    public Text JackpotTotal;
-    public Text Count;
-    public GameObject AwardPre;
-    public Transform P2GoParent;
-
-    //P3页面
-    public Transform P3GoParent;
-
-    //P4页面
-    public Transform P4GoParent;
-    public GameObject RoomMsgPre;
-
-    public Toggle[] Toggles;
-
-    private Color selectCol = new Color(33 / 255, 41 / 255, 50 / 255);
-    private Color openCol = new Color(24 / 255, 1, 1);
-    private int timer = 0;
-    private RectTransform _rectTransform;
-
-    private int highLightLevel;
-
-    void Awake()
+    public class MTTMsg : MonoBehaviour
     {
-        _rectTransform = GetComponent<RectTransform>();
 
-        foreach (var item in Toggles)
+        //标题内信息
+        public Text MatchName;
+        public Text PlayerNum;
+
+        //底部
+        public Text TimePassed;
+        public Text ButtomText;
+
+        //P1页面
+        public Text EntryFee;
+        public Text LvUpTime;
+        public Text InitalScore;
+        public Text TableNum;
+        public Text RoomPlayerNum;
+        public Text RoomNum;
+        public Text Rebuy;
+        public Text AddOn;
+        public Text CreatorName;
+        public Text BlindLv;
+        public Text LimitLevel;
+        public Text HalfBreak;
+        public Text GPSLimit;
+        public Text IPLimit;
+
+        //P2页面
+        public Text JackpotTotal;
+        public Text Count;
+        public GameObject AwardPre;
+        public Transform P2GoParent;
+
+        //P3页面
+        public Transform P3GoParent;
+
+        //P4页面
+        public Transform P4GoParent;
+        public GameObject RoomMsgPre;
+
+        public Toggle[] Toggles;
+
+        private Color selectCol = new Color(33 / 255, 41 / 255, 50 / 255);
+        private Color openCol = new Color(24 / 255, 1, 1);
+        private int timer = 0;
+        private RectTransform _rectTransform;
+
+        private int highLightLevel;
+
+        void Awake()
         {
-            item.onValueChanged.AddListener((isOn) => 
+            _rectTransform = GetComponent<RectTransform>();
+
+            foreach (var item in Toggles)
             {
-                if (isOn)
+                item.onValueChanged.AddListener((isOn) =>
                 {
-                    item.transform.Find("Label").GetComponent<Text>().color = selectCol;
-                }
-                else 
+                    if (isOn)
+                    {
+                        item.transform.Find("Label").GetComponent<Text>().color = selectCol;
+                    }
+                    else
+                    {
+                        item.transform.Find("Label").GetComponent<Text>().color = Color.white - new Color(0, 0, 0, 0.4f);
+                    }
+                });
+            }
+
+            Toggles[0].onValueChanged.AddListener((isOn) =>
+            {
+                if (!isOn)
+                    return;
+
+                setGoSize(false);
+            });
+
+            Toggles[1].onValueChanged.AddListener((isOn) =>
+            {
+                if (!isOn)
+                    return;
+
+                P2GoParent.GetComponent<MTTMsgP2>().requestData();
+            });
+
+
+            Toggles[2].onValueChanged.AddListener((isOn) =>
+            {
+                if (!isOn)
+                    return;
+
+                setGoSize(true);
+
+                Transform turnNormal = P3GoParent.GetChild(highLightLevel);
+                turnNormal.GetChild(1).GetComponentInChildren<Text>().color = new Color(1, 1, 1, 0.6f);
+                turnNormal.GetChild(2).GetComponentInChildren<Text>().color = new Color(1, 1, 1, 0.6f);
+
+                highLightLevel = GameData.Shared.BlindLv;
+                Transform highLight = P3GoParent.GetChild(highLightLevel);
+                highLight.GetChild(1).GetComponentInChildren<Text>().color = openCol;
+                highLight.GetChild(2).GetComponentInChildren<Text>().color = openCol;
+
+            });
+
+
+            Toggles[3].onValueChanged.AddListener((isOn) =>
+            {
+                if (!isOn)
+                    return;
+
+                HTTP.Get("/match-rooms", new Dictionary<string, object> {
+                {"match_id", GameData.Shared.MatchID },
+            }, (data) =>
+                    {
+                        for (int i = P4GoParent.childCount - 1; i > -1; i--)
+                        {
+                            Destroy(P4GoParent.GetChild(i).gameObject);
+                        }
+
+                        var roomsMsg = Json.Decode(data) as List<object>;
+
+                        setGoSize(roomsMsg.Count > 8);
+
+                        for (int i = 0; i < roomsMsg.Count; i++)
+                        {
+                            var msg = roomsMsg[i] as Dictionary<string, object>;
+
+                            GameObject go = Instantiate(RoomMsgPre, P4GoParent);
+                            go.SetActive(true);
+                            go.transform.GetChild(0).GetComponentInChildren<Text>().text = msg.Int("num").ToString();
+                            go.transform.GetChild(1).GetComponentInChildren<Text>().text = msg.Int("gamers_count").ToString();
+                            go.transform.GetChild(2).GetComponentInChildren<Text>().text = msg.Int("min") + "/" + msg.Int("max");
+                            if ((i + 1) % 2 == 1)
+                            {
+                                go.AddComponent<ProceduralImage>().color = new Color(0, 0, 0, 0.2f);
+                            }
+                        }
+                    });
+            });
+
+            // 倒计时
+            Observable.Interval(TimeSpan.FromSeconds(1)).AsObservable().Subscribe((__) =>
+            {
+                // 游戏未开始，不需要修改
+                if (!GameData.Shared.GameStarted || !gameObject.activeInHierarchy)
                 {
-                    item.transform.Find("Label").GetComponent<Text>().color = Color.white - new Color(0, 0, 0, 0.4f);
+                    return;
                 }
+
+                timer = timer + 1;
+                TimePassed.text = "已进行：" + _.SecondStr(timer);
             });
         }
 
-        Toggles[0].onValueChanged.AddListener((isOn) => 
+        public void Init()
         {
-            if (!isOn)
-                return;
-
-            setGoSize(false);
-        });
-
-        Toggles[1].onValueChanged.AddListener((isOn) => 
-        {
-            if (!isOn)
-                return;
-
-            HTTP.Get("/match-award", new Dictionary<string, object> {
-                {"match_id", GameData.Shared.MatchID },
-            }, (data) =>
-            {
-                var awardMsg = Json.Decode(data) as Dictionary<string,object>;
-
-                JackpotTotal.text = awardMsg.Int("total").ToString();
-                Count.text = awardMsg.Int("count").ToString();
-
-                for (int i = P2GoParent.childCount - 1; i > -1; i--)
-                {
-                    Destroy(P2GoParent.GetChild(i).gameObject);
-                }
-
-                var roomsMsg = awardMsg.List("list");
-
-                setGoSize(roomsMsg.Count > 5);
-
-                for (int i = 0; i < roomsMsg.Count; i++)
-                {
-                    var msg = roomsMsg[i] as Dictionary<string, object>;
-
-                    GameObject go = Instantiate(AwardPre, P2GoParent);
-                    go.SetActive(true);
-                    go.transform.GetChild(0).GetComponentInChildren<Text>().text = msg.Int("rank").ToString();
-                    go.transform.GetChild(1).GetComponentInChildren<Text>().text = msg.String("award");
-                    if ((i + 1) % 2 == 1)
-                    {
-                        go.AddComponent<ProceduralImage>().color = new Color(0, 0, 0, 0.2f);
-                    }
-                }
-            });
-        });
-
-
-        Toggles[2].onValueChanged.AddListener((isOn) =>
-        {
-            if (!isOn)
-                return;
-
-            setGoSize(true);
-
-            Transform turnNormal = P2GoParent.GetChild(highLightLevel);
-            turnNormal.GetChild(1).GetComponentInChildren<Text>().color = new Color(1, 1, 1, 0.6f);
-            turnNormal.GetChild(2).GetComponentInChildren<Text>().color = new Color(1, 1, 1, 0.6f);
-
-            highLightLevel = GameData.Shared.BlindLv;
-            Transform highLight = P2GoParent.GetChild(highLightLevel);
-            highLight.GetChild(1).GetComponentInChildren<Text>().color = openCol;
-            highLight.GetChild(2).GetComponentInChildren<Text>().color = openCol;
-
-        });
-
-
-        Toggles[3].onValueChanged.AddListener((isOn) => 
-        {
-            if (!isOn)
-                return;
-            
-            HTTP.Get("/match-rooms", new Dictionary<string, object> {
-                {"match_id", GameData.Shared.MatchID },
-            }, (data) =>
-                {
-                    for (int i = P4GoParent.childCount - 1; i > -1; i--)
-                    {
-                        Destroy(P4GoParent.GetChild(i).gameObject);
-                    }
-
-                    var roomsMsg = Json.Decode(data) as List<object>;
-
-                    setGoSize(roomsMsg.Count > 8);
-
-                    for (int i = 0; i < roomsMsg.Count; i++)
-                    {
-                        var msg = roomsMsg[i] as Dictionary<string, object>;
-
-                        GameObject go = Instantiate(RoomMsgPre, P4GoParent);
-                        go.SetActive(true);
-                        go.transform.GetChild(0).GetComponentInChildren<Text>().text = msg.Int("num").ToString();
-                        go.transform.GetChild(1).GetComponentInChildren<Text>().text = msg.Int("gamers_count").ToString();
-                        go.transform.GetChild(2).GetComponentInChildren<Text>().text = msg.Int("min") + "/" + msg.Int("max");
-                        if ((i+1)%2 == 1)
-                        {
-                            go.AddComponent<ProceduralImage>().color = new Color(0, 0, 0, 0.2f);
-                        }
-                    }
-            });
-        });
-
-        // 倒计时
-        Observable.Interval(TimeSpan.FromSeconds(1)).AsObservable().Subscribe((__) =>
-        {
-            // 游戏未开始，不需要修改
-            if (!GameData.Shared.GameStarted || !gameObject.activeInHierarchy)
-            {
-                return;
-            }
-
-            timer = timer + 1;
-            TimePassed.text = "已进行：" + _.SecondStr(timer);  
-        });
-    }
-
-    public void Init() 
-    {
-        //标题信息
-        MatchName.text = GameData.Shared.RoomName.Value;
-        PlayerNum.text = GameData.Shared.Players.Count + "/" + GameData.Shared.PlayerCount;
-
-        //p1信息
-        var matchData = GameData.MatchData.Data;
-        EntryFee.text = matchData[0] + "+" + matchData[2];
-        LvUpTime.text = matchData[3] + "分钟";
-        InitalScore.text = matchData[1].ToString();
-
-        HTTP.Get("/match/" + GameData.Shared.MatchID, new Dictionary<string, object> {
-                {"roomid", GameData.Shared.Room},
-        }, (data) =>
-        {
-            var roomsData = Json.Decode(data) as Dictionary<string, object>;
-            PlayerNum.text = roomsData.Int("valid_gamers") + "/" + roomsData.Int("ready_gamers");
-
-            //底部相关
-            ButtomText.text = "延时报名至第" + roomsData.Int("limit_level") + "级别";
-            timer = roomsData.Int("spent");
-            if (timer > 0)
-            {
-                TimePassed.text = "已进行：" + _.SecondStr(timer);
-            }
-            else 
-            {
-                TimePassed.text = "尚未开始";
-            }
+            //标题信息
+            MatchName.text = GameData.Shared.RoomName.Value;
+            PlayerNum.text = GameData.Shared.Players.Count + "/" + GameData.Shared.PlayerCount;
 
             //p1信息
-            TableNum.text = roomsData.Int("table_num").ToString();
-            RoomPlayerNum.text = roomsData.Int("max_seats").ToString();
-            RoomNum.text = roomsData.Int("table_count").ToString();
-            Rebuy.text = roomsData.Int("rebuy_count").ToString();
-            AddOn.text = roomsData.Int("add_on").ToString();
-            CreatorName.text = roomsData.String("creator_name");
-            BlindLv.text = roomsData.Int("blind_lv").ToString();
-            LimitLevel.text = roomsData.Int("limit_level").ToString();
+            var matchData = GameData.MatchData.Data;
+            EntryFee.text = matchData[0] + "+" + matchData[2];
+            LvUpTime.text = matchData[3] + "分钟";
+            InitalScore.text = matchData[1].ToString();
 
-            _.SetMsgText(roomsData.Int("half_break") == 1, HalfBreak);
-            _.SetMsgText(roomsData.Int("gps_limit") == 1, GPSLimit);
-            _.SetMsgText(roomsData.Int("ip_limit") == 1, IPLimit);
-        });
+            HTTP.Get("/match/" + GameData.Shared.MatchID, new Dictionary<string, object> {
+                {"roomid", GameData.Shared.Room},
+        }, (data) =>
+            {
+                var roomsData = Json.Decode(data) as Dictionary<string, object>;
+                PlayerNum.text = roomsData.Int("valid_gamers") + "/" + roomsData.Int("ready_gamers");
 
-        Toggles[0].isOn = true;
-    }
+                //底部相关
+                ButtomText.text = "延时报名至第" + roomsData.Int("limit_level") + "级别";
+                timer = roomsData.Int("spent");
+                if (timer > 0)
+                {
+                    TimePassed.text = "已进行：" + _.SecondStr(timer);
+                }
+                else
+                {
+                    TimePassed.text = "尚未开始";
+                }
 
-    private void setGoSize(bool addHeight) 
-    {
-        if (addHeight && _rectTransform.sizeDelta.y != 1286)
-        {
-            _rectTransform.DOSizeDelta(new Vector2(860, 1286), 0.3f);
+                //p1信息
+                TableNum.text = roomsData.Int("table_num").ToString();
+                RoomPlayerNum.text = roomsData.Int("max_seats").ToString();
+                RoomNum.text = roomsData.Int("table_count").ToString();
+                Rebuy.text = roomsData.Int("rebuy_count").ToString();
+                AddOn.text = roomsData.Int("add_on").ToString();
+                CreatorName.text = roomsData.String("creator_name");
+                BlindLv.text = roomsData.Int("blind_lv").ToString();
+                LimitLevel.text = roomsData.Int("limit_level").ToString();
+
+                _.SetMsgText(roomsData.Int("half_break") == 1, HalfBreak);
+                _.SetMsgText(roomsData.Int("gps_limit") == 1, GPSLimit);
+                _.SetMsgText(roomsData.Int("ip_limit") == 1, IPLimit);
+            });
+
+            Toggles[0].isOn = true;
         }
-        else if (!addHeight && _rectTransform.sizeDelta.y != 1010) 
+
+        private void setGoSize(bool addHeight)
         {
-            _rectTransform.DOSizeDelta(new Vector2(860, 1010), 0.3f);
+            if (addHeight && _rectTransform.sizeDelta.y != 1286)
+            {
+                _rectTransform.DOSizeDelta(new Vector2(860, 1286), 0.3f);
+            }
+            else if (!addHeight && _rectTransform.sizeDelta.y != 1010)
+            {
+                _rectTransform.DOSizeDelta(new Vector2(860, 1010), 0.3f);
+            }
         }
     }
 }
