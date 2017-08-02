@@ -476,8 +476,14 @@ namespace PokerPlayer {
             rect.localScale = new Vector2(1, 1);
         }
 
+        static private GameObject playerBase;
+
         static public PlayerBase LoadPrefab(Transform parent) {
-            var go = (GameObject)Instantiate(Resources.Load("Prefab/PlayerBase"));
+            if (playerBase == null) {
+                playerBase = Resources.Load<GameObject>("Prefab/PlayerBase");
+            }
+
+            var go = Instantiate(playerBase);
             var transform = go.GetComponent<Transform>();
            	transform.SetParent(parent);			
 			return transform.GetComponent<PlayerBase>();

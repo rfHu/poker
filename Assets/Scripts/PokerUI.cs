@@ -20,7 +20,7 @@ public class PokerUI: MonoBehaviour {
 		DialogAlert dialog = DialogManager.CreateAlert();
 		dialog.Initialize(text, yesAction, yesText, null, null, cancelAction, cancelText);
 
-		var animator = new DialogAnimatorSlide(0.5f, DialogAnimatorSlide.SlideDirection.Bottom, DialogAnimatorSlide.SlideDirection.Bottom);
+		var animator = new DialogAnimatorSlide(0.2f, DialogAnimatorSlide.SlideDirection.Top, DialogAnimatorSlide.SlideDirection.Bottom);
 		animator.backgroundAlpha = 0f;
 
 		dialog.dialogAnimator = animator;

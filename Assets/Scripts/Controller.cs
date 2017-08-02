@@ -59,7 +59,7 @@ public class Controller : MonoBehaviour {
 	public Camera FXCam;
 
 	void Awake () {
-		ObjectsPool.Shared.SetCamera(FXCam);
+		ObjectsPool.Init();
 		MaterialUI.DialogManager.SetParentCanvas(G.MaterialCvs);
 
 		if (Instance != null) {
@@ -438,7 +438,7 @@ public class Controller : MonoBehaviour {
                 }
             }
 
-            var em = PoolMan.Spawn("Emo" + pid);
+            var em = PoolMan.Spawn("Emoticon/Emo" + pid);
             em.GetComponent<Emoticon>().Init(fromSeatPos, toSeat, isToMe);
         }).AddTo(this);
 

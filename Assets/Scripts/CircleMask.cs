@@ -16,9 +16,15 @@ public class CircleMask : MonoBehaviour {
 
 	public bool EnableTick = false;
 
+	static private GameObject maskCache;
+
 	void Awake()
 	{
-		var go = (GameObject)Instantiate(Resources.Load("Prefab/CircleMask"));
+		if (maskCache == null) {
+			maskCache = Resources.Load<GameObject>("Prefab/CircleMask");
+		}
+
+		var go = Instantiate(maskCache);
 		proImage = go.GetComponent<ProceduralImage>();
 		
 		proImage.transform.SetParent(transform, false);
