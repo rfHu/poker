@@ -635,7 +635,7 @@ public class Controller : MonoBehaviour {
 			}
 
 			// 获取roomID，调用ExitCb后无法获取
-			var roomID = GameData.Shared.Room;
+			var roomID = GameData.Shared.Room.Value;
             var matchID = GameData.Shared.MatchID;
             var ID = "";
             var page = "";
@@ -667,7 +667,7 @@ public class Controller : MonoBehaviour {
 			var type = e.Data.Int("type");
 
 			if (type == 3) {
-				GameData.Shared.Room = e.Data.String("data");
+				GameData.Shared.Room.Value = e.Data.String("data");
 				Connect.Shared.EnterGame();
 			}
 		}).AddTo(this);

@@ -103,7 +103,7 @@ public class MatchWinner : MonoBehaviour {
             switch (GameData.Shared.Type) 
             {
                 case GameType.MTT: id = GameData.Shared.MatchID; toPage = "record_mtt.html"; break;
-                case GameType.SNG: id = GameData.Shared.Room; toPage = "record_sng.html"; break;
+                case GameType.SNG: id = GameData.Shared.Room.Value; toPage = "record_sng.html"; break;
                 default:
                     break;
             }

@@ -34,7 +34,7 @@ public class MTTWaiting : MonoBehaviour {
 		ts = data.Int("left_time");
 		setTime();
 
-		RoomName.text = GameData.Shared.Room;
+		RoomName.text = GameData.Shared.Room.Value;
 
 		var codeGo = inviteCode.transform.parent.gameObject;
 		var code = GameData.Shared.GameCode.Value;

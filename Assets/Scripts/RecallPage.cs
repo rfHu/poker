@@ -24,11 +24,34 @@ public class RecallPage : MonoBehaviour {
     private string favhand_id;
 
     private bool requesting = false;
+    private string roomID;
+
+    void Awake()
+    {
+        // 切换房间了，把弹框关闭
+        GameData.Shared.Room.Subscribe((rid) => {
+            if (!gameObject.activeSelf || string.IsNullOrEmpty(roomID)) {
+                return ;
+            }
+
+            if (rid != roomID) 
+            {
+                PoolMan.Despawn(transform);            
+            }
+        }).AddTo(this);
+    }
 
     void OnSpawned() {
         SBBB.text = GameData.Shared.SB + "/" + GameData.Shared.BB;
         GetComponent<DOPopup>().Show();
-        request();
+
+        if (GameData.Shared.Room.Value == roomID) {
+            request(currentNumber);
+        } else {
+            request(0);
+        }
+
+        roomID = GameData.Shared.Room.Value;
     }
 
     void OnDespawned() {
@@ -170,7 +193,7 @@ public class RecallPage : MonoBehaviour {
         if (Collect.isOn)
         {
             dict = new Dictionary<string, object>() {
-                {"roomid", GameData.Shared.Room},
+                {"roomid", roomID},
 			    {"handid", currentNumber},
 		    };
 

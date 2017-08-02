@@ -88,7 +88,7 @@ public sealed class Connect  {
 			{"f", "entergame"},
 			{"args", new Dictionary<string, object> {
 				{"matchid", GameData.Shared.MatchID},
-				{"roomid", GameData.Shared.Room},
+				{"roomid", GameData.Shared.Room.Value},
 				{"ver", Application.version}
 			}}
 		}, (json) => {
@@ -224,7 +224,7 @@ public sealed class Connect  {
 	private static Connect instance;
 
 	static public void SetupRoom() {
-		if (string.IsNullOrEmpty(GameData.Shared.Sid) || string.IsNullOrEmpty(GameData.Shared.Room)) {
+		if (string.IsNullOrEmpty(GameData.Shared.Sid) || string.IsNullOrEmpty(GameData.Shared.Room.Value)) {
 			return ;
 		}
 
@@ -260,7 +260,7 @@ public sealed class Connect  {
 			}
 
 			var rid = json.String("roomid");
-			if (!string.IsNullOrEmpty(rid) && rid != GameData.Shared.Room) {
+			if (!string.IsNullOrEmpty(rid) && rid != GameData.Shared.Room.Value) {
 				return ;
 			}
 
@@ -307,7 +307,7 @@ public sealed class Connect  {
 			if (e == "look" && argsDict.Int("is_enter_look") == 1) {
 				// 更新比赛、房间ID 
 				GameData.Shared.MatchID = argsDict.Dict("options").String("matchid");
-				GameData.Shared.Room = rid;
+				GameData.Shared.Room.Value = rid;
 
                 //传给应用环信需要
                 if (!string.IsNullOrEmpty(GameData.Shared.MatchID))
@@ -315,7 +315,7 @@ public sealed class Connect  {
                     Commander.Shared.InitHx(rid);
                 }
 
-			} else if (!string.IsNullOrEmpty(rid) && rid != GameData.Shared.Room) { // 收到异常包，忽略
+			} else if (!string.IsNullOrEmpty(rid) && rid != GameData.Shared.Room.Value) { // 收到异常包，忽略
 				return ;
 			}
 

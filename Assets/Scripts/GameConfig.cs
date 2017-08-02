@@ -555,7 +555,7 @@ sealed public class GameData {
 	public string Pin = "";
 	public string Name = ""; 
 	public string Avatar = "";
-	public string Room;
+	public ReactiveProperty<string> Room = new ReactiveProperty<string>();
 
 	public int MySeat {
 		get {

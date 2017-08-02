@@ -70,7 +70,7 @@ public class External : MonoBehaviour{
 			return ;
 		}
 
-		GameData.Shared.Room = info[0].ToString();
+		GameData.Shared.Room.Value = info[0].ToString();
 		GameData.Shared.Sid = info[1].ToString();
 
 		Connect.SetupRoom();
@@ -115,7 +115,7 @@ public class External : MonoBehaviour{
 	private void close(Action callback) {
 		// 清空关键数据
 		GameData.Shared.Sid = "";
-		GameData.Shared.Room = "";
+		GameData.Shared.Room.Value = "";
 		GameData.Shared.MatchID = "";
 
 		Back2LoadingScene();
