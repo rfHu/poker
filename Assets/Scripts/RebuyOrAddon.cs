@@ -52,7 +52,7 @@ public class RebuyOrAddon : MonoBehaviour {
         }
         else
         {
-            LeftTimes.GetComponentInChildren<Text>().text = (Rebuy ? (GameData.MatchData.Rebuy - GameData.Shared.GetMyPlayer().RebuyCount) : 1) + "次";
+            LeftTimes.transform.Find("Text").GetComponent<Text>().text = (Rebuy ? (GameData.MatchData.Rebuy - GameData.Shared.GetMyPlayer().RebuyCount) : 1) + "次";
             myCoroutine = Timer(15);
             StartCoroutine(myCoroutine);
         }
@@ -74,8 +74,14 @@ public class RebuyOrAddon : MonoBehaviour {
                     // 隐藏购买按钮
                     payDialog.Hide();
 
-                    // 购买记分牌弹框
-                    RxSubjects.TakeCoin.OnNext(new RxData());
+                    if (gameType == 1)
+                    {
+                        RxSubjects.ToRebuy.OnNext(new RxData());
+                    }
+                    else
+                    {
+                        RxSubjects.ToAddOn.OnNext(new RxData());
+                    }
                 }, null);
             }
 

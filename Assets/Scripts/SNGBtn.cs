@@ -15,7 +15,7 @@ public class SNGBtn: MonoBehaviour {
         {
             var MTTMsgPage = PoolMan.Spawn("MTTMsg");
             MTTMsgPage.GetComponent<DOPopup>().Show();
-            MTTMsgPage.GetComponent<MTTMsg>().Init();
+            MTTMsgPage.GetComponent<MTTMsgPage.MTTMsg>().Init();
         }
 
     }
