@@ -73,6 +73,7 @@ public class PoolMan {
 		if (!pool.prefabs.ContainsKey(name)) {
 			var path = "Prefab/" + name;
 			var go = Resources.Load<GameObject>(path);
+			go.name = name;
 			var prefabPool = new PrefabPool(go.transform);
 			pool.CreatePrefabPool(prefabPool);
 		}

@@ -149,8 +149,8 @@ namespace MTTMsgPage
             LvUpTime.text = matchData[3] + "分钟";
             InitalScore.text = matchData[1].ToString();
 
-            HTTP.Get("/match/" + GameData.Shared.MatchID, new Dictionary<string, object> {
-                {"roomid", GameData.Shared.Room},
+        HTTP.Get("/match/" + GameData.Shared.MatchID, new Dictionary<string, object> {
+                {"roomid", GameData.Shared.Room.Value},
         }, (data) =>
             {
                 var roomsData = Json.Decode(data) as Dictionary<string, object>;

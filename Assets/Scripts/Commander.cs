@@ -216,6 +216,9 @@ public class iOSCommander: ICommander {
 	private static extern void _ex_callGameOver(string roomID, string gameType);
 
 	[DllImport("__Internal")]
+	private static extern void _ex_callCanAudioPlay(bool canPlay);
+
+	[DllImport("__Internal")]
 	private static extern int _ex_callGetBatteryLevel();
 
 	[DllImport("__Internal")]
@@ -244,9 +247,6 @@ public class iOSCommander: ICommander {
 
     [DllImport("__Internal")]
     private static extern void _ex_callInitHx(string chatRoomId);
-
-    [DllImport("__Internal")]
-    private static extern void _ex_callCanAudioPlay(bool canPlay);
 
 	public void Exit() {
 		_ex_callExitGame();
@@ -310,9 +310,8 @@ public class iOSCommander: ICommander {
         _ex_callInitHx(chatRoomId);
     }
 
-    public void CanAudioPlay(bool canPlay)
-    {
-        _ex_callCanAudioPlay(canPlay);
-    }
+	public void CanAudioPlay(bool canPlay) {
+		_ex_callCanAudioPlay(canPlay);
+	}
 }
 #endif
