@@ -41,17 +41,29 @@ public class MatchWinner : MonoBehaviour {
         instance = transform;
     }
 
-    public void Init(int rank, int score, bool gameEnd) 
+    public void Init(Dictionary<string, object> json) 
     {
-        this.gameEnd = gameEnd;
+        var rank = json.Int("rank");
+        var score = json.Int("score");
+        var isEnd = json.Int("is_end") == 1;
+
+        this.gameEnd = isEnd;
 
         coinImg.SetActive(score != 0);
         SharePicBtn.SetActive(score != 0);
-        coinNum.text = (score != 0)? score.ToString():"没奖不可怕，调整心态再接再厉吧！";
+
+        var awardText = json.Dict("award").String("award");
+
+        if (score > 0) {
+            coinNum.text = score.ToString();
+        } else if (!string.IsNullOrEmpty(awardText)) {
+            coinNum.text = awardText;
+        } else {
+            coinNum.text = "调整好状态再来一局吧！";
+        }
 
         StayInRoom.SetActive(!gameEnd);
-
-        rank = setRankNum(rank);
+        setRankNum(rank);
     }
 
     private int setRankNum(int rank)

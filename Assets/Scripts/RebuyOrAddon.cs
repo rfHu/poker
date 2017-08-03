@@ -104,6 +104,7 @@ public class RebuyOrAddon : MonoBehaviour {
             {
                 PokerUI.Toast("金币不足，无法购买记分牌"); 
             } else {
+                // PokerUI.Toast();
                 // PokerUI.Toast("服务器出错了");
             }
 

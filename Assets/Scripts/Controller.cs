@@ -415,7 +415,7 @@ public class Controller : MonoBehaviour {
             ExpressionButton.SetActive(action);
         }).AddTo(this);
        
-		Debug.Log(gameObject.GetInstanceID());
+		// Debug.Log(gameObject.GetInstanceID());
 
 	   	subsPublicCards();
 		subsPlayer();
@@ -496,13 +496,9 @@ public class Controller : MonoBehaviour {
         }).AddTo(this);
 
         RxSubjects.MatchRank.Subscribe((json) => {
-            var rank = json.Data.Int("rank");
-            var score = json.Data.Int("score");
-            var isEnd = json.Data.Int("is_end") == 1;
-
             var SNGWinner = PoolMan.Spawn("MatchWinner");
             SNGWinner.GetComponent<DOPopup>().ShowModal(new Color(0, 0, 0, 0.7f), closeOnClick: false);
-            SNGWinner.GetComponent<MatchWinner>().Init(rank , score, isEnd);
+            SNGWinner.GetComponent<MatchWinner>().Init(json.Data);
         }).AddTo(this);
 
 		RxSubjects.ShowAudio.Where(isGuest).Subscribe((json) => {

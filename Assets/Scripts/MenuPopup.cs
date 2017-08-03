@@ -44,6 +44,7 @@ public class MenuPopup : MonoBehaviour {
         if (GameData.Shared.Type != GameType.MTT 
             || !GameData.MatchData.CanBuyLv() 
             || !player.IsValid()
+            || GameData.Shared.TableNumber.Value == 0
         ) {
             RebuyAddonGo.SetActive(false);
             return ;
