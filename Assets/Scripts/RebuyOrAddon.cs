@@ -96,7 +96,7 @@ public class RebuyOrAddon : MonoBehaviour {
                     radata.increase();
                     PokerUI.Toast(radata.successText);
                 } else {
-                    PokerUI.Toast(string.Format("{0}申请已提交，等待群主审核中", radata.title));
+                    PokerUI.Toast(string.Format("{0}申请已提交，等待房主审核中", radata.title));
                 }
 
                 PokerUI.Toast(radata.successText);
@@ -161,7 +161,6 @@ internal class RAData {
                     player.RebuyCount += 1;
                 }
             };
-            successText = string.Format("成功重购{0}记分牌（下一手生效）", chips);
         } else {
             title = "增购";
             this.cost = (int)(cost * 1.5);
@@ -173,9 +172,8 @@ internal class RAData {
                     player.AddonCount += 1;
                 }
             };
-            successText = string.Format("成功增购{0}记分牌（下一手生效）", chips);
         }
 
-        // successText
+        successText = string.Format("成功{0}{1}记分牌（下一手生效）", title, chips);
     }
 }

@@ -534,12 +534,19 @@ public class Controller : MonoBehaviour {
 			gameReload();
         }).AddTo(this);
 
-		RxSubjects.Pass.Subscribe((_) => {
-			if (GameData.Shared.InGame) {
-				PokerUI.Toast("记分牌带入成功（下一手生效）");
-			} else {
-				var text = GameData.Shared.IsMatch() ?  "报名成功" : "记分牌带入成功";
-				PokerUI.Toast(text);
+		RxSubjects.Pass.Subscribe((e) => {
+			if (GameData.Shared.Type == GameType.Normal) {
+				var msg = "记分牌带入成功";
+
+				if (GameData.Shared.InGame) {
+					msg += "（下一手生效）";
+				}
+				PokerUI.Toast(msg);
+			} else if (GameData.Shared.Type == GameType.SNG) {
+				PokerUI.Toast("报名成功");
+			} else if (GameData.Shared.Type == GameType.MTT) {
+				var inc = e.Data.Int("inc_bankroll");
+				PokerUI.Toast("成功购买{0}记分牌（下一手生效）", inc);
 			}
 		}).AddTo(this);
 

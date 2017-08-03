@@ -19,8 +19,20 @@ public class WaitForAudit : MonoBehaviour {
 
 		RxSubjects.UnPass.Subscribe((e) => {
 			Hide();
+			
+			string type;
 
-			var type = GameData.Shared.IsMatch() ? "报名" : "带入";
+			switch(GameData.Shared.Type) {
+				case GameType.MTT:
+					type = "购买";
+					break;
+				case GameType.SNG:
+					type = "报名";
+					break;
+				default:
+					type = "带入";
+					break;
+			}
 			PokerUI.Toast(string.Format("房主拒绝您的{0}申请", type));
 		}).AddTo(this);
 
