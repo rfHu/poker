@@ -79,12 +79,13 @@ namespace MTTMsgPage
                 {
                     var msg = roomsMsg[i] as Dictionary<string, object>;
 
-                    var roomData = new TableListGoData() 
+                    var roomData = new TableListGoData()
                     {
                         Num = msg.Int("num"),
                         gamersCount = msg.Int("gamers_count"),
                         Min = msg.Int("min"),
-                        Max = msg.Int("max")
+                        Max = msg.Int("max"),
+                        needbg = (i % 2 == 0),
                     };
                     rowData.Add(roomData);
                 }

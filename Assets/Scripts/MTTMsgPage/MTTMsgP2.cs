@@ -89,10 +89,11 @@ namespace MTTMsgPage
                 {
                     var msg = roomsMsg[i] as Dictionary<string, object>;
 
-                    var awardData = new AwardListGoData() 
+                    var awardData = new AwardListGoData()
                     {
                         Rank = msg.Int("rank"),
                         Award = msg.String("award"),
+                        needbg = (i % 2 == 0),
                     };
                     rowData.Add(awardData);
                 }
