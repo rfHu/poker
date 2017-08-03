@@ -107,7 +107,7 @@ namespace MTTMsgPage
                 turnNormal.GetChild(1).GetComponentInChildren<Text>().color = new Color(1, 1, 1, 0.6f);
                 turnNormal.GetChild(2).GetComponentInChildren<Text>().color = new Color(1, 1, 1, 0.6f);
 
-                highLightLevel = GameData.Shared.BlindLv;
+                highLightLevel = GameData.Shared.BlindLv - 1;
                 Transform highLight = P3GoParent.GetChild(highLightLevel);
                 highLight.GetChild(1).GetComponentInChildren<Text>().color = openCol;
                 highLight.GetChild(2).GetComponentInChildren<Text>().color = openCol;
