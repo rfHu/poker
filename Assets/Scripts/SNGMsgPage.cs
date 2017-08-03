@@ -15,6 +15,7 @@ public class SNGMsgPage : MonoBehaviour {
 
     public Transform BlindLvParents;
 
+    private int highLight = 0;
 
     public void Init() 
     {
@@ -24,17 +25,9 @@ public class SNGMsgPage : MonoBehaviour {
 
         SetCups();
 
-        for (int i = 0; i < BlindLvParents.childCount; i++)
-        {
-            if (i == GameData.Shared.BlindLv)
-            {
-                BlindLvParents.GetChild(i).GetChild(1).GetComponent<Text>().color = MaterialUI.MaterialColor.cyanA200;
-            }
-            else 
-            {
-                BlindLvParents.GetChild(i).GetChild(1).GetComponent<Text>().color = normalCol;
-            }
-        }
+        BlindLvParents.GetChild(highLight).GetChild(1).GetComponent<Text>().color = normalCol;
+        highLight = GameData.Shared.BlindLv - 1;
+        BlindLvParents.GetChild(highLight).GetChild(1).GetComponent<Text>().color = MaterialUI.MaterialColor.cyanA200;     
     }
 
     private void SetCups()
