@@ -345,7 +345,15 @@ public class Controller : MonoBehaviour {
 		setBBText();
 	}
 
+	private bool registered = false;
+
 	private void registerEvents() {
+		if (registered) {
+			return ;
+		}
+
+		registered = true;
+
 		GameData.Shared.LeftTime.Subscribe((value) => {
 			if (!GameData.Shared.GameStarted) {
 				setText(TimeLeftGo, "未开始");
@@ -407,6 +415,8 @@ public class Controller : MonoBehaviour {
             ExpressionButton.SetActive(action);
         }).AddTo(this);
        
+		Debug.Log(gameObject.GetInstanceID());
+
 	   	subsPublicCards();
 		subsPlayer();
 		subsRoomSetting();
@@ -534,12 +544,19 @@ public class Controller : MonoBehaviour {
 			gameReload();
         }).AddTo(this);
 
-		RxSubjects.Pass.Subscribe((_) => {
-			if (GameData.Shared.InGame) {
-				PokerUI.Toast("记分牌带入成功（下一手生效）");
-			} else {
-				var text = GameData.Shared.IsMatch() ?  "报名成功" : "记分牌带入成功";
-				PokerUI.Toast(text);
+		RxSubjects.Pass.Subscribe((e) => {
+			if (GameData.Shared.Type == GameType.Normal) {
+				var msg = "记分牌带入成功";
+
+				if (GameData.Shared.InGame) {
+					msg += "（下一手生效）";
+				}
+				PokerUI.Toast(msg);
+			} else if (GameData.Shared.Type == GameType.SNG) {
+				PokerUI.Toast("报名成功");
+			} else if (GameData.Shared.Type == GameType.MTT) {
+				var inc = e.Data.Int("inc_bankroll");
+				PokerUI.Toast("成功购买{0}记分牌（下一手生效）", inc);
 			}
 		}).AddTo(this);
 
@@ -678,6 +695,12 @@ public class Controller : MonoBehaviour {
 			var type = e.Data.Int("type");
 
 			if (type == 3) {
+				var player = GameData.Shared.GetMyPlayer();
+
+				if (player.Bankroll.Value > 0) {
+					return ;
+				}
+
 				GameData.Shared.Room.Value = e.Data.String("data");
 				Connect.Shared.EnterGame();
 			}
@@ -796,9 +819,14 @@ public class Controller : MonoBehaviour {
 		}).AddTo(this);
 
 		GameData.MatchData.MatchRoomStatus.Subscribe((value) => {
+			var text = PauseGame.transform.Find("Text").GetComponent<Text>();
+
 			if (value == 5) {
 				PauseGame.SetActive(true);
-				PauseGame.transform.Find("Text").GetComponent<Text>().text = "等待全场同步发牌";
+				text.text = "等待全场同步发牌";
+			} else if (value == 10) {
+				PauseGame.SetActive(true);
+				text.text = "中场休息5分钟";
 			} else {
 				PauseGame.SetActive(false);
 			}

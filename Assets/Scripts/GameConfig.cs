@@ -464,7 +464,6 @@ sealed public class GameData {
 		RxSubjects.GameOver.Subscribe((e) => {
 			InGame = false;
 
-
 			var data = e.Data.Dict("scorelist");
 
 			foreach(KeyValuePair<string, object> item in data) {
@@ -691,6 +690,16 @@ sealed public class GameData {
 	public DateTime StartTime;
 	public bool InGame = false;  
 
+	public int ForMatch {
+		get {
+			if (InGame && GameData.Shared.Type == GameType.MTT) {
+				return 1;
+			}
+
+			return 0;
+		}
+	}
+
 	public BehaviorSubject<int> AuditCD = new BehaviorSubject<int>(0);
 
     public ReactiveProperty<bool> TalkLimit = new ReactiveProperty<bool>(false);
@@ -747,7 +756,7 @@ sealed public class GameData {
             MatchData.Addon = options.Int("add_on");
 			MatchData.IsHunter = options.Int("reward_ratio") > 0;
 			LeftTime.Value = json.Int("blind_countdown");
-            BlindLv = json.Int("blind_lv") + 1;
+            BlindLv = json.Int("blind_lv");
         } else {
 			LeftTime.Value = json.Int("left_time");
 		}
