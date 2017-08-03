@@ -11,6 +11,8 @@ namespace MTTMsgPage
 
         public MTTPageData()
         { cachedType = GetType(); }
+
+        public bool needbg;
     }
 
     public class AwardListGoData : MTTPageData 
