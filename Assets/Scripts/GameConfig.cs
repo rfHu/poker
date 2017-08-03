@@ -124,6 +124,30 @@ sealed public class Player {
     public int AddonCount = 0;
     public int RebuyCount = 0;
 
+	public int LeftRebuy {
+		get {
+			return GameData.MatchData.Rebuy - RebuyCount;
+		}
+	}
+
+	public int LeftAddon {
+		get {
+			return GameData.MatchData.Addon - AddonCount;
+		}
+	}
+
+	public bool CanRebuy {
+		get {
+			return LeftRebuy > 0;
+		}
+	}
+
+	public bool CanAddon{
+		get {
+			return LeftAddon > 0;
+		}
+	}
+
 	public int readyState = -1;
 
 	public void SetState(int state, int cd = 0) {
@@ -588,7 +612,19 @@ sealed public class GameData {
 
 	public class MatchData {
 		public static int Type;
-        public static int LimitLv; // 终止报名，但还可以增购级别；数组下标，应该+1
+        public static int LimitLv; // 终止报名，但还可以增购级别；从1开始计数，与BlindLV比应该-1
+
+		public static bool CanRebuyLv() {
+			return GameData.Shared.BlindLv < LimitLv - 1; 
+		}
+
+		public static bool CanAddonLv() {
+			return GameData.Shared.BlindLv == LimitLv - 1;
+		}
+
+		public static bool CanBuyLv() {
+			return CanRebuyLv() || CanAddonLv();
+		}
 
         public static int Addon;
         public static int Rebuy;

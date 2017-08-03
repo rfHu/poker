@@ -586,7 +586,18 @@ public class Controller : MonoBehaviour {
 			GameData.Shared.BB = bb;
 			GameData.Shared.LeftTime.Value = cd;
 
-			PokerUI.Toast(string.Format("下一手盲注将升至{0}/{1}", bb / 2, bb));			
+			PokerUI.Toast(string.Format("盲注已升至{0}/{1}", bb / 2, bb));			
+
+			if (GameData.Shared.Type == GameType.MTT) {
+				var lv = e.Data.Int("blind_lv");
+
+				// 下一级别无法重购
+				if (lv == GameData.MatchData.LimitLv - 2) {
+					PokerUI.Toast("本级别过后将无法再重购");
+				} else if (lv == GameData.MatchData.LimitLv - 1) {
+					PokerUI.Toast("本级别过后将无法再增购");
+				}
+			}
 		}).AddTo(this);
 
 		RxSubjects.OffScore.Subscribe((e) => {

@@ -198,4 +198,11 @@ public class _ {
             text.color = Color.white;
         }
     }
+
+    public static void PayFor(Action cb) {
+        PokerUI.Alert("金币不足，请购买", () => {
+            Commander.Shared.PayFor();
+            cb();
+        }, null);
+    }
 }

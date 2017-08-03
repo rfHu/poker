@@ -45,7 +45,7 @@ public class RebuyOrAddon : MonoBehaviour {
 
         if (radata.type == "rebuy" && player.IsValid()) {
             rbgo.SetActive(true);
-            RebuyTimes.text = player.RebuyCount + "次";
+            RebuyTimes.text = player.LeftRebuy + "次";
         } else {
            rbgo.SetActive(false); 
         }
@@ -92,12 +92,12 @@ public class RebuyOrAddon : MonoBehaviour {
 		}, (json, err) =>
         {
             if (err == 0) {
-                radata.decrease();
+                radata.increase();
             } else if (err == 1201)
             {
                 PokerUI.Toast("金币不足，无法购买记分牌"); 
             } else {
-                PokerUI.Toast("服务器出错了诶");
+                PokerUI.Toast("服务器出错了");
             }
 
             GetComponent<DOPopup>().Close();
@@ -128,7 +128,7 @@ internal class RAData {
     internal string cue;
     internal string type;
     
-    internal Action decrease;
+    internal Action increase;
 
 
     internal string desc() {
@@ -142,14 +142,14 @@ internal class RAData {
         var chips = GameData.MatchData.Data[1];
         
         if (type == "rebuy") {
-            title = "重构";
+            title = "重购";
             this.cost = cost;
             this.chips = chips;
-            cue = string.Format("温馨提示：盲注升到第 <color=#FFD028FF>{0}</color> 级别后，将无法再重购", GameData.MatchData.LimitLv + 1);
-            decrease = () => {
+            cue = string.Format("温馨提示：盲注升到第 <color=#FFD028FF>{0}</color> 级别后，将无法再重购", GameData.MatchData.LimitLv);
+            increase = () => {
                 var player = GameData.Shared.GetMyPlayer();
                 if (player.IsValid()) {
-                    player.RebuyCount -= 1;
+                    player.RebuyCount += 1;
                 }
             };
         } else {
@@ -157,10 +157,10 @@ internal class RAData {
             this.cost = (int)(cost * 1.5);
             this.chips = (int)(chips * 1.5);
             cue = "温馨提示：本级别过后将无法再增购";
-            decrease = () => {
+            increase = () => {
                 var player = GameData.Shared.GetMyPlayer();
                 if (player.IsValid()) {
-                    player.AddonCount -= 1;
+                    player.AddonCount += 1;
                 }
             };
         }

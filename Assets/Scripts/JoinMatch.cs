@@ -11,8 +11,6 @@ public class JoinMatch : MonoBehaviour {
     public Text Coins;
     public Text Charge;
 
-    private DialogAlert payDialog;
-
     void OnSpawned() 
     {
 
@@ -34,15 +32,9 @@ public class JoinMatch : MonoBehaviour {
         {
             if (err == 1201)
             {
-				payDialog = PokerUI.Alert("金币不足，请购买", () => {
-					Commander.Shared.PayFor();
-
-					// 隐藏购买按钮
-					payDialog.Hide();
-
-					// 购买记分牌弹框
-					RxSubjects.TakeCoin.OnNext(new RxData());
-				}, null);
+				_.PayFor(() => {
+                    RxSubjects.TakeCoin.OnNext(new RxData());
+                });
 			} 
 
             GetComponent<DOPopup>().Close();

@@ -12,7 +12,7 @@ public class MenuPopup : MonoBehaviour {
 	public CanvasGroup StandCG;
 	public CanvasGroup SuppCG;
 	
-	private float da = 0.4f;
+	private float disabled = 0.4f;
 
 	public GameObject HangGo;
 	public GameObject ReserveGo;
@@ -33,35 +33,40 @@ public class MenuPopup : MonoBehaviour {
 	{
         SNGSetting();
         CommonSetting();
-
         RebuyAddonSetting();
 	}
 
     private void RebuyAddonSetting()
     {
-        RebuyAddonGo.SetActive(GameData.Shared.Type == GameType.MTT);
-        if (!RebuyAddonGo.activeInHierarchy)
-            return;
+        var player = GameData.Shared.GetMyPlayer();
 
-        var isInteractable = false;
-
-        var limitLv = GameData.MatchData.LimitLv;
-
-        if (GameData.Shared.BlindLv < limitLv)
-        {
-            RebuyAddonGo.GetComponentInChildren<Text>().text = "重购";
-            isInteractable = GameData.Shared.GetMyPlayer().RebuyCount < GameData.MatchData.Rebuy && GameData.Shared.Bankroll.Value < GameData.MatchData.Data[1];
-        }
-        else if (GameData.Shared.BlindLv >= limitLv)
-        {
-            RebuyAddonGo.GetComponentInChildren<Text>().text = "增购";
-            isInteractable = GameData.Shared.GetMyPlayer().AddonCount < GameData.MatchData.Addon && GameData.Shared.BlindLv == limitLv;
+        // （非MTT || 过了增购级别 || 游客）不展示按钮 
+        if (GameData.Shared.Type != GameType.MTT 
+            || !GameData.MatchData.CanBuyLv() 
+            || !player.IsValid()
+        ) {
+            RebuyAddonGo.SetActive(false);
+            return ;
         }
 
-        isInteractable = isInteractable && GameData.Shared.FindPlayerIndex(GameData.Shared.Uid) != -1;
+        RebuyAddonGo.SetActive(true);
 
-        RebuyAddonGo.GetComponent<CanvasGroup>().alpha = (isInteractable) ? 1 : 0.5f;
-        RebuyAddonGo.GetComponent<Button>().interactable = isInteractable;
+        var text = RebuyAddonGo.GetComponentInChildren<Text>(); 
+        var interactable = true; 
+
+        if (GameData.MatchData.CanRebuyLv())
+        {
+            text.text = "重购";
+            interactable = player.CanRebuy; 
+        }
+        else if (GameData.MatchData.CanAddonLv())
+        {
+            text.text = "增购";
+            interactable = player.CanAddon;
+        }
+
+        RebuyAddonGo.GetComponent<CanvasGroup>().alpha = interactable ? 1 : disabled;
+        RebuyAddonGo.GetComponent<Button>().interactable = interactable;
     }
 
     private void SNGSetting()
@@ -76,8 +81,8 @@ public class MenuPopup : MonoBehaviour {
 
     private void CommonSetting()
     {
-        StandCG.alpha = GameData.MyCmd.Unseat ? 1 : 0.5f;
-        SuppCG.alpha = GameData.MyCmd.Takecoin ? 1 : 0.5f;
+        StandCG.alpha = GameData.MyCmd.Unseat ? 1 : disabled;
+        SuppCG.alpha = GameData.MyCmd.Takecoin ? 1 : disabled;
 
         // 可下分  
         if (GameData.Shared.Bankroll.Value > 0 && GameData.Shared.OffScore.Value)
@@ -129,20 +134,20 @@ public class MenuPopup : MonoBehaviour {
         switch (state)
         {
             case PlayerState.Hanging:
-                hangCvg.alpha = da;
+                hangCvg.alpha = disabled;
                 hangBtn.interactable = false;
                 break;
             case PlayerState.Reserve: // 留座状态，托管可点
-                reserveCvg.alpha = da;
+                reserveCvg.alpha = disabled;
                 reserveBtn.interactable = false;
                 break;
             case PlayerState.Normal: // 正常状态，已复原
                 break;
             case PlayerState.Auditing:
             case PlayerState.Waiting: // 未带入记分牌，不可点
-                hangCvg.alpha = da;
+                hangCvg.alpha = disabled;
                 hangBtn.interactable = false;
-                reserveCvg.alpha = da;
+                reserveCvg.alpha = disabled;
                 reserveBtn.interactable = false;
                 break;
             default:
@@ -214,7 +219,7 @@ public class MenuPopup : MonoBehaviour {
     public void OnRebuyAddon() 
     {
         var go = PoolMan.Spawn("RebuyOrAddon");
-        go.GetComponent<DOPopup>().Show(closeOnClick: false);
+        go.GetComponent<DOPopup>().Show();
 
         var ins = go.GetComponent<RebuyOrAddon>();
 

@@ -14,9 +14,6 @@ public class Supplement : MonoBehaviour {
 	public Text Pay;
 	public Slider slider;
 
-	private DialogAlert payDialog;
-
-	// Use this for initialization
 	void Awake() {
 		RxSubjects.UnSeat.AsObservable().Where((e) => {
 			var uid = e.Data.String("uid");
@@ -83,15 +80,9 @@ public class Supplement : MonoBehaviour {
 			}}
 		}, (json, err) => {
 			if (err == 1201) {
-				payDialog = PokerUI.Alert("金币不足，请购买", () => {
-					Commander.Shared.PayFor();
-
-					// 隐藏购买按钮
-					payDialog.Hide();
-
-					// 购买记分牌弹框
+				_.PayFor(() => {
 					RxSubjects.TakeCoin.OnNext(new RxData());
-				}, null);
+				});	
 			} 
 
 			GetComponent<DOPopup>().Close();
