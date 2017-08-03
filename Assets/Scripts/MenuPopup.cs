@@ -52,10 +52,10 @@ public class MenuPopup : MonoBehaviour {
             RebuyAddonGo.GetComponentInChildren<Text>().text = "重购";
             isInteractable = GameData.Shared.GetMyPlayer().RebuyCount < GameData.MatchData.Rebuy && GameData.Shared.Bankroll.Value < GameData.MatchData.Data[1];
         }
-        else if (GameData.Shared.BlindLv == limitLv)
+        else if (GameData.Shared.BlindLv >= limitLv)
         {
             RebuyAddonGo.GetComponentInChildren<Text>().text = "增购";
-            isInteractable = GameData.Shared.GetMyPlayer().AddonCount < GameData.MatchData.Addon;
+            isInteractable = GameData.Shared.GetMyPlayer().AddonCount < GameData.MatchData.Addon && GameData.Shared.BlindLv == limitLv;
         }
 
         isInteractable = isInteractable && GameData.Shared.FindPlayerIndex(GameData.Shared.Uid) != -1;
