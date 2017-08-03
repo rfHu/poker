@@ -616,14 +616,14 @@ public class Controller : MonoBehaviour {
         RxSubjects.ToAddOn.Subscribe((e) => {
             var go = PoolMan.Spawn("RebuyOrAddon");
             go.GetComponent<DOPopup>().Show(closeOnClick: false);
-            go.GetComponent<RebuyOrAddon>().Init(false, true);
+            go.GetComponent<RebuyOrAddon>().AddOn(true);
         }).AddTo(this);
 
         RxSubjects.ToRebuy.Subscribe((e) =>
         {
             var go = PoolMan.Spawn("RebuyOrAddon");
             go.GetComponent<DOPopup>().Show(closeOnClick : false);
-            go.GetComponent<RebuyOrAddon>().Init(true,true);
+            go.GetComponent<RebuyOrAddon>().Rebuy(true);
         }).AddTo(this);
 
 		RxSubjects.GameEnd.Subscribe((e) => {

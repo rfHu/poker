@@ -12,7 +12,6 @@ public class MenuPopup : MonoBehaviour {
 	public CanvasGroup StandCG;
 	public CanvasGroup SuppCG;
 	
-	private float originalVolume;
 	private float da = 0.4f;
 
 	public GameObject HangGo;
@@ -216,6 +215,13 @@ public class MenuPopup : MonoBehaviour {
     {
         var go = PoolMan.Spawn("RebuyOrAddon");
         go.GetComponent<DOPopup>().Show(closeOnClick: false);
-        go.GetComponent<RebuyOrAddon>().Init(GameData.Shared.BlindLv < GameData.MatchData.LimitLv);
+
+        var ins = go.GetComponent<RebuyOrAddon>();
+
+        if (GameData.Shared.BlindLv < GameData.MatchData.LimitLv) {
+            ins.Rebuy();
+        } else {
+            ins.AddOn();
+        }
     }
 }

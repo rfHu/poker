@@ -91,6 +91,7 @@ sealed public class Player {
 	public string Uid = "";
 	public ReactiveProperty<int> Bankroll = new ReactiveProperty<int>();
 	public int Index = -1;
+
 	public ReactiveProperty<int> PrChips = new ReactiveProperty<int>();
 	public bool InGame = false;
 	public int AuditCD = 0; 
@@ -120,8 +121,8 @@ sealed public class Player {
 
     public ReactiveProperty<int> Rank = new ReactiveProperty<int>();
 
-    public int AddonCount;
-    public int RebuyCount;
+    public int AddonCount = 0;
+    public int RebuyCount = 0;
 
 	public int readyState = -1;
 
@@ -587,7 +588,7 @@ sealed public class GameData {
 
 	public class MatchData {
 		public static int Type;
-        public static int LimitLv;
+        public static int LimitLv; // 终止报名，但还可以增购级别；数组下标，应该+1
 
         public static int Addon;
         public static int Rebuy;

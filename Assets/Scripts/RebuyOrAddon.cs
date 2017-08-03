@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
+using UniRx;
 
 public class RebuyOrAddon : MonoBehaviour {
 
@@ -10,79 +12,92 @@ public class RebuyOrAddon : MonoBehaviour {
 
     public Text Message;
 
-    public Text Money;
-
-    public Text Fee;
-
-    public Text LimitLv;
+    public Text CueText;
 
     public Text EnterText;
 
-    public GameObject[] ShowInMenuOpen;
+    public Text RebuyTimes;
 
-    public GameObject LeftTimes;
+    private RAData radata;
+    private bool relive;
+    private IDisposable disposable;
 
-    private DialogAlert payDialog;
-    private int gameType;
+    public void Rebuy(bool relive = false) {
+        radata = new RAData("rebuy"); 
+        this.relive = relive;
+        setup();       
+    }
 
-    IEnumerator myCoroutine;
 
-    public void Init(bool Rebuy = true, bool isPush = false) 
-    {
-        gameType = Rebuy ? 1 : 2;
+    public void AddOn(bool relive = false) {
+        radata = new RAData("addon");
+        this.relive = relive;
+        setup();
+    }
 
-        Title.text = Rebuy? "重购":"增购";
+    private void setup() {
+        EnterText.text = Title.text = radata.title;
+        CueText.text = radata.cue;
+        CueText.gameObject.SetActive(!relive);
+        
+        var player = GameData.Shared.GetMyPlayer();
+        var rbgo = RebuyTimes.transform.parent.gameObject;
 
-        EnterText.text = Rebuy ? "重购" : "增购";
-
-        foreach (var item in ShowInMenuOpen)
-        {
-            item.SetActive(!isPush);
+        if (radata.type == "rebuy" && player.IsValid()) {
+            rbgo.SetActive(true);
+            RebuyTimes.text = player.RebuyCount + "次";
+        } else {
+           rbgo.SetActive(false); 
         }
-        LeftTimes.SetActive(isPush);
-        if (!isPush)
-        {
-            Money.text = GameData.Shared.Coins.ToString();
 
-            Fee.text = GameData.MatchData.Data[0].ToString();
-
-            LimitLv.text = GameData.MatchData.LimitLv.ToString();
-
-            Message.text = string.Format("{0}<color=#ffd028>{1}</color>倍的初始记分牌，继续参与赛事", Title.text, Rebuy ? "1" : "1.5");
+        if (relive) {
+            CueText.gameObject.SetActive(false);
+            setupDispose();
+        } else {
+            CueText.text = radata.cue;
+            Message.text = radata.desc();
         }
-        else
-        {
-            LeftTimes.transform.Find("Text").GetComponent<Text>().text = (Rebuy ? (GameData.MatchData.Rebuy - GameData.Shared.GetMyPlayer().RebuyCount) : 1) + "次";
-            myCoroutine = Timer(15);
-            StartCoroutine(myCoroutine);
+    }
+
+    private void setupDispose() {
+        if (disposable != null) {
+            disposable.Dispose();
         }
+
+        var time = 15;
+        setMessage(time);
+
+       disposable = Observable.Interval(TimeSpan.FromSeconds(1)).Subscribe((_) => {
+            time -= 1;
+
+            if (time == 0) {
+                disposable.Dispose();
+                Exit();
+            } else {
+                setMessage(time);
+            }
+        });
+    }
+
+    private void setMessage(int time) {
+        Message.text = string.Format("记分牌输光了，{0}（{1}秒）", radata.desc() , time);
     }
 
     public void Enter()
     {
+        // 复活金币不足，不弹出购买框；主动点击弹出购买框
         Connect.Shared.Emit(new Dictionary<string, object>(){
-			{"f", gameType == 1? "rebuy": "addon"},
+			{"f", radata.type},
             {"for_match", 1}
 		}, (json, err) =>
         {
-            if (err == 1201)
+            if (err == 0) {
+                radata.decrease();
+            } else if (err == 1201)
             {
-                payDialog = PokerUI.Alert("金币不足，请购买", () =>
-                {
-                    Commander.Shared.PayFor();
-
-                    // 隐藏购买按钮
-                    payDialog.Hide();
-
-                    if (gameType == 1)
-                    {
-                        RxSubjects.ToRebuy.OnNext(new RxData());
-                    }
-                    else
-                    {
-                        RxSubjects.ToAddOn.OnNext(new RxData());
-                    }
-                }, null);
+                PokerUI.Toast("金币不足，无法购买记分牌"); 
+            } else {
+                PokerUI.Toast("服务器出错了诶");
             }
 
             GetComponent<DOPopup>().Close();
@@ -91,29 +106,63 @@ public class RebuyOrAddon : MonoBehaviour {
 
     public void Exit() 
     {
+        if (relive) {
+            Connect.Shared.Emit("nobuy");
+        }
+
         GetComponent<DOPopup>().Close();
     }
 
     void OnDespawned() 
     {
-        StopCoroutine(myCoroutine);
-    }
-
-    private IEnumerator Timer(float time)
-    {
-        int pay = (int)(GameData.MatchData.Data[0] * (gameType == 1? 1 : 1.5f));
-        int get = (int)(GameData.MatchData.Data[1] * (gameType == 1? 1 : 1.5f));
-
-        string str = string.Format("比赛筹码输光了，是否花费${0}重新购买{1}筹码   （", pay, get);
-
-        while (time > 0)
-        {
-            time = time - Time.deltaTime;
-            Message.text = str + (int)time + "秒）";
-
-            yield return new WaitForFixedUpdate();
+        if (disposable != null) {
+            disposable.Dispose();
         }
+    }
+}
 
-        GetComponent<DOPopup>().Close();
+internal class RAData {
+    internal string title;
+    internal int cost;
+    internal int chips;
+    internal string cue;
+    internal string type;
+    
+    internal Action decrease;
+
+
+    internal string desc() {
+        var cost = this.cost + (int)(this.cost * 0.1);
+        return string.Format("是否花费<color=#FFD028FF>${0}</color>{1}<color=#FFD028FF>{2}</color>记分牌", cost, title, chips);
+    }
+    
+    internal RAData(string type) {
+        this.type = type;
+        var cost = GameData.MatchData.Data[0];
+        var chips = GameData.MatchData.Data[1];
+        
+        if (type == "rebuy") {
+            title = "重构";
+            this.cost = cost;
+            this.chips = chips;
+            cue = string.Format("温馨提示：盲注升到第 <color=#FFD028FF>{0}</color> 级别后，将无法再重购", GameData.MatchData.LimitLv + 1);
+            decrease = () => {
+                var player = GameData.Shared.GetMyPlayer();
+                if (player.IsValid()) {
+                    player.RebuyCount -= 1;
+                }
+            };
+        } else {
+            title = "增购";
+            this.cost = (int)(cost * 1.5);
+            this.chips = (int)(chips * 1.5);
+            cue = "温馨提示：本级别过后将无法再增购";
+            decrease = () => {
+                var player = GameData.Shared.GetMyPlayer();
+                if (player.IsValid()) {
+                    player.AddonCount -= 1;
+                }
+            };
+        }
     }
 }
