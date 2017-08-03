@@ -213,7 +213,8 @@ namespace PokerPlayer {
 
 	public void BackGame() {
 		Connect.Shared.Emit(new Dictionary<string, object>{
-			{"f", "ready"}
+			{"f", "ready"},
+			{"for_match", GameData.Shared.ForMatch}
 		});
 	}
 
@@ -238,6 +239,10 @@ namespace PokerPlayer {
 		OPMono = OP.Spawn().GetComponent<OP>();
 		OPMono.StartWithCmds(data, left, buyTimeCost);
 		Base.Circle.gameObject.SetActive(false);
+	}
+
+	 void OnDestroy()
+	{
 	}
 
 	private void turnTo(Dictionary<string, object> dict, int left, bool restore = false,int buyTimeCost = 10) {

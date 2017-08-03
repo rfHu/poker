@@ -42,6 +42,10 @@ namespace PokerPlayer {
             p.SetAsLastSibling();
         }
 
+        void OnDestroy()
+	{
+	}
+
         void OnDespawned() {
             disposables.Clear();
             CardDesc.transform.parent.gameObject.SetActive(false);

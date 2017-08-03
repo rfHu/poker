@@ -345,7 +345,15 @@ public class Controller : MonoBehaviour {
 		setBBText();
 	}
 
+	private bool registered = false;
+
 	private void registerEvents() {
+		if (registered) {
+			return ;
+		}
+
+		registered = true;
+
 		GameData.Shared.LeftTime.Subscribe((value) => {
 			if (!GameData.Shared.GameStarted) {
 				setText(TimeLeftGo, "未开始");
@@ -407,6 +415,8 @@ public class Controller : MonoBehaviour {
             ExpressionButton.SetActive(action);
         }).AddTo(this);
        
+		Debug.Log(gameObject.GetInstanceID());
+
 	   	subsPublicCards();
 		subsPlayer();
 		subsRoomSetting();
@@ -685,6 +695,12 @@ public class Controller : MonoBehaviour {
 			var type = e.Data.Int("type");
 
 			if (type == 3) {
+				var player = GameData.Shared.GetMyPlayer();
+
+				if (player.Bankroll.Value > 0) {
+					return ;
+				}
+
 				GameData.Shared.Room.Value = e.Data.String("data");
 				Connect.Shared.EnterGame();
 			}

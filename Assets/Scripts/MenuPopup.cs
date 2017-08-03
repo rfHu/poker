@@ -198,7 +198,10 @@ public class MenuPopup : MonoBehaviour {
 	}
 
 	public void OnHang() {
-		Connect.Shared.Emit("hang");
+		Connect.Shared.Emit(new Dictionary<string, object>{
+            {"f", "hang"},
+            {"for_match", GameData.Shared.ForMatch} 
+        });
 		Close();
 	}
 
