@@ -796,9 +796,14 @@ public class Controller : MonoBehaviour {
 		}).AddTo(this);
 
 		GameData.MatchData.MatchRoomStatus.Subscribe((value) => {
+			var text = PauseGame.transform.Find("Text").GetComponent<Text>();
+
 			if (value == 5) {
 				PauseGame.SetActive(true);
-				PauseGame.transform.Find("Text").GetComponent<Text>().text = "等待全场同步发牌";
+				text.text = "等待全场同步发牌";
+			} else if (value == 10) {
+				PauseGame.SetActive(true);
+				text.text = "中场休息5分钟";
 			} else {
 				PauseGame.SetActive(false);
 			}
