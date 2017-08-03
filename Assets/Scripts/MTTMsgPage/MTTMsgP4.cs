@@ -40,7 +40,7 @@ namespace MTTMsgPage
             { return 780; }
 
             protected override float GetItemHeight(int index)
-            { return 60; }
+            { return 64; }
 
             protected override MTTCellView CreateViewsHolder(int itemIndex)
             {
