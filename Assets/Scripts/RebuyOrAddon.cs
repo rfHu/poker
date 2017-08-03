@@ -92,13 +92,19 @@ public class RebuyOrAddon : MonoBehaviour {
 		}, (json, err) =>
         {
             if (err == 0) {
-                radata.increase();
+                if (json.ContainsKey("bankroll")) {
+                    radata.increase();
+                    PokerUI.Toast(radata.successText);
+                } else {
+                    PokerUI.Toast(string.Format("{0}申请已提交，等待群主审核中", radata.title));
+                }
+
                 PokerUI.Toast(radata.successText);
             } else if (err == 1201)
             {
                 PokerUI.Toast("金币不足，无法购买记分牌"); 
             } else {
-                PokerUI.Toast("服务器出错了");
+                // PokerUI.Toast("服务器出错了");
             }
 
             GetComponent<DOPopup>().Close();
@@ -155,7 +161,7 @@ internal class RAData {
                     player.RebuyCount += 1;
                 }
             };
-            successText = string.Format("成功重购{0}记分牌", chips);
+            successText = string.Format("成功重购{0}记分牌（下一手生效）", chips);
         } else {
             title = "增购";
             this.cost = (int)(cost * 1.5);
@@ -167,7 +173,9 @@ internal class RAData {
                     player.AddonCount += 1;
                 }
             };
-            successText = string.Format("成功增购{0}记分牌", chips);
+            successText = string.Format("成功增购{0}记分牌（下一手生效）", chips);
         }
+
+        // successText
     }
 }
