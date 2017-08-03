@@ -202,6 +202,7 @@ public class _ {
     public static void PayFor(Action cb) {
         PokerUI.Alert("金币不足，请购买", () => {
             Commander.Shared.PayFor();
+            PokerUI.RemoveDialog();
             cb();
         }, null);
     }
