@@ -93,6 +93,7 @@ public class RebuyOrAddon : MonoBehaviour {
         {
             if (err == 0) {
                 radata.increase();
+                PokerUI.Toast(radata.successText);
             } else if (err == 1201)
             {
                 PokerUI.Toast("金币不足，无法购买记分牌"); 
@@ -130,6 +131,8 @@ internal class RAData {
     
     internal Action increase;
 
+    internal string successText;
+
 
     internal string desc() {
         var cost = this.cost + (int)(this.cost * 0.1);
@@ -152,6 +155,7 @@ internal class RAData {
                     player.RebuyCount += 1;
                 }
             };
+            successText = string.Format("成功重购{0}记分牌", chips);
         } else {
             title = "增购";
             this.cost = (int)(cost * 1.5);
@@ -163,6 +167,7 @@ internal class RAData {
                     player.AddonCount += 1;
                 }
             };
+            successText = string.Format("成功增购{0}记分牌", chips);
         }
     }
 }
