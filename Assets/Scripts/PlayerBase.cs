@@ -71,6 +71,8 @@ namespace PokerPlayer {
         } 
 
         void Awake() {
+            // UnityEngine.Object.DontDestroyOnLoad(gameObject);
+
             WinCq = WinNumber.transform.parent;
             ScoreParent = ScoreLabel.transform.parent.gameObject;
             GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);

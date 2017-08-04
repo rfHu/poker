@@ -802,7 +802,7 @@ public class Controller : MonoBehaviour {
 
 			PauseGame.transform.Find("Text").GetComponent<Text>().text = "房主已暂停游戏";
 
-			if (pause > 0 && !GameData.Shared.InGame) {
+			if ((pause > 0 || GameData.MatchData.IsPaused) && !GameData.Shared.InGame) {
 				PauseGame.SetActive(true);
 			} else {
 				PauseGame.SetActive(false);

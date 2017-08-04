@@ -80,7 +80,10 @@ public class PoolMan {
 			pool.CreatePrefabPool(prefabPool);
 		}
 		
-		return pool.Spawn(pool.prefabs[name], parent);
+		var transform = pool.Spawn(pool.prefabs[name], parent);
+		// Object.DontDestroyOnLoad(transform.gameObject);
+
+		return transform;
 	}
 
 	public static void Despawn(Transform transform) {

@@ -21,6 +21,11 @@ public class ChipsGo : MonoBehaviour {
 		TextNumber.gameObject.SetActive(false);
 	}
 
+	void OnDestroy()
+	{	
+		disposables.Clear();		
+	}
+
 	void OnSpawned() {
 		hided = false;
 		GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);

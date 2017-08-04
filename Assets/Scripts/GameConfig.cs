@@ -613,6 +613,13 @@ sealed public class GameData {
 		public static int Type;
         public static int LimitLv; // 终止报名，但还可以增购级别；从1开始计数，与BlindLV比应该-1
 
+		public static bool IsPaused {
+			get {
+				var v = MatchRoomStatus.Value;
+				return GameData.Shared.Type == GameType.MTT && (v == 5 || v == 10);
+			}
+		}
+
 		public static bool CanRebuyLv() {
 			return GameData.Shared.BlindLv < LimitLv - 1; 
 		}
