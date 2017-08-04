@@ -700,6 +700,16 @@ public class Controller : MonoBehaviour {
 		Action<Player> showPlayer = (obj) => {
 			var parent = Seats[obj.Index].transform;
 
+			var oppo = parent.GetComponentInChildren<PokerPlayer.PlayerOppo>();
+			if (oppo != null) {
+				PoolMan.Despawn(oppo.transform);
+			}
+
+			var sel = parent.GetComponentInChildren<PokerPlayer.PlayerSelf>();
+			if (sel != null) {
+				PoolMan.Despawn(sel.transform);
+			}
+
 			if (obj.Uid == GameData.Shared.Uid) {
 				var go = PoolMan.Spawn("PlayerSelf");
 				go.GetComponent<PokerPlayer.PlayerSelf>().Init(obj, parent);
