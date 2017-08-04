@@ -96,8 +96,8 @@ public class MenuPopup : MonoBehaviour {
             ExchangeGo.SetActive(false);
         }
 
-        // 还未坐下
-        if (!GameData.MyCmd.Unseat && GameData.Shared.Type != GameType.MTT)
+        // 没有位置则不能托管
+        if (GameData.Shared.MySeat < 0)
         {
             HangGo.SetActive(false);
             ReserveGo.SetActive(false);
