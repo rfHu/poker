@@ -116,7 +116,10 @@ public class RebuyOrAddon : MonoBehaviour {
     public void Exit() 
     {
         if (relive) {
-            Connect.Shared.Emit("nobuy");
+            Connect.Shared.Emit(new Dictionary<string, object>{
+                {"f", "nobuy"},
+                {"for_match", 1} 
+            });
         }
 
         GetComponent<DOPopup>().Close();
