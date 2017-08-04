@@ -26,7 +26,7 @@ public class SNGMsgPage : MonoBehaviour {
         SetCups();
 
         BlindLvParents.GetChild(highLight).GetChild(1).GetComponent<Text>().color = normalCol;
-        highLight = GameData.Shared.BlindLv - 1;
+        highLight = GameData.Shared.BlindLv;
         BlindLvParents.GetChild(highLight).GetChild(1).GetComponent<Text>().color = MaterialUI.MaterialColor.cyanA200;     
     }
 
