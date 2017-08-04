@@ -545,7 +545,7 @@ public class Controller : MonoBehaviour {
 				PokerUI.Toast("报名成功");
 			} else if (GameData.Shared.Type == GameType.MTT) {
 				var inc = e.Data.Int("inc_bankroll");
-				PokerUI.Toast("成功购买{0}记分牌（下一手生效）", inc);
+				PokerUI.Toast(string.Format("成功购买{0}记分牌（下一手生效）", inc));
 			}
 		}).AddTo(this);
 
