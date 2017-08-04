@@ -49,7 +49,6 @@ namespace MTTMsgPage
 
         //P4页面
         public Transform P4GoParent;
-        public GameObject RoomMsgPre;
 
         public Toggle[] Toggles;
 
@@ -133,8 +132,12 @@ namespace MTTMsgPage
                 }
 
                 timer = timer + 1;
-                TimePassed.text = "已进行：" + _.SecondStr(timer);
+                setTimeText(); 
             });
+        }
+
+        private void setTimeText() {
+             TimePassed.text = "已进行：" + _.SecondStr(timer) + "，";
         }
 
         void OnDespawned() {
@@ -161,16 +164,10 @@ namespace MTTMsgPage
                 PlayerNum.text = roomsData.Int("valid_gamers") + "/" + roomsData.Int("ready_gamers");
 
                 //底部相关
-                ButtomText.text =  roomsData.Int("blind_lv") <= roomsData.Int("limit_level")? "延时报名至第" + roomsData.Int("limit_level") + "级别" : "以截止报名";
+                ButtomText.text =  roomsData.Int("blind_lv") <= roomsData.Int("limit_level")? "延时报名至第" + roomsData.Int("limit_level") + "级别" : "已截止报名";
+
                 timer = roomsData.Int("spent");
-                if (timer > 0)
-                {
-                    TimePassed.text = "已进行：" + _.SecondStr(timer);
-                }
-                else
-                {
-                    TimePassed.text = "尚未开始";
-                }
+                setTimeText();
 
                 //p1信息
                 TableNum.text = roomsData.Int("table_num") == 0 ? "决赛桌" : roomsData.Int("table_num").ToString();
