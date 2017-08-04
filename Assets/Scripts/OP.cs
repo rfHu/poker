@@ -58,6 +58,7 @@ public class OP : MonoBehaviour {
 	void OnDestroy()
 	{
 		hideModal();
+		slidDisposables.Clear();
 	}
 	
 	void Awake()

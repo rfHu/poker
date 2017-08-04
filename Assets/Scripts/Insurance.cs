@@ -35,8 +35,6 @@ public class Insurance : MonoBehaviour {
     public GameObject WatcherText;
     public EventTrigger CASliderUp;
 
-    private CompositeDisposable disposables = new CompositeDisposable();
-
     float odds;
     float[] OddsNums = { 30, 16, 10, 8, 6, 5, 4, 3.5f, 3, 2.5f, 2.2f, 2, 1.7f, 1.5f, 1.3f, 1.1f, 1, 0.8f, 0.6f, 0.5f };
 
@@ -185,7 +183,7 @@ public class Insurance : MonoBehaviour {
                     }
                     RPCRsyncInsurance();
                 }
-            }).AddTo(disposables);
+            }).AddTo(this);
         }
     }
 
@@ -201,11 +199,11 @@ public class Insurance : MonoBehaviour {
             StopCoroutine(myCoroutine);
             myCoroutine = Timer(model.total);
             StartCoroutine(myCoroutine);
-        }).AddTo(disposables);
+        }).AddTo(this);
 
         RxSubjects.Look.Subscribe((e) => {
             GetComponent<DOPopup>().Close();
-        }).AddTo(disposables);
+        }).AddTo(this);
 
         RxSubjects.RsyncInsurance.Subscribe((e) => {
             if (e.Data.Int("closeflag") == 1)
@@ -228,7 +226,7 @@ public class Insurance : MonoBehaviour {
             }
 
             CASlider.value = CASlidernum;
-        }).AddTo(disposables);
+        }).AddTo(this);
 
         ExitButton.OnClickAsObservable().Subscribe((_) => {
             if (isBuyer)
@@ -238,7 +236,7 @@ public class Insurance : MonoBehaviour {
                 });
             }
             GetComponent<DOPopup>().Close();
-        }).AddTo(disposables);
+        }).AddTo(this);
     }
 
     public void ClickUp() 
@@ -484,7 +482,7 @@ public class Insurance : MonoBehaviour {
 
     void OnDespawned() 
     {
-        disposables.Clear();
+        this.Dispose();
 
         for (int i = AllinPlayersParent.childCount - 1; i > -1; i--)
         {
