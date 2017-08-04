@@ -20,8 +20,6 @@ public class SNGBtn: MonoBehaviour {
 
     }
 
-    private CompositeDisposable disposables = new CompositeDisposable();
-
     public Text Msg;
 
     void OnEnable()
@@ -40,11 +38,11 @@ public class SNGBtn: MonoBehaviour {
                 image.enabled = true;
                 rect.anchoredPosition = new Vector2(0, 450);
             }
-        }).AddTo(disposables);
+        }).AddTo(this);
     }
 
     void OnDisable()
     {
-        disposables.Clear();
+        this.Dispose();
     }
 }
