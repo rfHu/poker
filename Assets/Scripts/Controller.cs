@@ -797,6 +797,10 @@ public class Controller : MonoBehaviour {
 		}).AddTo(this);
 
 		GameData.Shared.Paused.Subscribe((pause) => {
+			if (GameData.Shared.Type == GameType.MTT) {
+				return ;
+			}
+
 			if (!GameData.Shared.GameStarted) {
 				setNotStarted();
 				return ;
@@ -804,17 +808,16 @@ public class Controller : MonoBehaviour {
 
 			// 服务器升级
 			if (pause == 5) {
-				PokerUI.ToastThenExit("服务器升级中…");
+				PokerUI.DisAlert("服务器升级中…");
 				return ;
 			} 
 
-			PauseGame.transform.Find("Text").GetComponent<Text>().text = "房主已暂停游戏";
-
-			if ((pause > 0 || GameData.MatchData.IsPaused) && !GameData.Shared.InGame) {
+			if (pause > 0 && !GameData.Shared.InGame) {
+				PauseGame.transform.Find("Text").GetComponent<Text>().text = "房主已暂停游戏";
 				PauseGame.SetActive(true);
 			} else {
 				PauseGame.SetActive(false);
-			}
+			}	
 		}).AddTo(this);
 
 		GameData.MatchData.MatchRoomStatus.Subscribe((value) => {
