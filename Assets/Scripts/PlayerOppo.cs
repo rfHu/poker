@@ -18,7 +18,6 @@ namespace PokerPlayer {
 
         private IEnumerator turnFactor;
         private bool activated;
-        private CompositeDisposable disposables = new CompositeDisposable();
 
         private Player player {
             get {
@@ -47,7 +46,6 @@ namespace PokerPlayer {
 	}
 
         void OnDespawned() {
-            disposables.Clear();
             CardDesc.transform.parent.gameObject.SetActive(false);
             Cardfaces.GetComponent<RectTransform>().anchoredPosition = new Vector2(40, -20);
             Cardfaces.GetComponent<CanvasGroup>().alpha = 1;
@@ -57,6 +55,8 @@ namespace PokerPlayer {
             ShowCards[1].Turnback();
             ShowCards[0].transform.parent.gameObject.SetActive(false);
             NameLabel.gameObject.SetActive(true);
+
+            this.Dispose(); 
         }
 
         public void Init(Player player, Transform parent) {
@@ -78,7 +78,7 @@ namespace PokerPlayer {
             // 中途复原行动
             player.Countdown.AsObservable().Where((obj) => obj.seconds > 0).Subscribe((obj) => {
                 TurnTo(null, obj.seconds);
-            }).AddTo(disposables);
+            }).AddTo(this);
         }
 
         private void showCardType(int maxFive) {

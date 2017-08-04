@@ -358,7 +358,7 @@ public sealed class Connect  {
 					break;
 				case "look":
 					RxSubjects.Look.OnNext(rxdata);
-					RxSubjects.Look.OnNext(rxdata);
+					// RxSubjects.Look.OnNext(rxdata);
 					// SceneMan.LoadScene(SceneMan.Scenes.Loading);
 					break;
 				case "deal":

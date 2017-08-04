@@ -19,7 +19,6 @@ namespace PokerPlayer {
 		public GameObject BackGameBtn;
         
         private OP OPMono;
-		private CompositeDisposable disposables = new CompositeDisposable();
 
 		private bool hasShowCard = false;
 
@@ -47,8 +46,6 @@ namespace PokerPlayer {
 		}
 
 		void OnDespawned() {
-			disposables.Clear();	
-
 			hasShowCard = false;
 			RxSubjects.Seating.OnNext(false);
 			YouWin.SetActive(false);
@@ -58,6 +55,8 @@ namespace PokerPlayer {
 			MyCards[0].GetComponent<Card>().Turnback();
 			MyCards[1].GetComponent<Card>().Turnback();
 			OP.Despawn();
+
+			this.Dispose();	
 		}
 
         private void addEvents() {
@@ -72,7 +71,7 @@ namespace PokerPlayer {
 
                 parent.SetActive(true);
                 CardDesc.text = Card.GetCardDesc(value);
-            }).AddTo(disposables);
+            }).AddTo(this);
 
 		player.ShowCard.Subscribe((value) => {
 			if (value[0] == '1') {
@@ -86,11 +85,11 @@ namespace PokerPlayer {
 			} else {
 				Eyes[1].SetActive(false);
 			}
-		}).AddTo(disposables);
+		}).AddTo(this);
 
 		player.Trust.ShouldShow.Subscribe((show) => {
 			AutoArea.SetActive(show);
-		}).AddTo(disposables);
+		}).AddTo(this);
 
 		player.Trust.CallNumber.Subscribe((num) => {
 			var text = AutoOperas[1].transform.Find("Text").GetComponent<Text>();
@@ -107,7 +106,7 @@ namespace PokerPlayer {
 			if (flag == "01") {
 				player.Trust.SelectedFlag.Value = "00";	
 			}
-		}).AddTo(disposables);
+		}).AddTo(this);
 
 		player.Trust.SelectedFlag.Where((flags) => { return flags != null; }).Subscribe((flags) => {
 			var ncolor = _.HexColor("#2196F300");
@@ -127,16 +126,16 @@ namespace PokerPlayer {
 			} else {
 				img1.color = scolor;
 			}
-		}).AddTo(disposables);
+		}).AddTo(this);
 
 		RxSubjects.Deal.Subscribe((_) => {
 			player.Trust.Hide();
-		}).AddTo(disposables);
+		}).AddTo(this);
 
         RxSubjects.GameOver.Subscribe((_) => {
             AutoArea.SetActive(false);
             gameover = true;
-        }).AddTo(disposables);
+        }).AddTo(this);
 
 		  // 中途复原行动
             player.Countdown.AsObservable().Subscribe((obj) => {
@@ -145,7 +144,7 @@ namespace PokerPlayer {
 				} else {
 					OP.Despawn();
 				}
-            }).AddTo(disposables);
+            }).AddTo(this);
 
 			 player.PlayerStat.Subscribe((state) => {
 				switch(state) {
@@ -161,7 +160,7 @@ namespace PokerPlayer {
 						BackGameBtn.SetActive(false);
                         break;
                 }
-			 }).AddTo(disposables);
+			 }).AddTo(this);
         }
 
         private void toggleAutoBtns(int index) {
@@ -292,7 +291,7 @@ namespace PokerPlayer {
 	private void delayCall(Action cb) {
 		Observable.Timer(TimeSpan.FromSeconds(0.5)).Subscribe((_) => {
 			cb();
-		}).AddTo(disposables);
+		}).AddTo(this);
 	}
 
 	private void reShow(Card card, int index) {
@@ -353,7 +352,7 @@ namespace PokerPlayer {
 					Observable.Timer(TimeSpan.FromSeconds(0.3)).Subscribe((_) => {
 						reShow(c2, cards[1]);	
 						hasShowCard = true;
-					}).AddTo(disposables);
+					}).AddTo(this);
 				}
 			} else {
 				MyCards[0].GetComponent<Card>().Show(cards[0]);

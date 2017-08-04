@@ -40,7 +40,6 @@ namespace PokerPlayer {
         [SerializeField]private Text hunterAward;
 
         private Seat theSeat;
-        CompositeDisposable disposables = new CompositeDisposable();
 
         private PlayerDelegate myDelegate;
 
@@ -95,7 +94,6 @@ namespace PokerPlayer {
         }
 
         void OnDespawned() {
-            disposables.Clear();
 
             stopParticle(chipsParticle);
             stopParticle(allinParticle);
@@ -120,6 +118,8 @@ namespace PokerPlayer {
 
             Volume.SetActive(false);
             ScoreLabel.gameObject.SetActive(true);
+
+            this.Dispose();
         } 
 
         private void setScoreText(int number) {
@@ -136,7 +136,7 @@ namespace PokerPlayer {
                     hunterAward.transform.parent.gameObject.SetActive(true);
                     hunterAward.text = _.Num2CnDigit(value);
                 }
-            }).AddTo(disposables);
+            }).AddTo(this);
 
             RxSubjects.ShowCard.Subscribe((e) => {
                 var uid = e.Data.String("uid");
@@ -146,28 +146,28 @@ namespace PokerPlayer {
 
                  var cards = e.Data.IL("cards");
                  myDelegate.ShowCard(cards);
-            }).AddTo(disposables);
+            }).AddTo(this);
 
             RxSubjects.ShowAudio.Where(isSelfJson).Subscribe((jsonStr) => {
                 Volume.SetActive(true);
                 ScoreLabel.gameObject.SetActive(false);
-            }).AddTo(disposables);
+            }).AddTo(this);
 
             RxSubjects.HideAudio.Where(isSelfJson).Subscribe((_) => {
                 Volume.SetActive(false);
                 ScoreLabel.gameObject.SetActive(true);
-            }).AddTo(disposables);
+            }).AddTo(this);
 
             RxSubjects.SendChat.Where(isSelfJson).Subscribe((jsonStr) => {
                 var N = JSON.Parse(jsonStr);
                 var text = N["text"].Value;
                 SpkText.ShowMessage(text);
-            }).AddTo(disposables);
+            }).AddTo(this);
 
             theSeat.SeatPos.Subscribe((pos) => {
                 SpkText.ChangePos(pos);
                 PlayerAct.ChangePos(pos);
-            }).AddTo(disposables);
+            }).AddTo(this);
 
             player.PrChips.AsObservable().Subscribe((value) => {
                 if (value == 0) {
@@ -175,11 +175,11 @@ namespace PokerPlayer {
                 }
 
                 setPrChips(value);
-            }).AddTo(disposables);
+            }).AddTo(this);
 
             player.Destroyed.AsObservable().Where((v) => v).Subscribe((_) => {
                 myDelegate.Despawn();
-            }).AddTo(disposables);
+            }).AddTo(this);
 
             player.PlayerStat.Subscribe((state) => {
                 HandGo.SetActive(false);
@@ -197,7 +197,7 @@ namespace PokerPlayer {
                     default: 
                         break;
                 }
-            }).AddTo(disposables);
+            }).AddTo(this);
 
             player.ActState.AsObservable().Subscribe((e) => {
                 if (e == ActionState.None) {
@@ -233,7 +233,7 @@ namespace PokerPlayer {
 
                 dealAct(e);
                 actCardsNumber = GameData.Shared.PublicCards.Count;	
-            }).AddTo(disposables);
+            }).AddTo(this);
 
             IDisposable reserveCd = null; 
             player.ReservedCD.Subscribe((value) => {
@@ -247,20 +247,20 @@ namespace PokerPlayer {
                     reserveCd = Observable.Interval(TimeSpan.FromSeconds(1)).Subscribe((_) => {
                         value = Mathf.Max(value - 1, 1);
                         setReserveCd(value);
-                    }).AddTo(disposables);
+                    }).AddTo(this);
                 }
-            }).AddTo(disposables);
+            }).AddTo(this);
 
             player.LastAct.Where((act) => !String.IsNullOrEmpty(act)).Subscribe((act) => {
                 dealAct(act.ToActionEnum());	
-            }).AddTo(disposables);
+            }).AddTo(this);
 
             player.Allin.Subscribe((allin) => {
                 if (allin) {
                     player.ActStateTrigger = false;
                     player.ActState.OnNext(ActionState.Allin);
                 }
-            }).AddTo(disposables);
+            }).AddTo(this);
 
             RxSubjects.GainChip.Where((gainChip) => gainChip.Uid == Uid).Subscribe((gainChip) => {
                 gainChip.Grp.ToParent(transform, () => {
@@ -278,11 +278,11 @@ namespace PokerPlayer {
 
                     playParticle(chipsParticle);
                 });
-            }).AddTo(disposables);
+            }).AddTo(this);
 
             player.Bankroll.Subscribe((value) => {
                 setScoreText(value);
-            }).AddTo(disposables);
+            }).AddTo(this);
 
             RxSubjects.MoveTurn.Subscribe((e) => {
             	var uid = e.Data.String("uid");
@@ -305,7 +305,7 @@ namespace PokerPlayer {
                 if (Uid == GameData.Shared.Uid) {
                     player.SetTrust(e.Data.Dict("trust"));
                 }
-            }).AddTo(disposables);
+            }).AddTo(this);
 
             // 思考延时
             RxSubjects.Moretime.Subscribe((e) => {
@@ -321,7 +321,7 @@ namespace PokerPlayer {
                 }
 
                 myDelegate.ResetTime(model.total); 
-            }).AddTo(disposables);
+            }).AddTo(this);
 
             RxSubjects.GameOver.Subscribe((e) => {
                 myDelegate.MoveOut();
@@ -329,14 +329,14 @@ namespace PokerPlayer {
                 stopParticle(allinParticle);
                 player.PrChips.Value = 0;
                 OP.Despawn();
-            }).AddTo(disposables);
+            }).AddTo(this);
 
             player.Cards.AsObservable().Subscribe((cards) => {
                 if (cards.Count < 2) {
                     return ;
                 }
                 myDelegate.ShowCard(cards);
-            }).AddTo(disposables);
+            }).AddTo(this);
 
             IDisposable winEndDisposable = null;
             player.OverData.AsObservable().Where((data) => data != null).Subscribe((data) => {
@@ -372,8 +372,8 @@ namespace PokerPlayer {
                 // 4s后隐藏动画
                 winEndDisposable = Observable.Timer(TimeSpan.FromSeconds(4)).Subscribe((_) => {
                     hideWinAnim();
-                }).AddTo(disposables);
-            }).AddTo(disposables);
+                }).AddTo(this);
+            }).AddTo(this);
 
             RxSubjects.MatchRank.Subscribe((_) => {
                 if (winEndDisposable != null) {
@@ -381,12 +381,12 @@ namespace PokerPlayer {
                 }
 
                 hideWinAnim();
-            }).AddTo(disposables);
+            }).AddTo(this);
 
             player.Rank.Where((rank) => rank > 0 && player.readyState == 0).Subscribe((rank) => {
                 RankText.transform.parent.gameObject.SetActive(true);
                 RankText.text  = string.Format("第<size=42>{0}</size>名", rank);
-            }).AddTo(disposables);
+            }).AddTo(this);
         }
 
         private void hideWinAnim() {

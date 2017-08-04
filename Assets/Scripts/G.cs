@@ -129,9 +129,9 @@ public class SceneMan {
 
 	public static void LoadScene(string name) {
 		// 不允许一个Scene没加载完，立刻加载同一个Scene
-		if (currentScene == name && ActiveScene.name != name) {
-			return ;
-		}
+		// if (currentScene == name && ActiveScene.name != name) {
+		// 	return ;
+		// }
 
 		// 已切换场景，但没加载完
 		if (!string.IsNullOrEmpty(currentScene) && ActiveScene.name != name) {

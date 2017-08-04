@@ -247,4 +247,9 @@ using System.Text.RegularExpressions;
 
             return source.Substring(0, idx);
         }
+
+        public static void Dispose(this MonoBehaviour behavior) {
+            var trigger = behavior.GetComponent<UniRx.Triggers.ObservableDestroyTrigger>();
+            GameObject.Destroy(trigger);
+        }
     }
