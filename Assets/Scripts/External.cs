@@ -78,7 +78,8 @@ public class External : MonoBehaviour{
 
 		var matchID = info[0].ToString();
 
-		if (GameData.Shared.MatchID != matchID && SceneMan.IsInGame) {
+		// 已在游戏场景，但收到不同的MatchID
+		if (GameData.Shared.MatchID != matchID && SceneMan.HasInGame) {
 			SceneMan.LoadScene(SceneMan.Scenes.Loading);
 		}
 

@@ -125,19 +125,25 @@ public class SceneMan {
 	static private string currentScene = "";
 
 	public static void LoadScene(string name) {
-		// if (currentScene == name && IsInGame) {
-		// 	return ;
-		// }
+		// 不允许一个Scene没加载完，立刻加载同一个Scene
+		if (currentScene == name && ActiveScene.name != name) {
+			return ;
+		}
 
 		PoolMan.DespawnAll();
 		SceneManager.LoadScene(name);
 		currentScene = name;
 	}
 
-	public static bool IsInGame {
+	public static bool HasInGame {
 		get {
-			// return SceneManager.GetActiveScene().name == Scenes.PokerGame;
-			return currentScene == Scenes.PokerGame;
+			return ActiveScene.name == Scenes.PokerGame;
+		}
+	}
+
+	public static Scene ActiveScene {
+		get {
+			return SceneManager.GetActiveScene();
 		}
 	}
 

@@ -322,7 +322,7 @@ sealed public class GameData {
 			// 保存最新游戏数据
 			jsonData = e.Data;
 
-			if (SceneMan.IsInGame) {
+			if (SceneMan.HasInGame) {
 				byJson(e.Data);
 			} else {
 				foreach(var key in Players.Keys.ToList()) {
