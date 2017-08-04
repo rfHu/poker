@@ -139,7 +139,8 @@ public class SceneMan {
 		
 		currentScene = name;
 		PoolMan.DespawnAll();
-		SceneManager.LoadSceneAsync(name);
+		// SceneManager.LoadSceneAsync(name);
+		SceneManager.LoadScene(name);
 	}
 
 	public static bool HasInGame {
