@@ -72,7 +72,7 @@ public class RebuyOrAddon : MonoBehaviour {
 
             if (time == 0) {
                 disposable.Dispose();
-                Exit();
+                GetComponent<DOPopup>().Close();
             } else {
                 setMessage(time);
             }
