@@ -97,7 +97,7 @@ public class MenuPopup : MonoBehaviour {
         }
 
         // 还未坐下
-        if (!GameData.MyCmd.Unseat)
+        if (!GameData.MyCmd.Unseat && GameData.Shared.Type != GameType.MTT)
         {
             HangGo.SetActive(false);
             ReserveGo.SetActive(false);
@@ -202,6 +202,11 @@ public class MenuPopup : MonoBehaviour {
 		Connect.Shared.Emit(new Dictionary<string, object>{
             {"f", "hang"},
             {"for_match", GameData.Shared.ForMatch} 
+        }, (_) => {
+            var player = GameData.Shared.GetMyPlayer();
+            if (player.IsValid()) {
+                player.SetState((int)PlayerState.Hanging);
+            }
         });
 		Close();
 	}

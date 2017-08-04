@@ -705,7 +705,7 @@ sealed public class GameData {
 
 	public int ForMatch {
 		get {
-			if (InGame && GameData.Shared.Type == GameType.MTT) {
+			if (!InGame && GameData.Shared.Type == GameType.MTT) {
 				return 1;
 			}
 

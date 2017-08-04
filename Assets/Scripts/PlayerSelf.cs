@@ -214,6 +214,11 @@ namespace PokerPlayer {
 		Connect.Shared.Emit(new Dictionary<string, object>{
 			{"f", "ready"},
 			{"for_match", GameData.Shared.ForMatch}
+		}, (_) => {
+			var player = GameData.Shared.GetMyPlayer();
+			if (player.IsValid()) {
+				player.SetState((int)PlayerState.Normal);
+			}
 		});
 	}
 
