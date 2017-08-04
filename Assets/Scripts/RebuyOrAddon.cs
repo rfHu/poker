@@ -103,9 +103,10 @@ public class RebuyOrAddon : MonoBehaviour {
             } else if (err == 1201)
             {
                 PokerUI.Toast("金币不足，无法购买记分牌"); 
+            } else if (err == 1202) {
+                PokerUI.Toast(string.Format("还有{0}申请在审核中", radata.title));
             } else {
-                // PokerUI.Toast();
-                // PokerUI.Toast("服务器出错了");
+                PokerUI.Toast(string.Format("{0}失败", radata.title));                
             }
 
             GetComponent<DOPopup>().Close();
@@ -175,6 +176,6 @@ internal class RAData {
             };
         }
 
-        successText = string.Format("成功{0}{1}记分牌（下一手生效）", title, chips);
+        successText = string.Format("成功{0}{1}记分牌（下一手生效）", title, this.chips);
     }
 }
