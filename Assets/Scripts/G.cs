@@ -133,9 +133,13 @@ public class SceneMan {
 			return ;
 		}
 
-		PoolMan.DespawnAll();
-		SceneManager.LoadScene(name);
+		// 已切换场景，但没加载完
+		if (!string.IsNullOrEmpty(currentScene) && ActiveScene.name != name) {
+		} 
+		
 		currentScene = name;
+		PoolMan.DespawnAll();
+		SceneManager.LoadSceneAsync(name);
 	}
 
 	public static bool HasInGame {

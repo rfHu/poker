@@ -275,6 +275,12 @@ sealed public class GameData {
 			}
 		};
 
+		SceneManager.activeSceneChanged += (s1, s2) => {
+		};
+
+		SceneManager.sceneUnloaded += (s) => {
+		};
+
 		RxSubjects.TakeSeat.AsObservable().Subscribe((e) => {
 			var index = e.Data.Int("where");
 			var playerInfo = e.Data.Dict("who");

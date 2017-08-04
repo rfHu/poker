@@ -410,8 +410,6 @@ public class Controller : MonoBehaviour {
             ExpressionButton.SetActive(action);
         }).AddTo(this);
        
-		// Debug.Log(gameObject.GetInstanceID());
-
 	   	subsPublicCards();
 		subsPlayer();
 		subsRoomSetting();
