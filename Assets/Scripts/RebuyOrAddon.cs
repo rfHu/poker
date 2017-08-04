@@ -98,8 +98,6 @@ public class RebuyOrAddon : MonoBehaviour {
                 } else {
                     PokerUI.Toast(string.Format("{0}申请已提交，等待房主审核中", radata.title));
                 }
-
-                PokerUI.Toast(radata.successText);
             } else if (err == 1201)
             {
                 PokerUI.Toast("金币不足，无法购买记分牌"); 
