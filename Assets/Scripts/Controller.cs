@@ -62,10 +62,10 @@ public class Controller : MonoBehaviour {
 		ObjectsPool.Init();
 		MaterialUI.DialogManager.SetParentCanvas(G.MaterialCvs);
 
-		if (Instance != null) {
-			PoolMan.DespawnAll();
-			Destroy(Instance);
-		}
+		// if (Instance != null) {
+		// 	PoolMan.DespawnAll();
+		// 	Destroy(Instance);
+		// }
 
 		Instance = this;
 		LogoVector = Logo.transform.position;

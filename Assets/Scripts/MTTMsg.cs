@@ -60,6 +60,8 @@ namespace MTTMsgPage
 
         private int highLightLevel;
 
+        private IDisposable disposable;
+
         void Awake()
         {
             _rectTransform = GetComponent<RectTransform>();
@@ -123,11 +125,9 @@ namespace MTTMsgPage
                 P4GoParent.GetComponent<MTTMsgP4>().requestData();
             });
 
-            // 倒计时
-            Observable.Interval(TimeSpan.FromSeconds(1)).AsObservable().Subscribe((__) =>
+            disposable = Observable.Interval(TimeSpan.FromSeconds(1)).AsObservable().Subscribe((__) =>
             {
-                // 游戏未开始，不需要修改
-                if (!GameData.Shared.GameStarted || !gameObject.activeInHierarchy)
+                if (!gameObject.activeSelf)
                 {
                     return;
                 }
@@ -135,6 +135,10 @@ namespace MTTMsgPage
                 timer = timer + 1;
                 TimePassed.text = "已进行：" + _.SecondStr(timer);
             });
+        }
+
+        void OnDespawned() {
+            disposable.Dispose();
         }
 
         public void Init()
