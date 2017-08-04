@@ -46,6 +46,8 @@ namespace PokerPlayer {
 		}
 
 		void OnDespawned() {
+			this.Dispose();	
+
 			hasShowCard = false;
 			RxSubjects.Seating.OnNext(false);
 			YouWin.SetActive(false);
@@ -55,8 +57,6 @@ namespace PokerPlayer {
 			MyCards[0].GetComponent<Card>().Turnback();
 			MyCards[1].GetComponent<Card>().Turnback();
 			OP.Despawn();
-
-			this.Dispose();	
 		}
 
         private void addEvents() {
@@ -333,7 +333,11 @@ namespace PokerPlayer {
             OPMono.Reset(total);
         }
 
+		void OnSpawned() {
+		}
+
 		public void Despawn() {
+			// Destroy(gameObject);
 			PoolMan.Despawn(transform);
         }
 

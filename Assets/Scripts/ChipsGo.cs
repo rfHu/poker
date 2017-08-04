@@ -13,17 +13,10 @@ public class ChipsGo : MonoBehaviour {
 	private bool hided = false;
 	private Player player;
 	private Tweener tween;
-	private CompositeDisposable disposables = new CompositeDisposable();
-
 
 	void OnDespawned() {
-		disposables.Clear();	
+		this.Dispose();	
 		TextNumber.gameObject.SetActive(false);
-	}
-
-	void OnDestroy()
-	{	
-		disposables.Clear();		
 	}
 
 	void OnSpawned() {
@@ -47,7 +40,7 @@ public class ChipsGo : MonoBehaviour {
 			
 			theSeat.SeatPos.AsObservable().Subscribe((pos) => {
 				GetComponent<RectTransform>().anchoredPosition = getVector(pos);
-			}).AddTo(disposables);
+			}).AddTo(this);
 		};
 
 		if (player.ChipsChange) {
@@ -99,13 +92,7 @@ public class ChipsGo : MonoBehaviour {
 			}
 
 			Hide();
-		}).AddTo(disposables);
-
-		// player.Destroyed.Subscribe((destroy) => {
-		// 	if (destroy && gameObject.activeSelf) {
-		// 		Hide();
-		// 	}
-		// }).AddTo(disposables);
+		}).AddTo(this);
 	}
 	
 	private Tweener doTween() {

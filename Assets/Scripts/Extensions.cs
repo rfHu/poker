@@ -250,6 +250,11 @@ using System.Text.RegularExpressions;
 
         public static void Dispose(this MonoBehaviour behavior) {
             var trigger = behavior.GetComponent<UniRx.Triggers.ObservableDestroyTrigger>();
-            GameObject.Destroy(trigger);
+
+            if (trigger == null) {
+                return ;
+            }
+
+            trigger.Disposables.Clear();
         }
     }

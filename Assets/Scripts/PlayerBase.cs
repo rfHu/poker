@@ -70,8 +70,6 @@ namespace PokerPlayer {
         } 
 
         void Awake() {
-            // UnityEngine.Object.DontDestroyOnLoad(gameObject);
-
             WinCq = WinNumber.transform.parent;
             ScoreParent = ScoreLabel.transform.parent.gameObject;
             GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
@@ -94,6 +92,7 @@ namespace PokerPlayer {
         }
 
         void OnDespawned() {
+            this.Dispose();
 
             stopParticle(chipsParticle);
             stopParticle(allinParticle);
@@ -118,8 +117,6 @@ namespace PokerPlayer {
 
             Volume.SetActive(false);
             ScoreLabel.gameObject.SetActive(true);
-
-            this.Dispose();
         } 
 
         private void setScoreText(int number) {

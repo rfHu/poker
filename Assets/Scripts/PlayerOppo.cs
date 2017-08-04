@@ -46,6 +46,8 @@ namespace PokerPlayer {
 	}
 
         void OnDespawned() {
+            this.Dispose(); 
+
             CardDesc.transform.parent.gameObject.SetActive(false);
             Cardfaces.GetComponent<RectTransform>().anchoredPosition = new Vector2(40, -20);
             Cardfaces.GetComponent<CanvasGroup>().alpha = 1;
@@ -55,8 +57,6 @@ namespace PokerPlayer {
             ShowCards[1].Turnback();
             ShowCards[0].transform.parent.gameObject.SetActive(false);
             NameLabel.gameObject.SetActive(true);
-
-            this.Dispose(); 
         }
 
         public void Init(Player player, Transform parent) {

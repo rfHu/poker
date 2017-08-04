@@ -10,6 +10,12 @@ namespace UniRx.Triggers
         Subject<Unit> onDestroy;
         CompositeDisposable disposablesOnDestroy;
 
+        public CompositeDisposable Disposables {
+            get {
+                return disposablesOnDestroy;
+            }
+        }
+
         [Obsolete("Internal Use.")]
         internal bool IsMonitoredActivate { get; set; }
 
