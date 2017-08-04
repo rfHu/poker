@@ -5,7 +5,6 @@ using BestHTTP.SocketIO.Transports;
 using UnityEngine;
 using BestHTTP;
 using UniRx;
-using UnityEngine.SceneManagement;
 
 public sealed class Connect  {
 	public static string Proxy;

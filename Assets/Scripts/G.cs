@@ -4,6 +4,8 @@ using DarkTonic.MasterAudio;
 using PathologicalGames;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
+using UniRx;
 
 public class G {
 	public static Canvas UICvs {
@@ -116,5 +118,32 @@ public class PoolMan {
 		} 
 
 		pool.DespawnAll();
+	}
+}
+
+public class SceneMan {
+	static private string currentScene = "";
+
+	public static void LoadScene(string name) {
+		// if (currentScene == name && IsInGame) {
+		// 	return ;
+		// }
+
+		PoolMan.DespawnAll();
+		SceneManager.LoadScene(name);
+		currentScene = name;
+	}
+
+	public static bool IsInGame {
+		get {
+			// return SceneManager.GetActiveScene().name == Scenes.PokerGame;
+			return currentScene == Scenes.PokerGame;
+		}
+	}
+
+	public struct Scenes {
+		public static string Loading = "GameLoading";
+		public static string PokerGame = "PokerGame";
+ 
 	}
 }

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
 using System;
 using UniRx;
 using MaterialUI;
@@ -59,11 +58,6 @@ public class External : MonoBehaviour{
 		});
 	}
 
-	public void Back2LoadingScene() {
-		PoolMan.DespawnAll();
-		SceneManager.LoadScene("GameLoading");
-	}
-
 	public void InitGame(string gameInfo) {
 		var info = gameInfo.Split("&".ToCharArray());
 		if (gameInfo.Length < 2) {
@@ -83,11 +77,9 @@ public class External : MonoBehaviour{
 		}
 
 		var matchID = info[0].ToString();
-		var actScene = SceneManager.GetActiveScene().name;
 
-		// 在PokerGame场景中切换比赛，跳回到GameLoading界面
-		if (GameData.Shared.MatchID != matchID && actScene != "GameLoading") {
-			SceneManager.LoadScene("GameLoading");
+		if (GameData.Shared.MatchID != matchID && SceneMan.IsInGame) {
+			SceneMan.LoadScene(SceneMan.Scenes.Loading);
 		}
 
 		GameData.Shared.MatchID = matchID;
@@ -118,7 +110,7 @@ public class External : MonoBehaviour{
 		GameData.Shared.Room.Value = "";
 		GameData.Shared.MatchID = "";
 
-		Back2LoadingScene();
+		SceneMan.LoadScene(SceneMan.Scenes.Loading);
 
 		// 延时执行退出逻辑
 		Observable.Timer(TimeSpan.FromMilliseconds(90)).AsObservable().Subscribe((_) => {

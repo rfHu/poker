@@ -270,7 +270,7 @@ public class GameOverJson {
 sealed public class GameData {
 	private GameData() {
 		SceneManager.sceneLoaded += (s, mode) => {
-			if (s.name == "PokerGame") {
+			if (s.name == SceneMan.Scenes.PokerGame) {
 				byJson(jsonData);
 			}
 		};
@@ -322,13 +322,13 @@ sealed public class GameData {
 			// 保存最新游戏数据
 			jsonData = e.Data;
 
-			var scene = SceneManager.GetActiveScene();
-
-			if (scene.name == "PokerGame") {
+			if (SceneMan.IsInGame) {
 				byJson(e.Data);
 			} else {
-                Players.Clear();
-				SceneManager.LoadScene("PokerGame");
+				foreach(var key in Players.Keys.ToList()) {
+					Players.Remove(key);
+				}
+				SceneMan.LoadScene(SceneMan.Scenes.PokerGame);
 			}
 		});
 
