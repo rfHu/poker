@@ -58,6 +58,10 @@ public class CircleMask : MonoBehaviour {
 		activated = false;
 		proImage.enabled = false;
 		numberText.enabled = false;
+		
+		if (runCoroutine != null) {
+			StopCoroutine(runCoroutine);
+		}
 	}
 
 	IEnumerator run(float left) {
