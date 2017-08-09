@@ -106,9 +106,9 @@ public class RebuyOrAddon : MonoBehaviour {
             } else {
                 PokerUI.Toast(string.Format("{0}失败", radata.title));                
             }
-
-            GetComponent<DOPopup>().Close();
         });
+
+        GetComponent<DOPopup>().Close();
     }
 
     public void Exit() 

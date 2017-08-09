@@ -83,13 +83,23 @@ public sealed class Connect  {
 	}
 
 	public void EnterGame() {
-		Emit(new Dictionary<string, object>{
-			{"f", "entergame"},
-			{"args", new Dictionary<string, object> {
-				{"matchid", GameData.Shared.MatchID},
+		Dictionary<string, object> data;
+
+		if (string.IsNullOrEmpty(GameData.Shared.MatchID)) {
+			data = new Dictionary<string, object> {
 				{"roomid", GameData.Shared.Room.Value},
 				{"ver", Application.version}
-			}}
+			};
+		} else {
+			data = new Dictionary<string, object> {
+				{"matchid", GameData.Shared.MatchID},
+				{"ver", Application.version}	
+			};
+		}
+
+		Emit(new Dictionary<string, object>{
+			{"f", "entergame"},
+			{"args", data}
 		}, (json) => {
 			_.Log("Unity: 进入房间逻辑执行完毕");
 
