@@ -28,7 +28,7 @@ public class Expression: MonoBehaviour {
             disposable.Dispose();
         }
 
-        disposable = Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe((__) => {
+        disposable = Observable.Timer(TimeSpan.FromSeconds(4)).Subscribe((__) => {
             PoolMan.Despawn(transform);
         }).AddTo(this);
     }

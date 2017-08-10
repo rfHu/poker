@@ -9,15 +9,15 @@ public class ExpressionPage : MonoBehaviour {
 
     void Awake()
     {
-
-        foreach (var item in ExpressionPic)
+        for (int i = 0; i < transform.childCount; i++)
         {
-            item.AddComponent<Button>();
+            GameObject child = transform.GetChild(i).gameObject;
+            child.AddComponent<Button>();
 
-            item.GetComponent<Button>().onClick.AddListener(() =>
+            child.GetComponent<Button>().onClick.AddListener(() =>
             {
                 var dict = new Dictionary<string, object>() {
-			        {"expression", item.name}
+			        {"expression", child.name}
 		        };
 
                 Connect.Shared.Emit(
