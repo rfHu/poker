@@ -21,7 +21,7 @@ public class SNGMsgPage : MonoBehaviour {
     {
         PlayerNum.text = GameData.Shared.PlayerCount.Value.ToString();
 
-        Time.text = GameData.MatchData.Data[3].ToString() + "分钟";
+        Time.text = GameData.MatchData.Time.ToString() + "分钟";
 
         SetCups();
 
@@ -34,7 +34,7 @@ public class SNGMsgPage : MonoBehaviour {
     {
         int[] coinArr = new int[0];
         var seats = GameData.Shared.PlayerCount.Value;
-        var factor = GameData.MatchData.Data[0] * seats;
+        var factor = GameData.MatchData.SNGJoinFee * seats;
 
         switch (seats)
         {   
