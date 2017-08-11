@@ -851,6 +851,9 @@ public class Controller : MonoBehaviour {
 			} else if (value == 10) {
 				PauseGame.SetActive(true);
 				text.text = "中场休息5分钟";
+			} else if (value == 15) {
+				PauseGame.SetActive(true);
+				text.text = "决赛等待中";
 			} else {
 				PauseGame.SetActive(false);
 			}
