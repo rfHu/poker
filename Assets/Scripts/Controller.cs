@@ -220,16 +220,32 @@ public class Controller : MonoBehaviour {
 		go.transform.Find("Value").GetComponent<Text>().text = text;
 	}
 
-	void ipgpsText() {
+	void infoText() {
+		if (GameData.Shared.Type == GameType.MTT) {
+			return ;
+		}
+
 		var ipLimit = GameData.Shared.IPLimit.Value;
 		var gpsLimit = GameData.Shared.GPSLimit.Value;
+		var insurance = GameData.Shared.NeedInsurance.Value;
+
+		var target = gameInfoTexts[1];
 
 		if (ipLimit && gpsLimit) {
-			gameInfoTexts[1].text = "IP 及 GPS 限制";
+			target.text = "IP 及 GPS 限制";
 		} else if (gpsLimit) {
-			gameInfoTexts[1].text = "GPS 限制";
+			target.text = "GPS 限制";
 		} else if (ipLimit) {
-			gameInfoTexts[1].text = "IP 限制";
+			target.text = "IP 限制";
+		} else if (insurance) {
+			target.text = "保险模式";
+		} else {
+			target.text = "";
+		}
+
+		if (ipLimit || gpsLimit) {
+			var msg = insurance ? "保险模式" : "";
+			gameInfoTexts[2].text = msg; 
 		}
 	}
 
@@ -336,15 +352,7 @@ public class Controller : MonoBehaviour {
 		setBBText();
 	}
 
-	private bool registered = false;
-
 	private void registerEvents() {
-		if (registered) {
-			return ;
-		}
-
-		registered = true;
-
 		GameData.Shared.LeftTime.Subscribe((value) => {
 			if (!GameData.Shared.GameStarted) {
 				setText(TimeLeftGo, "未开始");
@@ -608,6 +616,7 @@ public class Controller : MonoBehaviour {
 
 			GameData.Shared.BB = bb;
 			GameData.Shared.LeftTime.Value = cd;
+			setBBText();
 
 			PokerUI.Toast(string.Format("盲注已升至{0}/{1}", bb / 2, bb));			
 
@@ -781,18 +790,16 @@ public class Controller : MonoBehaviour {
 			PokerUI.Toast("房主提前结束牌局");	
 		}).AddTo(this);
 
-		GameData.Shared.IPLimit.Where((flag) => flag).Subscribe((_) => {
-			ipgpsText();
+		GameData.Shared.IPLimit.Subscribe((_) => {
+			infoText();
 		}).AddTo(this);
 
-		GameData.Shared.GPSLimit.Where((flag) => flag).Subscribe((_) => {
-			ipgpsText();
+		GameData.Shared.GPSLimit.Subscribe((_) => {
+			infoText();
 		}).AddTo(this);
 
-		GameData.Shared.NeedInsurance.Subscribe((flag) => {
-			if (flag) {
-				gameInfoTexts[2].text = "保险模式";
-			}
+		GameData.Shared.NeedInsurance.Subscribe((_) => {
+			infoText();
 		}).AddTo(this);
 
 		GameData.Shared.RoomName.Subscribe((name) => {

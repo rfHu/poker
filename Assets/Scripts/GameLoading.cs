@@ -13,11 +13,11 @@ public class GameLoading : MonoBehaviour {
 		var external = External.Instance;
 
 		#if UNITY_EDITOR  
-			external.SetSocket("https://socket.dev.poker.top");
+			external.SetSocket("https://socket.pre.poker.top");
 			external.SetProxy("http://localhost:8888");
 
-            var rid = "598d795d44299375e009c0d1";
-            var sid = "s%3AoxkCQ9_g44vXFEGUIkDy2W5HkNIU8uTE.u9uhD7haLbqb0CcoyEDZZCOJjZf8MsO3rSaYe1MSL4g";
+            var rid = "598dc1c7aed9806e1580fd69";
+            var sid = "s%3AhHvZPXx6gosUvnmW38LLOHILoEDd596R.G1n63Bztjf8atJ2bVQVsJ%2BO%2BPLM%2FKb%2BbuRYNkRlbLvE";
 
 			// 外网登录态
 			// var sid = "s%3AHlY6SR0V3m8oM2oofbX_yl5R7f6v6Q7R.PK%2FqqIiSZHB0zLgH%2BwV52Yesi3CcsTPJFC3JPb7tjSQ";
