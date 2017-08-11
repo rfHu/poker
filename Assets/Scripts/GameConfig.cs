@@ -563,6 +563,8 @@ sealed public class GameData {
 		}
 	}
 
+	public bool IsMatchState = false;
+
 	public int DealState = -1;
 	public ReactiveProperty<bool> ShowAudit  = new ReactiveProperty<bool>(false);
 	public bool PublicCardAnimState = false;

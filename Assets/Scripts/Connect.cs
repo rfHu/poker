@@ -85,15 +85,15 @@ public sealed class Connect  {
 	public void EnterGame() {
 		Dictionary<string, object> data;
 
-		if (string.IsNullOrEmpty(GameData.Shared.MatchID)) {
-			data = new Dictionary<string, object> {
-				{"roomid", GameData.Shared.Room.Value},
-				{"ver", Application.version}
-			};
-		} else {
+		if (GameData.Shared.IsMatchState && !string.IsNullOrEmpty(GameData.Shared.MatchID)) {
 			data = new Dictionary<string, object> {
 				{"matchid", GameData.Shared.MatchID},
 				{"ver", Application.version}	
+			};	
+		} else {
+			data = new Dictionary<string, object> {
+				{"roomid", GameData.Shared.Room.Value},
+				{"ver", Application.version}
 			};
 		}
 
@@ -232,23 +232,7 @@ public sealed class Connect  {
 
 	private static Connect instance;
 
-	static public void SetupRoom() {
-		if (string.IsNullOrEmpty(GameData.Shared.Sid) || string.IsNullOrEmpty(GameData.Shared.Room.Value)) {
-			return ;
-		}
-
-		setup();	
-	}
-
-	static public void SetupMatch() {
-		if (string.IsNullOrEmpty(GameData.Shared.Sid) || string.IsNullOrEmpty(GameData.Shared.MatchID)) {
-			return ;
-		}
-
-		setup();	
-	}
-
-	static private void setup() {
+	static public void Setup() {
 		// 强制断开连接
 		if (instance != null) {
 			_.Log("Unity: 尝试建立新连接，强制断开");

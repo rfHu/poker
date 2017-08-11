@@ -67,7 +67,8 @@ public class External : MonoBehaviour{
 		GameData.Shared.Room.Value = info[0].ToString();
 		GameData.Shared.Sid = info[1].ToString();
 
-		Connect.SetupRoom();
+		GameData.Shared.IsMatchState = false;
+		Connect.Setup();
 	}
 
 	public void InitMatch(string gameInfo) {
@@ -86,7 +87,8 @@ public class External : MonoBehaviour{
 		GameData.Shared.MatchID = matchID;
 		GameData.Shared.Sid = info[1].ToString();
 
-		Connect.SetupMatch();
+		GameData.Shared.IsMatchState = true;
+		Connect.Setup();
 	}
 
 	public void SetProxy(string proxy) {
@@ -152,11 +154,7 @@ public class External : MonoBehaviour{
 				return ;	
 			}
 
-			if (!string.IsNullOrEmpty(GameData.Shared.MatchID)) {
-				Connect.SetupMatch();
-			} else {
-				Connect.SetupRoom();
-			}
+			Connect.Setup();	
 		}
 	}
 
