@@ -507,10 +507,8 @@ public class Controller : MonoBehaviour {
 		}).AddTo(this);
 
         RxSubjects.MatchRank.Subscribe((json) => {
-			// 输了则作为游客旁观，清空比赛ID
-			if (GameData.Shared.Type == GameType.MTT) {
-				GameData.Shared.MatchID = "";
-			}
+			// 输了之后以游客身份旁观
+			GameData.Shared.IsMatchState = false;
 
             var SNGWinner = PoolMan.Spawn("MatchWinner");
             SNGWinner.GetComponent<DOPopup>().ShowModal(new Color(0, 0, 0, 0.7f), closeOnClick: false);
@@ -718,7 +716,7 @@ public class Controller : MonoBehaviour {
 				}
 
 				GameData.Shared.Room.Value = e.Data.String("data");
-				GameData.Shared.MatchID = null; // 旁观不需要传MatchID
+				GameData.Shared.IsMatchState = false;
 				Connect.Shared.EnterGame();
 			}
 		}).AddTo(this);
