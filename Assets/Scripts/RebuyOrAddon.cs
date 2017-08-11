@@ -150,7 +150,7 @@ internal class RAData {
     
     internal RAData(string type) {
         this.type = type;
-        var cost = GameData.MatchData.Rebuy;
+        var cost = GameData.MatchData.RebuyFee;
         var chips = GameData.MatchData.BankrollNum;
         
         if (type == "rebuy") {
