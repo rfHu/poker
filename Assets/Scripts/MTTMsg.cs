@@ -182,6 +182,9 @@ namespace MTTMsgPage
                 _.SetMsgText(roomsData.Int("half_break") == 1, HalfBreak);
                 _.SetMsgText(roomsData.Int("gps_limit") == 1, GPSLimit);
                 _.SetMsgText(roomsData.Int("ip_limit") == 1, IPLimit);
+
+                //p2奖池类型
+                JackpotTotal.text = roomsData.Int("jackpot_type") == 1 ? "浮动奖池" : "固定奖池";
             });
 
             Toggles[0].isOn = true;

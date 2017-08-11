@@ -10,9 +10,6 @@ namespace MTTMsgPage
 {
     public class MTTMsgP2 : MonoBehaviour
     {
-
-        public Text JackpotTotal;
-
         public Text Count;
 
         public MyParams adapterParams;
@@ -77,8 +74,6 @@ namespace MTTMsgPage
             }, (data) =>
             {
                 var awardMsg = Json.Decode(data) as Dictionary<string, object>;
-
-                JackpotTotal.text = awardMsg.Int("total").ToString();
                 Count.text = awardMsg.Int("count").ToString();
 
                 var roomsMsg = awardMsg.List("list");
