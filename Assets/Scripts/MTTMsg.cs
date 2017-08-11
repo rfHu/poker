@@ -39,9 +39,6 @@ namespace MTTMsgPage
         public Text IPLimit;
 
         //P2页面
-        public Text JackpotTotal;
-        public Text Count;
-        public GameObject AwardPre;
         public Transform P2GoParent;
 
         //P3页面
@@ -104,15 +101,9 @@ namespace MTTMsgPage
 
                 SetGoSize(true);
 
-                Transform turnNormal = P3GoParent.GetChild(highLightLevel);
-                turnNormal.GetChild(1).GetComponentInChildren<Text>().color = new Color(1, 1, 1, 0.6f);
-                turnNormal.GetChild(2).GetComponentInChildren<Text>().color = new Color(1, 1, 1, 0.6f);
-
+                SetHighLighCol(new Color(1, 1, 1, 0.6f));
                 highLightLevel = GameData.Shared.BlindLv;
-                Transform highLight = P3GoParent.GetChild(highLightLevel);
-                highLight.GetChild(1).GetComponentInChildren<Text>().color = openCol;
-                highLight.GetChild(2).GetComponentInChildren<Text>().color = openCol;
-
+                SetHighLighCol(openCol);
             });
 
 
@@ -134,6 +125,13 @@ namespace MTTMsgPage
                 timer = timer + 1;
                 setTimeText(); 
             });
+        }
+
+        private void SetHighLighCol(Color color)
+        {
+            Transform turnNormal = P3GoParent.GetChild(highLightLevel);
+            turnNormal.GetChild(1).GetComponentInChildren<Text>().color = color;
+            turnNormal.GetChild(2).GetComponentInChildren<Text>().color = color;
         }
 
         private void setTimeText() {
@@ -182,9 +180,6 @@ namespace MTTMsgPage
                 _.SetMsgText(roomsData.Int("half_break") == 1, HalfBreak);
                 _.SetMsgText(roomsData.Int("gps_limit") == 1, GPSLimit);
                 _.SetMsgText(roomsData.Int("ip_limit") == 1, IPLimit);
-
-                //p2奖池类型
-                JackpotTotal.text = roomsData.Int("jackpot_type") == 1 ? "浮动奖池" : "固定奖池";
             });
 
             Toggles[0].isOn = true;
