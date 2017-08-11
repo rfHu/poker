@@ -58,7 +58,7 @@ public class MenuPopup : MonoBehaviour {
         if (GameData.MatchData.CanRebuyLv())
         {
             text.text = "重购";
-            bool lessRoll = player.Bankroll.Value <= GameData.MatchData.Data[1];
+            bool lessRoll = player.Bankroll.Value <= GameData.MatchData.BankrollNum;
             interactable = player.CanRebuy && lessRoll; 
         }
         else if (GameData.MatchData.CanAddonLv())

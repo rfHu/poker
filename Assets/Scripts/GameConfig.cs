@@ -661,15 +661,48 @@ sealed public class GameData {
         {
             get {
                 int[][] data = { 
-                                  new int[] { 200, 2000, 20, 3 },
-                                  new int[] { 500, 4000, 50, 5 }, 
-                                  new int[] { 1000, 4000, 100, 10 },
-                                  new int[] { 2000, 8000, 200, 10 }
+                                  new int[] { 200, 2000, 3 },
+                                  new int[] { 500, 4000, 5 }, 
+                                  new int[] { 1000, 4000, 10 },
+                                  new int[] { 2000, 8000, 10 }
                               };
 
                     return data[Type - 1]; 
             }
         }
+
+        public static int SNGJoinFee
+        {
+            get {
+                return Data[0];
+            }
+        }
+
+        public static int SNGServerFee 
+        {
+            get {
+                return Data[0] / 10;
+            }
+        }
+
+        public static int BankrollNum
+        {
+            get {
+                return Data[1];
+            }
+        }
+
+        public static int Time 
+        {
+            get {
+                return Data[2];
+            }
+        }
+
+        public static int JoinFee;
+        public static int RebuyFee;
+
+
 
 	}
 
@@ -770,6 +803,8 @@ sealed public class GameData {
 			MatchData.IsHunter = options.Int("reward_ratio") > 0;
 			LeftTime.Value = json.Int("blind_countdown");
             BlindLv = json.Int("blind_lv");
+            MatchData.JoinFee = options.Int("join_fee");
+            MatchData.RebuyFee = options.Int("rebuy_fee");
         } else {
 			LeftTime.Value = json.Int("left_time");
 		}

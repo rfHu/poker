@@ -151,10 +151,10 @@ namespace MTTMsgPage
             PlayerNum.text = GameData.Shared.Players.Count + "/" + GameData.Shared.PlayerCount;
 
             //p1信息
-            var matchData = GameData.MatchData.Data;
-            EntryFee.text = matchData[0] + "+" + matchData[2];
-            LvUpTime.text = matchData[3] + "分钟";
-            InitalScore.text = matchData[1].ToString();
+            var joinFee = GameData.MatchData.JoinFee;
+            EntryFee.text = joinFee + "+" + joinFee / 10;
+            LvUpTime.text = GameData.MatchData.Time + "分钟";
+            InitalScore.text = GameData.MatchData.BankrollNum.ToString();
 
         HTTP.Get("/match/" + GameData.Shared.MatchID, new Dictionary<string, object> {
                 {"roomid", GameData.Shared.Room.Value},
