@@ -14,9 +14,9 @@ public class JoinMatch : MonoBehaviour {
     void OnSpawned() 
     {
 
-        EntryFee.text = GameData.MatchData.Data[0].ToString();
-        InitialScoreboard.text = string.Format("初始记分牌：<color=#fff>{0}</color>", GameData.MatchData.Data[1]);
-        Charge.text = GameData.MatchData.Data[2].ToString();
+        EntryFee.text = GameData.MatchData.SNGJoinFee.ToString();
+        InitialScoreboard.text = string.Format("初始记分牌：<color=#fff>{0}</color>", GameData.MatchData.BankrollNum);
+        Charge.text = GameData.MatchData.SNGServerFee.ToString();
 
         Coins.text = _.Num2CnDigit(GameData.Shared.Coins);
     }

@@ -51,6 +51,7 @@ namespace PokerPlayer {
 			hasShowCard = false;
 			RxSubjects.Seating.OnNext(false);
 			YouWin.SetActive(false);
+			YouWin.GetComponent<CanvasGroup>().alpha = 1;
 			WinParticle.Stop(true);
 			CardDesc.transform.parent.gameObject.SetActive(false);
 			MyCards[0].parent.gameObject.SetActive(false);

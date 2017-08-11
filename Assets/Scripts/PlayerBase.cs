@@ -54,6 +54,8 @@ namespace PokerPlayer {
             var avatar = Avt.GetComponent<Avatar>();
 		    avatar.Uid = player.Uid;
 		    avatar.SetImage(player.Avatar);	
+            
+            PlayerAct.AnimID = AnimID;
 
             if (GameData.Shared.InGame && !player.InGame) {
 		    	SetFolded();
@@ -248,8 +250,15 @@ namespace PokerPlayer {
                 }
             }).AddTo(this);
 
-            player.LastAct.Where((act) => !String.IsNullOrEmpty(act)).Subscribe((act) => {
-                dealAct(act.ToActionEnum());	
+            player.LastAct.Subscribe((act) => {
+                var actState = act.ToActionEnum();
+
+                if (actState == ActionState.None) {
+                    lastState = actState;    
+                    PlayerAct.SetActive(false, false);
+                } else {
+                    dealAct(actState);	
+                }
             }).AddTo(this);
 
             player.Allin.Subscribe((allin) => {

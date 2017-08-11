@@ -106,9 +106,9 @@ public class RebuyOrAddon : MonoBehaviour {
             } else {
                 PokerUI.Toast(string.Format("{0}失败", radata.title));                
             }
-
-            GetComponent<DOPopup>().Close();
         });
+
+        GetComponent<DOPopup>().Close();
     }
 
     public void Exit() 
@@ -150,8 +150,8 @@ internal class RAData {
     
     internal RAData(string type) {
         this.type = type;
-        var cost = GameData.MatchData.Data[0];
-        var chips = GameData.MatchData.Data[1];
+        var cost = GameData.MatchData.Rebuy;
+        var chips = GameData.MatchData.BankrollNum;
         
         if (type == "rebuy") {
             title = "重购";

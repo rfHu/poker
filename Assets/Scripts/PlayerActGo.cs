@@ -8,6 +8,8 @@ using DG.Tweening;
 public class PlayerActGo: MonoBehaviour {
     public Text ActText;
 
+    public int AnimID;
+
     public void SetAct(ActionState act) {
         var color = GetColor(act); 
     
@@ -35,7 +37,7 @@ public class PlayerActGo: MonoBehaviour {
         var duration = 0.1f;
 
         if (anim) {
-            cvg.DOFade(targetValue, duration);
+            cvg.DOFade(targetValue, duration).SetId(AnimID);
         } else {
             cvg.alpha = targetValue;
         }
