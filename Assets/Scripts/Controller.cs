@@ -681,16 +681,21 @@ public class Controller : MonoBehaviour {
 		}).AddTo(this);
 
 		RxSubjects.MTTMatch.Subscribe((e) => {
+			if (GameData.Shared.Type != GameType.MTT) {
+				return ;
+			}
+
 			var type = e.Data.Int("type");
 
 			if (type == 3) {
 				var player = GameData.Shared.GetMyPlayer();
 
-				if (player.Bankroll.Value > 0) {
+				if (player.IsValid()) {
 					return ;
 				}
 
 				GameData.Shared.Room.Value = e.Data.String("data");
+				GameData.Shared.MatchID = null; // 旁观不需要传MatchID
 				Connect.Shared.EnterGame();
 			}
 		}).AddTo(this);
