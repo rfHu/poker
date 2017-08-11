@@ -488,7 +488,30 @@ public class Controller : MonoBehaviour {
 			expressCache.Add(uid, expression);
         }).AddTo(this);
 
+		RxSubjects.MatchLook.Subscribe((e) => {
+			if (GameData.Shared.Type != GameType.MTT) {
+				return ;
+			}
+
+			var state = e.Data.Int("match_state");
+
+			// 比赛未开始
+			if (state < 10) {
+				return ;
+			}
+			
+			var myself = e.Data.Dict("myself");
+			if (myself.Int("rank") >= 0) {
+				PokerUI.ToastThenExit("您已被淘汰");
+			} 
+		}).AddTo(this);
+
         RxSubjects.MatchRank.Subscribe((json) => {
+			// 输了则作为游客旁观，清空比赛ID
+			if (GameData.Shared.Type == GameType.MTT) {
+				GameData.Shared.MatchID = "";
+			}
+
             var SNGWinner = PoolMan.Spawn("MatchWinner");
             SNGWinner.GetComponent<DOPopup>().ShowModal(new Color(0, 0, 0, 0.7f), closeOnClick: false);
             SNGWinner.GetComponent<MatchWinner>().Init(json.Data);

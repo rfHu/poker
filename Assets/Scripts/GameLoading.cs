@@ -16,7 +16,7 @@ public class GameLoading : MonoBehaviour {
 			external.SetSocket("https://socket.dev.poker.top");
 			external.SetProxy("http://localhost:8888");
 
-            var rid = "598ca7b8b760c21ec9299cfc";
+            var rid = "598d27acf1228d5a3b13851a";
             var sid = "s%3AoxkCQ9_g44vXFEGUIkDy2W5HkNIU8uTE.u9uhD7haLbqb0CcoyEDZZCOJjZf8MsO3rSaYe1MSL4g";
 
 			// 外网登录态
@@ -59,6 +59,12 @@ public class GameLoading : MonoBehaviour {
 					}}
 				});
 
+				return ;
+			}
+
+			var state = e.Data.Int("match_state");
+			if (state > 10) {
+				PokerUI.ToastThenExit("未匹配到您的比赛信息");
 				return ;
 			}
 
