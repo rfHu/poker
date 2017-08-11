@@ -46,11 +46,12 @@ public class MatchWinner : MonoBehaviour {
         var rank = json.Int("rank");
         var score = json.Int("score");
         var isEnd = json.Int("is_end") == 1;
+        var win = json.Int("win");
 
         this.gameEnd = isEnd;
 
         coinImg.SetActive(score != 0);
-        SharePicBtn.SetActive(score != 0);
+        SharePicBtn.SetActive(score != 0 || win > 0);
 
         var awardText = json.Dict("award").String("award");
 
