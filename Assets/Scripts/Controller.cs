@@ -85,16 +85,12 @@ public class Controller : MonoBehaviour {
 	}
 
 	public void load() {
-		var infoShow = false;
-		GameData.Shared.GameInfoReady.Where((ready) => ready && !infoShow).Subscribe((_) => {
-			infoShow = true;
+		MatchSetting();
+		gameReload();
+		registerEvents();
+		setupDealer();
+		setOptions();
 
-            MatchSetting();
-			gameReload();
-			registerEvents();
-			setupDealer();
-			setOptions();
-		}).AddTo(this);
 		
 		#if UNITY_EDITOR
 		#else
