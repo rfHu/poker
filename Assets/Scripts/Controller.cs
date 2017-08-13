@@ -449,7 +449,6 @@ public class Controller : MonoBehaviour {
             em.GetComponent<Emoticon>().Init(fromSeatPos, toSeat, isToMe);
         }).AddTo(this);
 
-		Dictionary<string, Transform> expressCache = new Dictionary<string, Transform>(){};
         RxSubjects.Expression.Subscribe((e) => {
             var expressionName = e.Data.String("expression");
             var uid = e.Data.String("uid");
@@ -482,14 +481,13 @@ public class Controller : MonoBehaviour {
             }
 
 			// 删除上一个
-			if (expressCache.ContainsKey(uid)) {
-				var exp = expressCache[uid];
-				PoolMan.Despawn(exp);
-				expressCache.Remove(uid);
+			var prevExp = parent.GetComponentInChildren<Expression>();
+			if (prevExp) {
+				PoolMan.Despawn(prevExp.transform);
 			}
 
+
             expression.GetComponent<Expression>().SetTrigger(expressionName, parent);
-			expressCache.Add(uid, expression);
         }).AddTo(this);
 
 		RxSubjects.MatchLook.Subscribe((e) => {
@@ -616,6 +614,7 @@ public class Controller : MonoBehaviour {
 
 			GameData.Shared.BB = bb;
 			GameData.Shared.LeftTime.Value = cd;
+			GameData.Shared.Ante.Value = e.Data.Int("ante");
 			setBBText();
 
 			PokerUI.Toast(string.Format("盲注已升至{0}/{1}", bb / 2, bb));			
