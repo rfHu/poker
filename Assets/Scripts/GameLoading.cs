@@ -16,7 +16,7 @@ public class GameLoading : MonoBehaviour {
 			external.SetSocket("https://socket.dev.poker.top");
 			external.SetProxy("http://localhost:8888");
 
-            var rid = "59910ffa9e461d52f87311ae";
+            var rid = "599160873859be52c8d069ef";
             var sid = "s%3AanTtP_gG2Yx1ZdKxcJ5OrAIooVLMZi4g.sr1BmJdeP3pmp3RjcOIwbyPAakL%2B76o4BjMa6cRAOyU";
 
 			// 外网登录态

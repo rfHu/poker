@@ -100,7 +100,7 @@ namespace PokerPlayer {
             stopParticle(allinParticle);
             stopParticle(winParticle);
 
-			var exp = GetComponentInChildren<Expression>();
+			var exp = theSeat.GetComponent<Expression>();
 			if (exp != null) {
 				PoolMan.Despawn(exp.transform);
 			}
