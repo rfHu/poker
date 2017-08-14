@@ -13,17 +13,17 @@ public class GameLoading : MonoBehaviour {
 		var external = External.Instance;
 
 		#if UNITY_EDITOR  
-			external.SetSocket("https://socket.poker.top");
+			external.SetSocket("https://socket.dev.poker.top");
 			external.SetProxy("http://localhost:8888");
 
-            var rid = "5990bd33e67b8c3a85c7723c";
-            var sid = "s%3AL5zuABiLfMpbLR0sbqYMlGbA-xPPFy8J.0sH0PbSEhWcz8BN60kzj49dJoDzFo7r0PDkqLqpXjKs";
+            var rid = "59910ffa9e461d52f87311ae";
+            var sid = "s%3AanTtP_gG2Yx1ZdKxcJ5OrAIooVLMZi4g.sr1BmJdeP3pmp3RjcOIwbyPAakL%2B76o4BjMa6cRAOyU";
 
 			// 外网登录态
 			// var sid = "s%3AHlY6SR0V3m8oM2oofbX_yl5R7f6v6Q7R.PK%2FqqIiSZHB0zLgH%2BwV52Yesi3CcsTPJFC3JPb7tjSQ";
 
-            external.InitGame(rid + "&" + sid);
-			// external.InitMatch(rid + "&" + sid);
+            // external.InitGame(rid + "&" + sid);
+			external.InitMatch(rid + "&" + sid);
 		#endif
 
 		// 开启SDK的日志打印，发布版本请务必关闭
@@ -46,22 +46,6 @@ public class GameLoading : MonoBehaviour {
 
 	private void registerEvents() {
 		RxSubjects.MatchLook.Subscribe((e) => {
-
-			var roomid = e.Data.Dict("myself").String("roomid");
-
-			if (!string.IsNullOrEmpty(roomid)) {
-				Connect.Shared.Emit(new Dictionary<string, object>{
-					{"f", "entergame"},
-					{"args", new Dictionary<string, object> {
-						{"roomid", roomid},
-						{"ver", Application.version},
-						{"matchid", GameData.Shared.MatchID}
-					}}
-				});
-
-				return ;
-			}
-
 			var state = e.Data.Int("match_state");
 			if (state > 10) {
 				PokerUI.ToastThenExit("未匹配到您的比赛信息");
