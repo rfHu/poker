@@ -10,14 +10,20 @@ public class Expression: MonoBehaviour {
 
     private IDisposable disposable;
 
-    public void SetTrigger(string name, Transform parent) {
+
+    public void SetTrigger(string name, Transform parent, Action cb = null) {
         var rect = GetComponent<RectTransform>();
         var prect = parent.GetComponent<RectTransform>();
 
-        transform.SetParent(parent, false);
+        transform.SetParent(G.UICvs.transform, false);
+
+        rect.anchorMax = prect.anchorMax;
+        rect.anchorMin = prect.anchorMin;
+        rect.pivot = prect.pivot;
+        rect.position = parent.position;
 
         var animator = Face.GetComponent<Animator>();
-        animator.Play(name.Trim());
+        animator.Play(name);
 
         if (disposable != null) {
             disposable.Dispose();
@@ -25,6 +31,10 @@ public class Expression: MonoBehaviour {
 
         disposable = Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe((__) => {
             PoolMan.Despawn(transform);
+
+			if (cb != null) {
+				cb();
+			}
         }).AddTo(this);
     }
 

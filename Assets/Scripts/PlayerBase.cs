@@ -100,11 +100,6 @@ namespace PokerPlayer {
             stopParticle(allinParticle);
             stopParticle(winParticle);
 
-			var exp = theSeat.GetComponent<Expression>();
-			if (exp != null) {
-				PoolMan.Despawn(exp.transform);
-			}
-
             // 取消所有动画
             DOTween.Pause(AnimID);
 

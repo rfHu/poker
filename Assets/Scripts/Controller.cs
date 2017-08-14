@@ -455,10 +455,19 @@ public class Controller : MonoBehaviour {
             em.GetComponent<Emoticon>().Init(fromSeatPos, toSeat, isToMe);
         }).AddTo(this);
 
+		var expressions = new Dictionary<string, Transform>();
         RxSubjects.Expression.Subscribe((e) => {
-            var expressionName = e.Data.String("expression");
+			var expressionName = e.Data.String("expression");
             var uid = e.Data.String("uid");
+
+			if (expressions.ContainsKey(uid)) {
+				PoolMan.Despawn(expressions[uid]);
+				expressions.Remove(uid);
+			}
+            
             var expression = PoolMan.Spawn("Expression");
+			expressions[uid] = expression; // 保存起来
+
 			Transform parent;
 
             if (uid == GameData.Shared.Uid)
@@ -486,14 +495,9 @@ public class Controller : MonoBehaviour {
                 parent = aimSeat.GetComponentInChildren<PokerPlayer.PlayerOppo>().transform;
             }
 
-			// 删除上一个
-			var prevExp = parent.GetComponentInChildren<Expression>();
-			if (prevExp) {
-				PoolMan.Despawn(prevExp.transform);
-			}
-
-
-            expression.GetComponent<Expression>().SetTrigger(expressionName, parent);
+            expression.GetComponent<Expression>().SetTrigger(expressionName, parent, () => {
+				expressions.Remove(uid);
+			});
         }).AddTo(this);
 
 		RxSubjects.MatchLook.Subscribe((e) => {
