@@ -98,12 +98,6 @@ public class Controller : MonoBehaviour {
 		#endif
 	}
 
-	private void enterRoom(string roomId) {
-		GameData.Shared.Room.Value = roomId;	
-		GameData.Shared.IsMatchState = false;
-		Connect.Shared.EnterGame();
-	}
-
 	public void OnStartClick() {
 		Connect.Shared.Emit(new Dictionary<string, object>(){
 			{"f", "start"},
@@ -357,6 +351,8 @@ public class Controller : MonoBehaviour {
 
 		setBBText();
 	}
+
+	private bool requesting = false;
 
 	private void registerEvents() {
 		GameData.Shared.LeftTime.Subscribe((value) => {
@@ -730,9 +726,45 @@ public class Controller : MonoBehaviour {
 				}
 
 				var roomId = e.Data.String("data");
-				enterRoom(roomId);				
+				Connect.Shared.Enter(roomId, () => {
+					getRoomEnter();
+				});			
 			}
 		}).AddTo(this);
+
+			// Connect.Shared.Enter(GameData.Shared.Room.Value, () => {
+			// 	getRoomEnter();
+			// });	
+	}
+
+	private void getRoomEnter() {
+		if (requesting) {
+			return ;
+		}
+
+		if (GameData.Shared.Type != GameType.MTT || GameData.Shared.Players.Count > 0) {
+			return ;
+		}
+
+		requesting = true;
+
+		Connect.Shared.Emit(new Dictionary<string, object> {
+			{"f", "getroom"},
+			{"for_match", "1"}
+		}, (data, err) => {
+			requesting = false;
+
+			var roomid = data.String("roomid");
+			if (string.IsNullOrEmpty(roomid)) {
+				// PokerUI.Toast("房间已合并");
+				return ;
+			}
+
+			Connect.Shared.Enter(roomid);	
+		}, () => {
+			// PokerUI.Toast("服务器连接超时");
+			requesting = false;
+		});
 	}
 
 	private void subsPlayer() {
