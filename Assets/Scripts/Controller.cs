@@ -98,6 +98,43 @@ public class Controller : MonoBehaviour {
 		#endif
 	}
 
+	private bool requesting = false;
+
+	void Update()
+	{
+		if (requesting) {
+			return ;
+		}
+
+		if (GameData.Shared.Type == GameType.MTT && GameData.Shared.Players.Count == 0) {
+			requesting = true;
+
+			Connect.Shared.Emit(new Dictionary<string, object> {
+				{"f", "getroom"},
+				{"for_match", "1"}
+			}, (data) => {
+				var roomid = data.String("roomid");
+
+				if (string.IsNullOrEmpty(roomid)) {
+					PokerUI.ToastThenExit("房间已合并");
+					return ;
+				}
+
+				enterRoom(roomid);	
+
+				requesting = false;
+			}, () => {
+				PokerUI.ToastThenExit("服务器连接超时");
+			});
+		}		
+	}
+
+	private void enterRoom(string roomId) {
+		GameData.Shared.Room.Value = roomId;	
+		GameData.Shared.IsMatchState = false;
+		Connect.Shared.EnterGame();
+	}
+
 	public void OnStartClick() {
 		Connect.Shared.Emit(new Dictionary<string, object>(){
 			{"f", "start"},
@@ -719,9 +756,8 @@ public class Controller : MonoBehaviour {
 					return ;
 				}
 
-				GameData.Shared.Room.Value = e.Data.String("data");
-				GameData.Shared.IsMatchState = false;
-				Connect.Shared.EnterGame();
+				var roomId = e.Data.String("data");
+				enterRoom(roomId);				
 			}
 		}).AddTo(this);
 	}
