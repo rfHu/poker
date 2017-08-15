@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 public class ExpressionPage : MonoBehaviour {
 
-    public List<GameObject> ExpressionPic;
-
     void Awake()
     {
         for (int i = 0; i < transform.childCount; i++)
