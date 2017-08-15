@@ -16,8 +16,8 @@ public class GameLoading : MonoBehaviour {
 			external.SetSocket("https://socket.dev.poker.top");
 			external.SetProxy("http://localhost:8888");
 
-            var rid = "598d5091e1cadf62bef4044a";
-            var sid = "s%3Ap3NNJ1TOLJpfxgTUkIWd8nEW0c--APeB.XHdtszFm7mMRfjP%2BBvTON4AE04llvjPMs%2FCeW6nh4jw";
+            var rid = "5991b98a5299a706e1864b72";
+            var sid = "s%3AanTtP_gG2Yx1ZdKxcJ5OrAIooVLMZi4g.sr1BmJdeP3pmp3RjcOIwbyPAakL%2B76o4BjMa6cRAOyU";
 
 			// 外网登录态
 			// var sid = "s%3AHlY6SR0V3m8oM2oofbX_yl5R7f6v6Q7R.PK%2FqqIiSZHB0zLgH%2BwV52Yesi3CcsTPJFC3JPb7tjSQ";
@@ -46,19 +46,9 @@ public class GameLoading : MonoBehaviour {
 
 	private void registerEvents() {
 		RxSubjects.MatchLook.Subscribe((e) => {
-
-			var roomid = e.Data.Dict("myself").String("roomid");
-
-			if (!string.IsNullOrEmpty(roomid)) {
-				Connect.Shared.Emit(new Dictionary<string, object>{
-					{"f", "entergame"},
-					{"args", new Dictionary<string, object> {
-						{"roomid", roomid},
-						{"ver", Application.version},
-						{"matchid", GameData.Shared.MatchID}
-					}}
-				});
-
+			var state = e.Data.Int("match_state");
+			if (state >= 10) {
+				PokerUI.ToastThenExit("未匹配到您的比赛信息");
 				return ;
 			}
 

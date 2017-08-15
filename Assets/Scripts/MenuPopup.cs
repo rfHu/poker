@@ -58,7 +58,7 @@ public class MenuPopup : MonoBehaviour {
         if (GameData.MatchData.CanRebuyLv())
         {
             text.text = "重购";
-            bool lessRoll = player.Bankroll.Value < GameData.MatchData.BankrollNum;
+            bool lessRoll = player.Bankroll.Value <= GameData.MatchData.BankrollNum;
             interactable = player.CanRebuy && lessRoll; 
         }
         else if (GameData.MatchData.CanAddonLv())
@@ -200,8 +200,7 @@ public class MenuPopup : MonoBehaviour {
 
 	public void OnHang() {
 		Connect.Shared.Emit(new Dictionary<string, object>{
-            {"f", "hang"},
-            {"for_match", GameData.Shared.ForMatch} 
+            {"f", "hang"}
         }, (_) => {
             var player = GameData.Shared.GetMyPlayer();
             if (player.IsValid()) {

@@ -10,7 +10,8 @@ public class Expression: MonoBehaviour {
 
     private IDisposable disposable;
 
-    public void SetTrigger(string name, Transform parent) {
+
+    public void SetTrigger(string name, Transform parent, Action cb = null) {
         var rect = GetComponent<RectTransform>();
         var prect = parent.GetComponent<RectTransform>();
 
@@ -30,6 +31,10 @@ public class Expression: MonoBehaviour {
 
         disposable = Observable.Timer(TimeSpan.FromSeconds(4)).Subscribe((__) => {
             PoolMan.Despawn(transform);
+
+			if (cb != null) {
+				cb();
+			}
         }).AddTo(this);
     }
 

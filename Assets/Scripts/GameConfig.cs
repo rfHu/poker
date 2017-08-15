@@ -269,18 +269,6 @@ public class GameOverJson {
 
 sealed public class GameData {
 	private GameData() {
-		SceneManager.sceneLoaded += (s, mode) => {
-			if (s.name == SceneMan.Scenes.PokerGame) {
-				byJson(jsonData);
-			}
-		};
-
-		SceneManager.activeSceneChanged += (s1, s2) => {
-		};
-
-		SceneManager.sceneUnloaded += (s) => {
-		};
-
 		RxSubjects.TakeSeat.AsObservable().Subscribe((e) => {
 			var index = e.Data.Int("where");
 			var playerInfo = e.Data.Dict("who");
@@ -316,24 +304,16 @@ sealed public class GameData {
 			var json = e.Data.Dict("room");
 			PublicCardAnimState = true;
 
-			// 保存最新游戏数据
-			jsonData = json;
-
 			byJson(json, true);
 		});
 	
 		RxSubjects.Look.Subscribe((e) => {
 			PublicCardAnimState = false;
-
-			// 保存最新游戏数据
-			jsonData = e.Data;
+			byJson(e.Data);
 
 			if (SceneMan.HasInGame) {
-				byJson(e.Data);
+				// skip
 			} else {
-				foreach(var key in Players.Keys.ToList()) {
-					Players.Remove(key);
-				}
 				SceneMan.LoadScene(SceneMan.Scenes.PokerGame);
 			}
 		});
@@ -581,7 +561,6 @@ sealed public class GameData {
     public string OwnerName;
 	public List<int> BankrollMul;
 	public ReactiveProperty<int> PlayerCount = new ReactiveProperty<int>();
-	public Subject<bool> GameInfoReady = new Subject<bool>();
 	public string Sid; 
 	public string Uid = "";
 	public string Pin = "";
@@ -738,21 +717,11 @@ sealed public class GameData {
 	public DateTime StartTime;
 	public bool InGame = false;  
 
-	public int ForMatch {
-		get {
-			if (!InGame && GameData.Shared.Type == GameType.MTT) {
-				return 1;
-			}
-
-			return 0;
-		}
-	}
-
 	public BehaviorSubject<int> AuditCD = new BehaviorSubject<int>(0);
 
     public ReactiveProperty<bool> TalkLimit = new ReactiveProperty<bool>(false);
 
-	private Dictionary<string, object> jsonData;
+	// private Dictionary<string, object> jsonData;
 
 	private GameType string2GameType(string type) {
 		if (type == "sng") {
@@ -870,8 +839,6 @@ sealed public class GameData {
 			AuditCD.OnNext(0);
 			GameData.Shared.Rank.Value = 0;
 		}
-
-		GameInfoReady.OnNext(true);
 	}
 
 	public static GameData Shared = new GameData();

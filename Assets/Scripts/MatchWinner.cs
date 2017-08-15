@@ -46,18 +46,19 @@ public class MatchWinner : MonoBehaviour {
         var rank = json.Int("rank");
         var score = json.Int("score");
         var isEnd = json.Int("is_end") == 1;
+        var win = json.Int("win");
 
         this.gameEnd = isEnd;
 
         coinImg.SetActive(score != 0);
-        SharePicBtn.SetActive(score != 0);
+        SharePicBtn.SetActive(score != 0 || win > 0);
 
         var awardText = json.Dict("award").String("award");
 
         if (score > 0) {
             coinNum.text = score.ToString();
         } else if (!string.IsNullOrEmpty(awardText)) {
-            coinNum.text = awardText;
+            coinNum.text = string.Format("恭喜您获得：\n<b><size=60>{0}</size></b>", awardText);
         } else {
             coinNum.text = "调整好状态再来一局吧！";
         }

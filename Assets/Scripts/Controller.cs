@@ -85,16 +85,12 @@ public class Controller : MonoBehaviour {
 	}
 
 	public void load() {
-		var infoShow = false;
-		GameData.Shared.GameInfoReady.Where((ready) => ready && !infoShow).Subscribe((_) => {
-			infoShow = true;
+		MatchSetting();
+		gameReload();
+		registerEvents();
+		setupDealer();
+		setOptions();
 
-            MatchSetting();
-			gameReload();
-			registerEvents();
-			setupDealer();
-			setOptions();
-		}).AddTo(this);
 		
 		#if UNITY_EDITOR
 		#else
@@ -104,8 +100,7 @@ public class Controller : MonoBehaviour {
 
 	public void OnStartClick() {
 		Connect.Shared.Emit(new Dictionary<string, object>(){
-			{"f", "start"},
-            {"for_match", 1},
+			{"f", "start"}
 		}, (data, err) => {
 			if (err == 0) {
 				startButton.SetActive(false);
@@ -118,8 +113,7 @@ public class Controller : MonoBehaviour {
 		SeeLeftCard.SetActive(false);
 
         Connect.Shared.Emit(new Dictionary<string, object>() {
-				{"f", "seecard"},
-                {"for_match", 1},
+				{"f", "seecard"}
         }, (data, err) => {
             if (err != 0)
             {
@@ -224,16 +218,32 @@ public class Controller : MonoBehaviour {
 		go.transform.Find("Value").GetComponent<Text>().text = text;
 	}
 
-	void ipgpsText() {
+	void infoText() {
+		if (GameData.Shared.Type == GameType.MTT) {
+			return ;
+		}
+
 		var ipLimit = GameData.Shared.IPLimit.Value;
 		var gpsLimit = GameData.Shared.GPSLimit.Value;
+		var insurance = GameData.Shared.NeedInsurance.Value;
+
+		var target = gameInfoTexts[1];
 
 		if (ipLimit && gpsLimit) {
-			gameInfoTexts[1].text = "IP 及 GPS 限制";
+			target.text = "IP 及 GPS 限制";
 		} else if (gpsLimit) {
-			gameInfoTexts[1].text = "GPS 限制";
+			target.text = "GPS 限制";
 		} else if (ipLimit) {
-			gameInfoTexts[1].text = "IP 限制";
+			target.text = "IP 限制";
+		} else if (insurance) {
+			target.text = "保险模式";
+		} else {
+			target.text = "";
+		}
+
+		if (ipLimit || gpsLimit) {
+			var msg = insurance ? "保险模式" : "";
+			gameInfoTexts[2].text = msg; 
 		}
 	}
 
@@ -340,15 +350,9 @@ public class Controller : MonoBehaviour {
 		setBBText();
 	}
 
-	private bool registered = false;
+	private bool requesting = false;
 
 	private void registerEvents() {
-		if (registered) {
-			return ;
-		}
-
-		registered = true;
-
 		GameData.Shared.LeftTime.Subscribe((value) => {
 			if (!GameData.Shared.GameStarted) {
 				setText(TimeLeftGo, "未开始");
@@ -445,11 +449,19 @@ public class Controller : MonoBehaviour {
             em.GetComponent<Emoticon>().Init(fromSeatPos, toSeat, isToMe);
         }).AddTo(this);
 
-		Dictionary<string, Transform> expressCache = new Dictionary<string, Transform>(){};
+		var expressions = new Dictionary<string, Transform>();
         RxSubjects.Expression.Subscribe((e) => {
-            var expressionName = e.Data.String("expression");
+			var expressionName = e.Data.String("expression");
             var uid = e.Data.String("uid");
+
+			if (expressions.ContainsKey(uid)) {
+				PoolMan.Despawn(expressions[uid]);
+				expressions.Remove(uid);
+			}
+            
             var expression = PoolMan.Spawn("Expression");
+			expressions[uid] = expression; // 保存起来
+
 			Transform parent;
 
             if (uid == GameData.Shared.Uid)
@@ -477,15 +489,9 @@ public class Controller : MonoBehaviour {
                 parent = aimSeat.GetComponentInChildren<PokerPlayer.PlayerOppo>().transform;
             }
 
-			// 删除上一个
-			if (expressCache.ContainsKey(uid)) {
-				var exp = expressCache[uid];
-				PoolMan.Despawn(exp);
-				expressCache.Remove(uid);
-			}
-
-            expression.GetComponent<Expression>().SetTrigger(expressionName, parent);
-			expressCache.Add(uid, expression);
+            expression.GetComponent<Expression>().SetTrigger(expressionName, parent, () => {
+				expressions.Remove(uid);
+			});
         }).AddTo(this);
 
 		RxSubjects.MatchLook.Subscribe((e) => {
@@ -612,6 +618,8 @@ public class Controller : MonoBehaviour {
 
 			GameData.Shared.BB = bb;
 			GameData.Shared.LeftTime.Value = cd;
+			GameData.Shared.Ante.Value = e.Data.Int("ante");
+			setBBText();
 
 			PokerUI.Toast(string.Format("盲注已升至{0}/{1}", bb / 2, bb));			
 
@@ -715,11 +723,46 @@ public class Controller : MonoBehaviour {
 					return ;
 				}
 
-				GameData.Shared.Room.Value = e.Data.String("data");
-				GameData.Shared.IsMatchState = false;
-				Connect.Shared.EnterGame();
+				var roomId = e.Data.String("data");
+				Connect.Shared.Enter(roomId, () => {
+					getRoomEnter();
+				});			
 			}
 		}).AddTo(this);
+
+			// Connect.Shared.Enter(GameData.Shared.Room.Value, () => {
+			// 	getRoomEnter();
+			// });	
+	}
+
+	private void getRoomEnter() {
+		if (requesting) {
+			return ;
+		}
+
+		if (GameData.Shared.Type != GameType.MTT || GameData.Shared.Players.Count > 0) {
+			return ;
+		}
+
+		requesting = true;
+
+		Connect.Shared.Emit(new Dictionary<string, object> {
+			{"f", "getroom"},
+			{"for_match", "1"}
+		}, (data, err) => {
+			requesting = false;
+
+			var roomid = data.String("roomid");
+			if (string.IsNullOrEmpty(roomid)) {
+				// PokerUI.Toast("房间已合并");
+				return ;
+			}
+
+			Connect.Shared.Enter(roomid);	
+		}, () => {
+			// PokerUI.Toast("服务器连接超时");
+			requesting = false;
+		});
 	}
 
 	private void subsPlayer() {
@@ -785,18 +828,16 @@ public class Controller : MonoBehaviour {
 			PokerUI.Toast("房主提前结束牌局");	
 		}).AddTo(this);
 
-		GameData.Shared.IPLimit.Where((flag) => flag).Subscribe((_) => {
-			ipgpsText();
+		GameData.Shared.IPLimit.Subscribe((_) => {
+			infoText();
 		}).AddTo(this);
 
-		GameData.Shared.GPSLimit.Where((flag) => flag).Subscribe((_) => {
-			ipgpsText();
+		GameData.Shared.GPSLimit.Subscribe((_) => {
+			infoText();
 		}).AddTo(this);
 
-		GameData.Shared.NeedInsurance.Subscribe((flag) => {
-			if (flag) {
-				gameInfoTexts[2].text = "保险模式";
-			}
+		GameData.Shared.NeedInsurance.Subscribe((_) => {
+			infoText();
 		}).AddTo(this);
 
 		GameData.Shared.RoomName.Subscribe((name) => {
@@ -855,6 +896,9 @@ public class Controller : MonoBehaviour {
 			} else if (value == 10) {
 				PauseGame.SetActive(true);
 				text.text = "中场休息5分钟";
+			} else if (value == 15) {
+				PauseGame.SetActive(true);
+				text.text = "决赛等待中";
 			} else {
 				PauseGame.SetActive(false);
 			}

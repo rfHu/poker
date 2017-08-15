@@ -82,7 +82,7 @@ public sealed class Connect  {
 		_.Log("Connect Error");
 	}
 
-	public void EnterGame() {
+	public void EnterGame(Action cb = null) {
 		Dictionary<string, object> data;
 
 		if (GameData.Shared.IsMatchState && !string.IsNullOrEmpty(GameData.Shared.MatchID)) {
@@ -109,6 +109,10 @@ public sealed class Connect  {
 			}
 
 			RxSubjects.Connecting.OnNext(false);
+
+			if (cb != null) {
+				cb();
+			}
 		}, () => {
 			// PokerUI.DisAlert("连接服务器超时");
 		});
@@ -181,6 +185,12 @@ public sealed class Connect  {
 				success(data, err);
 			});
 		}
+	}
+
+	public void Enter(string roomId, Action cb = null) {
+		GameData.Shared.Room.Value = roomId;	
+		GameData.Shared.IsMatchState = false;
+		Connect.Shared.EnterGame(cb);
 	}
 
 	public void Close(Action callback = null) {
