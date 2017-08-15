@@ -213,8 +213,7 @@ namespace PokerPlayer {
 
 	public void BackGame() {
 		Connect.Shared.Emit(new Dictionary<string, object>{
-			{"f", "ready"},
-			{"for_match", GameData.Shared.ForMatch}
+			{"f", "ready"}
 		}, (_) => {
 			var player = GameData.Shared.GetMyPlayer();
 			if (player.IsValid()) {

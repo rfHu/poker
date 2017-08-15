@@ -100,8 +100,7 @@ public class Controller : MonoBehaviour {
 
 	public void OnStartClick() {
 		Connect.Shared.Emit(new Dictionary<string, object>(){
-			{"f", "start"},
-            {"for_match", 1},
+			{"f", "start"}
 		}, (data, err) => {
 			if (err == 0) {
 				startButton.SetActive(false);
@@ -114,8 +113,7 @@ public class Controller : MonoBehaviour {
 		SeeLeftCard.SetActive(false);
 
         Connect.Shared.Emit(new Dictionary<string, object>() {
-				{"f", "seecard"},
-                {"for_match", 1},
+				{"f", "seecard"}
         }, (data, err) => {
             if (err != 0)
             {
