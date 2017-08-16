@@ -798,7 +798,7 @@ sealed public class GameData {
 		StartTime = _.DateTimeFromTimeStamp(startTs);
 		// 游戏是否已开始
 		GameStarted = startTs != 0;
-		Paused.OnNext(json.Int("is_pause") == 0 ? 0 : 1);
+		Paused.OnNext(json.Int("is_pause"));
 		
 		// 删除公共牌重新添加
 		var cards = json.IL("shared_cards");

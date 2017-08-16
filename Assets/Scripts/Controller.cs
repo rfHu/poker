@@ -91,6 +91,9 @@ public class Controller : MonoBehaviour {
 		setupDealer();
 		setOptions();
 
+		if (!GameData.Shared.GameStarted) {
+			setNotStarted();
+		}
 		
 		#if UNITY_EDITOR
 		#else
@@ -555,6 +558,7 @@ public class Controller : MonoBehaviour {
 
         RxSubjects.GameStart.Subscribe((e) => {
 			gameReload();
+			PauseGame.SetActive(false);
         }).AddTo(this);
 
 		RxSubjects.Look.Subscribe((e) => {
@@ -886,27 +890,22 @@ public class Controller : MonoBehaviour {
 		}).AddTo(this);
 
 		GameData.Shared.Paused.Subscribe((pause) => {
-			if (GameData.Shared.Type == GameType.MTT) {
-				return ;
-			}
-
-			if (!GameData.Shared.GameStarted) {
-				setNotStarted();
-				return ;
-			}
-
 			// 服务器升级
 			if (pause == 5) {
 				PokerUI.DisAlert("服务器升级中…");
 				return ;
 			} 
+			
+			if (GameData.Shared.IsMatch()) {
+				return ;
+			}
 
-			if (pause > 0 && !GameData.Shared.InGame) {
+			if (GameData.Shared.InGame || pause != 2) {
+				PauseGame.SetActive(false);
+			} else {
 				PauseGame.transform.Find("Text").GetComponent<Text>().text = "房主已暂停游戏";
 				PauseGame.SetActive(true);
-			} else {
-				PauseGame.SetActive(false);
-			}	
+			}
 		}).AddTo(this);
 
 		RxSubjects.Pausing.Subscribe((e) => {
