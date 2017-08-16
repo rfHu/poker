@@ -902,24 +902,25 @@ public class GameSetting {
 	// 设置
 	private static string tagStr = "persist.txt?tag=";
 
-	private static bool getValue(string tag) {
-		tag = tagStr + tag;
+    private static void setValue<T>(T value, string tag)
+    {
+        ES2.Save(value, tagStr + tag);
+    }
 
-		if (ES2.Exists(tag))
-		{
-			return ES2.Load<bool>(tag);
-		}
-		return false;	
-	}
-
-	private static void setValue(bool value, string tag) {
-		ES2.Save(value, tagStr + tag);	
-	}
+    public static T getValue<T>(string tag) 
+    {
+        tag = tagStr + tag;
+        if (ES2.Exists(tag)) 
+        {
+            return ES2.Load<T>(tag);
+        }
+        return default(T);
+    }
 
     // 语音设置
     public static bool talkSoundClose {
         get {
-			return getValue("talkSound");
+			return getValue<bool>("talkSound");
         }
 
         set {
@@ -930,7 +931,7 @@ public class GameSetting {
     //游戏声音
 	public static bool muted {
 		get {
-			return getValue("mute");	
+			return getValue<bool>("mute");	
 		}
 
 		set {
@@ -942,7 +943,7 @@ public class GameSetting {
     public static bool chatBubbleClose {
         get
         {
-			return getValue("chatBubble");
+			return getValue<bool>("chatBubble");
         }
 
         set
@@ -955,12 +956,40 @@ public class GameSetting {
     public static bool emoticonClose{
         get
         {
-			return getValue("emoticonClose");
+			return getValue<bool>("emoticonClose");
         }
 
         set
         {
             setValue(value, "emoticonClose");
+        }
+    }
+
+    //卡牌颜色
+    public static int cardColor
+    {
+        get 
+        {
+            return getValue<int>("cardColor");
+        }
+
+        set 
+        {
+            setValue(value, "cardColor");
+        }
+    }
+
+    //背景画面
+    public static int bgColor 
+    {
+        get 
+        {
+            return getValue<int>("bgColor");
+        }
+
+        set 
+        {
+            setValue(value, "bgColor");
         }
     }
 }

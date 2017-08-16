@@ -58,6 +58,8 @@ public class Controller : MonoBehaviour {
 
 	public Camera FXCam;
 
+    public Image BackGround;
+
 	void Awake () {
 		ObjectsPool.Init();
 		MaterialUI.DialogManager.SetParentCanvas(G.MaterialCvs);
