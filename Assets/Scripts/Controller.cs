@@ -865,6 +865,10 @@ public class Controller : MonoBehaviour {
 		}).AddTo(this);
 
 		GameData.MatchData.MatchRoomStatus.Subscribe((value) => {
+			if (GameData.Shared.Type != GameType.MTT) {
+				return ;
+			}
+
 			var text = PauseGame.transform.Find("Text").GetComponent<Text>();
 
 			if (value == 5) {
