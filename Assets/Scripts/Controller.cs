@@ -227,23 +227,24 @@ public class Controller : MonoBehaviour {
 		var gpsLimit = GameData.Shared.GPSLimit.Value;
 		var insurance = GameData.Shared.NeedInsurance.Value;
 
-		var target = gameInfoTexts[1];
+		var t1 = gameInfoTexts[1];
+		var t2 = gameInfoTexts[2];
+
+		t1.text = "";
+		t2.text = "";
 
 		if (ipLimit && gpsLimit) {
-			target.text = "IP 及 GPS 限制";
+			t1.text = "IP 及 GPS 限制";
 		} else if (gpsLimit) {
-			target.text = "GPS 限制";
+			t1.text = "GPS 限制";
 		} else if (ipLimit) {
-			target.text = "IP 限制";
+			t1.text = "IP 限制";
 		} else if (insurance) {
-			target.text = "保险模式";
-		} else {
-			target.text = "";
-		}
+			t1.text = "保险模式";
+		} 
 
-		if (ipLimit || gpsLimit) {
-			var msg = insurance ? "保险模式" : "";
-			gameInfoTexts[2].text = msg; 
+		if ((ipLimit || gpsLimit) && insurance) {
+			t2.text = "保险模式"; 
 		}
 	}
 
@@ -863,6 +864,27 @@ public class Controller : MonoBehaviour {
 			gameInfoTexts[2].text = "";
 		}).AddTo(this);
 
+		GameData.MatchData.MatchRoomStatus.Subscribe((value) => {
+			if (GameData.Shared.Type != GameType.MTT) {
+				return ;
+			}
+
+			var text = PauseGame.transform.Find("Text").GetComponent<Text>();
+
+			if (value == 5) {
+				PauseGame.SetActive(true);
+				text.text = "等待全场同步发牌";
+			} else if (value == 10) {
+				PauseGame.SetActive(true);
+				text.text = "中场休息5分钟";
+			} else if (value == 15) {
+				PauseGame.SetActive(true);
+				text.text = "决赛等待中";
+			} else {
+				PauseGame.SetActive(false);
+			}
+		}).AddTo(this);
+
 		GameData.Shared.Paused.Subscribe((pause) => {
 			if (GameData.Shared.Type == GameType.MTT) {
 				return ;
@@ -885,23 +907,6 @@ public class Controller : MonoBehaviour {
 			} else {
 				PauseGame.SetActive(false);
 			}	
-		}).AddTo(this);
-
-		GameData.MatchData.MatchRoomStatus.Subscribe((value) => {
-			var text = PauseGame.transform.Find("Text").GetComponent<Text>();
-
-			if (value == 5) {
-				PauseGame.SetActive(true);
-				text.text = "等待全场同步发牌";
-			} else if (value == 10) {
-				PauseGame.SetActive(true);
-				text.text = "中场休息5分钟";
-			} else if (value == 15) {
-				PauseGame.SetActive(true);
-				text.text = "决赛等待中";
-			} else {
-				PauseGame.SetActive(false);
-			}
 		}).AddTo(this);
 
 		RxSubjects.Pausing.Subscribe((e) => {

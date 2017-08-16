@@ -28,8 +28,12 @@ public sealed class Connect  {
 		options.ConnectWith = TransportTypes.WebSocket;
 
 		_.Log("Unity: Socket URL=" + Connect.Domain);
-
 		manager = new SocketManager(new Uri(Connect.Domain + "/socket.io/"), options);
+	}
+
+	private void open() {
+		manager.Socket.Off();
+
 		manager.Socket.On("connect", onConnect);
 		manager.Socket.On("reconnect", onConnect);
 
@@ -41,7 +45,10 @@ public sealed class Connect  {
 		manager.Socket.On("reconnect_failed", onDisconnect);
 		// manager.Socket.On("error", onDisconnect);
 
-		manager.Open();	
+		subsPush();
+		subsRpcRet();
+
+		manager.Open();
 	}
 
 	private void onConnect(Socket socket, Packet packet, params object[] args) {
@@ -242,16 +249,8 @@ public sealed class Connect  {
 
 	private static Connect instance;
 
-	static public void Setup() {
-		// 强制断开连接
-		if (instance != null) {
-			_.Log("Unity: 尝试建立新连接，强制断开");
-			instance.close();
-		}
-
-		instance = new Connect();
-
-		instance.manager.Socket.On("rpc_ret", (socket, packet, args) => {
+	private void subsRpcRet() {
+		manager.Socket.On("rpc_ret", (socket, packet, args) => {
 			if (args.Length == 0) {
 				return ;
 			}
@@ -290,8 +289,10 @@ public sealed class Connect  {
 				}
 			}
 		});
+	}
 
-		instance.manager.Socket.On("push", (socket, packet, args) => {
+	private void subsPush() {
+		manager.Socket.On("push", (socket, packet, args) => {
 			if (args.Length == 0) {
 				return ;
 			}
@@ -489,11 +490,26 @@ public sealed class Connect  {
 		});
 	}
 
+	static public void Setup() {
+		if (string.IsNullOrEmpty(GameData.Shared.Sid)) {
+			return ;
+		}
+
+		if (string.IsNullOrEmpty(GameData.Shared.MatchID) && string.IsNullOrEmpty(GameData.Shared.Room.Value)) {
+			return ;
+		}
+
+		if (instance == null) {
+			instance = new Connect();
+		}
+
+		instance.open();
+	}
+
 	// 强制关闭
 	private void close() {
-		manager.Close();
 		manager.Socket.Off();
-		instance = null;
+		manager.Close();
 	}
 }
 
