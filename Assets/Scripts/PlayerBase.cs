@@ -17,11 +17,21 @@ namespace PokerPlayer {
 
         public static string CurrentUid; 
 
+		public bool IsMyTurn {
+			get {
+				return CurrentUid == player.Uid;
+			}
+		}
+
         public Avatar Avt;
         public SpkTextGo SpkText;
 	    public GameObject Volume;
 	    public Text ScoreLabel;
-        private GameObject ScoreParent;
+        private GameObject ScoreParent {
+			get {
+				return ScoreLabel.transform.parent.gameObject;
+			}
+		}
         public PlayerActGo PlayerAct;
         public Text StateLabel;
 	    public GameObject HandGo;
@@ -73,7 +83,6 @@ namespace PokerPlayer {
 
         void Awake() {
             WinCq = WinNumber.transform.parent;
-            ScoreParent = ScoreLabel.transform.parent.gameObject;
             GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
         }
 
@@ -107,6 +116,7 @@ namespace PokerPlayer {
             lastState = ActionState.None;
             WinCq.gameObject.SetActive(false);
             ScoreParent.SetActive(true);
+			ScoreParent.GetComponent<CanvasGroup>().alpha = 1;
             PlayerAct.SetActive(false, false);
             Avt.GetComponent<CanvasGroup>().alpha = 1;
             Circle.gameObject.SetActive(true);
@@ -251,6 +261,10 @@ namespace PokerPlayer {
             }).AddTo(this);
 
             player.LastAct.Subscribe((act) => {
+				if (IsMyTurn) {
+					return ;
+				}
+
                 var actState = act.ToActionEnum();
 
                 if (actState == ActionState.None) {
@@ -474,7 +488,8 @@ namespace PokerPlayer {
         }
 
         public void SetFolded() {
-		    Avt.GetComponent<CanvasGroup>().alpha = 0.5f;
+		    Avt.GetComponent<CanvasGroup>().alpha = 0.4f;
+			ScoreParent.GetComponent<CanvasGroup>().alpha = 0.4f;
         }
 
         static public void SetInParent(Transform target, Transform parent) {
