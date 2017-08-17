@@ -19,12 +19,18 @@ public class RecallPage : MonoBehaviour {
     public GameObject InsuranceGo;
     public GameObject Win27Go;
 
+    public Slider HandSlider;
+    public Toggle WholeToggle;
+    public Toggle SelfToggle;
+
 	private int totalNumber;
 	private int currentNumber;
     private string favhand_id;
 
     private bool requesting = false;
     private string roomID;
+
+    private bool self = false;
 
     void Awake()
     {
@@ -39,6 +45,15 @@ public class RecallPage : MonoBehaviour {
                 PoolMan.Despawn(transform);            
             }
         }).AddTo(this);
+
+        HandSlider.onValueChanged.AddListener((value) => {
+            Current.text = value.ToString();
+        });
+
+        SelfToggle.onValueChanged.AddListener((isOn) => {
+            self = isOn;
+            request();                
+        });
     }
 
     void OnSpawned() {
@@ -61,10 +76,11 @@ public class RecallPage : MonoBehaviour {
 	public void request(int num = 0) {
         if (requesting) {
             return ;
-        } 
+        }
 
-		var dict = new Dictionary<string, object>() {
-			{"handid", num}
+        var dict = new Dictionary<string, object>() {
+			{"handid", num},
+            {"self", self? 1 : 0},
 		};
 
 		Connect.Shared.Emit(
@@ -85,15 +101,13 @@ public class RecallPage : MonoBehaviour {
 	}
 
 	private void reload(Dictionary<string, object> ret) {
-		totalNumber = ret.Int("total_hand");
-		currentNumber = ret.Int("cur_hand");
-
+		HandSlider.maxValue = totalNumber = ret.Int("total_hand");
+		HandSlider.value = currentNumber = ret.Int("cur_hand");
+		Total.text = string.Format("/ {0}", totalNumber);
 		Current.text = currentNumber.ToString();
-		Total.text =  string.Format("/ {0}", totalNumber);
 
         var insuValue = ret.Dict("insurance").Int("score");
         var win27Value = ret.Int("award_27");
-
         SetPublicValue(insuValue, InsuranceGo);
         SetPublicValue(win27Value, Win27Go);
 
@@ -222,6 +236,12 @@ public class RecallPage : MonoBehaviour {
 
     public void ShareRecord() {
         Commander.Shared.ShareRecord(currentNumber);
+    }
+
+    public void OnPointUpSlider() 
+    {
+        request((int)HandSlider.value);
+        currentNumber = (int)HandSlider.value;
     }
 }
 
