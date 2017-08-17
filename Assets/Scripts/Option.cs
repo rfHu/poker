@@ -15,6 +15,9 @@ public class Option : MonoBehaviour {
     Color NormalColor = MaterialUI.MaterialColor.cyanA200;
     Color DisableColor = MaterialUI.MaterialColor.grey400;
 
+    int PokerColType = GameSetting.cardColor;
+    int BGColType = GameSetting.bgColor;
+
     void Awake() 
     {
         foreach (var toggle in Toggles)
@@ -26,6 +29,9 @@ public class Option : MonoBehaviour {
             });
         }
 
+        PokerCol[PokerColType].isOn = true;
+        BgCol[BGColType].isOn = true;
+
         foreach (var item in PokerCol)
         {
             item.onValueChanged.AddListener((isOn) =>
@@ -33,6 +39,7 @@ public class Option : MonoBehaviour {
                 if (isOn)
                 {
                     GameSetting.cardColor = int.Parse(item.name);
+                    RxSubjects.CardStyleChange.OnNext(0);
                 }
             });
         }

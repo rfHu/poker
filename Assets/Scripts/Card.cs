@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System;
 using DarkTonic.MasterAudio;
 using MaterialUI;
+using UniRx;
 
 public class Card : MonoBehaviour {
 	public Sprite Face;
@@ -12,6 +13,7 @@ public class Card : MonoBehaviour {
     public VectorImage NumberPic;
     public VectorImage SuitPic;
     public Image FigurePic;
+    public Sprite[] Figures;
 	private int _index = -1;
 
 	public AnimationCurve scaleCurve;
@@ -21,6 +23,11 @@ public class Card : MonoBehaviour {
 	private bool hasReShow = false;
 
 	void Awake() {
+
+        RxSubjects.CardStyleChange.Subscribe((num) => {
+            SetCardFace(_index, GetComponent<Image>());
+        }).AddTo(this);
+
 		var img = GetComponent<Image>();
 		img.sprite = CardBack;
 
@@ -50,10 +57,16 @@ public class Card : MonoBehaviour {
 
     private void SetCardFace(int index, Image image)
     {
+        //消除原图
+        foreach (Transform child in transform)
+        {
+            child.gameObject.SetActive(false);
+        }
+
         image.sprite = Face;
         int NumSub = (index + 1) % 13;
         NumSub = NumSub == 0 ? 13 : NumSub;
-        int SuitSub = (index + 1) / 13;
+        int SuitSub = index / 13;
 
         NumberPic.gameObject.SetActive(true);
         NumberPic.vectorImageData = CustomIconHelper.GetIcon("poker_" + NumSub).vectorImageData;
@@ -62,6 +75,33 @@ public class Card : MonoBehaviour {
         {
             FigurePic.gameObject.SetActive(true);
             int figureSub = NumSub + SuitSub * 3 - 11;
+            FigurePic.sprite = Figures[figureSub];
+        }
+        else 
+        {
+            SuitPic.gameObject.SetActive(true);
+            NumberPic.vectorImageData = CustomIconHelper.GetIcon("pattern_" + SuitSub).vectorImageData;
+        }
+
+        //设置颜色
+        if (GameSetting.cardColor == 0)
+        {
+            image.color = Color.white;
+            NumberPic.color = SuitPic.color = SuitSub % 2 == 0 ? Color.black : Color.red;
+        }
+        else 
+        {
+            string[] colors = new string[4] { "#000000", "#ff0000", "#00a221", "#0059ff" };
+            if (GameSetting.cardColor == 1)
+            {
+                image.color = Color.white;
+                NumberPic.color = SuitPic.color = _.HexColor(colors[SuitSub]);
+            }
+            else if (GameSetting.cardColor == 2) 
+            {
+                image.color = _.HexColor(colors[SuitSub]);
+                NumberPic.color = SuitPic.color = Color.white;
+            }
         }
     }
 
@@ -127,7 +167,7 @@ public class Card : MonoBehaviour {
 			rectTrans.localScale = vector;
 
 			if (time >= 0.5) {
-				image.sprite = Faces[index];
+                SetCardFace(index, image);
 			}
 
 			yield return new WaitForFixedUpdate();
@@ -143,6 +183,10 @@ public class Card : MonoBehaviour {
 	public void Turnback() {
 		_index = -1;
 		GetComponent<Image>().sprite = CardBack;
+        foreach (Transform child in transform)
+        {
+            child.gameObject.SetActive(false);
+        }
 		ReColor();
 	}
 
