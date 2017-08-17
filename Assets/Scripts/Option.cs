@@ -8,6 +8,9 @@ public class Option : MonoBehaviour {
 
     public Toggle[] Toggles;
     //0.聊天 1.游戏 2，文字 3.动态
+    public Toggle[] PokerCol;
+    public Toggle[] BgCol;
+
 
     Color NormalColor = MaterialUI.MaterialColor.cyanA200;
     Color DisableColor = MaterialUI.MaterialColor.grey400;
@@ -20,6 +23,29 @@ public class Option : MonoBehaviour {
             {
                 Text text = toggle.transform.parent.Find("Text (1)").GetComponent<Text>();
                 OnToggleChange(text, isOn);
+            });
+        }
+
+        foreach (var item in PokerCol)
+        {
+            item.onValueChanged.AddListener((isOn) =>
+            {
+                if (isOn)
+                {
+                    GameSetting.cardColor = int.Parse(item.name);
+                }
+            });
+        }
+
+
+        foreach (var item in BgCol)
+        {
+            item.onValueChanged.AddListener((isOn) =>
+            {
+                if (isOn)
+                {
+                    GameSetting.bgColor = int.Parse(item.name);
+                }
             });
         }
 
