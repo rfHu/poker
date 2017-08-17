@@ -39,7 +39,7 @@ public class Option : MonoBehaviour {
                 if (isOn)
                 {
                     GameSetting.cardColor = int.Parse(item.name);
-                    RxSubjects.CardStyleChange.OnNext(0);
+                    PokerColType = int.Parse(item.name);
                 }
             });
         }
@@ -49,10 +49,6 @@ public class Option : MonoBehaviour {
         {
             item.onValueChanged.AddListener((isOn) =>
             {
-                if (isOn)
-                {
-                    GameSetting.bgColor = int.Parse(item.name);
-                }
             });
         }
 
@@ -60,38 +56,6 @@ public class Option : MonoBehaviour {
         Toggles[1].isOn = !GameSetting.muted;
         Toggles[2].isOn = !GameSetting.chatBubbleClose;
         Toggles[3].isOn = !GameSetting.emoticonClose;
-
-        Toggles[0].onValueChanged.AddListener((isOn) => 
-        {
-            Commander.Shared.OptionToggle(isOn,2);
-            GameSetting.talkSoundClose = !isOn;
-        });
-
-        Toggles[1].onValueChanged.AddListener((isOn) => 
-        {
-            if (GameSetting.muted)
-            {
-                MasterAudio.UnmuteEverything();
-            }
-            else
-            {
-                MasterAudio.MuteEverything();
-            }
-
-            GameSetting.muted = !isOn;
-        });
-
-        Toggles[2].onValueChanged.AddListener((isOn) => 
-        {
-            Commander.Shared.OptionToggle(isOn, 1);
-            GameSetting.chatBubbleClose = !isOn;
-        });
-
-        Toggles[3].onValueChanged.AddListener((isOn) => 
-        {
-            GameSetting.emoticonClose = !isOn;
-        });
-
     }
 
     public void OnToggleChange(Text text, bool isOn) 
@@ -106,5 +70,49 @@ public class Option : MonoBehaviour {
             text.text = "关";
             text.color = DisableColor;
         }
+    }
+
+    public void Enter() 
+    {
+        if (GameSetting.talkSoundClose == Toggles[0].isOn)
+        {
+            Commander.Shared.OptionToggle(Toggles[0].isOn, 2);
+            GameSetting.talkSoundClose = !Toggles[0].isOn;
+        }
+
+        if (GameSetting.muted == Toggles[1].isOn)
+        {
+            if (GameSetting.muted)
+            {
+                MasterAudio.UnmuteEverything();
+            }
+            else
+            {
+                MasterAudio.MuteEverything();
+            }
+
+            GameSetting.muted = !Toggles[1].isOn;
+        }
+
+        if (GameSetting.chatBubbleClose == Toggles[2].isOn)
+        {
+            Commander.Shared.OptionToggle(Toggles[2].isOn, 1);
+            GameSetting.chatBubbleClose = !Toggles[2].isOn;
+        }
+
+        GameSetting.emoticonClose = !Toggles[3].isOn;
+
+        if (GameSetting.cardColor != PokerColType)
+        {
+            GameSetting.cardColor = PokerColType;
+            RxSubjects.CardStyleChange.OnNext(0);
+        }
+
+        Exit();
+    }
+
+    public void Exit() 
+    {
+        GetComponent<DOPopup>().Close();
     }
 }
