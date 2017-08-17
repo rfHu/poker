@@ -102,6 +102,7 @@ public class RecallPage : MonoBehaviour {
 
 	private void reload(Dictionary<string, object> ret) {
 		HandSlider.maxValue = totalNumber = ret.Int("total_hand");
+        HandSlider.minValue = totalNumber == 0 ? 0 : 1;
 		HandSlider.value = currentNumber = ret.Int("cur_hand");
 		Total.text = string.Format("/ {0}", totalNumber);
 		Current.text = currentNumber.ToString();

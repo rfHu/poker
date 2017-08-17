@@ -6,8 +6,10 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class GameLoading : MonoBehaviour {
+
 	// Use this for initialization
 	void Awake () {
+
 		Application.targetFrameRate = 60;
 
 		var external = External.Instance;
@@ -16,7 +18,7 @@ public class GameLoading : MonoBehaviour {
 			external.SetSocket("https://socket.dev.poker.top");
 			external.SetProxy("http://localhost:8888");
 
-            var rid = "59955aa18124ac6214349abc";
+            var rid = "5995650ad1c22f6602fab19f";
             var sid = "s%3AiJsR9ijiKjgkIHyYMHZPJ4Jre4nOFitm.un31mqALiRUDPpx1bsZEZmwJVYmHYpav4nRZKMzOn%2FM";
 
 			// 外网登录态
