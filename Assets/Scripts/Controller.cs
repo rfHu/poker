@@ -898,7 +898,7 @@ public class Controller : MonoBehaviour {
 				return ;
 			} 
 			
-			if (GameData.Shared.IsMatch()) {
+			if (GameData.Shared.IsMatch() || !GameData.Shared.GameStarted) {
 				return ;
 			}
 
