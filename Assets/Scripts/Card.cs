@@ -4,10 +4,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using DarkTonic.MasterAudio;
+using MaterialUI;
 
 public class Card : MonoBehaviour {
-	public Sprite[] Faces;
+	public Sprite Face;
 	public Sprite CardBack;
+    public VectorImage NumberPic;
+    public VectorImage SuitPic;
+    public Image FigurePic;
 	private int _index = -1;
 
 	public AnimationCurve scaleCurve;
@@ -37,11 +41,29 @@ public class Card : MonoBehaviour {
 		if (anim && diffIndex) { 
 			StartCoroutine(flipCard(index, complete));
 		} else {
-			image.sprite = Faces[index];
+            SetCardFace(index, image);
+
 			var rect = image.GetComponent<RectTransform>();
 			rect.localScale = new Vector2(1, 1);
 		}
 	}
+
+    private void SetCardFace(int index, Image image)
+    {
+        image.sprite = Face;
+        int NumSub = (index + 1) % 13;
+        NumSub = NumSub == 0 ? 13 : NumSub;
+        int SuitSub = (index + 1) / 13;
+
+        NumberPic.gameObject.SetActive(true);
+        NumberPic.vectorImageData = CustomIconHelper.GetIcon("poker_" + NumSub).vectorImageData;
+
+        if (GameSetting.cardColor == 0 && NumSub > 10)
+        {
+            FigurePic.gameObject.SetActive(true);
+            int figureSub = NumSub + SuitSub * 3 - 11;
+        }
+    }
 
 	public void SetSize(Vector2 size) {
 		var rectTrans = GetComponent<RectTransform>();
