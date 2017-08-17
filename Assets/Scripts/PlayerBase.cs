@@ -17,6 +17,12 @@ namespace PokerPlayer {
 
         public static string CurrentUid; 
 
+		public bool IsMyTurn {
+			get {
+				return CurrentUid == player.Uid;
+			}
+		}
+
         public Avatar Avt;
         public SpkTextGo SpkText;
 	    public GameObject Volume;
@@ -255,6 +261,10 @@ namespace PokerPlayer {
             }).AddTo(this);
 
             player.LastAct.Subscribe((act) => {
+				if (IsMyTurn) {
+					return ;
+				}
+
                 var actState = act.ToActionEnum();
 
                 if (actState == ActionState.None) {
