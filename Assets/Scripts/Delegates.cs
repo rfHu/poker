@@ -74,6 +74,7 @@ public class RxSubjects {
 	public static Subject<GainChip> GainChip = new Subject<GainChip>();
 	public static Subject<int> MTTChangeTabIndex = new Subject<int>();
     public static Subject<int> CardStyleChange = new Subject<int>();
+    public static Subject<int> BGChange = new Subject<int>();
 }
 
 public struct GainChip {

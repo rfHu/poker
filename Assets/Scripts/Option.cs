@@ -111,6 +111,7 @@ public class Option : MonoBehaviour {
         if (GameSetting.bgColor != BGColType)
         {
             GameSetting.bgColor = BGColType;
+            RxSubjects.BGChange.OnNext(0);
         }
 
         Exit();

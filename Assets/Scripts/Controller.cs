@@ -285,6 +285,11 @@ public class Controller : MonoBehaviour {
 		}
         Commander.Shared.OptionToggle(!GameSetting.talkSoundClose, 2);
         Commander.Shared.OptionToggle(!GameSetting.chatBubbleClose, 1);
+
+        if (GameSetting.bgColor != 0)
+        {
+            RxSubjects.BGChange.OnNext(0);
+        }
 	}
 
 	private void setupSeats(int numberOfPlayers) {
@@ -736,6 +741,17 @@ public class Controller : MonoBehaviour {
 				});			
 			}
 		}).AddTo(this);
+
+        RxSubjects.BGChange.Subscribe((num) => {
+            if (GameSetting.bgColor == 0)
+            {
+                BackGround.sprite = Resources.Load<Sprite>("table");
+            }
+            else 
+            {
+                BackGround.sprite = Resources.Load<Sprite>("table_green");
+            }
+        }).AddTo(this);
 
 			// Connect.Shared.Enter(GameData.Shared.Room.Value, () => {
 			// 	getRoomEnter();
