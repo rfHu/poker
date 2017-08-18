@@ -11,12 +11,15 @@ public class Option : MonoBehaviour {
     public Toggle[] PokerCol;
     public Toggle[] BgCol;
 
+    public Image ShowGBImg;
 
     Color NormalColor = MaterialUI.MaterialColor.cyanA200;
     Color DisableColor = MaterialUI.MaterialColor.grey400;
 
     int PokerColType = GameSetting.cardColor;
     int BGColType = GameSetting.bgColor;
+
+    public Sprite[] bgSprites;
 
     void Awake() 
     {
@@ -29,28 +32,31 @@ public class Option : MonoBehaviour {
             });
         }
 
-        PokerCol[PokerColType].isOn = true;
-        BgCol[BGColType].isOn = true;
-
         foreach (var item in PokerCol)
         {
             item.onValueChanged.AddListener((isOn) =>
             {
                 if (isOn)
                 {
-                    GameSetting.cardColor = int.Parse(item.name);
                     PokerColType = int.Parse(item.name);
                 }
             });
         }
 
-
         foreach (var item in BgCol)
         {
             item.onValueChanged.AddListener((isOn) =>
             {
+                if (isOn)
+                {
+                    var num = int.Parse(item.name);
+                    BGColType = num;
+                    ShowGBImg.sprite = bgSprites[num];
+                }
             });
         }
+        PokerCol[PokerColType].isOn = true;
+        BgCol[BGColType].isOn = true;
 
         Toggles[0].isOn = !GameSetting.talkSoundClose;
         Toggles[1].isOn = !GameSetting.muted;
@@ -106,6 +112,12 @@ public class Option : MonoBehaviour {
         {
             GameSetting.cardColor = PokerColType;
             RxSubjects.CardStyleChange.OnNext(0);
+        }
+
+        if (GameSetting.bgColor != BGColType)
+        {
+            GameSetting.bgColor = BGColType;
+            RxSubjects.BGChange.OnNext(0);
         }
 
         Exit();

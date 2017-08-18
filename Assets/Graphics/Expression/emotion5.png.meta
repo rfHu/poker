@@ -1,14 +1,14 @@
 fileFormatVersion: 2
 guid: 1124b00ec52491143a223cd398a98c79
-timeCreated: 1502347883
+timeCreated: 1503040761
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
     21300000: emotion5_Logy1
     21300002: emotion5_Happy1
-    21300004: emotion5_5
+    21300004: emotion5_Logy5
     21300006: emotion5_6
-    21300008: emotion5_7
+    21300008: emotion5_Logy6
     21300010: emotion5_Kiss1
     21300012: emotion5_10
     21300014: emotion5_Logy3
@@ -141,12 +141,12 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: emotion5_5
+      name: emotion5_Logy5
       rect:
         serializedVersion: 2
         x: 0
         y: 338
-        width: 47
+        width: 109
         height: 37
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -154,26 +154,13 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: emotion5_6
+      name: emotion5_Logy6
       rect:
         serializedVersion: 2
-        x: 63
-        y: 340
-        width: 46
-        height: 35
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: emotion5_7
-      rect:
-        serializedVersion: 2
-        x: 138
-        y: 366
-        width: 104
-        height: 30
+        x: 136
+        y: 363
+        width: 109
+        height: 37
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
