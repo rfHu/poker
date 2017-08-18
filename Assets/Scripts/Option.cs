@@ -11,12 +11,15 @@ public class Option : MonoBehaviour {
     public Toggle[] PokerCol;
     public Toggle[] BgCol;
 
+    public Image ShowGBImg;
 
     Color NormalColor = MaterialUI.MaterialColor.cyanA200;
     Color DisableColor = MaterialUI.MaterialColor.grey400;
 
     int PokerColType = GameSetting.cardColor;
     int BGColType = GameSetting.bgColor;
+
+    public Sprite[] bgSprites;
 
     void Awake() 
     {
@@ -29,9 +32,6 @@ public class Option : MonoBehaviour {
             });
         }
 
-        PokerCol[PokerColType].isOn = true;
-        BgCol[BGColType].isOn = true;
-
         foreach (var item in PokerCol)
         {
             item.onValueChanged.AddListener((isOn) =>
@@ -43,14 +43,20 @@ public class Option : MonoBehaviour {
             });
         }
 
-
         foreach (var item in BgCol)
         {
             item.onValueChanged.AddListener((isOn) =>
             {
-                BGColType = int.Parse(item.name);
+                if (isOn)
+                {
+                    var num = int.Parse(item.name);
+                    BGColType = num;
+                    ShowGBImg.sprite = bgSprites[num];
+                }
             });
         }
+        PokerCol[PokerColType].isOn = true;
+        BgCol[BGColType].isOn = true;
 
         Toggles[0].isOn = !GameSetting.talkSoundClose;
         Toggles[1].isOn = !GameSetting.muted;
