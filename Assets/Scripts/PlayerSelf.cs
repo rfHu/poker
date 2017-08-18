@@ -5,6 +5,7 @@ using System;
 using UniRx;
 using UnityEngine.UI.ProceduralImage;
 using DG.Tweening;
+using System.Linq;
 
 namespace PokerPlayer {
     public class PlayerSelf: MonoBehaviour, PlayerDelegate {
@@ -12,7 +13,14 @@ namespace PokerPlayer {
         public GameObject[] Eyes; 
         public GameObject AutoArea;
         public GameObject[] AutoOperas; 
-        public List<Transform> MyCards;
+        public List<Transform> MyCards {
+			get {
+				return cardContainers.Select(o => o.CardInstance.transform).ToList();
+			}
+		}
+
+		[SerializeField] private List<CardContainer> cardContainers; 
+
 		public Text CardDesc;
 		public GameObject YouWin;
 		public ParticleSystem WinParticle;
@@ -30,6 +38,10 @@ namespace PokerPlayer {
         private bool gameover = false;
 
         public void Init(Player player, Transform parent) {
+			MyCards.ForEach((card) => {
+				card.gameObject.SetActive(false);
+			});		
+
             Base.Init(player, parent.GetComponent<Seat>(), this);
 			PlayerBase.SetInParent(transform, parent);
 

@@ -15,6 +15,8 @@ public class Card : MonoBehaviour {
     public Image FigurePic;
     public Sprite[] Figures;
 	private int _index = -1;
+	[SerializeField]private Image cardBg;
+	[SerializeField]private Transform cardContent;
 
 	public AnimationCurve scaleCurve;
 
@@ -23,13 +25,11 @@ public class Card : MonoBehaviour {
 	private bool hasReShow = false;
 
 	void Awake() {
-
         RxSubjects.CardStyleChange.Subscribe((num) => {
-            SetCardFace(_index, GetComponent<Image>());
+            setCardFace(_index);
         }).AddTo(this);
 
-		var img = GetComponent<Image>();
-		img.sprite = CardBack;
+		cardBg.sprite = CardBack;
 
 		scaleCurve = new AnimationCurve();
 		scaleCurve.AddKey(0, 1);
@@ -42,28 +42,31 @@ public class Card : MonoBehaviour {
 		_index = index;
 		gameObject.SetActive(true);
 
-		var image = GetComponent<Image>();
-		image.enabled = true;
+		cardBg.enabled = true;
 		
 		if (anim && diffIndex) { 
 			StartCoroutine(flipCard(index, complete));
 		} else {
-            SetCardFace(index, image);
+            setCardFace(index);
 
-			var rect = image.GetComponent<RectTransform>();
+			var rect = cardBg.GetComponent<RectTransform>();
 			rect.localScale = new Vector2(1, 1);
 		}
 	}
 
-    private void SetCardFace(int index, Image image)
-    {
-        //消除原图
-        foreach (Transform child in transform)
+	private void hideCardContents() {
+		//消除原图
+        foreach (Transform child in cardContent)
         {
             child.gameObject.SetActive(false);
         }
+	}
 
-        image.sprite = Face;
+    private void setCardFace(int index)
+    {
+		hideCardContents();
+
+       	cardBg.sprite = Face;
         int NumSub = (index + 1) % 13;
         NumSub = NumSub == 0 ? 13 : NumSub;
         int SuitSub = index / 13;
@@ -86,7 +89,7 @@ public class Card : MonoBehaviour {
         //设置颜色
         if (GameSetting.cardColor == 0)
         {
-            image.color = Color.white;
+            cardBg.color = Color.white;
             NumberPic.color = SuitPic.color = SuitSub % 2 == 0 ? Color.black : Color.red;
         }
         else 
@@ -94,28 +97,23 @@ public class Card : MonoBehaviour {
             string[] colors = new string[4] { "#000000", "#ff0000", "#00a221", "#0059ff" };
             if (GameSetting.cardColor == 1)
             {
-                image.color = Color.white;
+                cardBg.color = Color.white;
                 NumberPic.color = SuitPic.color = _.HexColor(colors[SuitSub]);
             }
             else if (GameSetting.cardColor == 2) 
             {
-                image.color = _.HexColor(colors[SuitSub]);
+                cardBg.color = _.HexColor(colors[SuitSub]);
                 NumberPic.color = SuitPic.color = Color.white;
             }
         }
     }
 
-	public void SetSize(Vector2 size) {
-		var rectTrans = GetComponent<RectTransform>();
-		rectTrans.sizeDelta = size;
-	}
-
 	public void Darken() {
-		GetComponent<Image>().color = new Color(150 / 255f ,150 / 255f, 150 / 255f, 1);
+		cardBg.color = new Color(150 / 255f ,150 / 255f, 150 / 255f, 1);
 	}
 
 	public void ReColor() {
-		GetComponent<Image>().color = new Color(1, 1, 1, 1);
+		cardBg.color = new Color(1, 1, 1, 1);
 	}
 
 	public void Show(int index, bool anim = false, Action complete = null) {
@@ -155,8 +153,7 @@ public class Card : MonoBehaviour {
 
 	IEnumerator flipCard(int index, Action complete = null) {
 		float time = 0f;
-		var image = GetComponent<Image>();
-		var rectTrans = GetComponent<RectTransform>();
+		var rectTrans = cardContent.parent.GetComponent<RectTransform>();
 		
 		while(time < 1f) {
 			time = Mathf.Min(time + Time.deltaTime / TurnCardDuration, 1);
@@ -167,7 +164,7 @@ public class Card : MonoBehaviour {
 			rectTrans.localScale = vector;
 
 			if (time >= 0.5) {
-                SetCardFace(index, image);
+                setCardFace(index);
 			}
 
 			yield return new WaitForFixedUpdate();
@@ -180,18 +177,15 @@ public class Card : MonoBehaviour {
 		}
 	}
 
-	public void Turnback() {
+	public void Turnback(bool hide = false) {
 		_index = -1;
-		GetComponent<Image>().sprite = CardBack;
-        foreach (Transform child in transform)
-        {
-            child.gameObject.SetActive(false);
-        }
+		cardBg.sprite = CardBack;
+		hideCardContents();
 		ReColor();
-	}
 
-	public void Hide() {
-		GetComponent<Image>().enabled = false;
+		if (hide) {
+			cardBg.enabled = false;
+		}
 	}
 
 	public static int CardIndex(int number) {
@@ -239,5 +233,29 @@ public class Card : MonoBehaviour {
 		}
 
 		return map[value];
+	}
+
+	static public Vector2 Size = new Vector2(126, 172); 
+
+	static private GameObject prefab; 
+
+	static public Card LoadCard(Transform parent) {
+		if (prefab == null) {
+			prefab = Resources.Load<GameObject>("Prefab/Card");
+		}
+
+		var rect = parent.GetComponent<RectTransform>().rect;
+		var card = GameObject.Instantiate(prefab).GetComponent<Card>();
+		var scale = rect.width / Size.x;
+		var cardTransform = card.GetComponent<RectTransform>();
+
+		Debug.Log(scale);
+
+		cardTransform.localScale = new Vector2(scale, scale);
+		cardTransform.SetParent(parent);
+		parent.SetAsFirstSibling();
+		cardTransform.anchoredPosition = new Vector2(0, 0);
+
+		return card;
 	}
 }
