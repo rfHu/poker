@@ -13,7 +13,16 @@ public class Controller : MonoBehaviour {
 
 	public GameObject startButton;
 
-	public List<GameObject> PublicCards;
+    public List<Transform> PublicCards
+    {
+        get
+        {
+            return PublicCardContainers.Select(o => o.CardInstance.transform).ToList();
+        }
+    }
+    [SerializeField]
+    private List<CardContainer> PublicCardContainers; 
+
 	[SerializeField]private Text[] gameInfoTexts;
 
 	public List<GameObject> Seats;	
@@ -1130,7 +1139,7 @@ public class Controller : MonoBehaviour {
 	}
 
 	void resetAllCards() {
-		foreach(GameObject obj in PublicCards) {
+		foreach(Transform obj in PublicCards) {
 			var card = obj.GetComponent<Card>();
 			card.Turnback(true);
 		}		
