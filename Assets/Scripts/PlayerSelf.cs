@@ -13,9 +13,22 @@ namespace PokerPlayer {
         public GameObject[] Eyes; 
         public GameObject AutoArea;
         public GameObject[] AutoOperas; 
-        public List<Transform> MyCards {
+
+		private Card  card1 {
 			get {
-				return cardContainers.Select(o => o.CardInstance.transform).ToList();
+				return cardContainers[0].CardInstance;
+			}
+		}
+
+		private Card card2 {
+			get {
+				return cardContainers[1].CardInstance;
+			}
+		}
+
+		private GameObject cardParent {
+			get {
+				return card1.transform.parent.gameObject;
 			}
 		}
 
@@ -62,9 +75,11 @@ namespace PokerPlayer {
 			YouWin.GetComponent<CanvasGroup>().alpha = 1;
 			WinParticle.Stop(true);
 			CardDesc.transform.parent.gameObject.SetActive(false);
-			MyCards[0].parent.gameObject.SetActive(false);
-			MyCards[0].GetComponent<Card>().Turnback();
-			MyCards[1].GetComponent<Card>().Turnback();
+
+			cardParent.SetActive(false);
+			card1.Turnback();
+			card2.Turnback();
+
 			OP.Despawn();
 		}
 
@@ -239,8 +254,8 @@ namespace PokerPlayer {
 	}
 
     private void darkenCards() {
-		MyCards[0].GetComponent<Card>().Darken();
-		MyCards[1].GetComponent<Card>().Darken();
+		card1.Darken();
+		card2.Darken();
 	}
 
 	private void showOP(Dictionary<string, object> data, int left, int buyTimeCost = 10) {
@@ -355,25 +370,22 @@ namespace PokerPlayer {
         }
 
 		public void ShowCard(List<int> cards) {
-			MyCards[0].parent.gameObject.SetActive(true);
+			cardParent.SetActive(true);
 
 			if (player.SeeCardAnim) {
-				var c1 = MyCards[0].GetComponent<Card>();
-				var c2 = MyCards[1].GetComponent<Card>();
-				
 				if (hasShowCard) { // 同时开牌
-					reShow(c1, cards[0]);
-					reShow(c2, cards[1]);
+					reShow(card1, cards[0]);
+					reShow(card2, cards[1]);
 				} else { // 间隔开牌
-					reShow(c1, cards[0]);
+					reShow(card1, cards[0]);
 					Observable.Timer(TimeSpan.FromSeconds(0.3)).Subscribe((_) => {
-						reShow(c2, cards[1]);	
+						reShow(card2, cards[1]);	
 						hasShowCard = true;
 					}).AddTo(this);
 				}
 			} else {
-				MyCards[0].GetComponent<Card>().Show(cards[0]);
-				MyCards[1].GetComponent<Card>().Show(cards[1]);
+				card1.Show(cards[0]);
+				card2.Show(cards[1]);
 				hasShowCard = true;
 			}
 		}	
