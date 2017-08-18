@@ -249,8 +249,6 @@ public class Card : MonoBehaviour {
 		var scale = rect.width / Size.x;
 		var cardTransform = card.GetComponent<RectTransform>();
 
-		Debug.Log(scale);
-
 		cardTransform.localScale = new Vector2(scale, scale);
 		cardTransform.SetParent(parent);
 		parent.SetAsFirstSibling();

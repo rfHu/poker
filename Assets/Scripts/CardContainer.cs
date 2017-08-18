@@ -12,5 +12,6 @@ class CardContainer: MonoBehaviour {
 	void Awake()
 	{
 		card = Card.LoadCard(transform);		
+		card.gameObject.SetActive(false);
 	}
 }

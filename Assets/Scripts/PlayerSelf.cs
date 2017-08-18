@@ -38,10 +38,6 @@ namespace PokerPlayer {
         private bool gameover = false;
 
         public void Init(Player player, Transform parent) {
-			MyCards.ForEach((card) => {
-				card.gameObject.SetActive(false);
-			});		
-
             Base.Init(player, parent.GetComponent<Seat>(), this);
 			PlayerBase.SetInParent(transform, parent);
 
