@@ -38,7 +38,6 @@ public class Option : MonoBehaviour {
             {
                 if (isOn)
                 {
-                    GameSetting.cardColor = int.Parse(item.name);
                     PokerColType = int.Parse(item.name);
                 }
             });
