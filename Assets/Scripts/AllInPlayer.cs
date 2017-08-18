@@ -7,13 +7,19 @@ public class AllInPlayer : MonoBehaviour {
 
         public Text Name;
 
-        public List<Transform> Cards
-        {
-            get
-            {
-                return CardContainers.Select(o => o.CardInstance.transform).ToList();
-            }
-        }
+		private Card card1 {
+			get {
+				return CardContainers[0].CardInstance;
+			}
+		}
+
+		private Card card2 {
+			get {
+				return CardContainers[1].CardInstance;
+			}
+		}
+
+       
         [SerializeField]
         private List<CardContainer> CardContainers; 
 
@@ -24,8 +30,8 @@ public class AllInPlayer : MonoBehaviour {
             Name.text = name;
 
 
-            Cards[0].GetComponent<Card>().Show(cards[0]);
-            Cards[1].GetComponent<Card>().Show(cards[1]);
+            card1.Show(cards[0]);
+            card2.Show(cards[1]);
 
             Kind.text = outsNumber.ToString() + "张";
         }

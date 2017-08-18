@@ -11,19 +11,31 @@ public class RecallUser : MonoBehaviour {
 	public Text MaxFive;
     public Text[] ActionsText;
 
-    public List<Transform> Cards
+    private Card card1
     {
         get
         {
-            return CardContainers.Select(o => o.CardInstance.transform).ToList();
+            return CardContainers[0].CardInstance;
         }
     }
 
-    public List<Transform> ComCards
+	private Card card2 {
+		get {
+			return CardContainers[1].CardInstance;
+		}
+	}
+
+	private List<Card> _comCards;
+
+    public List<Card> ComCards
     {
         get
         {
-            return ComCardContainers.Select(o => o.CardInstance.transform).ToList();
+			if (_comCards == null) {
+				_comCards = ComCardContainers.Select(o => o.CardInstance).ToList();
+			}
+
+            return _comCards;
         }
     }
 
@@ -74,19 +86,15 @@ public class RecallUser : MonoBehaviour {
 		setScoreColor(earn);	
 
 		var cards = dict.IL("cards");
-		var cardsList = new Card[] {
-			Cards[0].GetComponent<Card>(),
-			Cards[1].GetComponent<Card>()
-		};
 
 		if (cards.Count <= 0) {
-			cardsList[0].Turnback();
-			cardsList[1].Turnback();
+			card1.Turnback();
+			card2.Turnback();
 			return ;
 		}	
 
-		cardsList[0].Show(cards[0]);
-		cardsList[1].Show(cards[1]);
+		card1.Show(cards[0]);
+		card2.Show(cards[1]);
 
         var actions = dict.List("action");
         actCount = actions.Count;
@@ -159,7 +167,7 @@ public class RecallUser : MonoBehaviour {
 		for (var i = 0; i < getComCardsCount(actCount) && i < list.Count; i++) {
 			var card = ComCards[i];
 			card.gameObject.SetActive(true);
-			card.GetComponent<Card>().Show(list[i]);
+			card.Show(list[i]);
 		}
 	}
 

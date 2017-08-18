@@ -13,11 +13,16 @@ public class Controller : MonoBehaviour {
 
 	public GameObject startButton;
 
+	private List<Transform> _publicCards;
     public List<Transform> PublicCards
     {
         get
         {
-            return PublicCardContainers.Select(o => o.CardInstance.transform).ToList();
+			if (_publicCards == null) {
+				_publicCards = PublicCardContainers.Select(o => o.CardInstance.transform).ToList();
+			}
+
+            return _publicCards;
         }
     }
     [SerializeField]

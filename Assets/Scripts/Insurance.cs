@@ -32,14 +32,7 @@ public class Insurance : MonoBehaviour {
     public GameObject BuyerButtons;
     public GameObject WatcherText;
     public EventTrigger CASliderUp;
-
-    public List<Transform> PublicCards
-    {
-        get
-        {
-            return PublicCardContainers.Select(o => o.CardInstance.transform).ToList();
-        }
-    }
+  
     [SerializeField]
     private List<CardContainer> PublicCardContainers;
 
@@ -151,14 +144,15 @@ public class Insurance : MonoBehaviour {
 
     private void setupPbCards() {
         var cards = GameData.Shared.PublicCards.ToList();
+		var pbCards = PublicCardContainers.Select(o => o.CardInstance).ToList();
 
-        for (int i = 0; i < PublicCards.Count; i++)
+        for (int i = 0; i < pbCards.Count; i++)
 		{
-            var card = PublicCards[i];
+            var card = pbCards[i];
             if (i < cards.Count)
             {
                 card.gameObject.SetActive(true);
-                card.GetComponent<Card>().Show(cards[i]);
+                card.Show(cards[i]);
             }
             else 
             {
