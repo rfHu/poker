@@ -80,7 +80,7 @@ public class Card : MonoBehaviour {
         else 
         {
             SuitPic.gameObject.SetActive(true);
-            NumberPic.vectorImageData = CustomIconHelper.GetIcon("pattern_" + SuitSub).vectorImageData;
+            SuitPic.vectorImageData = CustomIconHelper.GetIcon("pattern_" + SuitSub).vectorImageData;
         }
 
         //设置颜色
