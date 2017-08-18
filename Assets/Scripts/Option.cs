@@ -48,6 +48,7 @@ public class Option : MonoBehaviour {
         {
             item.onValueChanged.AddListener((isOn) =>
             {
+                BGColType = int.Parse(item.name);
             });
         }
 
@@ -105,6 +106,11 @@ public class Option : MonoBehaviour {
         {
             GameSetting.cardColor = PokerColType;
             RxSubjects.CardStyleChange.OnNext(0);
+        }
+
+        if (GameSetting.bgColor != BGColType)
+        {
+            GameSetting.bgColor = BGColType;
         }
 
         Exit();
