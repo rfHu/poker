@@ -2,14 +2,35 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UI.ProceduralImage;
+using System.Linq;
+
 public class RecallUser : MonoBehaviour {
     public Text PlayerName;
 	public RawImage Avatar;
 	public Text Score;
-	public GameObject[] Cards;
 	public Text MaxFive;
     public Text[] ActionsText;
-	public Card[] ComCards;
+
+    public List<Transform> Cards
+    {
+        get
+        {
+            return CardContainers.Select(o => o.CardInstance.transform).ToList();
+        }
+    }
+
+    public List<Transform> ComCards
+    {
+        get
+        {
+            return ComCardContainers.Select(o => o.CardInstance.transform).ToList();
+        }
+    }
+
+    [SerializeField]
+    private List<CardContainer> ComCardContainers;
+    [SerializeField]
+    private List<CardContainer> CardContainers; 
 
     private Color bClolor = new Color(5 / 255f, 150 / 255f, 213 / 255f);
 
@@ -138,7 +159,7 @@ public class RecallUser : MonoBehaviour {
 		for (var i = 0; i < getComCardsCount(actCount) && i < list.Count; i++) {
 			var card = ComCards[i];
 			card.gameObject.SetActive(true);
-			card.Show(list[i]);
+			card.GetComponent<Card>().Show(list[i]);
 		}
 	}
 

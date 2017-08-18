@@ -14,7 +14,6 @@ public class Insurance : MonoBehaviour {
     public Text CountDown;
     public Text AllinTitle;
     public Transform AllinPlayersParent;
-    public List<Card> PublicCards;
     public Text Odds;
     public Text SelectNum;
     public Transform OutsCardsParent;
@@ -28,12 +27,31 @@ public class Insurance : MonoBehaviour {
     public Toggle CheckAllToggle;
     public GameObject BuyTime;
     public Text TotalSupass;
-    public List<Card> MyCards;
     public Text CardDesc;
     public Text BuyButtonNum;
     public GameObject BuyerButtons;
     public GameObject WatcherText;
     public EventTrigger CASliderUp;
+
+    public List<Transform> PublicCards
+    {
+        get
+        {
+            return PublicCardContainers.Select(o => o.CardInstance.transform).ToList();
+        }
+    }
+    [SerializeField]
+    private List<CardContainer> PublicCardContainers;
+
+    public List<Transform> MyCards
+    {
+        get
+        {
+            return MyCardContainers.Select(o => o.CardInstance.transform).ToList();
+        }
+    }
+    [SerializeField]
+    private List<CardContainer> MyCardContainers; 
 
     float odds;
     float[] OddsNums = { 30, 16, 10, 8, 6, 5, 4, 3.5f, 3, 2.5f, 2.2f, 2, 1.7f, 1.5f, 1.3f, 1.1f, 1, 0.8f, 0.6f, 0.5f };
@@ -109,7 +127,7 @@ public class Insurance : MonoBehaviour {
 
         for (int i = 0; i < MyCards.Count; i++)
         {
-            MyCards[i].Show(buyPlayer.Cards.Value[i]);
+            MyCards[i].GetComponent<Card>().Show(buyPlayer.Cards.Value[i]);
         }
 
         CardDesc.text = Card.GetCardDesc(data.Int("maxFiveRank"));
@@ -140,7 +158,7 @@ public class Insurance : MonoBehaviour {
             if (i < cards.Count)
             {
                 card.gameObject.SetActive(true);
-                card.Show(cards[i]);
+                card.GetComponent<Card>().Show(cards[i]);
             }
             else 
             {

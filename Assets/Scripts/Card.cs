@@ -26,7 +26,7 @@ public class Card : MonoBehaviour {
 
 	void Awake() {
         RxSubjects.CardStyleChange.Subscribe((num) => {
-            setCardFace(_index);
+            setCardFace(_index, GameSetting.cardColor);
         }).AddTo(this);
 
 		cardBg.sprite = CardBack;
@@ -47,7 +47,7 @@ public class Card : MonoBehaviour {
 		if (anim && diffIndex) { 
 			StartCoroutine(flipCard(index, complete));
 		} else {
-            setCardFace(index);
+            setCardFace(index, GameSetting.cardColor);
 
 			var rect = cardBg.GetComponent<RectTransform>();
 			rect.localScale = new Vector2(1, 1);
@@ -62,7 +62,7 @@ public class Card : MonoBehaviour {
         }
 	}
 
-    private void setCardFace(int index)
+    private void setCardFace(int index, int cardType)
     {
 		hideCardContents();
 
@@ -74,7 +74,7 @@ public class Card : MonoBehaviour {
         NumberPic.gameObject.SetActive(true);
         NumberPic.vectorImageData = CustomIconHelper.GetIcon("poker_" + NumSub).vectorImageData;
 
-        if (GameSetting.cardColor == 0 && NumSub > 10)
+        if (cardType == 0 && NumSub > 10)
         {
             FigurePic.gameObject.SetActive(true);
             int figureSub = NumSub + SuitSub * 3 - 11;
@@ -87,7 +87,7 @@ public class Card : MonoBehaviour {
         }
 
         //设置颜色
-        if (GameSetting.cardColor == 0)
+        if (cardType == 0)
         {
             cardBg.color = Color.white;
             NumberPic.color = SuitPic.color = SuitSub % 2 == 0 ? Color.black : Color.red;
@@ -95,12 +95,12 @@ public class Card : MonoBehaviour {
         else 
         {
             string[] colors = new string[4] { "#000000", "#ff0000", "#00a221", "#0059ff" };
-            if (GameSetting.cardColor == 1)
+            if (cardType == 1)
             {
                 cardBg.color = Color.white;
                 NumberPic.color = SuitPic.color = _.HexColor(colors[SuitSub]);
             }
-            else if (GameSetting.cardColor == 2) 
+            else if (cardType == 2) 
             {
                 cardBg.color = _.HexColor(colors[SuitSub]);
                 NumberPic.color = SuitPic.color = Color.white;
@@ -164,7 +164,7 @@ public class Card : MonoBehaviour {
 			rectTrans.localScale = vector;
 
 			if (time >= 0.5) {
-                setCardFace(index);
+                setCardFace(index, GameSetting.cardColor);
 			}
 
 			yield return new WaitForFixedUpdate();

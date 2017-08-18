@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using System.Collections;
 using UnityEngine.UI.ProceduralImage;
+using System.Linq;
 
 namespace PokerPlayer {
     public class PlayerOppo: MonoBehaviour, PlayerDelegate {
@@ -12,7 +13,18 @@ namespace PokerPlayer {
 
 	    public Text NameLabel;
         public Text CardDesc;
-	    public List<Card> ShowCards;
+
+        public List<Transform> ShowCards
+        {
+            get
+            {
+                return cardContainers.Select(o => o.CardInstance.transform).ToList();
+            }
+        }
+
+        [SerializeField]
+        private List<CardContainer> cardContainers; 
+
         public Transform Cardfaces;
         public Transform Countdown;
 
@@ -53,9 +65,9 @@ namespace PokerPlayer {
             Cardfaces.GetComponent<CanvasGroup>().alpha = 1;
 
             MoveOut();
-            ShowCards[0].Turnback();
-            ShowCards[1].Turnback();
-            ShowCards[0].transform.parent.gameObject.SetActive(false);
+            ShowCards[0].GetComponent<Card>().Turnback();
+            ShowCards[1].GetComponent<Card>().Turnback();
+            ShowCards[0].GetComponent<Card>().transform.parent.gameObject.SetActive(false);
             NameLabel.gameObject.SetActive(true);
         }
 
@@ -105,11 +117,11 @@ namespace PokerPlayer {
 
                 // 显示手牌
                 if (cards[0] > 0) {
-                    ShowCards[0].Show(cards[0], anim);
+                    ShowCards[0].GetComponent<Card>().Show(cards[0], anim);
                 } 
 
                 if (cards[1] > 0) {
-                    ShowCards[1].Show(cards[1], anim);
+                    ShowCards[1].GetComponent<Card>().Show(cards[1], anim);
                 }
 
                 if (Cardfaces != null) {

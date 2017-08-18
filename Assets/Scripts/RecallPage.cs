@@ -20,7 +20,6 @@ public class RecallPage : MonoBehaviour {
     public GameObject Win27Go;
 
     public Slider HandSlider;
-    public Toggle WholeToggle;
     public Toggle SelfToggle;
 
 	private int totalNumber;
