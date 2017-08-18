@@ -14,13 +14,24 @@ namespace PokerPlayer {
 	    public Text NameLabel;
         public Text CardDesc;
 
-        public List<Transform> ShowCards
-        {
-            get
-            {
-                return cardContainers.Select(o => o.CardInstance.transform).ToList();
-            }
-        }
+		private GameObject cardParent {
+			get {
+				return card1.transform.parent.gameObject;
+			}
+		}
+
+		private Card card1 {
+			get {
+				return cardContainers[0].CardInstance;
+			}
+		}
+
+		private Card card2 {
+			get {
+				return cardContainers[1].CardInstance;
+			}
+		}
+
 
         [SerializeField]
         private List<CardContainer> cardContainers; 
@@ -48,9 +59,8 @@ namespace PokerPlayer {
             Cardfaces.SetParent(Base.Circle, false);
             Cardfaces.SetSiblingIndex(3);
 
-            var p = ShowCards[0].transform.parent;
-            p.SetParent(Base.Circle, false);
-            p.SetAsLastSibling();
+            cardParent.transform.SetParent(Base.Circle, false);
+            cardParent.transform.SetAsLastSibling();
         }
 
         void OnDestroy()
@@ -65,9 +75,9 @@ namespace PokerPlayer {
             Cardfaces.GetComponent<CanvasGroup>().alpha = 1;
 
             MoveOut();
-            ShowCards[0].GetComponent<Card>().Turnback();
-            ShowCards[1].GetComponent<Card>().Turnback();
-            ShowCards[0].GetComponent<Card>().transform.parent.gameObject.SetActive(false);
+            card1.Turnback();
+            card2.Turnback();
+            cardParent.SetActive(false);
             NameLabel.gameObject.SetActive(true);
         }
 
@@ -113,15 +123,15 @@ namespace PokerPlayer {
             Base.PlayerAct.SetActive(false);		
         
             if (cards[0] > 0 || cards[1] > 0) {
-                ShowCards[0].transform.parent.gameObject.SetActive(true);
+                cardParent.SetActive(true);
 
                 // 显示手牌
                 if (cards[0] > 0) {
-                    ShowCards[0].GetComponent<Card>().Show(cards[0], anim);
+      				card1.Show(cards[0], anim);
                 } 
 
                 if (cards[1] > 0) {
-                    ShowCards[1].GetComponent<Card>().Show(cards[1], anim);
+                    card2.Show(cards[1], anim);
                 }
 
                 if (Cardfaces != null) {
@@ -219,7 +229,7 @@ namespace PokerPlayer {
         }
 
         public void WinEnd() {
-            Base.DoFade(ShowCards[0].transform.parent.gameObject);
+            Base.DoFade(cardParent);
             Base.DoFade(CardDesc.transform.parent.gameObject, () => {
                 NameLabel.gameObject.SetActive(true);
             });
