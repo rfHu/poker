@@ -244,14 +244,15 @@ public class Card : MonoBehaviour {
 			prefab = Resources.Load<GameObject>("Prefab/Card");
 		}
 
-		var rect = parent.GetComponent<RectTransform>().rect;
+		var rect = parent.GetComponent<RectTransform>().sizeDelta;
+
 		var card = GameObject.Instantiate(prefab).GetComponent<Card>();
-		var scale = rect.width / Size.x;
+		var scale = rect.x / Size.x;
 		var cardTransform = card.GetComponent<RectTransform>();
 
-		cardTransform.localScale = new Vector2(scale, scale);
 		cardTransform.SetParent(parent);
 		parent.SetAsFirstSibling();
+		cardTransform.localScale = new Vector2(scale, scale);
 		cardTransform.anchoredPosition = new Vector2(0, 0);
 
 		return card;

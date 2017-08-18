@@ -80,12 +80,12 @@ public class Controller : MonoBehaviour {
 
 		Instance = this;
 		LogoVector = Logo.transform.position;
-
-		load();
     }
 
     void Start() 
     {
+		load();
+
         if (GameData.Shared.IsMatch())
         {
             OwnerButton.SetActive(false);

@@ -28,7 +28,7 @@ namespace PokerPlayer {
 
 		private GameObject cardParent {
 			get {
-				return card1.transform.parent.gameObject;
+				return cardContainers[0].transform.parent.gameObject;
 			}
 		}
 

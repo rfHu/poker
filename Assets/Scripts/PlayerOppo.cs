@@ -16,7 +16,7 @@ namespace PokerPlayer {
 
 		private GameObject cardParent {
 			get {
-				return card1.transform.parent.gameObject;
+				return cardContainers[0].transform.parent.gameObject;
 			}
 		}
 
@@ -75,11 +75,20 @@ namespace PokerPlayer {
             Cardfaces.GetComponent<CanvasGroup>().alpha = 1;
 
             MoveOut();
-            card1.Turnback();
-            card2.Turnback();
+			turnbackCards();
             cardParent.SetActive(false);
             NameLabel.gameObject.SetActive(true);
         }
+
+		private void turnbackCards() {
+			if (card1 != null) {
+				card1.Turnback();
+			}
+
+			if (card2 != null) {
+				card2.Turnback();
+			}
+		}
 
         public void Init(Player player, Transform parent) {
             Base.Init(player, parent.GetComponent<Seat>(), this);
