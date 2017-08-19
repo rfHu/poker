@@ -41,6 +41,7 @@ public class Card : MonoBehaviour {
 		var diffIndex = (_index != index);
 		_index = index;
 		gameObject.SetActive(true);
+        cardContent.gameObject.SetActive(true);
 
 		cardBg.enabled = true;
 		
@@ -181,7 +182,8 @@ public class Card : MonoBehaviour {
 		_index = -1;
 		cardBg.sprite = CardBack;
 		hideCardContents();
-		ReColor();
+        cardContent.gameObject.SetActive(false);
+        ReColor();
 
 		if (hide) {
 			cardBg.enabled = false;
