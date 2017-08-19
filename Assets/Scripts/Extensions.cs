@@ -10,6 +10,7 @@ using System.Collections;
 using UniRx;
 using BestHTTP;
 using System.Text.RegularExpressions;
+using Unity.Linq;
 
     public static class CShapeExtensions
     {
@@ -257,4 +258,10 @@ using System.Text.RegularExpressions;
 
             trigger.Disposables.Clear();
         }
+
+		public static void SetChildrenActive(this GameObject gameObject, bool active) {
+			gameObject.Children().ForEach((go) => {
+				go.SetActive(active);
+			});
+		}
     }

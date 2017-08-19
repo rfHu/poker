@@ -6,6 +6,7 @@ using System;
 using DarkTonic.MasterAudio;
 using MaterialUI;
 using UniRx;
+using Unity.Linq;
 
 public class Card : MonoBehaviour {
 	public Sprite Face;
@@ -18,6 +19,12 @@ public class Card : MonoBehaviour {
 	[SerializeField]private Image cardBg;
 	[SerializeField]private Transform cardContent;
 
+	private RectTransform flipTransform {
+		get {
+			return cardBg.GetComponent<RectTransform>();
+		}
+	}
+
 	public AnimationCurve scaleCurve;
 
 	public static float TurnCardDuration = 0.3f;
@@ -26,6 +33,9 @@ public class Card : MonoBehaviour {
 
 	void Awake() {
         RxSubjects.CardStyleChange.Subscribe((num) => {
+			if (_index < 0) {
+				return ;
+			}
             setCardFace(_index, GameSetting.cardColor);
         }).AddTo(this);
 
@@ -38,34 +48,22 @@ public class Card : MonoBehaviour {
 	}
 
 	private void show(int index, bool anim = false, Action complete = null) {	
-		var diffIndex = (_index != index);
-		_index = index;
 		gameObject.SetActive(true);
-        cardContent.gameObject.SetActive(true);
-
-		cardBg.enabled = true;
+		ReColor();
 		
-		if (anim && diffIndex) { 
+		if (anim && _index != index) { 
 			StartCoroutine(flipCard(index, complete));
 		} else {
             setCardFace(index, GameSetting.cardColor);
-
-			var rect = cardBg.GetComponent<RectTransform>();
-			rect.localScale = new Vector2(1, 1);
+			flipTransform.localScale = new Vector2(1, 1);
 		}
-	}
 
-	private void hideCardContents() {
-		//消除原图
-        foreach (Transform child in cardContent)
-        {
-            child.gameObject.SetActive(false);
-        }
+		_index = index;
 	}
 
     private void setCardFace(int index, int cardType)
     {
-		hideCardContents();
+		cardContent.gameObject.SetChildrenActive(false);
 
        	cardBg.sprite = Face;
         int NumSub = (index + 1) % 13;
@@ -123,8 +121,6 @@ public class Card : MonoBehaviour {
 			return ;
 		}
 
-		ReColor();
-
 		var realIndex = Card.CardIndex(index);
 		show(realIndex, anim, complete);
 	}
@@ -135,7 +131,7 @@ public class Card : MonoBehaviour {
 		}
 
 		hasReShow = true;
-		StartCoroutine(flipCard(_index, null));
+		StartCoroutine(flipCard(_index));
 		G.PlaySound("fapai_1");
 	}
 
@@ -154,7 +150,8 @@ public class Card : MonoBehaviour {
 
 	IEnumerator flipCard(int index, Action complete = null) {
 		float time = 0f;
-		var rectTrans = cardContent.parent.GetComponent<RectTransform>();
+		var rectTrans = flipTransform;
+		var hasSet = false;
 		
 		while(time < 1f) {
 			time = Mathf.Min(time + Time.deltaTime / TurnCardDuration, 1);
@@ -164,8 +161,9 @@ public class Card : MonoBehaviour {
 			vector.x = scale;
 			rectTrans.localScale = vector;
 
-			if (time >= 0.5) {
+			if (time >= 0.5 && !hasSet) {
                 setCardFace(index, GameSetting.cardColor);
+				hasSet = true;
 			}
 
 			yield return new WaitForFixedUpdate();
@@ -181,12 +179,11 @@ public class Card : MonoBehaviour {
 	public void Turnback(bool hide = false) {
 		_index = -1;
 		cardBg.sprite = CardBack;
-		hideCardContents();
-        cardContent.gameObject.SetActive(false);
-        ReColor();
+
+		flipTransform.gameObject.SetChildrenActive(false);
 
 		if (hide) {
-			cardBg.enabled = false;
+			gameObject.SetActive(false);
 		}
 	}
 
@@ -253,7 +250,7 @@ public class Card : MonoBehaviour {
 		var cardTransform = card.GetComponent<RectTransform>();
 
 		cardTransform.SetParent(parent);
-		parent.SetAsFirstSibling();
+		cardTransform.SetAsFirstSibling();
 		cardTransform.localScale = new Vector2(scale, scale);
 		cardTransform.anchoredPosition = new Vector2(0, 0);
 

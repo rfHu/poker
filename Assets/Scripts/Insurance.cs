@@ -165,7 +165,7 @@ public class Insurance : MonoBehaviour {
         foreach (var cardNum in outsCardArray)
         {
             var card = PoolMan.Spawn("InsureCard",OutsCardsParent.transform);
-            card.GetComponent<CardContainer>().CardInstance.GetComponent<Card>().Show(cardNum);
+            card.GetComponent<CardContainer>().CardInstance.Show(cardNum);
             card.GetComponent<Toggle>().isOn = true;
 
             var toggle = card.GetComponent<Toggle>();

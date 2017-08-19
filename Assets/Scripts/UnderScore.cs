@@ -6,7 +6,7 @@ using System.Collections;
 using System.IO;
 using BestHTTP;
 
-public class _ {
+public static class _ {
     public static DateTime DateTimeFromTimeStamp(double timeStamp)
     {
         // Unix timestamp is seconds past epoch
