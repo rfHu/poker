@@ -13,5 +13,6 @@ class CardContainer: MonoBehaviour {
 	{
 		card = Card.LoadCard(transform);		
 		card.gameObject.SetActive(false);
+        card.transform.SetSiblingIndex(0);
 	}
 }
