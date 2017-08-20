@@ -7,7 +7,6 @@ using UniRx;
 
 [RequireComponent(typeof(DOPopup))]
 public class RecallPage : MonoBehaviour {
-    public Text SBBB;
 	public GameObject Rect;
 	public GameObject LeftIndicator;
 	public GameObject RightIndicator;
@@ -22,7 +21,7 @@ public class RecallPage : MonoBehaviour {
     public Slider HandSlider;
     public Toggle SelfToggle;
 
-	private int totalNumber;
+	private int totalNumber = 0;
 	
 	private int currentNumber {
 		get {
@@ -73,7 +72,6 @@ public class RecallPage : MonoBehaviour {
     }
 
     void OnSpawned() {
-        SBBB.text = GameData.Shared.SB + "/" + GameData.Shared.BB;
         GetComponent<DOPopup>().Show();
 
         if (GameData.Shared.Room.Value == roomID && currentNumber != totalNumber) {
@@ -200,7 +198,7 @@ public class RecallPage : MonoBehaviour {
         return RecallUser.UserTag.None;
     }
 
-	public void Up() {
+	public void Right() {
 		if (currentNumber >= totalNumber) {
 			return ;
 		}
@@ -208,12 +206,23 @@ public class RecallPage : MonoBehaviour {
 		request(currentNumber + 1);
 	}
 
-	public void Down() {
+	public void Left() {
 		if (currentNumber <= 1) {
 			return ;
 		}
 
 		request(currentNumber - 1);
+	}
+
+	public void Right2End() {
+		request(0);
+	}
+
+	public void Left2Start() {
+		if (totalNumber < 1) {
+			return ;
+		}
+		request(1);
 	}
 
     public void CollectOrCancel() 
