@@ -18,6 +18,7 @@ public class Card : MonoBehaviour {
 	private int _index = -1;
 	[SerializeField]private Image cardBg;
 	[SerializeField]private Transform cardContent;
+	[SerializeField]private GameObject darkenCover;
 
 	private RectTransform flipTransform {
 		get {
@@ -63,8 +64,6 @@ public class Card : MonoBehaviour {
 
     private void setCardFace(int index, int cardType)
     {
-		cardContent.gameObject.SetChildrenActive(false);
-
        	cardBg.sprite = Face;
         int NumSub = (index + 1) % 13;
         NumSub = NumSub == 0 ? 13 : NumSub;
@@ -76,12 +75,14 @@ public class Card : MonoBehaviour {
         if (cardType == 0 && NumSub > 10)
         {
             FigurePic.gameObject.SetActive(true);
+			SuitPic.gameObject.SetActive(false);
             int figureSub = NumSub + SuitSub * 3 - 11;
             FigurePic.sprite = Figures[figureSub];
         }
         else 
         {
             SuitPic.gameObject.SetActive(true);
+            FigurePic.gameObject.SetActive(false);
             SuitPic.vectorImageData = CustomIconHelper.GetIcon("pattern_" + SuitSub).vectorImageData;
         }
 
@@ -108,11 +109,11 @@ public class Card : MonoBehaviour {
     }
 
 	public void Darken() {
-		cardBg.color = new Color(150 / 255f ,150 / 255f, 150 / 255f, 1);
+		darkenCover.SetActive(true);
 	}
 
 	public void ReColor() {
-		cardBg.color = new Color(1, 1, 1, 1);
+		darkenCover.SetActive(false);
 	}
 
 	public void Show(int index, bool anim = false, Action complete = null) {
