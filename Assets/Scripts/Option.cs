@@ -23,8 +23,8 @@ public class Option : MonoBehaviour {
 
     void Awake() 
     {
-		pokerColType = GameSetting.cardColor;
-		bgColType = GameSetting.bgColor;
+		pokerColType = GameSetting.CardColor.Value;
+		bgColType = GameSetting.TableSprite.Value;
 
         foreach (var toggle in Toggles)
         {
@@ -110,18 +110,8 @@ public class Option : MonoBehaviour {
         }
 
         GameSetting.emoticonClose = !Toggles[3].isOn;
-
-        if (GameSetting.cardColor != pokerColType)
-        {
-            GameSetting.cardColor = pokerColType;
-            RxSubjects.CardStyleChange.OnNext(0);
-        }
-
-        if (GameSetting.bgColor != bgColType)
-        {
-            GameSetting.bgColor = bgColType;
-            RxSubjects.BGChange.OnNext(0);
-        }
+		GameSetting.CardColor.Value = pokerColType;
+		GameSetting.TableSprite.Value = bgColType;
 
         Exit();
     }

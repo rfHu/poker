@@ -37,12 +37,18 @@ public class Card : MonoBehaviour {
 
 	private bool hasReShow = false;
 
+	private int cardColor {
+		get {
+			return GameSetting.CardColor.Value;
+		}
+	}
+
 	void Awake() {
-        RxSubjects.CardStyleChange.Subscribe((num) => {
+        GameSetting.CardColor.Subscribe((num) => {
 			if (_index < 0) {
 				return ;
 			}
-            setCardFace(_index, GameSetting.cardColor);
+            setCardFace(_index, num);
         }).AddTo(this);
 
 		cardBg.sprite = CardBack;
@@ -61,7 +67,7 @@ public class Card : MonoBehaviour {
 		if (anim && _index != index) { 
 			StartCoroutine(flipCard(index, complete));
 		} else {
-            setCardFace(index, GameSetting.cardColor);
+            setCardFace(index, cardColor);
 			flipTransform.localScale = new Vector2(1, 1);
 		}
 
@@ -169,7 +175,7 @@ public class Card : MonoBehaviour {
 			rectTrans.localScale = vector;
 
 			if (time >= 0.5 && !hasSet) {
-                setCardFace(index, GameSetting.cardColor);
+                setCardFace(index, cardColor);
 				hasSet = true;
 			}
 
