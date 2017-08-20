@@ -16,13 +16,16 @@ public class Option : MonoBehaviour {
     Color NormalColor = MaterialUI.MaterialColor.cyanA200;
     Color DisableColor = MaterialUI.MaterialColor.grey400;
 
-    int PokerColType = GameSetting.cardColor;
-    int BGColType = GameSetting.bgColor;
+    int pokerColType;
+    int bgColType;
 
     public Sprite[] bgSprites;
 
     void Awake() 
     {
+		pokerColType = GameSetting.cardColor;
+		bgColType = GameSetting.bgColor;
+
         foreach (var toggle in Toggles)
         {
             toggle.onValueChanged.AddListener((isOn) => 
@@ -38,7 +41,7 @@ public class Option : MonoBehaviour {
             {
                 if (isOn)
                 {
-                    PokerColType = int.Parse(item.name);
+                    pokerColType = int.Parse(item.name);
                 }
             });
         }
@@ -50,13 +53,13 @@ public class Option : MonoBehaviour {
                 if (isOn)
                 {
                     var num = int.Parse(item.name);
-                    BGColType = num;
+                    bgColType = num;
                     ShowGBImg.sprite = bgSprites[num];
                 }
             });
         }
-        PokerCol[PokerColType].isOn = true;
-        BgCol[BGColType].isOn = true;
+        PokerCol[pokerColType].isOn = true;
+        BgCol[bgColType].isOn = true;
 
         Toggles[0].isOn = !GameSetting.talkSoundClose;
         Toggles[1].isOn = !GameSetting.muted;
@@ -108,15 +111,15 @@ public class Option : MonoBehaviour {
 
         GameSetting.emoticonClose = !Toggles[3].isOn;
 
-        if (GameSetting.cardColor != PokerColType)
+        if (GameSetting.cardColor != pokerColType)
         {
-            GameSetting.cardColor = PokerColType;
+            GameSetting.cardColor = pokerColType;
             RxSubjects.CardStyleChange.OnNext(0);
         }
 
-        if (GameSetting.bgColor != BGColType)
+        if (GameSetting.bgColor != bgColType)
         {
-            GameSetting.bgColor = BGColType;
+            GameSetting.bgColor = bgColType;
             RxSubjects.BGChange.OnNext(0);
         }
 

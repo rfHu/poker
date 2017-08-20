@@ -141,7 +141,8 @@ public class RecallUser : MonoBehaviour {
 		}
 
 		string text;
-		Color color = bClolor;
+		Color bgColor = bClolor;
+		Color textColor = Color.white;
 
 		if (tag == UserTag.SmallBlind) {
 			text = "小盲";
@@ -149,14 +150,15 @@ public class RecallUser : MonoBehaviour {
 			text = "大盲";
 		} else {
 			text = "D";
-			color = G.Black;
+			bgColor = Color.white;
+			textColor = Color.black;
 		}
 
 		Tag.SetActive(true);
-        Tag.GetComponent<ProceduralImage>().color = bClolor;
+        Tag.GetComponent<ProceduralImage>().color = bgColor;
         var UText = Tag.transform.Find("Text").GetComponent<Text>();
         UText.text = text;
-        UText.color = Color.white;
+        UText.color = textColor;
 	}
 
 	public void SetComCard(List<int> list) {

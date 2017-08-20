@@ -23,13 +23,30 @@ public class RecallPage : MonoBehaviour {
     public Toggle SelfToggle;
 
 	private int totalNumber;
-	private int currentNumber;
+	
+	private int currentNumber {
+		get {
+			return self ? selfCurrent : totalCurrent;
+		}
+
+		set {
+			if (self) {
+				selfCurrent = value;
+			} else {
+				totalCurrent = value;
+			}
+		}
+	}
+
     private string favhand_id;
 
     private bool requesting = false;
     private string roomID;
 
     private bool self = false;
+
+	private int totalCurrent = 0;
+	private int selfCurrent = 0;
 
     void Awake()
     {
@@ -51,7 +68,7 @@ public class RecallPage : MonoBehaviour {
 
         SelfToggle.onValueChanged.AddListener((isOn) => {
             self = isOn;
-            request();                
+            request(currentNumber);                
         });
     }
 
@@ -59,7 +76,7 @@ public class RecallPage : MonoBehaviour {
         SBBB.text = GameData.Shared.SB + "/" + GameData.Shared.BB;
         GetComponent<DOPopup>().Show();
 
-        if (GameData.Shared.Room.Value == roomID) {
+        if (GameData.Shared.Room.Value == roomID && currentNumber != totalNumber) {
             request(currentNumber);
         } else {
             request(0);
@@ -100,9 +117,11 @@ public class RecallPage : MonoBehaviour {
 	}
 
 	private void reload(Dictionary<string, object> ret) {
-		HandSlider.maxValue = totalNumber = ret.Int("total_hand");
-        HandSlider.minValue = totalNumber == 0 ? 0 : 1;
+		totalNumber = ret.Int("total_hand");
+		HandSlider.maxValue = totalNumber;
+        HandSlider.minValue = Mathf.Min(totalNumber, 1);
 		HandSlider.value = currentNumber = ret.Int("cur_hand");
+
 		Total.text = string.Format("/ {0}", totalNumber);
 		Current.text = currentNumber.ToString();
 
@@ -235,13 +254,16 @@ public class RecallPage : MonoBehaviour {
     }
 
     public void ShareRecord() {
+		if (currentNumber <= 0) {
+			return ;
+		}
+
         Commander.Shared.ShareRecord(currentNumber);
     }
 
     public void OnPointUpSlider() 
     {
         request((int)HandSlider.value);
-        currentNumber = (int)HandSlider.value;
     }
 }
 

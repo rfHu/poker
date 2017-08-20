@@ -17,12 +17,17 @@ public class Card : MonoBehaviour {
     public Sprite[] Figures;
 	private int _index = -1;
 	[SerializeField]private Image cardBg;
-	[SerializeField]private Transform cardContent;
 	[SerializeField]private GameObject darkenCover;
 
 	private RectTransform flipTransform {
 		get {
 			return cardBg.GetComponent<RectTransform>();
+		}
+	}
+
+	private GameObject cardContent {
+		get {
+			return NumberPic.transform.parent.gameObject;
 		}
 	}
 
@@ -50,6 +55,7 @@ public class Card : MonoBehaviour {
 
 	private void show(int index, bool anim = false, Action complete = null) {	
 		gameObject.SetActive(true);
+		cardContent.SetActive(true);
 		ReColor();
 		
 		if (anim && _index != index) { 
@@ -185,6 +191,8 @@ public class Card : MonoBehaviour {
 
 		if (hide) {
 			gameObject.SetActive(false);
+		} else {
+			gameObject.SetActive(true);
 		}
 	}
 
