@@ -61,7 +61,6 @@ public class Card : MonoBehaviour {
 
 	private void show(int index, bool anim = false, Action complete = null) {	
 		gameObject.SetActive(true);
-		cardContent.SetActive(true);
 		ReColor();
 		
 		if (anim && _index != index) { 
@@ -193,7 +192,8 @@ public class Card : MonoBehaviour {
 		_index = -1;
 		cardBg.sprite = CardBack;
 
-		flipTransform.gameObject.SetChildrenActive(false);
+		cardContent.SetChildrenActive(false);
+		ReColor();
 
 		if (hide) {
 			gameObject.SetActive(false);
