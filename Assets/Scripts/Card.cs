@@ -137,6 +137,11 @@ public class Card : MonoBehaviour {
 		show(realIndex, anim, complete);
 	}
 
+    public void ShowInExplain(int index) 
+    {
+        show(index);
+    }
+
 	public void ReShow() {
 		if (hasReShow) {
 			return ;
