@@ -191,6 +191,7 @@ public class Card : MonoBehaviour {
 	public void Turnback(bool hide = false) {
 		_index = -1;
 		cardBg.sprite = CardBack;
+		cardBg.color = Color.white;
 
 		cardContent.SetChildrenActive(false);
 		ReColor();

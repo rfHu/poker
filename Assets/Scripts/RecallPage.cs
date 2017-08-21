@@ -77,6 +77,8 @@ public class RecallPage : MonoBehaviour {
         if (GameData.Shared.Room.Value == roomID && currentNumber != totalNumber) {
             request(currentNumber);
         } else {
+			totalCurrent = 0;
+			selfCurrent = 0;
             request(0);
         }
 
