@@ -58,7 +58,7 @@ public class MatchWinner : MonoBehaviour {
         if (score > 0) {
             coinNum.text = score.ToString();
         } else if (!string.IsNullOrEmpty(awardText)) {
-            coinNum.text = string.Format("恭喜您获得：\n<b><size=60>{0}</size></b>", awardText);
+            coinNum.text = string.Format("恭喜您获得：\n<size=60>{0}</size>", awardText);
         } else {
             coinNum.text = "调整好状态再来一局吧！";
         }
