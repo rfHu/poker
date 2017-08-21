@@ -101,11 +101,11 @@ public class Card : MonoBehaviour {
         if (cardType == 0)
         {
             cardBg.color = Color.white;
-            NumberPic.color = SuitPic.color = SuitSub % 2 == 0 ? Color.black : Color.red;
+            NumberPic.color = SuitPic.color = SuitSub % 2 == 0 ? Color.black : _.HexColor("#d32f2f");
         }
         else 
         {
-            string[] colors = new string[4] { "#000000", "#ff0000", "#00a221", "#0059ff" };
+            string[] colors = new string[4] { "#000000", "#d32f2f", "#388e3c", "#1976d2" };
             if (cardType == 1)
             {
                 cardBg.color = Color.white;

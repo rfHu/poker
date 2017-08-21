@@ -62,6 +62,8 @@ public class Seat : MonoBehaviour {
 		} else {
 			takeSeat(new float[]{0, 0});
 		}
+
+		RxSubjects.ChangeVectorsByIndexAnimate.OnNext(Index);
 	}
 
 	void OnDespawned() {

@@ -142,7 +142,15 @@ public class Controller : MonoBehaviour {
         });
     }
 
+	private int currentIndex;
+
 	void changePositions(int index, bool anim = true) {
+		if (currentIndex == index) {
+			return ;
+		}
+
+		currentIndex = index;
+
 		var count = GameData.Shared.PlayerCount.Value;
 		var left = anchorPositions.Skip(count - index).Take(index);
 		var right = anchorPositions.Take(count - index);
@@ -816,7 +824,11 @@ public class Controller : MonoBehaviour {
 			Seats[index].GetComponent<Seat>().Show();
 		};
 
-		RxSubjects.ChangeVectorsByIndex.AsObservable().DistinctUntilChanged().Subscribe((index) => {
+		RxSubjects.ChangeVectorsByIndex.DistinctUntilChanged().Subscribe((index) => {
+			changePositions(index, false);
+		}).AddTo(this);
+
+		RxSubjects.ChangeVectorsByIndexAnimate.Subscribe((index) => {
 			changePositions(index);
 		}).AddTo(this);
 

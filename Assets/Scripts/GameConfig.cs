@@ -269,7 +269,7 @@ public class GameOverJson {
 
 sealed public class GameData {
 	private GameData() {
-		RxSubjects.TakeSeat.AsObservable().Subscribe((e) => {
+		RxSubjects.TakeSeat.Subscribe((e) => {
 			var index = e.Data.Int("where");
 			var playerInfo = e.Data.Dict("who");
 			var player = new Player(playerInfo, index);
