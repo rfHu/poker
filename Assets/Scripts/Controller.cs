@@ -913,7 +913,12 @@ public class Controller : MonoBehaviour {
 				return ;
 			} 
 			
-			if (GameData.Shared.IsMatch() || !GameData.Shared.GameStarted) {
+			if (!GameData.Shared.GameStarted) {
+				return ;
+			}
+
+			if (GameData.Shared.IsMatch()) {
+				PauseGame.SetActive(false);
 				return ;
 			}
 
