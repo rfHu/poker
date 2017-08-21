@@ -135,13 +135,8 @@ namespace PokerPlayer {
                 cardParent.SetActive(true);
 
                 // 显示手牌
-                if (cards[0] > 0) {
-      				card1.Show(cards[0], anim);
-                } 
-
-                if (cards[1] > 0) {
-                    card2.Show(cards[1], anim);
-                }
+      			card1.Show(cards[0], anim);
+                card2.Show(cards[1], anim);
 
                 if (Cardfaces != null) {
                     Cardfaces.gameObject.SetActive(false);
