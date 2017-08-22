@@ -492,6 +492,12 @@ sealed public class GameData {
 				return ;
 			}
 
+			// 中场休息不应该涨盲
+			// @FIXME: MatchRoomStatus后期改为枚举
+			if (GameData.Shared.Type == GameType.MTT && GameData.MatchData.MatchRoomStatus.Value == 10) {
+				return ;
+			}
+
 			var value = Math.Max(0, LeftTime.Value - 1);
 			LeftTime.Value = value;
 		});
