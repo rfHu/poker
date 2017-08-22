@@ -19,14 +19,14 @@ public class GameLoading : MonoBehaviour {
 			external.SetProxy("http://localhost:8888");
 
             // var rid = "599a959abbf3de4d88dcc599";
-            var rid = "599ad6235973845caff32aeb";
-            var sid = "s%3A88z03pRbCO1dRah4xGOvBqFaSUkwLl6e.c0TFcEOx5hssTvbShn3mWbwdQf7d8vMe%2F5eDGsrmj4c";
+            var rid = "599bad05bf0edc050117fa40";
+            var sid = "s%3AWcEoxQO-9Rd2wsXKY9Q2Zq_ZlJYTdZCi.nrp0stWnWkf0cfJO9IlaetFkSPCdBGlSn13Z87JfFaI";
 
 			// 外网登录态
 			// var sid = "s%3AHlY6SR0V3m8oM2oofbX_yl5R7f6v6Q7R.PK%2FqqIiSZHB0zLgH%2BwV52Yesi3CcsTPJFC3JPb7tjSQ";
 
-            external.InitGame(rid + "&" + sid);
-			//external.InitMatch(rid + "&" + sid);
+            //external.InitGame(rid + "&" + sid);
+			external.InitMatch(rid + "&" + sid);
 		#endif
 
 		// 开启SDK的日志打印，发布版本请务必关闭

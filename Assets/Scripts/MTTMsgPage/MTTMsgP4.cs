@@ -65,35 +65,44 @@ namespace MTTMsgPage
 
         public void requestData()
         {
-            var rowData = new List<MTTPageData>();
 
             HTTP.Get("/match-rooms", new Dictionary<string, object> {
                 {"match_id", GameData.Shared.MatchID },
             }, (data) =>
             {
-                var roomsMsg = Json.Decode(data) as List<object>;
-
-                transform.parent.parent.GetComponent<MTTMsg>().SetGoSize(roomsMsg.Count > 8);
-
-                for (int i = 0; i < roomsMsg.Count; i++)
-                {
-                    var msg = roomsMsg[i] as Dictionary<string, object>;
-
-                    var roomData = new TableListGoData()
-                    {
-                        Num = msg.Int("num"),
-                        gamersCount = msg.Int("gamers_count"),
-                        Min = msg.Int("min"),
-                        Max = msg.Int("max"),
-                        needbg = (i % 2 == 0),
-                    };
-                    rowData.Add(roomData);
-                }
-
-                adapterParams.rowData.Clear();
-                adapterParams.rowData.AddRange(rowData);
-                _Adapter.ChangeItemCountTo(rowData.Count);
+                StartCoroutine(SetData(data));
             });
+        }
+
+        IEnumerator SetData(string data)
+        {
+            var rowData = new List<MTTPageData>();
+            var roomsMsg = Json.Decode(data) as List<object>;
+
+            transform.parent.parent.GetComponent<MTTMsg>().SetGoSize(roomsMsg.Count > 8);
+
+            yield return new WaitForSeconds(0.2f);
+            _Adapter.Init(adapterParams);
+
+
+            for (int i = 0; i < roomsMsg.Count; i++)
+            {
+                var msg = roomsMsg[i] as Dictionary<string, object>;
+
+                var roomData = new TableListGoData()
+                {
+                    Num = msg.Int("num"),
+                    gamersCount = msg.Int("gamers_count"),
+                    Min = msg.Int("min"),
+                    Max = msg.Int("max"),
+                    needbg = (i % 2 == 0),
+                };
+                rowData.Add(roomData);
+            }
+
+            adapterParams.rowData.Clear();
+            adapterParams.rowData.AddRange(rowData);
+            _Adapter.ChangeItemCountTo(rowData.Count);
         }
     }
 }

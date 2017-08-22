@@ -189,11 +189,11 @@ namespace MTTMsgPage
         {
             if (addHeight && _rectTransform.sizeDelta.y != 1286)
             {
-                _rectTransform.DOSizeDelta(new Vector2(860, 1286), 0.3f);
+                _rectTransform.DOSizeDelta(new Vector2(860, 1286), 0.2f);
             }
             else if (!addHeight && _rectTransform.sizeDelta.y != 1010)
             {
-                _rectTransform.DOSizeDelta(new Vector2(860, 1010), 0.3f);
+                _rectTransform.DOSizeDelta(new Vector2(860, 1010), 0.2f);
             }
         }
     }

@@ -68,39 +68,48 @@ namespace MTTMsgPage
 
         public void requestData() 
         {
-            var rowData = new List<MTTPageData>();
 
             HTTP.Get("/match-award", new Dictionary<string, object> {
                 {"match_id", GameData.Shared.MatchID },
             }, (data) =>
             {
-                var awardMsg = Json.Decode(data) as Dictionary<string, object>;
-
-                var total = awardMsg.Int("total");
-                JackpotTotal.text = total == -1? "固定奖池" : total.ToString();
-                Count.text = awardMsg.Int("count").ToString();
-
-                var roomsMsg = awardMsg.List("list");
-
-                transform.parent.parent.GetComponent<MTTMsg>().SetGoSize(roomsMsg.Count > 5);
-
-                for (int i = 0; i < roomsMsg.Count; i++)
-                {
-                    var msg = roomsMsg[i] as Dictionary<string, object>;
-
-                    var awardData = new AwardListGoData()
-                    {
-                        Rank = msg.Int("rank"),
-                        Award = msg.String("award"),
-                        needbg = (i % 2 == 0),
-                    };
-                    rowData.Add(awardData);
-                }
-
-                adapterParams.rowData.Clear();
-                adapterParams.rowData.AddRange(rowData);
-                _Adapter.ChangeItemCountTo(rowData.Count);
+                StartCoroutine(SetData(data));
             });
+        }
+
+        IEnumerator SetData(string data)
+        {
+            var rowData = new List<MTTPageData>();
+            var awardMsg = Json.Decode(data) as Dictionary<string, object>;
+
+            var total = awardMsg.Int("total");
+            JackpotTotal.text = total == -1 ? "固定奖池" : total.ToString();
+            Count.text = awardMsg.Int("count").ToString();
+
+            var roomsMsg = awardMsg.List("list");
+
+            transform.parent.parent.GetComponent<MTTMsg>().SetGoSize(roomsMsg.Count > 5);
+
+            yield return new WaitForSeconds(0.2f);
+
+            _Adapter.Init(adapterParams);
+
+            for (int i = 0; i < roomsMsg.Count; i++)
+            {
+                var msg = roomsMsg[i] as Dictionary<string, object>;
+
+                var awardData = new AwardListGoData()
+                {
+                    Rank = msg.Int("rank"),
+                    Award = msg.String("award"),
+                    needbg = (i % 2 == 0),
+                };
+                rowData.Add(awardData);
+            }
+
+            adapterParams.rowData.Clear();
+            adapterParams.rowData.AddRange(rowData);
+            _Adapter.ChangeItemCountTo(rowData.Count);
         }
     }
 }
