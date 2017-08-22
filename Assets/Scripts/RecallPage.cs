@@ -38,6 +38,7 @@ public class RecallPage : MonoBehaviour {
 	}
 
     private string favhand_id;
+	private int handId;
 
     private bool requesting = false;
     private string roomID;
@@ -121,6 +122,7 @@ public class RecallPage : MonoBehaviour {
 		HandSlider.maxValue = totalNumber;
         HandSlider.minValue = Mathf.Min(totalNumber, 1);
 		HandSlider.value = currentNumber = ret.Int("cur_hand");
+		handId = ret.Int("handid");
 
 		Total.text = string.Format("/ {0}", totalNumber);
 		Current.text = currentNumber.ToString();
@@ -231,45 +233,53 @@ public class RecallPage : MonoBehaviour {
     {
        Collect.isOn = !Collect.isOn;
 
-        var dict = new Dictionary<string, object>() { };
-        string f = "";
-
         if (Collect.isOn)
         {
-            dict = new Dictionary<string, object>() {
-                {"roomid", roomID},
-			    {"handid", currentNumber},
-		    };
-
-            f = "fav";
+			collect();
         }
         else {
-            dict = new Dictionary<string, object>() {
-                {"favhand_id", favhand_id},
-		    };
-
-            f = "notfav";
+			cancelCollect();	
         }
-
-        Connect.Shared.Emit(new Dictionary<string, object>() {
-				{"f", f},
-				{"args", dict}
-			},
-            (json, err) =>
-            {
-                if (err == 0 && f == "fav") {
-                    favhand_id = json.String("favhand_id");
-                } 
-            }
-        );
     }
 
+	private void collect() {
+		var dict = new Dictionary<string, object>() {
+				{"roomid", roomID},
+				{"handid", currentNumber},
+			};
+
+		Connect.Shared.Emit(new Dictionary<string, object>() {
+				{"f", "fav"},
+				{"args", dict}
+			},
+			(json, err) =>
+			{
+				if (err == 0)
+				{
+					favhand_id = json.String("favhand_id");
+				}
+			}
+		);	
+	}
+
+	private void cancelCollect() {
+		var dict = new Dictionary<string, object>() {
+				{"favhand_id", favhand_id},
+			};
+
+		Connect.Shared.Emit(new Dictionary<string, object>() {
+				{"f", "notfav"},
+				{"args", dict}
+			}
+		);
+	}
+
     public void ShareRecord() {
-		if (currentNumber <= 0) {
+		if (handId <= 0) {
 			return ;
 		}
 
-        Commander.Shared.ShareRecord(currentNumber);
+        Commander.Shared.ShareRecord(handId);
     }
 
     public void OnPointUpSlider() 
