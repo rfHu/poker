@@ -5,16 +5,16 @@ using System;
 
 namespace ScorePage {
     public class SNGRank1: MonoBehaviour {
-        [SerializeField]private Texture[] textures;
+        [SerializeField]private Sprite[] sprites;
 
         public void SetRank(int rank) {
-            var img = GetComponent<RawImage>();
+            var img = GetComponent<Image>();
 
             if (rank > 3 || rank <= 0) {
                 return ;
             }
 
-            img.texture = textures[rank - 1];
+            img.sprite = sprites[rank - 1];
         }
     }
 }
