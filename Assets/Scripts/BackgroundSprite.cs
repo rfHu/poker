@@ -3,32 +3,37 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
+using Unity.Linq;
 
-[RequireComponent(typeof(Image))]
 public class BackgroundSprite : MonoBehaviour {
-	private static Sprite sprite;
-	private Image bgImage;
+	private static GameObject prefab;
 
 	void Start()
 	{
-		bgImage = GetComponent<Image>();
-
 		GameSetting.TableSprite.Subscribe((type) => {
-			var spriteName = type == 0 ? "table" : "table_green";
+			var name = type == 0 ? "TableBlue" : "TableGreen";
 
-			if (sprite && sprite.name == spriteName) {
-				// skip
-			} else {
-				// 释放内存
-				if (sprite != null) {
-					Resources.UnloadAsset(sprite);
-				}
+			if (prefab != null && prefab.name == name) {
+				fillTable();
+				return ;	
+			} 
 
-				sprite = Resources.Load<Sprite>(spriteName);
+			// 释放内存
+			if (prefab != null) {
+				var image = prefab.GetComponent<Image>();
+				Resources.UnloadAsset(image.sprite);
 			}
 
-			bgImage.sprite = sprite;
-			bgImage.enabled = true;
+			var prefabPath = string.Format("Prefab/{0}", name);
+			prefab = Resources.Load<GameObject>(prefabPath);	
+			prefab.name = name;	
+		
+			fillTable();
 		}).AddTo(this);
 	}	
+
+	private void fillTable() {
+		gameObject.Children().Destroy();
+		Instantiate(prefab, transform, false);
+	}
 }
