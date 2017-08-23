@@ -15,7 +15,7 @@ public class Supplement : MonoBehaviour {
 	public Slider slider;
 
 	void Awake() {
-		RxSubjects.UnSeat.AsObservable().Where((e) => {
+		RxSubjects.UnSeat.Where((e) => {
 			var uid = e.Data.String("uid");
 			return GameData.Shared.Uid == uid;
 		}).Subscribe((e) => {

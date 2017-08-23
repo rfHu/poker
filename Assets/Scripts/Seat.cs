@@ -35,7 +35,7 @@ public class Seat : MonoBehaviour {
 	}
 
 	public void Show() {
-		if (GameData.Shared.Type == GameType.MTT) {
+		if (GameData.Shared.IsMatch()) {
 			return ;
 		}
 

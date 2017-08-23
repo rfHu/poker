@@ -412,7 +412,7 @@ public class Controller : MonoBehaviour {
 
 		}).AddTo(this);
 
-		RxSubjects.UnSeat.AsObservable().Subscribe((e) => {
+		RxSubjects.UnSeat.Subscribe((e) => {
 			var uid = e.Data.String("uid");
 			if (uid == GameData.Shared.Uid && e.Data.Int("type") == 2) {
 				PokerUI.Alert("您已连续3次超时，先站起来休息下吧~");
@@ -442,7 +442,7 @@ public class Controller : MonoBehaviour {
 				var seat = go.GetComponent<Seat>();
 				if (action) {
 					seat.Hide();
-				} else if (seat.Index >= 0) {
+				} else if (!GameData.Shared.Players.ContainsKey(seat.Index)) {
 					seat.Show();
 				}
 			}
