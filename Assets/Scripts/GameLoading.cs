@@ -19,7 +19,7 @@ public class GameLoading : MonoBehaviour {
 			external.SetProxy("http://localhost:8888");
 
             // var rid = "599a959abbf3de4d88dcc599";
-            var rid = "599c5966270fef0ea7324e75";
+            var rid = "599cd9aa270fef0ea7325136";
             var sid = "s%3A88z03pRbCO1dRah4xGOvBqFaSUkwLl6e.c0TFcEOx5hssTvbShn3mWbwdQf7d8vMe%2F5eDGsrmj4c";
 
 			// 外网登录态
