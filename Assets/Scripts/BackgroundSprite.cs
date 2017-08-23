@@ -18,12 +18,7 @@ public class BackgroundSprite : MonoBehaviour {
 				return ;	
 			} 
 
-			// 释放内存
-			// if (prefab != null) {
-			// 	var image = prefab.GetComponent<Image>();
-			// 	Resources.UnloadAsset(image.sprite);
-			// }
-
+			// 这样切换会导致内存极剧加大，后期考虑AssetBundle
 			var prefabPath = string.Format("Prefab/{0}", name);
 			prefab = Resources.Load<GameObject>(prefabPath);	
 			prefab.name = name;	
