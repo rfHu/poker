@@ -19,10 +19,10 @@ public class BackgroundSprite : MonoBehaviour {
 			} 
 
 			// 释放内存
-			if (prefab != null) {
-				var image = prefab.GetComponent<Image>();
-				Resources.UnloadAsset(image.sprite);
-			}
+			// if (prefab != null) {
+			// 	var image = prefab.GetComponent<Image>();
+			// 	Resources.UnloadAsset(image.sprite);
+			// }
 
 			var prefabPath = string.Format("Prefab/{0}", name);
 			prefab = Resources.Load<GameObject>(prefabPath);	

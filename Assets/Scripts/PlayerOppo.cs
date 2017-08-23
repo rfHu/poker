@@ -9,7 +9,8 @@ using System.Linq;
 
 namespace PokerPlayer {
     public class PlayerOppo: MonoBehaviour, PlayerDelegate {
-        public PlayerBase Base;
+        public GameObject BaseObject;
+		public PlayerBase Base;
 
 	    public Text NameLabel;
         public Text CardDesc;
@@ -50,7 +51,8 @@ namespace PokerPlayer {
 
         void Awake()
         {
-            Base = PlayerBase.LoadPrefab(transform);            
+			var go = Instantiate(BaseObject, transform, false);
+			Base = go.GetComponent<PlayerBase>();
 
             Countdown.gameObject.SetActive(false);                        
             Countdown.SetParent(Base.Circle, false);

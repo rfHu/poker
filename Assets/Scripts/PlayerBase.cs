@@ -498,19 +498,6 @@ namespace PokerPlayer {
             rect.anchoredPosition = new Vector2(0, 0);
             rect.localScale = new Vector2(1, 1);
         }
-
-        static private GameObject playerBase;
-
-        static public PlayerBase LoadPrefab(Transform parent) {
-            if (playerBase == null) {
-                playerBase = Resources.Load<GameObject>("Prefab/PlayerBase");
-            }
-
-            var go = Instantiate(playerBase);
-            var transform = go.GetComponent<Transform>();
-           	transform.SetParent(parent);			
-			return transform.GetComponent<PlayerBase>();
-        }
     }
 
 

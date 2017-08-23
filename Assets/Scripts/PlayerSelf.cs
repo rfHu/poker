@@ -9,6 +9,7 @@ using System.Linq;
 
 namespace PokerPlayer {
     public class PlayerSelf: MonoBehaviour, PlayerDelegate {
+		public GameObject BaseObject;
         public PlayerBase Base;
         public GameObject[] Eyes; 
         public GameObject AutoArea;
@@ -63,7 +64,8 @@ namespace PokerPlayer {
 
 		void Awake()
 		{
-			Base = PlayerBase.LoadPrefab(transform);
+			var go = Instantiate(BaseObject, transform, false);
+			Base = go.GetComponent<PlayerBase>();
 		}
 
 		void OnDespawned() {
