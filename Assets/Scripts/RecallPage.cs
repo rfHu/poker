@@ -243,9 +243,13 @@ public class RecallPage : MonoBehaviour {
     }
 
 	private void collect() {
+		if (handId <= 0) {
+			return ;
+		}
+
 		var dict = new Dictionary<string, object>() {
 				{"roomid", roomID},
-				{"handid", currentNumber},
+				{"handid", handId},
 			};
 
 		Connect.Shared.Emit(new Dictionary<string, object>() {
@@ -263,6 +267,10 @@ public class RecallPage : MonoBehaviour {
 	}
 
 	private void cancelCollect() {
+		if (string.IsNullOrEmpty(favhand_id)) {
+			return ;
+		}
+
 		var dict = new Dictionary<string, object>() {
 				{"favhand_id", favhand_id},
 			};

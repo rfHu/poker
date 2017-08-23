@@ -33,6 +33,12 @@ public class Controller : MonoBehaviour {
 	public List<GameObject> Seats;	
 
 	public GameObject PauseGame;
+	private Text PauseText {
+		get {
+			return PauseGame.transform.Find("Text").GetComponent<Text>();	
+		}
+	}
+
 
 	public GameObject BBGo;
 	public GameObject InviteCodeGo;
@@ -339,7 +345,7 @@ public class Controller : MonoBehaviour {
 			PauseGame.SetActive(true);
 
 			var text = GameData.Shared.IsMatch() ? "比赛报名中" : "等待房主开始游戏";
-			PauseGame.transform.Find("Text").GetComponent<Text>().text = text;
+			PauseText.text = text;
 		}
 	}
 
@@ -902,7 +908,7 @@ public class Controller : MonoBehaviour {
 				return ;
 			}
 
-			var text = PauseGame.transform.Find("Text").GetComponent<Text>();
+			var text = PauseText;
 
 			if (value == 5) {
 				PauseGame.SetActive(true);
@@ -924,20 +930,19 @@ public class Controller : MonoBehaviour {
 				PokerUI.DisAlert("服务器升级中…");
 				return ;
 			} 
-			
-			if (!GameData.Shared.GameStarted) {
-				return ;
-			}
 
 			if (GameData.Shared.IsMatch()) {
-				PauseGame.SetActive(false);
+				return ;
+			}
+			
+			if (!GameData.Shared.GameStarted) {
 				return ;
 			}
 
 			if (GameData.Shared.InGame || pause != 2) {
 				PauseGame.SetActive(false);
 			} else {
-				PauseGame.transform.Find("Text").GetComponent<Text>().text = "房主已暂停游戏";
+				PauseText.text = "房主已暂停游戏";
 				PauseGame.SetActive(true);
 			}
 		}).AddTo(this);
