@@ -53,7 +53,6 @@ namespace PokerPlayer {
 
         public void Init(Player player, Transform parent) {
             Base.Init(player, parent.GetComponent<Seat>(), this);
-			PlayerBase.SetInParent(transform, parent);
 
 			gameover = false;
             addEvents();

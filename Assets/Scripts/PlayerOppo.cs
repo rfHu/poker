@@ -94,7 +94,6 @@ namespace PokerPlayer {
 
         public void Init(Player player, Transform parent) {
             Base.Init(player, parent.GetComponent<Seat>(), this);
-            PlayerBase.SetInParent(transform, parent);
 
 		    NameLabel.text = player.Name;
 

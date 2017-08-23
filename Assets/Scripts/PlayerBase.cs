@@ -491,13 +491,6 @@ namespace PokerPlayer {
 		    Avt.GetComponent<CanvasGroup>().alpha = 0.4f;
 			ScoreParent.GetComponent<CanvasGroup>().alpha = 0.4f;
         }
-
-        static public void SetInParent(Transform target, Transform parent) {
-            target.SetParent(parent, true);
-			var rect = target.GetComponent<RectTransform>(); 
-            rect.anchoredPosition = new Vector2(0, 0);
-            rect.localScale = new Vector2(1, 1);
-        }
     }
 
 
