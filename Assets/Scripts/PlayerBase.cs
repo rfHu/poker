@@ -37,7 +37,7 @@ namespace PokerPlayer {
 	    public GameObject HandGo;
         public Transform Circle;
         [SerializeField] private ParticleSystem winParticle;
-        private Transform WinCq; 
+        private GameObject WinCq; 
         public Text WinNumber;
         public Text RankText;
         [SerializeField] private ParticleSystem chipsParticle;
@@ -49,6 +49,12 @@ namespace PokerPlayer {
 
         [SerializeField]private Text hunterAward;
 
+		private GameObject hunterParent {
+			get {
+				return hunterAward.transform.parent.gameObject;	
+			}
+		}
+
         private Seat theSeat;
 
         private PlayerDelegate myDelegate;
@@ -59,7 +65,6 @@ namespace PokerPlayer {
             this.myDelegate = myDelegate;
             SpkText.Uid = player.Uid;
 		    setScoreText(player.Bankroll.Value);
-            GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
 
             var avatar = Avt.GetComponent<Avatar>();
 		    avatar.Uid = player.Uid;
@@ -75,6 +80,12 @@ namespace PokerPlayer {
             addEvents();
         }
 
+		static public PlayerBase Load(GameObject prefab, Transform parent) {
+			var go = Instantiate(prefab, parent, false);
+            go.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
+			return go.GetComponent<PlayerBase>();
+		}
+
         public int AnimID {
             get {
                 return gameObject.GetInstanceID(); 
@@ -82,8 +93,7 @@ namespace PokerPlayer {
         } 
 
         void Awake() {
-            WinCq = WinNumber.transform.parent;
-            GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
+            WinCq = WinNumber.transform.parent.gameObject;
         }
 
         private void playParticle(ParticleSystem particle) {
@@ -112,9 +122,9 @@ namespace PokerPlayer {
             // 取消所有动画
             DOTween.Pause(AnimID);
 
-            hunterAward.transform.parent.gameObject.SetActive(false);
+            hunterParent.SetActive(false);
             lastState = ActionState.None;
-            WinCq.gameObject.SetActive(false);
+            WinCq.SetActive(false);
             ScoreParent.SetActive(true);
 			ScoreParent.GetComponent<CanvasGroup>().alpha = 1;
             PlayerAct.SetActive(false, false);
@@ -122,11 +132,7 @@ namespace PokerPlayer {
             Circle.gameObject.SetActive(true);
             RankText.transform.parent.gameObject.SetActive(false);
 
-            var cgo = theSeat.GetComponentInChildren<ChipsGo>();
-            if (cgo != null) {
-                PoolMan.Despawn(cgo.transform);
-            }
-
+			theSeat.RemoveChip();
             Volume.SetActive(false);
             ScoreLabel.gameObject.SetActive(true);
         } 
@@ -142,7 +148,7 @@ namespace PokerPlayer {
         private void addEvents() {
             player.HeadValue.Subscribe((value) => {
                 if (value > 0) {
-                    hunterAward.transform.parent.gameObject.SetActive(true);
+                    hunterParent.SetActive(true);
                     hunterAward.text = _.Num2CnDigit(value);
                 }
             }).AddTo(this);
@@ -262,6 +268,7 @@ namespace PokerPlayer {
 
             player.LastAct.Subscribe((act) => {
 				if (IsMyTurn) {
+					PlayerAct.SetActive(false, false);
 					return ;
 				}
 
@@ -307,8 +314,6 @@ namespace PokerPlayer {
             RxSubjects.MoveTurn.Subscribe((e) => {
             	var uid = e.Data.String("uid");
             	var dc = e.Data.Int("deal_card");
-            
-                CurrentUid = uid;
 
             	if (uid == Uid) {
             		myDelegate.TurnTo(e.Data, GameData.Shared.ThinkTime);
@@ -375,7 +380,7 @@ namespace PokerPlayer {
                     rect.anchoredPosition = new Vector2(0, -300);
                     rect.DOAnchorPos(new Vector2(0, -224), 0.3f).SetId(AnimID);
 
-                    WinCq.gameObject.SetActive(true); 
+                    WinCq.SetActive(true); 
                     WinNumber.text = _.Number2Text(gain);
                     ScoreParent.SetActive(false);
                 }
@@ -411,7 +416,7 @@ namespace PokerPlayer {
 
         private void hideWinAnim() {
             stopParticle(winParticle);
-            DoFade(WinCq.gameObject, () => {
+            DoFade(WinCq, () => {
                 ScoreParent.SetActive(true);
             });
             myDelegate.WinEnd();
@@ -444,17 +449,17 @@ namespace PokerPlayer {
 	    }
 
         private void setPrChips(int value) {
-            var existChips = theSeat.GetComponentInChildren<ChipsGo>();
-
             var newChips = PoolMan.Spawn("UpChip");
-            newChips.SetParent(theSeat.transform, false);
-            newChips.SetAsLastSibling();
+			theSeat.AddChip(newChips);
 
-            if (existChips == null) {
+            if (theSeat.Chip == null) {
                 newChips.GetComponent<ChipsGo>().Create(value, theSeat, player);
             } else {
                 newChips.GetComponent<ChipsGo>().AddMore(() => {
-                    existChips.SetChips(value);
+					var chip = theSeat.Chip;
+					if (chip != null) {
+                    	chip.GetComponent<ChipsGo>().SetChips(value);
+					}
                 }, theSeat, player);	
             }	
         }

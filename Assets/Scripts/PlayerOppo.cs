@@ -51,8 +51,7 @@ namespace PokerPlayer {
 
         void Awake()
         {
-			var go = Instantiate(BaseObject, transform, false);
-			Base = go.GetComponent<PlayerBase>();
+			Base = PlayerBase.Load(BaseObject, transform);
 
             Countdown.gameObject.SetActive(false);                        
             Countdown.SetParent(Base.Circle, false);
@@ -208,6 +207,8 @@ namespace PokerPlayer {
         }
 
         public void TurnTo(Dictionary<string, object> data, int left) {
+			PlayerBase.CurrentUid = player.Uid;
+
             if (turnFactor != null) {
                 StopCoroutine(turnFactor);
             }

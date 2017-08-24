@@ -63,8 +63,7 @@ namespace PokerPlayer {
 
 		void Awake()
 		{
-			var go = Instantiate(BaseObject, transform, false);
-			Base = go.GetComponent<PlayerBase>();
+			Base = PlayerBase.Load(BaseObject, transform);	
 		}
 
 		void OnDespawned() {
@@ -274,6 +273,8 @@ namespace PokerPlayer {
 	}
 
 	private void turnTo(Dictionary<string, object> dict, int left, bool restore = false,int buyTimeCost = 10) {
+		PlayerBase.CurrentUid = player.Uid;
+
 			showOP(dict, left, buyTimeCost);
 
 			var flag = player.Trust.FlagString();
