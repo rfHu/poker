@@ -51,8 +51,15 @@ namespace PokerPlayer {
 		} 
         private bool gameover = false;
 
-        public void Init(Player player, Transform parent) {
-            Base.Init(player, parent.GetComponent<Seat>(), this);
+
+		static public void Init(Player player, Seat seat) {
+			var transform = PoolMan.Spawn("PlayerSelf", seat.transform);
+			transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
+			transform.GetComponent<PlayerSelf>().init(player, seat);
+		}
+
+        private void init(Player player, Seat seat) {
+            Base.Init(player, seat, this);
 
 			gameover = false;
             addEvents();

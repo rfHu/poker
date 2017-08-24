@@ -91,8 +91,14 @@ namespace PokerPlayer {
 			}
 		}
 
-        public void Init(Player player, Transform parent) {
-            Base.Init(player, parent.GetComponent<Seat>(), this);
+		public static void Init(Player player, Seat seat) {
+			var transform = PoolMan.Spawn("PlayerOppo", seat.transform);
+			transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
+			transform.GetComponent<PlayerOppo>().init(player, seat);
+		}
+
+        private void init(Player player, Seat seat) {
+            Base.Init(player, seat, this);
 
 		    NameLabel.text = player.Name;
 

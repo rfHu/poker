@@ -7,6 +7,7 @@ using UniRx;
 using DarkTonic.MasterAudio;
 using SimpleJSON;
 using DG.Tweening;
+using PokerPlayer;
 
 public class Controller : MonoBehaviour {
 	public GameObject LoadingModal;
@@ -521,7 +522,7 @@ public class Controller : MonoBehaviour {
                     }
                 }
 
-                parent = aimSeat.GetComponentInChildren<PokerPlayer.PlayerOppo>().transform;
+                parent = aimSeat.GetComponentInChildren<PlayerOppo>().transform;
             }
 
             expression.GetComponent<Expression>().SetTrigger(expressionName, parent, () => {
@@ -802,28 +803,21 @@ public class Controller : MonoBehaviour {
 	}
 
 	private void subsPlayer() {
-		Action<Player> showPlayer = (obj) => {
-			var parent = Seats[obj.Index].transform;
+		Action<Player> showPlayer = (player) => {
+			var seat = Seats[player.Index].GetComponent<Seat>();
 
-			var oppo = parent.GetComponentInChildren<PokerPlayer.PlayerOppo>();
-			if (oppo != null) {
-				PoolMan.Despawn(oppo.transform);
+			var playerBase = seat.GetComponentInChildren<PlayerBase>();
+			if (playerBase != null) {
+				playerBase.Despawn();	
 			}
 
-			var sel = parent.GetComponentInChildren<PokerPlayer.PlayerSelf>();
-			if (sel != null) {
-				PoolMan.Despawn(sel.transform);
-			}
-
-			if (obj.Uid == GameData.Shared.Uid) {
-				var go = PoolMan.Spawn("PlayerSelf");
-				go.GetComponent<PokerPlayer.PlayerSelf>().Init(obj, parent);
+			if (player.Uid == GameData.Shared.Uid) {
+				PlayerSelf.Init(player, seat);	
 			} else {
-				var go = PoolMan.Spawn("PlayerOppo");
-				go.GetComponent<PokerPlayer.PlayerOppo>().Init(obj, parent);
+				PlayerOppo.Init(player, seat);	
 			}
 
-			parent.GetComponent<Seat>().Hide();
+			seat.Hide();
 		};
 
 		Action<int> enableSeat = (index) => {

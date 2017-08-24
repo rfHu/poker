@@ -8,6 +8,12 @@ using System;
 using System.Collections.Generic;
 
 namespace PokerPlayer {
+		public enum PlayerType
+		{
+			Self,
+			Oppo
+		}
+
     public class PlayerBase: MonoBehaviour {
         public string Uid {
             get {
@@ -144,6 +150,10 @@ namespace PokerPlayer {
                 ScoreLabel.text = _.Num2CnDigit(number);
             }
         }
+
+		public void Despawn() {
+			myDelegate.Despawn();
+		}
 
         private void addEvents() {
             player.HeadValue.Subscribe((value) => {
