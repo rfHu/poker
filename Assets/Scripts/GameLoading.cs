@@ -9,38 +9,26 @@ public class GameLoading : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake () {
-
 		Application.targetFrameRate = 60;
-
 		var external = External.Instance;
 
+		var debug = false;
+
 		#if UNITY_EDITOR  
-			external.SetSocket("https://socket.poker.top");
-			external.SetProxy("http://localhost:8888");
-
-            // var rid = "599a959abbf3de4d88dcc599";
-            var rid = "599d3a60f3125650640a54fa";
-            var sid = "s%3AXj4dKeQtzrCf1gobRD1gJ4iUhv6ImrFJ.pU%2FP84kTUJj0JM55xJMlnxc5U3mZ4lJ9GdFZcxbEsZo";
-
-			// 外网登录态
-			// var sid = "s%3AHlY6SR0V3m8oM2oofbX_yl5R7f6v6Q7R.PK%2FqqIiSZHB0zLgH%2BwV52Yesi3CcsTPJFC3JPb7tjSQ";
-
-            external.InitGame(rid + "&" + sid);
-			//external.InitMatch(rid + "&" + sid);
+			debug = true;	
 		#endif
 
-		// 开启SDK的日志打印，发布版本请务必关闭
-		//BuglyAgent.ConfigDebugMode (true);
+		if (Debug.isDebugBuild || debug) {
+			debugSetup();
+		}
 
 		BuglyAgent.RegisterLogCallback (CallbackDelegate.Instance.OnApplicationLogCallbackHandler);
-
-#if UNITY_IPHONE || UNITY_IOS
+		#if UNITY_IPHONE || UNITY_IOS
             BuglyAgent.InitWithAppId ("b3d868488f");
-#endif
+		#endif
 
 		// 如果你确认已在对应的iOS工程或Android工程中初始化SDK，那么在脚本中只需启动C#异常捕获上报功能即可
 		BuglyAgent.EnableExceptionHandler ();
-
 		registerEvents();
 	}
 
@@ -63,5 +51,14 @@ public class GameLoading : MonoBehaviour {
 
 	public void ExitGame() {
 		External.Instance.Exit();
+	}
+
+	private void debugSetup() {
+		External.Instance.SetSocket("https://socket.poker.top");
+		// External.Instance.SetProxy("http://localhost:8888");
+		var rid = "599fdfdd679ec14cf50f6e84";
+		var sid = "s%3AGCokxL5kewH4dD49gc-uRvGiEQ5KITkq.AvO3J3WQmbl2cmp4GIMZtntf0Is52fo54fz9AI7ZF%2BA";
+
+		External.Instance.InitGame(rid + "&" + sid);
 	}
 }
