@@ -7,7 +7,7 @@ namespace DarkTonic.MasterAudio {
     public static class AmbientUtil {
         public const string FollowerHolderName = "_Followers";
         public const string ListenerFollowerName = "~ListenerFollower~";
-        public const float ListenerFollowerTrigRadius = 1f;
+        public const float ListenerFollowerTrigRadius = .01f;
 
         private static Transform _followerHolder;
         private static ListenerFollower _listenerFollower;
@@ -51,13 +51,14 @@ namespace DarkTonic.MasterAudio {
             var triggerRadius = grp.groupVariations[0].VarAudio.maxDistance;
 
             var follower = new GameObject(followerName);
-            var existingDupe = FollowerHolder.Find(followerName);
+            var existingDupe = FollowerHolder.GetChildTransform(followerName);
             if (existingDupe != null) {
                 GameObject.Destroy(existingDupe.gameObject);
             }
 
             follower.transform.parent = FollowerHolder;
-            var followerScript = follower.gameObject.AddComponent<TransformFollower>();
+			follower.gameObject.layer = FollowerHolder.gameObject.layer;
+			var followerScript = follower.gameObject.AddComponent<TransformFollower>();
 
             followerScript.StartFollowing(transToFollow, soundGroupName, triggerRadius, willFollowSource);
             return follower.transform;
@@ -73,10 +74,11 @@ namespace DarkTonic.MasterAudio {
                     return null;
                 }
 
-                var follower = FollowerHolder.Find(ListenerFollowerName);
+                var follower = FollowerHolder.GetChildTransform(ListenerFollowerName);
                 if (follower == null) {
                     follower = new GameObject(ListenerFollowerName).transform;
                     follower.parent = FollowerHolder;
+					follower.gameObject.layer = FollowerHolder.gameObject.layer;
                 }
 
                 _listenerFollower = follower.GetComponent<ListenerFollower>();
@@ -102,7 +104,7 @@ namespace DarkTonic.MasterAudio {
                 }
 
                 var ma = MasterAudio.SafeInstance.Trans;
-                _followerHolder = ma.Find(FollowerHolderName);
+                _followerHolder = ma.GetChildTransform(FollowerHolderName);
 
                 if (_followerHolder != null) {
                     return _followerHolder;
@@ -110,9 +112,14 @@ namespace DarkTonic.MasterAudio {
 
                 _followerHolder = new GameObject(FollowerHolderName).transform;
                 _followerHolder.parent = ma;
+				_followerHolder.gameObject.layer = ma.gameObject.layer;
 
                 return _followerHolder;
             }
+        }
+
+        public static bool HasListenerFollower {
+            get { return _listenerFollower != null; }
         }
     }
 }

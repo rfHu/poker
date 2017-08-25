@@ -13,7 +13,9 @@ namespace DarkTonic.MasterAudio {
         public float StartTime;
         public float CompletionTime;
         public bool IsActive = true;
-        // ReSharper disable once InconsistentNaming
+		public bool WillStopGroupAfterFade = false;
+		public bool WillResetVolumeAfterFade = false;
+		// ReSharper disable once InconsistentNaming
         // ReSharper disable once RedundantNameQualifier
         public System.Action completionAction;
     }

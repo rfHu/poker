@@ -4,12 +4,12 @@ using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-#if UNITY_4_6 || UNITY_4_7 || UNITY_5
+#if UNITY_4_6 || UNITY_4_7 || UNITY_5 || UNITY_2017
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 #endif
 
-#if UNITY_5
+#if UNITY_5 || UNITY_2017
 using UnityEngine.Audio;
 #endif
 
@@ -106,7 +106,7 @@ public class AudioEventInspector : Editor {
 
         _sounds = (EventSounds)target;
 
-#if UNITY_4_6 || UNITY_4_7 || UNITY_5
+#if UNITY_4_6 || UNITY_4_7 || UNITY_5 || UNITY_2017
         var showNewUIEvents = _sounds.unityUIMode == EventSounds.UnityUIVersion.uGUI;
         var hasSlider = _sounds.GetComponent<Slider>() != null;
         var hasButton = _sounds.GetComponent<Button>() != null;
@@ -699,7 +699,7 @@ public class AudioEventInspector : Editor {
             RenderEventWithHeader("Mouse Up (Legacy)" + DisabledText, "toggle Mouse Up (Legacy) Sound", _sounds.mouseUpSound, EventSounds.EventType.OnMouseUp);
         }
 
-#if UNITY_4_6 || UNITY_4_7 || UNITY_5
+#if UNITY_4_6 || UNITY_4_7 || UNITY_5 || UNITY_2017
         if (showNewUIEvents) {
             if (hasSlider) {
                 if (_sounds.useUnitySliderChangedSound) {
@@ -860,7 +860,7 @@ public class AudioEventInspector : Editor {
         //DrawDefaultInspector();
     }
 
-#if UNITY_4_6 || UNITY_4_7 || UNITY_5
+#if UNITY_4_6 || UNITY_4_7 || UNITY_5 || UNITY_2017
     private bool HasEventTrigger {
         get {
             return _sounds.GetComponent<EventTrigger>() != null;
@@ -876,7 +876,7 @@ public class AudioEventInspector : Editor {
 
             var trig = _sounds.gameObject.AddComponent<EventTrigger>();
 
-#if UNITY_5_1 || UNITY_5_2 || UNITY_5_3 || UNITY_5_4 || UNITY_5_5 || UNITY_5_6 || UNITY_5_7
+#if UNITY_5_1 || UNITY_5_2 || UNITY_5_3 || UNITY_5_4 || UNITY_5_5 || UNITY_5_6 || UNITY_5_7 || UNITY_2017
             if (trig.triggers == null) {
                 trig.triggers = new List<EventTrigger.Entry>();
             }
@@ -1742,8 +1742,20 @@ public class AudioEventInspector : Editor {
                                                 if (trs != null) {
                                                     Selection.activeObject = trs;
                                                 }
-                                                break;
+                                                break; 
                                         }
+
+										var buttonPress = DTGUIHelper.AddDynamicVariationButtons();
+										var sType = _groupNames[existingIndex];		
+
+										switch (buttonPress) {
+											case DTGUIHelper.DTFunctionButtons.Play:
+												DTGUIHelper.PreviewSoundGroup(sType);
+												break;
+											case DTGUIHelper.DTFunctionButtons.Stop:
+												DTGUIHelper.StopPreview(sType);
+												break;
+										}
                                     }
 
                                     EditorGUILayout.EndHorizontal();
@@ -2031,6 +2043,7 @@ public class AudioEventInspector : Editor {
                                         AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "change Fade Time");
                                         aEvent.fadeTime = newFadeTime;
                                     }
+
                                     break;
                                 case MasterAudio.PlaylistCommand.PlayClip:
                                     var newClip = EditorGUILayout.TextField("Clip Name", aEvent.clipName);
@@ -2157,6 +2170,19 @@ public class AudioEventInspector : Editor {
                                         AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "change Fade Time");
                                         aEvent.fadeTime = newFadeTime;
                                     }
+
+									var newStop = EditorGUILayout.Toggle("Stop Group After Fade", aEvent.stopAfterFade);
+									if (newStop != aEvent.stopAfterFade) {
+										AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "toggle Stop Group After Fade");
+										aEvent.stopAfterFade = newStop;
+									}
+									
+									var newRestore = EditorGUILayout.Toggle("Restore Volume After Fade", aEvent.restoreVolumeAfterFade);
+									if (newRestore != aEvent.restoreVolumeAfterFade) {
+										AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "toggle Restore Volume After Fade");
+										aEvent.restoreVolumeAfterFade = newRestore;
+									}
+
                                     break;
                                 case MasterAudio.SoundGroupCommand.FadeOutAllOfSound:
                                     var newFadeT = EditorGUILayout.Slider("Fade Time", aEvent.fadeTime, 0f, 10f);
@@ -2332,7 +2358,7 @@ public class AudioEventInspector : Editor {
                                 case MasterAudio.BusCommand.None:
                                     DTGUIHelper.ShowRedError("You have no command selected. Action will do nothing.");
                                     break;
-                                case MasterAudio.BusCommand.ChangeBusPitch:
+                                case MasterAudio.BusCommand.ChangePitch:
                                     var newPitch = DTGUIHelper.DisplayPitchField(aEvent.pitch);
                                     if (newPitch != aEvent.pitch) {
                                         AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "change Pitch");
@@ -2370,6 +2396,19 @@ public class AudioEventInspector : Editor {
                                         AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "change Fade Time");
                                         aEvent.fadeTime = newFadeTime;
                                     }
+
+									var newStop = EditorGUILayout.Toggle("Stop Bus After Fade", aEvent.stopAfterFade);
+									if (newStop != aEvent.stopAfterFade) {
+										AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "toggle Stop Bus After Fade");
+										aEvent.stopAfterFade = newStop;
+									}
+									
+									var newRestore = EditorGUILayout.Toggle("Restore Volume After Fade", aEvent.restoreVolumeAfterFade);
+									if (newRestore != aEvent.restoreVolumeAfterFade) {
+										AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "toggle Restore Volume After Fade");
+										aEvent.restoreVolumeAfterFade = newRestore;
+									}
+
                                     break;
                                 case MasterAudio.BusCommand.Pause:
                                     break;
@@ -2527,7 +2566,7 @@ public class AudioEventInspector : Editor {
                                     break;
                             }
                             break;
-#if UNITY_5
+#if UNITY_5 || UNITY_2017
                         case MasterAudio.EventSoundFunctionType.UnityMixerControl:
                             var newMix = (MasterAudio.UnityMixerCommand)EditorGUILayout.EnumPopup("Unity Mixer Cmd", aEvent.currentMixerCommand);
                             if (newMix != aEvent.currentMixerCommand) {

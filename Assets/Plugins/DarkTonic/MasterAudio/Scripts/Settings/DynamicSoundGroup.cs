@@ -35,7 +35,7 @@ namespace DarkTonic.MasterAudio {
 
         public int busIndex = -1;
 
-#if UNITY_5
+#if UNITY_5 || UNITY_2017
         public MasterAudio.ItemSpatialBlendType spatialBlendType = MasterAudio.ItemSpatialBlendType.ForceTo3D;
 		public float spatialBlend = 1f;
 #endif
@@ -65,8 +65,11 @@ namespace DarkTonic.MasterAudio {
         public bool copySettingsExpanded = false;
         public int selectedVariationIndex = 0;
 
-        public MasterAudioGroup.ChildGroupMode childGroupMode = MasterAudioGroup.ChildGroupMode.None;
+        public bool expandLinkedGroups = false;
         public List<string> childSoundGroups = new List<string>();
+        public List<string> endLinkedGroups = new List<string>();
+        public MasterAudio.LinkedGroupSelectionType linkedStartGroupSelectionType = MasterAudio.LinkedGroupSelectionType.All;
+        public MasterAudio.LinkedGroupSelectionType linkedStopGroupSelectionType = MasterAudio.LinkedGroupSelectionType.All;
 
         public List<DynamicGroupVariation> groupVariations = new List<DynamicGroupVariation>();
         // filled and used by Inspector only

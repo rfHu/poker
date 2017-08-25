@@ -1,4 +1,5 @@
-﻿using DarkTonic.MasterAudio;
+﻿/*! \cond PRIVATE */
+using DarkTonic.MasterAudio;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace
@@ -93,3 +94,4 @@ public class ListenerFollower : MonoBehaviour {
         }
     }
 }
+/*! \endcond */

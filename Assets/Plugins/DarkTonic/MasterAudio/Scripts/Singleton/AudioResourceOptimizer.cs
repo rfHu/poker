@@ -149,7 +149,7 @@ namespace DarkTonic.MasterAudio {
             clips.Add(resAudioClip); // even needs to add duplicates
         }
 
-#if UNITY_4_5_3 || UNITY_4_5_4 || UNITY_4_5_5 || UNITY_4_6 || UNITY_4_7 || UNITY_5
+#if UNITY_4_5_3 || UNITY_4_5_4 || UNITY_4_5_5 || UNITY_4_6 || UNITY_4_7 || UNITY_5 || UNITY_2017
         public static IEnumerator PopulateResourceSongToPlaylistControllerAsync(string songResourceName,
             string playlistName, PlaylistController controller, PlaylistController.AudioPlayType playType) {
             var asyncRes = Resources.LoadAsync(songResourceName, typeof(AudioClip));
@@ -217,10 +217,14 @@ namespace DarkTonic.MasterAudio {
                     yield break;
                 }
 
+#if UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_5_0 || UNITY_5_1 || UNITY_5_2 || UNITY_5_3 || UNITY_5_4 || UNITY_5_5
+                internetClip = fileRequest.audioClip;
+#else
                 internetClip = fileRequest.GetAudioClip();
+#endif
 
-				// assign clip name
-				string[] urlParts = new Uri(fileUrl).Segments;
+                // assign clip name
+                string[] urlParts = new Uri(fileUrl).Segments;
 				internetClip.name = Path.GetFileNameWithoutExtension(urlParts[urlParts.Length - 1]);
             }
 
@@ -348,7 +352,7 @@ namespace DarkTonic.MasterAudio {
             }
         }
 #else
-	public static IEnumerator PopulateResourceSongToPlaylistControllerAsync(string songResourceName, string playlistName, PlaylistController controller, PlaylistController.AudioPlayType playType) {
+        public static IEnumerator PopulateResourceSongToPlaylistControllerAsync(string songResourceName, string playlistName, PlaylistController controller, PlaylistController.AudioPlayType playType) {
 		MasterAudio.LogError("If this method got called, please report it to Dark Tonic immediately. It should not happen.");
 		yield break;
 	}

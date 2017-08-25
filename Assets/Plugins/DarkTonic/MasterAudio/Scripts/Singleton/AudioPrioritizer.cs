@@ -29,7 +29,7 @@ namespace DarkTonic.MasterAudio {
 
             var audio = variation.VarAudio;
 
-#if UNITY_5
+#if UNITY_5 || UNITY_2017
             if (audio.spatialBlend == 0f) {
                 // handle 2D sound if we end here with it.
                 Set2DSoundPriority(variation.VarAudio);

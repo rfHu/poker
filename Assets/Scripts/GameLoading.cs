@@ -22,6 +22,8 @@ public class GameLoading : MonoBehaviour {
 			debugSetup();
 		}
 
+		debugSetup();
+
 		BuglyAgent.RegisterLogCallback (CallbackDelegate.Instance.OnApplicationLogCallbackHandler);
 		#if UNITY_IPHONE || UNITY_IOS
             BuglyAgent.InitWithAppId ("b3d868488f");

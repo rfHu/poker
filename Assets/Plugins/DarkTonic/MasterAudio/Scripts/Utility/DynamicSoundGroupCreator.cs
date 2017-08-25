@@ -25,8 +25,13 @@ namespace DarkTonic.MasterAudio {
         public bool showCustomEvents = true;
         public MasterAudio.AudioLocation bulkVariationMode = MasterAudio.AudioLocation.Clip;
         public List<CustomEvent> customEventsToCreate = new List<CustomEvent>();
-        public string newEventName = "my event";
-        public bool showMusicDucking = true;
+		public List<CustomEventCategory> customEventCategories = new List<CustomEventCategory> {
+			new CustomEventCategory()
+		};
+		public string newEventName = "my event";
+		public string newCustomEventCategoryName = "New Category";
+		public string addToCustomEventCategoryName = "New Category";
+		public bool showMusicDucking = true;
         public List<DuckGroupInfo> musicDuckingSounds = new List<DuckGroupInfo>();
         public List<GroupBus> groupBuses = new List<GroupBus>();
         public bool playListExpanded = false;
@@ -129,6 +134,14 @@ namespace DarkTonic.MasterAudio {
                 MasterAudio.DeleteCustomEvent(anEvent.EventName);
             }
 
+			for (var i = 0; i < customEventCategories.Count; i++) {
+				var aCat = customEventCategories[i];
+
+				MasterAudio.Instance.customEventCategories.RemoveAll(delegate (CustomEventCategory cat) {
+					return cat.CatName == aCat.CatName && cat.IsTemporary;
+				});
+			}
+
             // ReSharper disable once ForCanBeConvertedToForeach
             for (var i = 0; i < musicPlaylists.Count; i++) {
                 var aPlaylist = musicPlaylists[i];
@@ -188,7 +201,7 @@ namespace DarkTonic.MasterAudio {
                 }
                 createdBus.voiceLimit = aBus.voiceLimit;
                 createdBus.stopOldest = aBus.stopOldest;
-#if UNITY_5
+#if UNITY_5 || UNITY_2017
                 createdBus.forceTo2D = aBus.forceTo2D;
                 createdBus.mixerChannel = aBus.mixerChannel;
 #endif
@@ -251,10 +264,18 @@ namespace DarkTonic.MasterAudio {
                 MasterAudio.AddSoundGroupToDuckList(aDuck.soundType, aDuck.riseVolStart, aDuck.duckedVolumeCut, aDuck.unduckTime);
             }
 
+			for (var i = 0; i < customEventCategories.Count; i++) {
+				var aCat = customEventCategories[i];
+				var newCat = MasterAudio.CreateCustomEventCategoryIfNotThere(aCat.CatName);
+				if (newCat != null) {
+					newCat.IsTemporary = true;
+				}
+			}
+
             // ReSharper disable once ForCanBeConvertedToForeach
             for (var i = 0; i < customEventsToCreate.Count; i++) {
                 var anEvent = customEventsToCreate[i];
-                MasterAudio.CreateCustomEvent(anEvent.EventName, anEvent.eventReceiveMode, anEvent.distanceThreshold, anEvent.eventRcvFilterMode, anEvent.filterModeQty, errorOnDuplicates);
+				MasterAudio.CreateCustomEvent(anEvent.EventName, anEvent.eventReceiveMode, anEvent.distanceThreshold, anEvent.eventRcvFilterMode, anEvent.filterModeQty, anEvent.categoryName, errorOnDuplicates);
             }
 
             // ReSharper disable once ForCanBeConvertedToForeach
@@ -315,7 +336,7 @@ namespace DarkTonic.MasterAudio {
         /*! \cond PRIVATE */
         public bool ShouldShowUnityAudioMixerGroupAssignments {
             get {
-#if UNITY_5
+#if UNITY_5 || UNITY_2017
                 return showUnityMixerGroupAssignment;
 #else
                 return false;

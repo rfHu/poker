@@ -36,6 +36,11 @@ public class MasterAudioEventBackend : MinimalBackend<object, string> {
         public LinkedGroupNode(string groupName) { this.groupName = groupName; }
     }
 
+    public class EndLinkedGroupNode {
+        public string groupName;
+        public EndLinkedGroupNode(string groupName) { this.groupName = groupName; }
+    }
+
     public class EventGroupData {
         public EventSounds.EventType type;
         public Func<EventSounds, AudioEventGroup> getGroup;
@@ -151,12 +156,17 @@ public class MasterAudioEventBackend : MinimalBackend<object, string> {
 
         var asAmbientSoundNode = entity as AmbientSoundNode;
         if (asAmbientSoundNode != null) {
-            foreach (var linkedGroupName in GetLinkedGroups(asAmbientSoundNode._groupName)) {
+            foreach (var linkedGroupName in GetStartLinkedGroups(asAmbientSoundNode._groupName)) {
                 yield return
                     new Relation<object, string>(asAmbientSoundNode, new LinkedGroupNode(linkedGroupName),
-                        GetGroupLinkLabel(asAmbientSoundNode._groupName));
+                        GetGroupLinkLabel(asAmbientSoundNode._groupName, false));
             }
-            yield break; 
+            foreach (var endLinkedGroupName in GetStopLinkedGroups(asAmbientSoundNode._groupName)) {
+                yield return
+                    new Relation<object, string>(asAmbientSoundNode, new EndLinkedGroupNode(endLinkedGroupName),
+                        GetGroupLinkLabel(asAmbientSoundNode._groupName, true));
+            }
+            yield break;
         }
 
         // connect EventSounds components to their AudioEventGroups that contain actions
@@ -181,10 +191,15 @@ public class MasterAudioEventBackend : MinimalBackend<object, string> {
         var asAction = entity as AudioEvent;
         if (asAction != null) {
             if (asAction.currentSoundFunctionType == MasterAudio.EventSoundFunctionType.PlaySound) {
-                foreach (var linkedGroupName in GetLinkedGroups(asAction.soundType)) {
+                foreach (var linkedGroupName in GetStartLinkedGroups(asAction.soundType)) {
                     yield return
                         new Relation<object, string>(asAction, new LinkedGroupNode(linkedGroupName),
-                            GetGroupLinkLabel(asAction.soundType));
+                            GetGroupLinkLabel(asAction.soundType, true));
+                }
+                foreach (var endLinkedGroupName in GetStopLinkedGroups(asAction.soundType)) {
+                    yield return
+                        new Relation<object, string>(asAction, new EndLinkedGroupNode(endLinkedGroupName),
+                            GetGroupLinkLabel(asAction.soundType, false));
                 }
             }
             yield break;
@@ -222,15 +237,29 @@ public class MasterAudioEventBackend : MinimalBackend<object, string> {
                     if (!string.IsNullOrEmpty(asStateSounds.enterSoundGroup) && !FilterSoundGroup(asStateSounds.enterSoundGroup)) {
                         yield return new Relation<object, string>(
                             asAnimState,
-                            new MechanimEventSound(asStateSounds.enterSoundGroup, "OnEnter"),
+                            new MechanimEventSound(asStateSounds.enterSoundGroup, "On Enter"),
                             "plays on state entry");
                     }
 
                     if (!string.IsNullOrEmpty(asStateSounds.exitSoundGroup) && !FilterSoundGroup(asStateSounds.exitSoundGroup)) {
                         yield return new Relation<object, string>(
                             asAnimState,
-                            new MechanimEventSound(asStateSounds.exitSoundGroup, "OnExit"),
+                            new MechanimEventSound(asStateSounds.exitSoundGroup, "On Exit"),
                             "plays on state exit");
+                    }
+
+                    if (!string.IsNullOrEmpty(asStateSounds.TimedSoundGroup) && !FilterSoundGroup(asStateSounds.TimedSoundGroup)) {
+                        yield return new Relation<object, string>(
+                            asAnimState,
+                            new MechanimEventSound(asStateSounds.TimedSoundGroup, "Anim-Timed"),
+                            "plays on animation timeline");
+                    }
+
+                    if (!string.IsNullOrEmpty(asStateSounds.MultiSoundsTimedGroup) && !FilterSoundGroup(asStateSounds.MultiSoundsTimedGroup)) {
+                        yield return new Relation<object, string>(
+                            asAnimState,
+                            new MechanimEventSound(asStateSounds.MultiSoundsTimedGroup, "Multi Anim-Timed"),
+                            "plays on animation timeline 0-4 times");
                     }
                 }
 
@@ -239,15 +268,22 @@ public class MasterAudioEventBackend : MinimalBackend<object, string> {
                     if (!string.IsNullOrEmpty(asStateEvents.enterCustomEvent) && !FilterCustomEvent(asStateEvents.enterCustomEvent)) {
                         yield return new Relation<object, string>(
                             asAnimState,
-                            new MechanimEventCustomEvent(asStateEvents.enterCustomEvent, "OnEnter"),
+                            new MechanimEventCustomEvent(asStateEvents.enterCustomEvent, "On Enter"),
                             "plays on state entry");
                     }
 
                     if (!string.IsNullOrEmpty(asStateEvents.exitCustomEvent) && !FilterCustomEvent(asStateEvents.exitCustomEvent)) {
                         yield return new Relation<object, string>(
                             asAnimState,
-                            new MechanimEventCustomEvent(asStateEvents.exitCustomEvent, "OnExit"),
+                            new MechanimEventCustomEvent(asStateEvents.exitCustomEvent, "On Exit"),
                             "plays on state exit");
+                    }
+
+                    if (!string.IsNullOrEmpty(asStateEvents.timedCustomEvent) && !FilterCustomEvent(asStateEvents.timedCustomEvent)) {
+                        yield return new Relation<object, string>(
+                            asAnimState,
+                            new MechanimEventCustomEvent(asStateEvents.timedCustomEvent, "Anim-Timed"),
+                            "plays on animation timeline");
                     }
                 }
             }
@@ -256,10 +292,15 @@ public class MasterAudioEventBackend : MinimalBackend<object, string> {
 
         var asMechanimEventSound = entity as MechanimEventSound;
         if (asMechanimEventSound != null) {
-            foreach (var linkedGroupName in GetLinkedGroups(asMechanimEventSound.group)) {
+            foreach (var linkedGroupName in GetStartLinkedGroups(asMechanimEventSound.group)) {
                 yield return
                     new Relation<object, string>(asMechanimEventSound, new LinkedGroupNode(linkedGroupName),
-                        GetGroupLinkLabel(asMechanimEventSound.group));
+                        GetGroupLinkLabel(asMechanimEventSound.group, true));
+            }
+            foreach (var linkedGroupName in GetStopLinkedGroups(asMechanimEventSound.group)) {
+                yield return
+                    new Relation<object, string>(asMechanimEventSound, new EndLinkedGroupNode(linkedGroupName),
+                        GetGroupLinkLabel(asMechanimEventSound.group, false));
             }
 
             yield break;
@@ -384,7 +425,12 @@ public class MasterAudioEventBackend : MinimalBackend<object, string> {
 
         var asLinkedGroupNode = entity as LinkedGroupNode;
         if (asLinkedGroupNode != null) {
-            return new GUIContent("Linked Group\n" + asLinkedGroupNode.groupName);
+            return new GUIContent("Play 'Start' Linked\nGroup: " + asLinkedGroupNode.groupName);
+        }
+
+        var asStopLinkedGroupNode = entity as EndLinkedGroupNode;
+        if (asStopLinkedGroupNode != null) {
+            return new GUIContent("Play 'Stop' Linked\nGroup: " + asStopLinkedGroupNode.groupName);
         }
 
         var asAnimator = entity as Animator;
@@ -534,6 +580,16 @@ public class MasterAudioEventBackend : MinimalBackend<object, string> {
                 }
                 return;
             }
+
+            var asMechanimCustomEvent = single as MechanimEventCustomEvent;
+            if (asMechanimCustomEvent != null) {
+                var mago = MasterAudio.SafeInstance;
+                if (mago != null) {
+                    Selection.activeObject = mago;
+                }
+                return;
+            }
+
 #endif
         }
         base.OnEntitySelectionChange(selection);
@@ -603,7 +659,7 @@ public class MasterAudioEventBackend : MinimalBackend<object, string> {
     }
 
     static IEnumerable<string> GetSoundGroups(MechanimStateSounds behaviour) {
-        var groups = new[] { behaviour.enterSoundGroup, behaviour.exitSoundGroup };
+        var groups = new[] { behaviour.enterSoundGroup, behaviour.exitSoundGroup, behaviour.TimedSoundGroup, behaviour.MultiSoundsTimedGroup };
         return groups.Where(name => !string.IsNullOrEmpty(name) && !FilterSoundGroup(name));
     }
 
@@ -628,7 +684,7 @@ public class MasterAudioEventBackend : MinimalBackend<object, string> {
     }
 
     static IEnumerable<string> GetCustomEvents(MechanimStateCustomEvents behaviour) {
-        var customEvents = new[] { behaviour.enterCustomEvent, behaviour.exitCustomEvent };
+        var customEvents = new[] { behaviour.enterCustomEvent, behaviour.exitCustomEvent, behaviour.timedCustomEvent };
         return customEvents.Where(name => !string.IsNullOrEmpty(name) && !FilterCustomEvent(name));
     }
 
@@ -809,26 +865,36 @@ public class MasterAudioEventBackend : MinimalBackend<object, string> {
     }
 
     // returns a label for a group link relation comming from the given group
-    private string GetGroupLinkLabel(string groupName) {
-        var component = MasterAudio.GrabGroup(groupName, false);
-        if (component == null)
+    private string GetGroupLinkLabel(string groupName, bool isStartLinkedGroup) {
+        var component = MasterAudio.Instance.Trans.GetChildTransform(groupName);
+        if (component == null) {
             return string.Empty;
-
-        switch (component.childGroupMode) {
-            case MasterAudioGroup.ChildGroupMode.TriggerLinkedGroupsWhenPlayed:
-                return "triggers when played";
-
-            case MasterAudioGroup.ChildGroupMode.TriggerLinkedGroupsWhenRequested:
-                return "triggers when requested";
-
-            default:
-                return string.Empty;
         }
+
+        var group = component.GetComponent<MasterAudioGroup>();
+
+        if (group == null) {
+            return string.Empty;
+        }
+
+        if (isStartLinkedGroup) {
+            if (group.childSoundGroups.Count <= 1 || group.linkedStartGroupSelectionType == MasterAudio.LinkedGroupSelectionType.All) {
+                return "plays when linker group\nstarts playing";
+            }
+
+            return "may play when linker group\nstarts playing (random selection)";
+        }
+
+        if (group.endLinkedGroups.Count <= 1 || group.linkedStopGroupSelectionType == MasterAudio.LinkedGroupSelectionType.All) {
+            return "plays when linker group\nfinishes playing";
+        }
+
+        return "may play when linker group\nfinishes playing (random selection)";
     }
 
     // returns the names of all groups that the given group links to
-    static IEnumerable<string> GetLinkedGroups(string groupName) {
-        var grpTrans = MasterAudio.Instance.Trans.Find(groupName);
+    static IEnumerable<string> GetStartLinkedGroups(string groupName) {
+        var grpTrans = MasterAudio.Instance.Trans.GetChildTransform(groupName);
         if (grpTrans == null) {
             return Enumerable.Empty<string>();
         }
@@ -839,5 +905,19 @@ public class MasterAudioEventBackend : MinimalBackend<object, string> {
         }
 
         return component.childSoundGroups;
+    }
+
+    static IEnumerable<string> GetStopLinkedGroups(string groupName) {
+        var grpTrans = MasterAudio.Instance.Trans.GetChildTransform(groupName);
+        if (grpTrans == null) {
+            return Enumerable.Empty<string>();
+        }
+
+        var component = grpTrans.GetComponent<MasterAudioGroup>();
+        if (component == null) {
+            return Enumerable.Empty<string>();
+        }
+
+        return component.endLinkedGroups;
     }
 }

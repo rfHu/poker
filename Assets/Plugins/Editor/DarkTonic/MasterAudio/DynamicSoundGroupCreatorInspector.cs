@@ -1,10 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using DarkTonic.MasterAudio;
 using UnityEditor;
 using UnityEngine;
 
-#if UNITY_5
+#if UNITY_5 || UNITY_2017
 using UnityEngine.Audio;
 #endif
 
@@ -37,7 +38,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
         }
 
         if (_creator.groupByBus) {
-            groups.Sort(delegate(DynamicSoundGroup g1, DynamicSoundGroup g2) {
+            groups.Sort(delegate (DynamicSoundGroup g1, DynamicSoundGroup g2) {
                 // ReSharper disable once ConvertIfStatementToReturnStatement
                 if (g1.busIndex == g2.busIndex) {
                     return g1.name.CompareTo(g2.name);
@@ -46,7 +47,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
                 return g1.busIndex.CompareTo(g2.busIndex);
             });
         } else {
-            groups.Sort(delegate(DynamicSoundGroup g1, DynamicSoundGroup g2) {
+            groups.Sort(delegate (DynamicSoundGroup g1, DynamicSoundGroup g2) {
                 return g1.name.CompareTo(g2.name);
             });
         }
@@ -79,7 +80,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
             DTGUIHelper.ShowHeaderTexture(MasterAudioInspectorResources.LogoTexture);
         }
 
-		DTGUIHelper.HelpHeader("https://dl.dropboxusercontent.com/u/40293802/DarkTonic/MA_OnlineDocs/DynamicSoundGroupCreators.htm", "https://dl.dropboxusercontent.com/u/40293802/DarkTonic/MasterAudio_API/class_dark_tonic_1_1_master_audio_1_1_dynamic_sound_group_creator.html");
+        DTGUIHelper.HelpHeader("https://dl.dropboxusercontent.com/u/40293802/DarkTonic/MA_OnlineDocs/DynamicSoundGroupCreators.htm", "https://dl.dropboxusercontent.com/u/40293802/DarkTonic/MasterAudio_API/class_dark_tonic_1_1_master_audio_1_1_dynamic_sound_group_creator.html");
 
         MasterAudio.Instance = null;
         var ma = MasterAudio.SafeInstance;
@@ -146,7 +147,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
         EditorGUI.indentLevel = 0;  // Space will handle this for the header
 
         if (MasterAudio.SafeInstance == null) {
-            var newLang = (SystemLanguage)EditorGUILayout.EnumPopup(new GUIContent("Preview Language", "This setting is only used (and visible) to choose the previewing language when there's no Master Audio prefab in the Scene (language settings are grabbed from there normally). This should only happen when you're using a Master Audio prefab from a previous Scene in persistent mode."), _creator.previewLanguage);
+            var newLang = (SystemLanguage)EditorGUILayout.EnumPopup(new GUIContent("Preview Language", "This setting is only used (and visible) to choose the previewing language when there's no Master Audio Game Object in the Scene (language settings are grabbed from there normally). This should only happen when you're using a Master Audio Game Object from a previous Scene in persistent mode."), _creator.previewLanguage);
             if (newLang != _creator.previewLanguage) {
                 AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "change Preview Language");
                 _creator.previewLanguage = newLang;
@@ -167,9 +168,9 @@ public class DynamicSoundGroupCreatorInspector : Editor {
             _creator.errorOnDuplicates = newIgnore;
         }
         if (_creator.errorOnDuplicates) {
-            DTGUIHelper.ShowColorWarning("An error will be logged if your Dynamic items already exist in the MA prefab.");
+            DTGUIHelper.ShowColorWarning("An error will be logged if your Dynamic items already exist in the MA Game Object.");
         } else {
-            DTGUIHelper.ShowLargeBarAlert("Dynamic items that already exist in the MA prefab will be ignored and not created.");
+            DTGUIHelper.ShowLargeBarAlert("Dynamic items that already exist in the MA Game Object will be ignored and not created.");
         }
 
 
@@ -191,7 +192,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
         }
 
         if (_creator.removeGroupsOnSceneChange) {
-            DTGUIHelper.ShowColorWarning("Items will be deleted when the Scene changes.");
+            DTGUIHelper.ShowColorWarning("Items will be deleted when this object is disabled or destroyed.");
         } else {
             DTGUIHelper.ShowLargeBarAlert("Items created by this will persist across Scenes if MasterAudio does.");
         }
@@ -308,7 +309,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
             GUI.contentColor = DTGUIHelper.BrightButtonColor;
             EditorGUILayout.BeginHorizontal();
 
-            GUILayout.Space(10);
+            GUILayout.Space(4);
 
             if (GUILayout.Button(new GUIContent("Add Duck Group"), EditorStyles.toolbarButton, GUILayout.Width(100))) {
                 AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "Add Duck Group");
@@ -481,8 +482,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
                 var audioSrcTemplates = Directory.GetFiles(MasterAudio.AudioSourceTemplateFolder, "*.prefab").Length;
                 if (audioSrcTemplates > _creator.audioSourceTemplates.Count) {
                     audTemplatesMissing = true;
-                    DTGUIHelper.ShowLargeBarAlert("There's " + (audioSrcTemplates - _creator.audioSourceTemplates.Count) + " Audio Source Template(s) that aren't set up in this MA prefab. Locate them");
-                    DTGUIHelper.ShowLargeBarAlert("in Plugins/DarkTonic/MasterAudio/Sources/Prefabs/AudioSourceTemplates and drag them in below.");
+                    DTGUIHelper.ShowLargeBarAlert("There's " + (audioSrcTemplates - _creator.audioSourceTemplates.Count) + " Audio Source Template(s) that aren't set up in this MA Game Object. Locate them in Plugins/DarkTonic/MasterAudio/Sources/Prefabs/AudioSourceTemplates and drag them in below.");
                 }
             }
 
@@ -495,7 +495,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
                 GUI.color = DTGUIHelper.DragAreaColor;
 
                 var dragArea = GUILayoutUtility.GetRect(0f, 35f, GUILayout.ExpandWidth(true));
-                GUI.Box(dragArea, "Drag prefabs here from Project View to create Group Templates!");
+                GUI.Box(dragArea, "Drag prefabs here from Project View to create Audio Source Templates!");
 
                 GUI.color = Color.white;
 
@@ -603,7 +603,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
                                 clips.Add(aClip);
                             }
 
-                            clips.Sort(delegate(AudioClip x, AudioClip y) {
+                            clips.Sort(delegate (AudioClip x, AudioClip y) {
                                 return x.name.CompareTo(y.name);
                             });
 
@@ -645,7 +645,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
                 var groupDirty = false;
 
                 EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
-                GUILayout.Label(aGroup.name, GUILayout.MinWidth(150));
+                GUILayout.Label(aGroup.name, GUILayout.MinWidth(100));
 
                 GUILayout.FlexibleSpace();
 
@@ -726,7 +726,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
             EditorGUILayout.Separator();
             EditorGUILayout.BeginHorizontal();
 
-            GUILayout.Space(10);
+            GUILayout.Space(2);
 
             GUI.contentColor = DTGUIHelper.BrightButtonColor;
             if (_groups.Count > 0) {
@@ -760,7 +760,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
             if (_creator.groupBuses.Count > 0) {
                 DTGUIHelper.VerticalSpace(3);
 
-                var voiceLimitedBuses = _creator.groupBuses.FindAll(delegate(GroupBus obj) {
+                var voiceLimitedBuses = _creator.groupBuses.FindAll(delegate (GroupBus obj) {
                     return obj.voiceLimit >= 0;
                 });
 
@@ -844,9 +844,9 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 
                     EditorGUILayout.EndHorizontal();
 
-#if UNITY_5
+#if UNITY_5 || UNITY_2017
                     if (showingMixer) {
-                        var newChan = (AudioMixerGroup)  EditorGUILayout.ObjectField(aBus.mixerChannel, typeof(AudioMixerGroup), false);
+                        var newChan = (AudioMixerGroup)EditorGUILayout.ObjectField(aBus.mixerChannel, typeof(AudioMixerGroup), false);
                         if (newChan != aBus.mixerChannel) {
                             AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "change Bus Mixer Group");
                             aBus.mixerChannel = newChan;
@@ -854,24 +854,27 @@ public class DynamicSoundGroupCreatorInspector : Editor {
                         EditorGUILayout.EndVertical();
                     }
 
-                    EditorGUILayout.BeginHorizontal();
-                    var new2D = GUILayout.Toggle(aBus.forceTo2D, "Force to 2D");
-                    if (new2D != aBus.forceTo2D) {
-                        AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "toggle Force to 2D");
-                        aBus.forceTo2D = new2D;
-                    }
-
-
-                    if (!aBus.forceTo2D) {
-                        var newOcc = GUILayout.Toggle(aBus.isUsingOcclusion, "Use Occlusion");
-                        if (newOcc != aBus.isUsingOcclusion) {
-                            AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "toggle Use Occlusion");
-                            aBus.isUsingOcclusion = newOcc;
+                    if (!aBus.isExisting) {
+                        EditorGUILayout.BeginHorizontal();
+                        var new2D = GUILayout.Toggle(aBus.forceTo2D, "Force to 2D");
+                        if (new2D != aBus.forceTo2D) {
+                            AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "toggle Force to 2D");
+                            aBus.forceTo2D = new2D;
                         }
-                    }
-                    GUILayout.FlexibleSpace();
 
-                    EditorGUILayout.EndHorizontal();
+
+                        if (!aBus.forceTo2D) {
+                            var newOcc = GUILayout.Toggle(aBus.isUsingOcclusion, "Use Occlusion");
+                            if (newOcc != aBus.isUsingOcclusion) {
+                                AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator,
+                                    "toggle Use Occlusion");
+                                aBus.isUsingOcclusion = newOcc;
+                            }
+                        }
+                        GUILayout.FlexibleSpace();
+
+                        EditorGUILayout.EndHorizontal();
+                    }
 
 #endif
 
@@ -880,14 +883,14 @@ public class DynamicSoundGroupCreatorInspector : Editor {
                 }
 
                 if (showOcclusion && _creator.groupBuses.Count > 0 && !maInScene) {
-                    DTGUIHelper.ShowLargeBarAlert("The Occlusion setting on Buses will only be used if the Master Audio prefab is set to allow Occlusion.");
+                    DTGUIHelper.ShowLargeBarAlert("The Occlusion setting on Buses will only be used if the Master Audio Game Object is set to allow Occlusion.");
                 }
 
                 if (busToDelete.HasValue) {
                     DeleteBus(busToDelete.Value);
                 }
 
-#if UNITY_5
+#if UNITY_5 || UNITY_2017
                 EditorGUILayout.BeginHorizontal();
                 GUILayout.Space(6);
 
@@ -1096,7 +1099,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
                             }
                         }
                         EditorGUILayout.BeginHorizontal();
-                        GUILayout.Space(10);
+                        GUILayout.Space(2);
                         GUI.contentColor = DTGUIHelper.BrightButtonColor;
                         if (GUILayout.Button(new GUIContent("Eq. Song Volumes"), EditorStyles.toolbarButton, GUILayout.Width(110))) {
                             EqualizePlaylistVolumes(aList.MusicSettings);
@@ -1682,142 +1685,553 @@ public class DynamicSoundGroupCreatorInspector : Editor {
         EditorGUILayout.EndHorizontal();
         GUI.color = Color.white;
 
-        if (_creator.showCustomEvents) {
-            DTGUIHelper.BeginGroupedControls();
-            var newEvent = EditorGUILayout.TextField("New Event Name", _creator.newEventName);
-            if (newEvent != _creator.newEventName) {
-                AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "change New Event Name");
-                _creator.newEventName = newEvent;
-            }
+		if (_creator.showCustomEvents) {
+			var catNames = new List<string>(_creator.customEventCategories.Count);
+			// ReSharper disable once ForCanBeConvertedToForeach
+			for (var i = 0; i < _creator.customEventCategories.Count; i++) {
+				catNames.Add(_creator.customEventCategories[i].CatName);
+			}
+			
+			var selCatIndex = catNames.IndexOf(_creator.addToCustomEventCategoryName);
+			
+			if (selCatIndex == -1) {
+				selCatIndex = 0;
+				_isDirty = true;
+			}
+			
+			var defaultCat = catNames[selCatIndex];
+			
+			DTGUIHelper.BeginGroupedControls();
+			DTGUIHelper.StartGroupHeader(0, false);
+			GUI.color = Color.white;
+			GUI.backgroundColor = Color.white;
+			GUI.contentColor = Color.white;
+			var newEvent = EditorGUILayout.TextField("New Event Name", _creator.newEventName);
+			if (newEvent != _creator.newEventName) {
+				AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "change New Event Name");
+				_creator.newEventName = newEvent;
+			}
+			
+			EditorGUILayout.BeginHorizontal();
+			GUILayout.Space(4);
+			GUI.contentColor = DTGUIHelper.BrightButtonColor;
+			if (GUILayout.Button("Create New Event", EditorStyles.toolbarButton, GUILayout.Width(100))) {
+				CreateCustomEvent(_creator.newEventName, defaultCat);
+			}
+			GUILayout.Space(10);
+			GUI.contentColor = DTGUIHelper.BrightButtonColor;
+			
+			GUI.contentColor = Color.white;
+			EditorGUILayout.EndHorizontal();
+			EditorGUILayout.EndVertical();
+			
+			DTGUIHelper.AddSpaceForNonU5(2);
+			
+			DTGUIHelper.StartGroupHeader(0, false);
+			DTGUIHelper.ResetColors();
+			var newCat = EditorGUILayout.TextField("New Category Name", _creator.newCustomEventCategoryName);
+			if (newCat != _creator.newCustomEventCategoryName) {
+				AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "change New Category Name");
+				_creator.newCustomEventCategoryName = newCat;
+			}
+			EditorGUILayout.BeginHorizontal();
+			GUI.contentColor = DTGUIHelper.BrightButtonColor;
+			GUILayout.Space(4);
+			if (GUILayout.Button("Create New Category", EditorStyles.toolbarButton, GUILayout.Width(130))) {
+				CreateCategory();
+			}
+			GUI.contentColor = Color.white;
+			
+			EditorGUILayout.EndHorizontal();
 
-            GUI.contentColor = DTGUIHelper.BrightButtonColor;
+			DTGUIHelper.ShowLargeBarAlert("You must Create all Categories you need here even if they exist in the MA game object.");
 
-            EditorGUILayout.BeginHorizontal();
-
-            GUILayout.Space(10);
-            if (GUILayout.Button("Create New Event", EditorStyles.toolbarButton, GUILayout.Width(100))) {
-                CreateCustomEvent(_creator.newEventName);
-            }
-
-            GUILayout.Space(10);
-            GUI.contentColor = DTGUIHelper.BrightButtonColor;
-
-            var hasExpanded = false;
-            foreach (var t in _creator.customEventsToCreate) {
-                if (!t.eventExpanded) {
-                    continue;
-                }
-                hasExpanded = true;
-                break;
-            }
-
-            var buttonText = hasExpanded ? "Collapse All" : "Expand All";
-
-            if (GUILayout.Button(buttonText, EditorStyles.toolbarButton, GUILayout.Width(100))) {
-                ExpandCollapseCustomEvents(!hasExpanded);
-            }
-            GUILayout.Space(10);
-            if (GUILayout.Button("Sort Alpha", EditorStyles.toolbarButton, GUILayout.Width(100))) {
-                SortCustomEvents();
-            }
-
-            GUI.contentColor = Color.white;
-
-            EditorGUILayout.EndHorizontal();
-
-            EditorGUI.indentLevel = 0;
-            if (_creator.customEventsToCreate.Count == 0) {
-                DTGUIHelper.ShowLargeBarAlert("You currently have no custom events defined here.");
-            }
-
-            int? indexToDelete = null;
-            int? indexToRename = null;
-
-            for (var i = 0; i < _creator.customEventsToCreate.Count; i++) {
-                DTGUIHelper.AddSpaceForNonU5(2);
-                DTGUIHelper.StartGroupHeader();
-                EditorGUI.indentLevel = 1;
-                var anEvent = _creator.customEventsToCreate[i];
-
-                EditorGUILayout.BeginHorizontal();
-                exp = DTGUIHelper.Foldout(anEvent.eventExpanded, anEvent.EventName);
-                if (exp != anEvent.eventExpanded) {
-                    AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "toggle expand Custom Event");
-                    anEvent.eventExpanded = exp;
-                }
-
-                GUILayout.FlexibleSpace();
-                var newName = GUILayout.TextField(anEvent.ProspectiveName, GUILayout.Width(170));
-                if (newName != anEvent.ProspectiveName) {
-                    AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "change Proposed Event Name");
-                    anEvent.ProspectiveName = newName;
-                }
-
-                var buttonPressed = DTGUIHelper.AddDeleteIcon(true, "Custom Event");
-
-                switch (buttonPressed) {
-                    case DTGUIHelper.DTFunctionButtons.Remove:
-                        indexToDelete = i;
-                        break;
-                    case DTGUIHelper.DTFunctionButtons.Rename:
-                        indexToRename = i;
-                        break;
-                }
-
-                EditorGUILayout.EndHorizontal();
-                EditorGUILayout.EndVertical();
-
-                if (!anEvent.eventExpanded) {
-                    EditorGUILayout.EndVertical();
-                    continue;
-                }
-
-                EditorGUI.indentLevel = 0;
-                var rcvMode = (MasterAudio.CustomEventReceiveMode)EditorGUILayout.EnumPopup("Send To Receivers", anEvent.eventReceiveMode);
-                if (rcvMode != anEvent.eventReceiveMode) {
-                    AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "change Send To Receivers");
-                    anEvent.eventReceiveMode = rcvMode;
-                }
-
-                if (rcvMode == MasterAudio.CustomEventReceiveMode.WhenDistanceLessThan || rcvMode == MasterAudio.CustomEventReceiveMode.WhenDistanceMoreThan) {
-                    var newDist = EditorGUILayout.Slider("Distance Threshold", anEvent.distanceThreshold, 0f, float.MaxValue);
-                    if (newDist != anEvent.distanceThreshold) {
-                        AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "change Distance Threshold");
-                        anEvent.distanceThreshold = newDist;
-                    }
-                }
-
-                if (rcvMode != MasterAudio.CustomEventReceiveMode.Never) {
-                    var rcvFilter = (MasterAudio.EventReceiveFilter)EditorGUILayout.EnumPopup("Valid Receivers", anEvent.eventRcvFilterMode);
-                    if (rcvFilter != anEvent.eventRcvFilterMode) {
-                        AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "change Valid Receivers");
-                        anEvent.eventRcvFilterMode = rcvFilter;
-                    }
-
-                    switch (anEvent.eventRcvFilterMode) {
-                        case MasterAudio.EventReceiveFilter.Closest:
-                        case MasterAudio.EventReceiveFilter.Random:
-                            var newQty = EditorGUILayout.IntField("Valid Qty", anEvent.filterModeQty);
-                            if (newQty != anEvent.filterModeQty) {
-                                AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "change Valid Qty");
-                                anEvent.filterModeQty = System.Math.Max(1, newQty);
-                            }
-                            break;
-                    }
-                }
-
-                EditorGUILayout.EndVertical();
-            }
-
-            if (indexToDelete.HasValue) {
-                _creator.customEventsToCreate.RemoveAt(indexToDelete.Value);
-            }
-            if (indexToRename.HasValue) {
-                RenameEvent(_creator.customEventsToCreate[indexToRename.Value]);
-            }
-
-            DTGUIHelper.EndGroupedControls();
-        }
+			EditorGUILayout.EndVertical();
+			DTGUIHelper.ResetColors();
+			
+			DTGUIHelper.AddSpaceForNonU5(2);
+			GUI.backgroundColor = DTGUIHelper.BrightButtonColor;
+			
+			var newIndex = EditorGUILayout.Popup("Default Event Category", selCatIndex, catNames.ToArray());
+			if (newIndex != selCatIndex) {
+				AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "change Default Event Category");
+				_creator.addToCustomEventCategoryName = catNames[newIndex];
+			}
+			
+			GUI.backgroundColor = Color.white;
+			GUI.contentColor = Color.white;
+			
+			EditorGUILayout.BeginHorizontal();
+			GUILayout.Space(10);
+			
+			var hasExpanded = false;
+			foreach (var t in _creator.customEventsToCreate) {
+				if (string.IsNullOrEmpty(t.categoryName)) {
+					t.categoryName = defaultCat;
+				}
+				
+				if (!t.eventExpanded) {
+					continue;
+				}
+				hasExpanded = true;
+				break;
+			}
+			
+			var buttonText = hasExpanded ? "Collapse All" : "Expand All";
+			
+			if (GUILayout.Button(buttonText, EditorStyles.toolbarButton, GUILayout.Width(80))) {
+				ExpandCollapseCustomEvents(!hasExpanded);
+			}
+			EditorGUILayout.EndHorizontal();
+			
+			EditorGUILayout.Separator();
+			
+			int? indexToShiftUp = null;
+			int? indexToShiftDown = null;
+			CustomEventCategory catEditing = null;
+			CustomEventCategory catRenaming = null;
+			CustomEventCategory catToDelete = null;
+			CustomEvent eventEditing = null;
+			CustomEvent eventToDelete = null;
+			CustomEvent eventRenaming = null;
+			
+			DTGUIHelper.StartGroupHeader(1, true);
+			
+			for (var c = 0; c < _creator.customEventCategories.Count; c++) {
+				var cat = _creator.customEventCategories[c];
+				
+				EditorGUI.indentLevel = 0;
+				
+				var matchingItems = new List<CustomEvent>();
+				matchingItems.AddRange(_creator.customEventsToCreate);
+				matchingItems.RemoveAll(delegate (CustomEvent x) {
+					return x.categoryName != cat.CatName;
+				});
+				
+				var hasItems = matchingItems.Count > 0;
+				
+				EditorGUILayout.BeginHorizontal();
+				
+				if (!cat.IsEditing || Application.isPlaying) {
+					var catName = cat.CatName;
+					
+					catName += ": " + matchingItems.Count + " item" + ((matchingItems.Count != 1) ? "s" : "");
+					
+					var state2 = cat.IsExpanded;
+					var text2 = catName;
+					
+					// ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
+					if (!state2) {
+						GUI.backgroundColor = DTGUIHelper.InactiveHeaderColor;
+					} else {
+						GUI.backgroundColor = DTGUIHelper.BrightButtonColor;
+					}
+					
+					text2 = "<b><size=11>" + text2 + "</size></b>";
+					
+					if (state2) {
+						text2 = "\u25BC " + text2;
+					} else {
+						text2 = "\u25BA " + text2;
+					}
+					if (!GUILayout.Toggle(true, text2, "dragtab", GUILayout.MinWidth(20f))) {
+						state2 = !state2;
+					}
+					
+					GUILayout.Space(2f);
+					
+					if (state2 != cat.IsExpanded) {
+						AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "toggle expand Custom Event Category");
+						cat.IsExpanded = state2;
+					}
+					
+					var catItemsCollapsed = true;
+					
+					for (var i = 0; i < matchingItems.Count; i++) {
+						var item = matchingItems[i];
+						
+						if (!item.eventExpanded) {
+							continue;
+						}
+						catItemsCollapsed = false;
+						break;
+					}
+					
+					GUI.backgroundColor = Color.white;
+					
+					var tooltip = catItemsCollapsed ? "Click to expand all items in this category" : "Click to collapse all items in this category";
+					var btnText = catItemsCollapsed ? "Expand" : "Collapse";
+					
+					GUI.contentColor = DTGUIHelper.BrightButtonColor;
+					if (GUILayout.Button(new GUIContent(btnText, tooltip), EditorStyles.toolbarButton, GUILayout.Width(60), GUILayout.Height(16))) {
+						ExpandCollapseCategory(cat.CatName, catItemsCollapsed);
+					}
+					GUI.contentColor = Color.white;
+					
+					if (!Application.isPlaying) {
+						if (c > 0) {
+							// the up arrow.
+							var upArrow = MasterAudioInspectorResources.UpArrowTexture;
+							if (GUILayout.Button(new GUIContent(upArrow, "Click to shift Category up"),
+							                     EditorStyles.toolbarButton, GUILayout.Width(24), GUILayout.Height(16))) {
+								indexToShiftUp = c;
+							}
+						} else {
+							GUILayout.Button("", EditorStyles.toolbarButton, GUILayout.Width(24), GUILayout.Height(16));
+						}
+						
+						if (c < _creator.customEventCategories.Count - 1) {
+							// The down arrow will move things towards the end of the List
+							var dnArrow = MasterAudioInspectorResources.DownArrowTexture;
+							if (GUILayout.Button(new GUIContent(dnArrow, "Click to shift Category down"),
+							                     EditorStyles.toolbarButton, GUILayout.Width(24), GUILayout.Height(16))) {
+								indexToShiftDown = c;
+							}
+						} else {
+							GUILayout.Button("", EditorStyles.toolbarButton, GUILayout.Width(24), GUILayout.Height(16));
+						}
+						
+						var settingsIcon = new GUIContent(MasterAudioInspectorResources.GearTexture,
+						                                  "Click to edit Category");
+						
+						GUI.backgroundColor = Color.white;
+						if (GUILayout.Button(settingsIcon, EditorStyles.toolbarButton, GUILayout.Width(24),
+						                     GUILayout.Height(16))) {
+							catEditing = cat;
+						}
+						GUI.backgroundColor = DTGUIHelper.DeleteButtonColor;
+						if (GUILayout.Button(new GUIContent("Delete", "Click to delete Category"),
+						                     EditorStyles.miniButton, GUILayout.MaxWidth(45))) {
+							catToDelete = cat;
+						}
+						
+						GUILayout.Space(2);
+					} else {
+						GUILayout.Space(4);
+					}
+					
+				} else {
+					GUI.backgroundColor = DTGUIHelper.BrightTextColor;
+					var tex = EditorGUILayout.TextField("", cat.ProspectiveName);
+					if (tex != cat.ProspectiveName) {
+						cat.ProspectiveName = tex;
+						_isDirty = true;
+					}
+					
+					var buttonPressed = DTGUIHelper.AddCancelSaveButtons("Custom Event Category");
+					
+					switch (buttonPressed) {
+					case DTGUIHelper.DTFunctionButtons.Cancel:
+						cat.IsEditing = false;
+						cat.ProspectiveName = cat.CatName;
+						_isDirty = true;
+						break;
+					case DTGUIHelper.DTFunctionButtons.Save:
+						catRenaming = cat;
+						break;
+					}
+					
+					GUILayout.Space(4);
+				}
+				
+				GUI.backgroundColor = Color.white;
+				EditorGUILayout.EndHorizontal();
+				
+				if (cat.IsEditing) {
+					DTGUIHelper.VerticalSpace(2);
+				}
+				
+				matchingItems.Sort(delegate (CustomEvent x, CustomEvent y) {
+					// ReSharper disable PossibleNullReferenceException
+					return string.Compare(x.EventName, y.EventName, StringComparison.Ordinal);
+					// ReSharper restore PossibleNullReferenceException
+				});
+				
+				if (!hasItems) {
+					DTGUIHelper.BeginGroupedControls();
+					DTGUIHelper.ShowLargeBarAlert("This Category is empty. Add / move some items or you may delete it.");
+					DTGUIHelper.EndGroupedControls();
+				}
+				
+				GUI.contentColor = Color.white;
+				
+				if (cat.IsExpanded) {
+					if (hasItems) {
+						DTGUIHelper.BeginGroupedControls();
+					}
+					
+					for (var i = 0; i < matchingItems.Count; i++) {
+						EditorGUI.indentLevel = 1;
+						var anEvent = matchingItems[i];
+						
+						DTGUIHelper.AddSpaceForNonU5(2);
+						DTGUIHelper.StartGroupHeader();
+						
+						EditorGUILayout.BeginHorizontal();
+						
+						if (!anEvent.IsEditing || Application.isPlaying) {
+							var exp2 = DTGUIHelper.Foldout(anEvent.eventExpanded, anEvent.EventName);
+							if (exp2 != anEvent.eventExpanded) {
+								AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "toggle expand Custom Event");
+								anEvent.eventExpanded = exp2;
+							}
+							
+							GUILayout.FlexibleSpace();
+							if (!Application.isPlaying) {
+								GUI.backgroundColor = DTGUIHelper.BrightButtonColor;
+								var newCatIndex = catNames.IndexOf(anEvent.categoryName);
+								var newEventCat = EditorGUILayout.Popup(newCatIndex, catNames.ToArray(),
+								                                        GUILayout.Width(130));
+								if (newEventCat != newCatIndex) {
+									AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator,
+									                                            "change Custom Event Category");
+									anEvent.categoryName = catNames[newEventCat];
+								}
+								GUI.backgroundColor = Color.white;
+							}
+							
+							if (!Application.isPlaying) {
+								GUI.backgroundColor = Color.white;
+								var settingsIcon = new GUIContent(MasterAudioInspectorResources.GearTexture,
+								                                  "Click to edit Custom Event Name");
+								if (GUILayout.Button(settingsIcon, EditorStyles.toolbarButton, GUILayout.Width(24),
+								                     GUILayout.Height(16))) {
+									eventEditing = anEvent;
+								}
+								
+								GUI.backgroundColor = DTGUIHelper.DeleteButtonColor;
+								if (GUILayout.Button(new GUIContent("Delete", "Click to delete Event"),
+								                     EditorStyles.miniButton, GUILayout.MaxWidth(45))) {
+									eventToDelete = anEvent;
+								}
+							}
+							GUI.contentColor = Color.white;
+						} else {
+							EditorGUI.indentLevel = 0;
+							GUI.backgroundColor = DTGUIHelper.BrightTextColor;
+							var tex = EditorGUILayout.TextField("", anEvent.ProspectiveName);
+							if (tex != anEvent.ProspectiveName) {
+								anEvent.ProspectiveName = tex;
+								_isDirty = true;
+							}
+							
+							var buttonPressed = DTGUIHelper.AddCancelSaveButtons("Custom Event");
+							
+							switch (buttonPressed) {
+							case DTGUIHelper.DTFunctionButtons.Cancel:
+								anEvent.IsEditing = false;
+								anEvent.ProspectiveName = cat.CatName;
+								_isDirty = true;
+								break;
+							case DTGUIHelper.DTFunctionButtons.Save:
+								eventRenaming = anEvent;
+								break;
+							}
+						}
+						
+						EditorGUILayout.EndHorizontal();
+						EditorGUILayout.EndVertical();
+						
+						if (!anEvent.eventExpanded) {
+							EditorGUILayout.EndVertical();
+							continue;
+						}
+						
+						DTGUIHelper.ResetColors();
+						EditorGUI.indentLevel = 0;
+						
+						var rcvMode =
+							(MasterAudio.CustomEventReceiveMode)
+								EditorGUILayout.EnumPopup("Send To Receivers", anEvent.eventReceiveMode);
+						if (rcvMode != anEvent.eventReceiveMode) {
+							AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "change Send To Receivers");
+							anEvent.eventReceiveMode = rcvMode;
+						}
+						
+						if (rcvMode == MasterAudio.CustomEventReceiveMode.WhenDistanceLessThan ||
+						    rcvMode == MasterAudio.CustomEventReceiveMode.WhenDistanceMoreThan) {
+							var newDist = EditorGUILayout.Slider("Distance Threshold", anEvent.distanceThreshold, 0f,
+							                                     float.MaxValue);
+							if (newDist != anEvent.distanceThreshold) {
+								AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator,
+								                                            "change Distance Threshold");
+								anEvent.distanceThreshold = newDist;
+							}
+						}
+						
+						if (rcvMode != MasterAudio.CustomEventReceiveMode.Never) {
+							var rcvFilter =
+								(MasterAudio.EventReceiveFilter)
+									EditorGUILayout.EnumPopup("Valid Receivers", anEvent.eventRcvFilterMode);
+							if (rcvFilter != anEvent.eventRcvFilterMode) {
+								AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "change Valid Receivers");
+								anEvent.eventRcvFilterMode = rcvFilter;
+							}
+							
+							switch (anEvent.eventRcvFilterMode) {
+							case MasterAudio.EventReceiveFilter.Closest:
+							case MasterAudio.EventReceiveFilter.Random:
+								var newQty = EditorGUILayout.IntField("Valid Qty", anEvent.filterModeQty);
+								if (newQty != anEvent.filterModeQty) {
+									AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator,
+									                                            "change Valid Qty");
+									anEvent.filterModeQty = System.Math.Max(1, newQty);
+								}
+								break;
+							}
+						}
+						
+						EditorGUILayout.EndVertical();
+					}
+					
+					if (hasItems) {
+						DTGUIHelper.EndGroupedControls();
+					}
+				}
+				
+				if (c < _creator.customEventCategories.Count - 1) {
+					DTGUIHelper.VerticalSpace(3);
+				}
+			}
+			DTGUIHelper.EndGroupHeader();
+			
+			if (eventToDelete != null) {
+				AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "Delete Custom Event");
+				_creator.customEventsToCreate.Remove(eventToDelete);
+			}
+			
+			if (indexToShiftUp.HasValue) {
+				AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "shift up Category");
+				var item = _creator.customEventCategories[indexToShiftUp.Value];
+				_creator.customEventCategories.Insert(indexToShiftUp.Value - 1, item);
+				_creator.customEventCategories.RemoveAt(indexToShiftUp.Value + 1);
+				_isDirty = true;
+			}
+			
+			if (indexToShiftDown.HasValue) {
+				AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "shift down Category");
+				var index = indexToShiftDown.Value + 1;
+				var item = _creator.customEventCategories[index];
+				_creator.customEventCategories.Insert(index - 1, item);
+				_creator.customEventCategories.RemoveAt(index + 1);
+				_isDirty = true;
+			}
+			
+			if (catToDelete != null) {
+				if (_creator.customEventsToCreate.FindAll(delegate (CustomEvent x) {
+					return x.categoryName == catToDelete.CatName;
+				}).Count > 0) {
+					DTGUIHelper.ShowAlert("You cannot delete a Category with Custom Events in it. Move or delete the items first.");
+				} else if (_creator.customEventCategories.Count <= 1) {
+					DTGUIHelper.ShowAlert("You cannot delete the last Category.");
+				} else {
+					AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "Delete Category");
+					_creator.customEventCategories.Remove(catToDelete);
+					_isDirty = true;
+				}
+			}
+			
+			if (catRenaming != null) {
+				// ReSharper disable once ForCanBeConvertedToForeach
+				var isValidName = true;
+				
+				if (string.IsNullOrEmpty(catRenaming.ProspectiveName)) {
+					isValidName = false;
+					DTGUIHelper.ShowAlert("You cannot have a blank Category name.");
+				}
+				
+				if (isValidName) {
+					// ReSharper disable once ForCanBeConvertedToForeach
+					for (var c = 0; c < _creator.customEventCategories.Count; c++) {
+						var cat = _creator.customEventCategories[c];
+						// ReSharper disable once InvertIf
+						if (cat != catRenaming && cat.CatName == catRenaming.ProspectiveName) {
+							isValidName = false;
+							DTGUIHelper.ShowAlert("You already have a Category named '" + catRenaming.ProspectiveName + "'. Category names must be unique.");
+						}
+					}
+					
+					if (isValidName) {
+						AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "Undo change Category name.");
+						
+						// ReSharper disable once ForCanBeConvertedToForeach
+						for (var i = 0; i < _creator.customEventsToCreate.Count; i++) {
+							var item = _creator.customEventsToCreate[i];
+							if (item.categoryName == catRenaming.CatName) {
+								item.categoryName = catRenaming.ProspectiveName;
+							}
+						}
+						
+						catRenaming.CatName = catRenaming.ProspectiveName;
+						catRenaming.IsEditing = false;
+						_isDirty = true;
+					}
+				}
+			}
+			
+			if (catEditing != null) {
+				// ReSharper disable once ForCanBeConvertedToForeach
+				for (var c = 0; c < _creator.customEventCategories.Count; c++) {
+					var cat = _creator.customEventCategories[c];
+					// ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
+					if (catEditing == cat) {
+						cat.IsEditing = true;
+					} else {
+						cat.IsEditing = false;
+					}
+					
+					_isDirty = true;
+				}
+			}
+			
+			if (eventEditing != null) {
+				// ReSharper disable once ForCanBeConvertedToForeach
+				for (var c = 0; c < _creator.customEventsToCreate.Count; c++) {
+					var evt = _creator.customEventsToCreate[c];
+					// ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
+					if (eventEditing == evt) {
+						evt.IsEditing = true;
+					} else {
+						evt.IsEditing = false;
+					}
+					
+					_isDirty = true;
+				}
+			}
+			
+			if (eventRenaming != null) {
+				// ReSharper disable once ForCanBeConvertedToForeach
+				var isValidName = true;
+				
+				if (string.IsNullOrEmpty(eventRenaming.ProspectiveName)) {
+					isValidName = false;
+					DTGUIHelper.ShowAlert("You cannot have a blank Custom Event name.");
+				}
+				
+				if (isValidName) {
+					// ReSharper disable once ForCanBeConvertedToForeach
+					for (var c = 0; c < _creator.customEventsToCreate.Count; c++) {
+						var evt = _creator.customEventsToCreate[c];
+						// ReSharper disable once InvertIf
+						if (evt != eventRenaming && evt.EventName == eventRenaming.ProspectiveName) {
+							isValidName = false;
+							DTGUIHelper.ShowAlert("You already have a Custom Event named '" + eventRenaming.ProspectiveName + "'. Custom Event names must be unique.");
+						}
+					}
+					
+					if (isValidName) {
+						AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator,
+						                                            "Undo change Custom Event name.");
+						
+						eventRenaming.EventName = eventRenaming.ProspectiveName;
+						eventRenaming.IsEditing = false;
+						_isDirty = true;
+					}
+				}
+			}
+			
+			DTGUIHelper.EndGroupedControls();
+		}
 
         // End Show Custom Events
 
@@ -1836,7 +2250,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 
         var groupName = UtilStrings.TrimSpace(aClip.name);
 
-        var matchingGroup = _groups.Find(delegate(DynamicSoundGroup obj) {
+        var matchingGroup = _groups.Find(delegate (DynamicSoundGroup obj) {
             return obj.transform.name == groupName;
         });
 
@@ -1874,7 +2288,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 
         var myGroup = aGroup.GetComponent<DynamicSoundGroup>();
 
-        var matches = myGroup.groupVariations.FindAll(delegate(DynamicGroupVariation obj) {
+        var matches = myGroup.groupVariations.FindAll(delegate (DynamicGroupVariation obj) {
             return obj.name == clipName;
         });
 
@@ -1900,23 +2314,60 @@ public class DynamicSoundGroupCreatorInspector : Editor {
         CopyFromAudioSourceTemplate(_creator, dynamicVar.VarAudio, false);
     }
 
-    private void CreateCustomEvent(string newEventName) {
-        var match = _creator.customEventsToCreate.FindAll(delegate(CustomEvent custEvent) {
-            return custEvent.EventName == newEventName;
-        });
+	private void ExpandCollapseCategory(string category, bool isExpand) {
+		AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "toggle expand / collapse all items in Category");
+		
+		foreach (var item in _creator.customEventsToCreate) {
+			if (item.categoryName != category) {
+				continue;
+			}
+			
+			item.eventExpanded = isExpand;
+		}
+	}
 
-        if (match.Count > 0) {
-            DTGUIHelper.ShowAlert("You already have a custom event named '" + newEventName + "' configured here. Please choose a different name.");
-            return;
-        }
+	private void CreateCustomEvent(string newEventName, string defaultCategory) {
+		if (_creator.customEventsToCreate.FindAll(delegate (CustomEvent obj) {
+			return obj.EventName == newEventName;
+		}).Count > 0) {
+			DTGUIHelper.ShowAlert("You already have a Custom Event named '" + newEventName + "'. Please choose a different name.");
+			return;
+		}
+		
+		var newEvent = new CustomEvent(newEventName);
+		newEvent.categoryName = defaultCategory;
+		
+		_creator.customEventsToCreate.Add(newEvent);
+	}
 
-        var newEvent = new CustomEvent(newEventName);
-
-        _creator.customEventsToCreate.Add(newEvent);
-    }
+	private void CreateCategory() {
+		if (string.IsNullOrEmpty(_creator.newCustomEventCategoryName)) {
+			DTGUIHelper.ShowAlert("You cannot have a blank Category name.");
+			return;
+		}
+		
+		// ReSharper disable once ForCanBeConvertedToForeach
+		for (var c = 0; c < _creator.customEventCategories.Count; c++) {
+			var cat = _creator.customEventCategories[c];
+			// ReSharper disable once InvertIf
+			if (cat.CatName == _creator.newCustomEventCategoryName) {
+				DTGUIHelper.ShowAlert("You already have a Category named '" + _creator.newCustomEventCategoryName + "'. Category names must be unique.");
+				return;
+			}
+		}
+		
+		AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "Create New Category");
+		
+		var newCat = new CustomEventCategory {
+			CatName = _creator.newCustomEventCategoryName,
+			ProspectiveName = _creator.newCustomEventCategoryName
+		};
+		
+		_creator.customEventCategories.Add(newCat);
+	}
 
     private void RenameEvent(CustomEvent cEvent) {
-        var match = _creator.customEventsToCreate.FindAll(delegate(CustomEvent obj) {
+        var match = _creator.customEventsToCreate.FindAll(delegate (CustomEvent obj) {
             return obj.EventName == cEvent.ProspectiveName;
         });
 
@@ -1925,11 +2376,12 @@ public class DynamicSoundGroupCreatorInspector : Editor {
             return;
         }
 
+        AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "Rename Custom Event");
         cEvent.EventName = cEvent.ProspectiveName;
     }
 
     private void PreviewGroup(DynamicSoundGroup aGroup) {
-        var rndIndex = Random.Range(0, aGroup.groupVariations.Count);
+        var rndIndex = UnityEngine.Random.Range(0, aGroup.groupVariations.Count);
         var rndVar = aGroup.groupVariations[rndIndex];
 
         var previewer = MasterAudioInspector.GetPreviewer();
@@ -1942,7 +2394,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
                 var clip = Resources.Load(fileName) as AudioClip;
                 if (clip != null) {
                     if (previewer != null) {
-                        previewer.PlayOneShot(clip, rndVar.VarAudio.volume*aGroup.groupMasterVolume);
+                        previewer.PlayOneShot(clip, rndVar.VarAudio.volume * aGroup.groupMasterVolume);
                     }
                 } else {
                     DTGUIHelper.ShowAlert("Could not find Resource file: " + fileName);
@@ -1950,7 +2402,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
                 break;
             case MasterAudio.AudioLocation.Clip:
                 if (previewer != null) {
-                    previewer.PlayOneShot(rndVar.VarAudio.clip, rndVar.VarAudio.volume*aGroup.groupMasterVolume);
+                    previewer.PlayOneShot(rndVar.VarAudio.clip, rndVar.VarAudio.volume * aGroup.groupMasterVolume);
                 }
                 break;
             case MasterAudio.AudioLocation.FileOnInternet:
@@ -1988,7 +2440,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
             }
         }
 
-        var allObjects = new List<Object> { _creator };
+        var allObjects = new List<UnityEngine.Object> { _creator };
         foreach (var g in groupsWithBus) {
             allObjects.Add(g);
         }
@@ -2014,10 +2466,10 @@ public class DynamicSoundGroupCreatorInspector : Editor {
     private void CreateBus(int groupIndex, bool isExisting) {
         var sourceGroup = _groups[groupIndex];
 
-        var affectedObjects = new Object[] {
-			_creator,
-			sourceGroup
-		};
+        var affectedObjects = new UnityEngine.Object[] {
+            _creator,
+            sourceGroup
+        };
 
         AudioUndoHelper.RecordObjectsForUndo(affectedObjects, "create Bus");
 
@@ -2168,7 +2620,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
     private void SortCustomEvents() {
         AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "Sort Custom Events Alpha");
 
-        _creator.customEventsToCreate.Sort(delegate(CustomEvent x, CustomEvent y) {
+        _creator.customEventsToCreate.Sort(delegate (CustomEvent x, CustomEvent y) {
             return x.EventName.CompareTo(y.EventName);
         });
     }
@@ -2184,7 +2636,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
     private void SortSongsAlpha(MasterAudio.Playlist aList) {
         AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "Sort Playlist Songs Alpha");
 
-        aList.MusicSettings.Sort(delegate(MusicSetting x, MusicSetting y) {
+        aList.MusicSettings.Sort(delegate (MusicSetting x, MusicSetting y) {
             return x.songName.CompareTo(y.songName);
         });
     }
@@ -2248,7 +2700,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
 
         AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _creator, "Add Audio Source Template");
         _creator.audioSourceTemplates.Add(temp.gameObject);
-        _creator.audioSourceTemplates.Sort(delegate(GameObject x, GameObject y) {
+        _creator.audioSourceTemplates.Sort(delegate (GameObject x, GameObject y) {
             return x.name.CompareTo(y.name);
         });
 
@@ -2261,7 +2713,7 @@ public class DynamicSoundGroupCreatorInspector : Editor {
             return null;
         }
 
-        var selTemplate = creator.audioSourceTemplates.Find(delegate(GameObject obj) {
+        var selTemplate = creator.audioSourceTemplates.Find(delegate (GameObject obj) {
             return obj.name == creator.audioSourceTemplateName;
         });
 

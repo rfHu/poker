@@ -32,7 +32,7 @@ public class SoundGroupVariationInspector : Editor {
 
         EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
         GUI.contentColor = DTGUIHelper.BrightButtonColor;
-        if (GUILayout.Button(new GUIContent("Back to Group", "Select Group in Hierarchy"), EditorStyles.toolbarButton, GUILayout.Width(80))) {
+        if (GUILayout.Button(new GUIContent("Back to Group", "Select Group in Hierarchy"), EditorStyles.toolbarButton, GUILayout.Width(90))) {
             Selection.activeObject = _variation.transform.parent.gameObject;
         }
         GUILayout.FlexibleSpace();
@@ -276,7 +276,18 @@ public class SoundGroupVariationInspector : Editor {
         }
 
         EditorGUI.indentLevel = 0;
-        var newVolume = DTGUIHelper.DisplayVolumeField(_variation.VarAudio.volume, DTGUIHelper.VolumeFieldType.None, MasterAudio.MixerWidthMode.Normal, 0f, true);
+        
+		var newProbability = EditorGUILayout.IntSlider("Probability to Play (%)", _variation.probabilityToPlay, 0, 100);
+		if (newProbability != _variation.probabilityToPlay) {
+			AudioUndoHelper.RecordObjectPropertyForUndo(ref isDirty, _variation, "change Probability to Play (%)");
+			_variation.probabilityToPlay = newProbability;
+		}
+		
+		if (_variation.probabilityToPlay < 100) {
+			DTGUIHelper.ShowLargeBarAlert("Since Probability to Play is less than 100%, you will not always hear this Variation when it's selected to play.");
+		}
+
+		var newVolume = DTGUIHelper.DisplayVolumeField(_variation.VarAudio.volume, DTGUIHelper.VolumeFieldType.None, MasterAudio.MixerWidthMode.Normal, 0f, true);
         if (newVolume != _variation.VarAudio.volume) {
             AudioUndoHelper.RecordObjectPropertyForUndo(ref isDirty, _variation.VarAudio, "change Volume");
             _variation.VarAudio.volume = newVolume;
