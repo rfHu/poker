@@ -8,9 +8,20 @@ using System.Collections;
 
 [RequireComponent(typeof(DOPopup))]
 public class UserDetail : MonoBehaviour {
+
 	public RawImage Avatar;
 	public Text Name;
+    public Text CoinsNumber;
     public Text RemarkText;
+
+    public GameObject GameOptionBtn;
+    public CButton AddFriend;   
+    public GameObject UserRemark;
+
+    public GameObject EmoticonsList;
+    public Button[] EmoticonButtons;
+
+    public GameObject NormalPart;
 	public Text Hands;
 	public Text ShowHand;
 	public Text Join;
@@ -19,15 +30,6 @@ public class UserDetail : MonoBehaviour {
 	public Text PreRaise;
 	public Text ThreeBet;
 	public Text CBet;
-    public GameObject GameOptionBtn;
-    public GameObject EmoticonsList;
-    public GameObject R1;
-    public GameObject R2;
-    public Button[] EmoticonButtons;
-    public Button StandUpButton;
-    public GameObject UserRemark;
-    public Text CoinsNumber;
-    public GameObject NormalPart;
 
     public GameObject MatchPart;
     public Text SNGJoin;
@@ -38,8 +40,6 @@ public class UserDetail : MonoBehaviour {
     public Text Golden;
     public Text Silver;
     public Text Copper;
-
-    public CButton AddFriend;
 
     string Uid;
     private string remark;
@@ -97,37 +97,35 @@ public class UserDetail : MonoBehaviour {
 
     private void buttonInit(string Uid)
     {
-        if (GameData.Shared.Owner && !GameData.Shared.IsMatch())
-        {
-            GameOptionBtn.SetActive(true);
-        }
-        else 
-        {
-            GameOptionBtn.SetActive(false);
-        }
-
-        var parent = GameOptionBtn.transform.parent.gameObject;
-
-        if (Uid == GameData.Shared.Uid) {
-            parent.SetActive(false);
-        } else {
-            parent.SetActive(true);
-        }
-    }
-
-	
-    void RequestById(string id) {
-        var coinGo = CoinsNumber.transform.parent.gameObject;
-
         bool isMyself = Uid == GameData.Shared.Uid;
 
-        RemarkText.gameObject.SetActive(!isMyself);
+        var coinGo = CoinsNumber.transform.parent.gameObject;
         coinGo.SetActive(isMyself);
-        AddFriend.gameObject.SetActive(!isMyself);
         if (isMyself) {
             CoinsNumber.text = _.Num2CnDigit(GameData.Shared.Coins);
         }
 
+        RemarkText.gameObject.SetActive(!isMyself);
+
+        var parent = GameOptionBtn.transform.parent.parent.gameObject;
+
+        if (isMyself) {
+            parent.SetActive(false);
+        } else {
+            parent.SetActive(true);
+            if (GameData.Shared.Owner && !GameData.Shared.IsMatch())
+            {
+                GameOptionBtn.SetActive(true);
+            }
+            else 
+            {
+                GameOptionBtn.SetActive(false);
+            }
+            AddFriend.gameObject.SetActive(true);
+        }
+    }
+
+    void RequestById(string id) {
 		var d = new Dictionary<string, object>(){
 			{"uid", id}
 		};
@@ -257,28 +255,6 @@ public class UserDetail : MonoBehaviour {
         GetComponent<DOPopup>().Close();
     }
 
-    private void setStandUpButton(bool interactable)
-    {
-        StandUpButton.interactable = interactable;
-
-        var image = StandUpButton.GetComponent<ProceduralImage>();
-        var text = StandUpButton.transform.Find("Text").GetComponent<Text>();
-        var icon = StandUpButton.transform.Find("Image").GetComponent<VectorImage>();
-        Color color;
-
-        if (interactable)
-        {
-            color = MaterialUI.MaterialColor.cyanA200;
-        }
-        else
-        {
-            color = MaterialUI.MaterialColor.grey400;
-        }
-
-        image.color = color;
-        text.color = color;
-        icon.color = color;
-    }
 
     public void OnRemark() {
         var transform = PoolMan.Spawn("UserRemark");
@@ -306,14 +282,4 @@ public class UserDetail : MonoBehaviour {
 
 
     }
-
-    //IEnumerator bgAlphaChange(Transform lastEmo) 
-    //{
-    //    //if (PoolMan.IsSpawned(PoolMan.g))
-    //    //{
-    //    //    yield return new WaitForFixedUpdate();
-    //    //}
-
-    //    GetComponent<ProceduralImage>().color += new Color(0,0,0,1);
-    //}
 }
