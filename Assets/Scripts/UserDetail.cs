@@ -183,7 +183,7 @@ public class UserDetail : MonoBehaviour {
                 EmoticonButtons[pid].GetComponentInChildren<Text>().text = dict.Int("coin").ToString();
             }
 
-            AddFriend.interactable = data.Int("is_friend") == 0;
+            AddFriend.interactable = data.Int("is_friend_or_audit") == 0;
         });
 
 	}
@@ -294,6 +294,7 @@ public class UserDetail : MonoBehaviour {
             if (data == "200")
             {
                 PokerUI.Toast("已发送添加好友请求");
+                AddFriend.interactable = false;
             }
             else if (data == "400")
             {
