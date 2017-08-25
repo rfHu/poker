@@ -20,7 +20,6 @@ public class UserDetail : MonoBehaviour {
 	public Text ThreeBet;
 	public Text CBet;
     public GameObject GameOptionBtn;
-    public GameObject EmoticonsTeam;
     public GameObject EmoticonsList;
     public GameObject R1;
     public GameObject R2;
@@ -30,7 +29,7 @@ public class UserDetail : MonoBehaviour {
     public Text CoinsNumber;
     public GameObject NormalPart;
 
-    public GameObject SNGPart;
+    public GameObject MatchPart;
     public Text SNGJoin;
     public Text ReturnPercent;
     public Text WinMatchCount;
@@ -39,6 +38,8 @@ public class UserDetail : MonoBehaviour {
     public Text Golden;
     public Text Silver;
     public Text Copper;
+
+    public CButton AddFriend;
 
     string Uid;
     private string remark;
@@ -69,21 +70,21 @@ public class UserDetail : MonoBehaviour {
         if (GameData.Shared.IsMatch())
         {
             NormalPart.SetActive(false);
-            SNGPart.SetActive(true);
+            MatchPart.SetActive(true);
         }
         else
         {
             NormalPart.SetActive(true);
-            SNGPart.SetActive(false);
+            MatchPart.SetActive(false);
         }
 
         //动态表情
         if (Uid == GameData.Shared.Uid || GameData.Shared.FindPlayerIndex(Uid) == -1 || GameSetting.emoticonClose)
         {
-            EmoticonsTeam.SetActive(false);
+            EmoticonsList.SetActive(false);
             GetComponent<VerticalLayoutGroup>().padding.bottom = 40;
         } else {
-            EmoticonsTeam.SetActive(true);
+            EmoticonsList.SetActive(true);
             EmoticonsList.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
             GetComponent<VerticalLayoutGroup>().padding.bottom = 0;
         }
@@ -153,7 +154,7 @@ public class UserDetail : MonoBehaviour {
 
             if (GameData.Shared.IsMatch())
 	        {
-                setSNGText(achieve);
+                setMatchText(achieve);
 	        }
             else
 	        {
@@ -181,10 +182,13 @@ public class UserDetail : MonoBehaviour {
                 EmoticonButtons[pid].GetComponent<Button>().interactable = true;
                 EmoticonButtons[pid].GetComponentInChildren<Text>().text = dict.Int("coin").ToString();
             }
+
+            AddFriend.interactable = data.Int("is_friend") == 0;
         });
+
 	}
 
-    private void setSNGText(AchieveModel achieve)
+    private void setMatchText(AchieveModel achieve)
     {
         SNGJoin.text = achieve.total_match_count.ToString();
 
@@ -277,6 +281,27 @@ public class UserDetail : MonoBehaviour {
     public void OnRemark() {
         var transform = PoolMan.Spawn("UserRemark");
         transform.GetComponent<UserRemark>().Show(Uid, remark);
+    }
+
+    public void OnClickAddFriend() 
+    {
+        HTTP.Post("/handle-friend", new Dictionary<string, object>()
+        {
+            {"type", 1},
+            {"uid", Uid},
+        }, (data) =>
+        {
+            if (data == "200")
+            {
+                PokerUI.Toast("已发送添加好友请求");
+            }
+            else if (data == "400")
+            {
+                PokerUI.Toast("发送请求失败");
+            }
+        });
+
+
     }
 
     //IEnumerator bgAlphaChange(Transform lastEmo) 
