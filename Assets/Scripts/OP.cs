@@ -22,6 +22,13 @@ public class OP : MonoBehaviour {
 	public Text CallNumber;
 	public Text CallText;
 	public Slider Slid;
+
+	private GameObject slidParent {
+		get {
+			return Slid.transform.parent.gameObject;
+		}
+	}
+
 	public GameObject Allin;
 	public Text RaiseNumber;
 	public Text MaxText;
@@ -285,7 +292,7 @@ public class OP : MonoBehaviour {
 	public void OnRaiseClick() {
 		slidDisposables.Clear();
 		
-		Slid.gameObject.SetActive(true);
+		slidParent.SetActive(true);
 		Slid.maxValue = range[1];
 		Slid.value = Slid.minValue = range[0];
 		Slid.wholeNumbers = true;
@@ -402,7 +409,7 @@ public class OP : MonoBehaviour {
 
 	private void hideRaiseSlider() {
 		hideModal();
-		Slid.gameObject.SetActive(false);
+		slidParent.SetActive(false);
 		AccurateBtn.SetActive(true);
 		setToggle(true);
 	}
