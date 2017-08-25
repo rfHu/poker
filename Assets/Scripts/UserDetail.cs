@@ -89,6 +89,8 @@ public class UserDetail : MonoBehaviour {
             GetComponent<VerticalLayoutGroup>().padding.bottom = 0;
         }
 
+
+
         RequestById(Uid);
         GetComponent<DOPopup>().Show();
     }
@@ -117,14 +119,14 @@ public class UserDetail : MonoBehaviour {
     void RequestById(string id) {
         var coinGo = CoinsNumber.transform.parent.gameObject;
 
-        if (Uid == GameData.Shared.Uid) {
-            RemarkText.gameObject.SetActive(false);
-            coinGo.SetActive(true);
+        bool isMyself = Uid == GameData.Shared.Uid;
+
+        RemarkText.gameObject.SetActive(!isMyself);
+        coinGo.SetActive(isMyself);
+        AddFriend.gameObject.SetActive(!isMyself);
+        if (isMyself) {
             CoinsNumber.text = _.Num2CnDigit(GameData.Shared.Coins);
-        } else {
-            RemarkText.gameObject.SetActive(true);
-            coinGo.SetActive(false);
-        } 
+        }
 
 		var d = new Dictionary<string, object>(){
 			{"uid", id}
