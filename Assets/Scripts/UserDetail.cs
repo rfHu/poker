@@ -269,15 +269,7 @@ public class UserDetail : MonoBehaviour {
             {"uid", Uid},
         }, (data) =>
         {
-            if (data == "200")
-            {
-                PokerUI.Toast("已发送添加好友请求");
-                AddFriend.interactable = false;
-            }
-            else if (data == "400")
-            {
-                PokerUI.Toast("发送请求失败");
-            }
+            AddFriend.interactable = false;
         });
 
 
