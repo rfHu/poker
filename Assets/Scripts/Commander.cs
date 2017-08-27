@@ -154,7 +154,11 @@ public class AndroidCommander: ICommander {
 		#if UNITY_EDITOR
 			return 50;	
 		#else
-			return getJo().Call<int>("getCurPower");
+			try {
+				return getJo().Call<int>("getCurPower");
+			} catch(Exception e) {
+				return 50;
+			}
 		#endif
 	}
 
@@ -175,7 +179,11 @@ public class AndroidCommander: ICommander {
     }
 
     public void VoiceIconToggle(bool isShowing) {
-        getJo().Call("voiceIconToggle", isShowing);
+		try {
+        	getJo().Call("voiceIconToggle", isShowing);
+		} catch(Exception e) {
+			// skip
+		}
     }
 
     public void ShareSNGResult(string pic) {
@@ -188,7 +196,11 @@ public class AndroidCommander: ICommander {
     {
 		#if UNITY_EDITOR 
 		#else
-	        getJo().Call("gameMessageIsShowToggle", isOpen, type);
+			try {
+
+			} catch(Exception e) {
+	        	getJo().Call("gameMessageIsShowToggle", isOpen, type);
+			}
 		#endif
     }
 
