@@ -54,9 +54,4 @@ public class JoinMatch : MonoBehaviour {
 
         GetComponent<DOPopup>().Close();
     }
-
-    void OnDespawned() 
-    {
-        Exit();
-    }
 }

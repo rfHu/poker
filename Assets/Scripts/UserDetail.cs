@@ -269,6 +269,7 @@ public class UserDetail : MonoBehaviour {
             {"uid", Uid},
         }, (data) =>
         {
+            PokerUI.Toast("好友请求已发送");
             AddFriend.interactable = false;
         });
 
