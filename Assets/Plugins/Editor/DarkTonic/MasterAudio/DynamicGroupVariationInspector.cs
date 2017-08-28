@@ -220,7 +220,17 @@ public class DynamicGroupVariationInspector : Editor {
 
         EditorGUI.indentLevel = 0;
 
-        var newVolume = EditorGUILayout.Slider("Volume", _variation.VarAudio.volume, 0f, 1f);
+		var newProbability = EditorGUILayout.IntSlider("Probability to Play (%)", _variation.probabilityToPlay, 0, 100);
+		if (newProbability != _variation.probabilityToPlay) {
+			AudioUndoHelper.RecordObjectPropertyForUndo(ref isDirty, _variation, "change Probability to Play (%)");
+			_variation.probabilityToPlay = newProbability;
+		}
+		
+		if (_variation.probabilityToPlay < 100) {
+			DTGUIHelper.ShowLargeBarAlert("Since Probability to Play is less than 100%, you will not always hear this Variation when it's selected to play.");
+		}
+
+		var newVolume = EditorGUILayout.Slider("Volume", _variation.VarAudio.volume, 0f, 1f);
         if (newVolume != _variation.VarAudio.volume) {
             AudioUndoHelper.RecordObjectPropertyForUndo(ref isDirty, _variation.VarAudio, "change Volume");
             _variation.VarAudio.volume = newVolume;

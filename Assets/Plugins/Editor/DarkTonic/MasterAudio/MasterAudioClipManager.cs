@@ -1,5 +1,5 @@
-#if UNITY_5
-    // clip manager doesn't exist because they've closed off the API of the Audio Importer
+#if UNITY_5 || UNITY_2017
+// clip manager doesn't exist because they've closed off the API of the Audio Importer
 #else
 using System;
 using System.Collections.Generic;

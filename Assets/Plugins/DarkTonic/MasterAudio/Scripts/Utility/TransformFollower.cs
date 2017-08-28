@@ -1,3 +1,5 @@
+/*! \cond PRIVATE */
+using System.Net;
 using DarkTonic.MasterAudio;
 using UnityEngine;
 
@@ -12,11 +14,20 @@ public class TransformFollower : MonoBehaviour {
     private SphereCollider _collider;
     private string _soundType;
     private bool _willFollowSource;
+    private bool _isInsideTrigger;
+    private bool _hasPlayedSound;
+    private bool _groupLoadFailed;
+    private MasterAudioGroup _groupToPlay;
 
     // ReSharper disable once UnusedMember.Local
     void Awake() {
         var trig = Trigger;
         if (trig == null) { } // get rid of warning
+    }
+
+    // ReSharper disable once UnusedMember.Local
+    void Start() {
+        _groupToPlay = MasterAudio.GrabGroup(_soundType, false);
     }
 
     public void StartFollowing(Transform transToFollow, string soundType, float trigRadius, bool willFollowSource) {
@@ -42,11 +53,61 @@ public class TransformFollower : MonoBehaviour {
             return; // abort if this is the Listener or if not colliding with Listener.
         }
 
-        // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
+        _isInsideTrigger = true;
+
+        if (_groupToPlay != null) {
+            switch (_groupToPlay.GroupLoadStatus) {
+                case MasterAudio.InternetFileLoadStatus.Loaded:
+                    break;
+                case MasterAudio.InternetFileLoadStatus.Failed:
+                    if (MasterAudio.LogSoundsEnabled) {
+                        MasterAudio.LogWarning("TransformFollower: '" + name + "' not attempting to play Sound Group '" + _soundType + "' because the Sound Group failed to load.");
+                    }
+                    _groupLoadFailed = true;
+                    return;
+                case MasterAudio.InternetFileLoadStatus.Loading:
+                    return;
+            }
+        }
+
+        PlaySound();
+    }
+
+    private void PlaySound() {
         if (_willFollowSource) {
             MasterAudio.PlaySound3DFollowTransformAndForget(_soundType, RuntimeFollowingTransform);
         } else {
             MasterAudio.PlaySound3DAtTransformAndForget(_soundType, RuntimeFollowingTransform);
+        }
+
+        _hasPlayedSound = true;
+    }
+
+    // ReSharper disable once UnusedMember.Local
+    void LateUpdate() {
+        if (RuntimeFollowingTransform == null || !DTMonoHelper.IsActive(_goToFollow)) {
+            StopFollowing();
+            return;
+        }
+
+        Trans.position = RuntimeFollowingTransform.position;
+
+        if (!_isInsideTrigger || _hasPlayedSound || _groupLoadFailed) {
+            return;
+        }
+
+        switch (_groupToPlay.GroupLoadStatus) {
+            case MasterAudio.InternetFileLoadStatus.Loaded:
+                PlaySound();
+                break;
+            case MasterAudio.InternetFileLoadStatus.Failed:
+                if (MasterAudio.LogSoundsEnabled) {
+                    MasterAudio.LogWarning("TransformFollower: '" + name + "' not attempting to play Sound Group '" + _soundType + "' because the Sound Group failed to load.");
+                }
+                _groupLoadFailed = true;
+                break;
+            case MasterAudio.InternetFileLoadStatus.Loading:
+                break;
         }
     }
 
@@ -60,17 +121,9 @@ public class TransformFollower : MonoBehaviour {
             return; // abort if not colliding with Listener.
         }
 
+        _isInsideTrigger = false;
+        _hasPlayedSound = false;
         MasterAudio.StopSoundGroupOfTransform(RuntimeFollowingTransform, _soundType);
-    }
-
-    // ReSharper disable once UnusedMember.Local
-    void LateUpdate() {
-        if (RuntimeFollowingTransform == null || !DTMonoHelper.IsActive(_goToFollow)) {
-            StopFollowing();
-            return;
-        }
-
-        Trans.position = RuntimeFollowingTransform.position;
     }
 
     public SphereCollider Trigger {
@@ -108,3 +161,4 @@ public class TransformFollower : MonoBehaviour {
         }
     }
 }
+/*! \endcond */

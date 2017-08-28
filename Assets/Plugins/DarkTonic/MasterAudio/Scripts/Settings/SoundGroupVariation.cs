@@ -11,7 +11,10 @@ namespace DarkTonic.MasterAudio {
     public class SoundGroupVariation : MonoBehaviour {
         /*! \cond PRIVATE */
         // ReSharper disable InconsistentNaming
-		public int weight = 1;
+        public int weight = 1;
+
+        [Range(0f, 1f)]
+		public int probabilityToPlay = 100;
 
         public bool useLocalization = false;
 
@@ -41,7 +44,7 @@ namespace DarkTonic.MasterAudio {
 
         public bool useRandomStartTime = false;
         public float randomStartMinPercent = 0f;
-        public float randomStartMaxPercent = 0f;
+        public float randomStartMaxPercent = 100f;
 
         public bool useIntroSilence = false;
         public float introSilenceMin = 0f;
@@ -165,6 +168,8 @@ namespace DarkTonic.MasterAudio {
                 return;
             }
 
+			GameObj.layer = MasterAudio.Instance.gameObject.layer;
+
             switch (audLocation) {
                 case MasterAudio.AudioLocation.FileOnInternet:
                     if (internetFileLoadStatus == MasterAudio.InternetFileLoadStatus.Loading) {
@@ -173,7 +178,7 @@ namespace DarkTonic.MasterAudio {
                     break;
             }
 
-#if UNITY_5
+#if UNITY_5 || UNITY_2017
             SetMixerGroup();
             SetSpatialBlend();
 #endif
@@ -181,9 +186,11 @@ namespace DarkTonic.MasterAudio {
             SetPriority();
 
             SetOcclusion();
+
+            SpatializerHelper.TurnOnSpatializerIfEnabled(VarAudio);
         }
 
-#if UNITY_5
+#if UNITY_5 || UNITY_2017
         public void SetMixerGroup() {
             var aBus = ParentGroup.BusForGroup;
             // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
@@ -220,12 +227,15 @@ namespace DarkTonic.MasterAudio {
                 return;
             }
 
-            // set occlusion default
-            if (LowPassFilter == null) {
-                _lpFilter = gameObject.AddComponent<AudioLowPassFilter>();
-            } else {
-                _lpFilter = GetComponent<AudioLowPassFilter>();
-            }
+			// set occlusion default
+			if (LowPassFilter == null) {
+				_lpFilter = GetComponent<AudioLowPassFilter>();
+				if (_lpFilter == null) {
+					_lpFilter = gameObject.AddComponent<AudioLowPassFilter>();
+				}
+			} else {
+				_lpFilter = GetComponent<AudioLowPassFilter>();
+			}
 
             // ReSharper disable once PossibleNullReferenceException
             LowPassFilter.cutoffFrequency = AudioUtil.MinCutoffFreq(VariationUpdater);
@@ -280,21 +290,34 @@ namespace DarkTonic.MasterAudio {
         }
 
         /*! \cond PRIVATE */
-        public void Play(float? pitch, float maxVolume, string gameObjectName, float volPercent, float targetVol,
-            float? targetPitch, Transform sourceTrans, bool attach, float delayTime, bool isChaining,
-            bool isSingleSubscribedPlay) {
+        /// <summary>
+        /// Never call this method. Used internally.
+        /// </summary>
+        /// <param name="pitch">Pitch.</param>
+        /// <param name="maxVolume">Max volume.</param>
+        /// <param name="gameObjectName">Game object name.</param>
+        /// <param name="volPercent">Vol percent.</param>
+        /// <param name="targetVol">Target vol.</param>
+        /// <param name="targetPitch">Target pitch.</param>
+        /// <param name="sourceTrans">Source trans.</param>
+        /// <param name="attach">If set to <c>true</c> attach.</param>
+        /// <param name="delayTime">Delay time.</param>
+        /// <param name="isChaining">If set to <c>true</c> is chaining.</param>
+        /// <param name="isSingleSubscribedPlay">If set to <c>true</c> is single subscribed play.</param>
+		public void Play(float? pitch, float maxVolume, string gameObjectName, float volPercent, float targetVol,
+            float? targetPitch, Transform sourceTrans, bool attach, float delayTime, bool isChaining, bool isSingleSubscribedPlay) {
 
             if (!MasterAudio.IsWarming && audLocation == MasterAudio.AudioLocation.FileOnInternet) {
                 switch (internetFileLoadStatus) {
                     case MasterAudio.InternetFileLoadStatus.Loading:
-                        if (MasterAudio.Instance.LogSounds) {
+                        if (ParentGroup.LoggingEnabledForGroup) {
                             MasterAudio.LogWarning("Cannot play Variation '" + name +
                                                    "' because its Internet file has not been downloaded yet.");
                         }
                         return;
                     case MasterAudio.InternetFileLoadStatus.Failed:
-                        if (MasterAudio.Instance.LogSounds) {
-                            MasterAudio.LogWarning("Cannot play Variation '" + name +	
+                        if (ParentGroup.LoggingEnabledForGroup) {
+                            MasterAudio.LogWarning("Cannot play Variation '" + name +
                                                    "' because its Internet file failed downloading.");
                         }
                         return;
@@ -304,19 +327,9 @@ namespace DarkTonic.MasterAudio {
             SoundFinished = null; // clear it out so subscribers don't have to clean up
             _isWaitingForDelay = false;
 
-            _playSndParam.SoundType = gameObjectName;
-            _playSndParam.VolumePercentage = volPercent;
-            _playSndParam.GroupCalcVolume = targetVol;
-            _playSndParam.Pitch = targetPitch;
-            _playSndParam.SourceTrans = sourceTrans;
-            _playSndParam.AttachToSource = attach;
-            _playSndParam.DelaySoundTime = delayTime;
-            _playSndParam.IsChainLoop = isChaining ||
-                                        ParentGroup.curVariationMode == MasterAudioGroup.VariationMode.LoopedChain;
-            _playSndParam.IsSingleSubscribedPlay = isSingleSubscribedPlay;
-            _playSndParam.IsPlaying = true;
-
-            SetPriority(); // reset it back to normal priority in case you're playing 2D this time.
+			SetPlaySoundParams(gameObjectName, volPercent, targetVol, targetPitch, sourceTrans, attach, delayTime, isChaining, isSingleSubscribedPlay);
+            
+			SetPriority(); // reset it back to normal priority in case you're playing 2D this time.
 
             if (MasterAudio.HasAsyncResourceLoaderFeature() && ShouldLoadAsync) {
                 StopAllCoroutines(); // The only Coroutine right now requires pro version and Unity 4.5.3
@@ -340,7 +353,7 @@ namespace DarkTonic.MasterAudio {
                 VarAudio.pitch = OriginalPitch;
             }
 
-#if UNITY_5
+#if UNITY_5 || UNITY_2017
             // in case it was changed at runtime.
             SetSpatialBlend();
 #endif
@@ -371,6 +384,32 @@ namespace DarkTonic.MasterAudio {
                     return;
             }
         }
+
+		/// <summary>
+		/// Never call this method. Used internally.
+		/// </summary>
+		/// <param name="gameObjectName">Game object name.</param>
+		/// <param name="volPercent">Vol percent.</param>
+		/// <param name="targetVol">Target vol.</param>
+		/// <param name="targetPitch">Target pitch.</param>
+		/// <param name="sourceTrans">Source trans.</param>
+		/// <param name="attach">If set to <c>true</c> attach.</param>
+		/// <param name="delayTime">Delay time.</param>
+		/// <param name="isChaining">If set to <c>true</c> is chaining.</param>
+		/// <param name="isSingleSubscribedPlay">If set to <c>true</c> is single subscribed play.</param>
+		public void SetPlaySoundParams(string gameObjectName, float volPercent, float targetVol, float? targetPitch, Transform sourceTrans, bool attach, float delayTime, bool isChaining, bool isSingleSubscribedPlay) {
+			_playSndParam.SoundType = gameObjectName;
+			_playSndParam.VolumePercentage = volPercent;
+			_playSndParam.GroupCalcVolume = targetVol;
+			_playSndParam.Pitch = targetPitch;
+			_playSndParam.SourceTrans = sourceTrans;
+			_playSndParam.AttachToSource = attach;
+			_playSndParam.DelaySoundTime = delayTime;
+			_playSndParam.IsChainLoop = isChaining ||
+				ParentGroup.curVariationMode == MasterAudioGroup.VariationMode.LoopedChain;
+			_playSndParam.IsSingleSubscribedPlay = isSingleSubscribedPlay;
+			_playSndParam.IsPlaying = true;
+		}
         /*! \endcond */
 
         private void InternetFileFailedToLoad() {
@@ -378,7 +417,7 @@ namespace DarkTonic.MasterAudio {
         }
 
         private void InternetFileLoaded() {
-            if (MasterAudio.Instance.LogSounds) {
+            if (ParentGroup.LoggingEnabledForGroup) {
                 MasterAudio.LogWarning("Internet file: '" + internetFileUrl + "' loaded successfully.");
             }
 
@@ -418,10 +457,7 @@ namespace DarkTonic.MasterAudio {
 
             ParentGroup.AddActiveAudioSourceId(InstanceId);
 
-            if (VariationUpdater != null) {
-                VariationUpdater.enabled = true;
-                VariationUpdater.WaitForSoundFinish(_playSndParam.DelaySoundTime);
-            }
+			EnableUpdater();
 
             _attachToSource = false;
 
@@ -464,17 +500,17 @@ namespace DarkTonic.MasterAudio {
 
             _playSndParam.VolumePercentage = volumePercentage;
 
-			// SET LastVolumePercentage for the AudioInfo so a bus fade will work with respect to this value.
-			var grpInfo = MasterAudio.GetAllVariationsOfGroup(ParentGroup.name);
-			for (var i = 0; i < grpInfo.Count; i++) {
-				var aVar = grpInfo[i];
-				if (aVar.Variation != this) {
-					continue;
-				}
+            // SET LastVolumePercentage for the AudioInfo so a bus fade will work with respect to this value.
+            var grpInfo = MasterAudio.GetAllVariationsOfGroup(ParentGroup.name);
+            for (var i = 0; i < grpInfo.Count; i++) {
+                var aVar = grpInfo[i];
+                if (aVar.Variation != this) {
+                    continue;
+                }
 
-				aVar.LastPercentageVolume = volumePercentage;
-				break;
-			}
+                aVar.LastPercentageVolume = volumePercentage;
+                break;
+            }
         }
 
         /// <summary>
@@ -504,6 +540,28 @@ namespace DarkTonic.MasterAudio {
             //}
         }
 
+		/*! \cond PRIVATE */
+		/// <summary>
+		/// Do not call this method. Used internally for ver specific operations. This will set params for "silent" or randomly skipped variations so that a Chained Loop may continue when no audio is played.
+		/// </summary>
+		public void DoNextChain(float volumePercentage, float? pitch, Transform transActor, bool attach) {
+			EnableUpdater(false); 
+			SetPlaySoundParams(ParentGroup.GameObjectName, volumePercentage, volumePercentage, pitch, transActor, attach, 0f, true, false);
+
+			VariationUpdater.MaybeChain();
+			VariationUpdater.StopWaitingForFinish();
+		}
+		/*! \endcond */
+
+		private void EnableUpdater(bool waitForSoundFinish = true) {
+			if (VariationUpdater != null) {
+				VariationUpdater.enabled = true;
+				if (waitForSoundFinish) {
+					VariationUpdater.WaitForSoundFinish(_playSndParam.DelaySoundTime);
+				}
+			}
+		}
+
         private void MaybeUnloadClip() {
             if (audLocation == MasterAudio.AudioLocation.ResourceFile) {
                 AudioResourceOptimizer.UnloadClipIfUnused(_resFileName);
@@ -512,10 +570,45 @@ namespace DarkTonic.MasterAudio {
             AudioUtil.UnloadNonPreloadedAudioData(VarAudio.clip);
         }
 
+        private void PlayEndLinkedGroups() {
+            if (MasterAudio.AppIsShuttingDown || MasterAudio.IsWarming || ParentGroup.endLinkedGroups.Count == 0) {
+                return;
+            }
+
+            if (VariationUpdater == null || VariationUpdater.FramesPlayed == 0) {
+                return;
+            }
+
+            switch (ParentGroup.linkedStopGroupSelectionType) {
+                case MasterAudio.LinkedGroupSelectionType.All:
+                    // ReSharper disable once ForCanBeConvertedToForeach
+                    for (var i = 0; i < ParentGroup.endLinkedGroups.Count; i++) {
+                        PlayEndLinkedGroup(ParentGroup.endLinkedGroups[i]);
+                    }
+                    break;
+                case MasterAudio.LinkedGroupSelectionType.OneAtRandom:
+                    var randomIndex = Random.Range(0, ParentGroup.endLinkedGroups.Count);
+                    PlayEndLinkedGroup(ParentGroup.endLinkedGroups[randomIndex]);
+                    break;
+            }
+        }
+
+        private void PlayEndLinkedGroup(string sType) {
+            if (_playSndParam.AttachToSource && _playSndParam.SourceTrans != null) {
+                MasterAudio.PlaySound3DFollowTransformAndForget(sType, _playSndParam.SourceTrans, _playSndParam.VolumePercentage, _playSndParam.Pitch);
+            } else if (_playSndParam.SourceTrans != null) {
+                MasterAudio.PlaySound3DAtTransformAndForget(sType, _playSndParam.SourceTrans, _playSndParam.VolumePercentage, _playSndParam.Pitch);
+            } else {
+                MasterAudio.PlaySound3DAtVector3AndForget(sType, Trans.position, _playSndParam.VolumePercentage, _playSndParam.Pitch);
+            }
+        }
+
         /// <summary>
         /// This method allows you to stop the audio being played by this Variation. 
         /// </summary>
-        public void Stop(bool stopEndDetection = false) {
+        /// <param name="stopEndDetection">Do not ever pass this in.</param>
+        /// <param name="skipLinked">Do not ever pass this in.</param>
+        public void Stop(bool stopEndDetection = false, bool skipLinked = false) {
             var waitStopped = false;
 
             if (stopEndDetection || _isWaitingForDelay) {
@@ -523,6 +616,10 @@ namespace DarkTonic.MasterAudio {
                     VariationUpdater.StopWaitingForFinish(); // turn off the chain loop endless repeat
                     waitStopped = true;
                 }
+            }
+
+            if (!skipLinked) {
+                PlayEndLinkedGroups();
             }
 
             _objectToFollow = null;
@@ -580,6 +677,13 @@ namespace DarkTonic.MasterAudio {
                 }
                 return;
             }
+
+			if (!VarAudio.clip.IsClipReadyToPlay()) {
+				if (ParentGroup.LoggingEnabledForGroup) {
+					MasterAudio.LogWarning("Cannot Fade Variation '" + name + "' because it is still loading.");
+				}
+				return;
+			}
 
             if (VariationUpdater != null) {
                 VariationUpdater.FadeOverTimeToVolume(newVolume, fadeTime);
@@ -708,12 +812,36 @@ namespace DarkTonic.MasterAudio {
         /*! \cond PRIVATE */
         public Transform ObjectToFollow {
             get { return _objectToFollow; }
-            set { _objectToFollow = value; }
+            set {
+                _objectToFollow = value;
+                UpdateTransformTracker(value);
+            }
         }
 
         public Transform ObjectToTriggerFrom {
             get { return _objectToTriggerFrom; }
-            set { _objectToTriggerFrom = value; }
+            set {
+                _objectToTriggerFrom = value;
+                UpdateTransformTracker(value);
+            }
+        }
+
+        public void UpdateTransformTracker(Transform sourceTrans) {
+            if (sourceTrans == null) {
+                return;
+            }
+
+            if (!Application.isEditor) { // no tracking outside of editor, because it creates garbage.
+                return;
+            }
+
+			if (MasterAudio.IsWarming) {
+				return;
+			}
+
+            if (sourceTrans.GetComponent<AudioTransformTracker>() == null) { 
+				sourceTrans.gameObject.AddComponent<AudioTransformTracker>();
+            }
         }
         /*! \endcond */
 
@@ -926,7 +1054,7 @@ namespace DarkTonic.MasterAudio {
 
         private bool Is2D {
             get {
-#if UNITY_5
+#if UNITY_5 || UNITY_2017
                 return VarAudio.spatialBlend <= 0;
 #else
 				return false;
@@ -945,7 +1073,7 @@ namespace DarkTonic.MasterAudio {
         }
 
         public bool UsesOcclusion {
-            get { 
+            get {
                 if (!VariationUpdater.MAThisFrame.useOcclusion) {
                     return false;
                 }

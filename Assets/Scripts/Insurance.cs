@@ -263,6 +263,14 @@ public class Insurance : MonoBehaviour {
 
     private void SetCASlider()
     {
+		if (scope.Count < 2) {
+			BuyButton.interactable = false;
+			CASlider.minValue = CASlider.maxValue = 0;
+			EqualButton.interactable = false;
+			BreakEventButton.interactable = false;
+			return ;
+		}	
+
         // 最小值向上取整
         var minValue = Mathf.CeilToInt(scope[0] / odds);
 
@@ -285,7 +293,6 @@ public class Insurance : MonoBehaviour {
 
         EqualButton.interactable = !(eqValue > maxValue) ;
         BreakEventButton.interactable = !(beValue > maxValue);
-        
     }
 
     private void SetOdds()

@@ -3,7 +3,7 @@ using System;
 // ReSharper disable once RedundantUsingDirective
 using System.Collections.Generic;
 
-#if UNITY_5
+#if UNITY_5 || UNITY_2017
 using UnityEngine.Audio;
 #endif
 
@@ -32,7 +32,7 @@ namespace DarkTonic.MasterAudio {
         public MasterAudio.BusCommand currentBusCommand = MasterAudio.BusCommand.None;
         public MasterAudio.CustomEventCommand currentCustomEventCommand = MasterAudio.CustomEventCommand.None;
         public MasterAudio.GlobalCommand currentGlobalCommand = MasterAudio.GlobalCommand.None;
-#if UNITY_5
+#if UNITY_5 || UNITY_2017
     public MasterAudio.UnityMixerCommand currentMixerCommand = MasterAudio.UnityMixerCommand.None;
 	public AudioMixerSnapshot snapshotToTransitionTo = null;
 	public float snapshotTransitionTime = 1f;
@@ -48,6 +48,8 @@ namespace DarkTonic.MasterAudio {
         public bool startPlaylist = true;
         public float fadeVolume = 0f;
         public float fadeTime = 1f;
+		public bool stopAfterFade = false;
+		public bool restoreVolumeAfterFade = false;
         public TargetVolumeMode targetVolMode = TargetVolumeMode.UseSliderValue;
         public string clipName = "[None]";
         public EventSounds.VariationType variationType = EventSounds.VariationType.PlayRandom;
@@ -62,7 +64,7 @@ namespace DarkTonic.MasterAudio {
             UseSpecificValue
         }
 
-#if UNITY_5
+#if UNITY_5 || UNITY_2017
     [Serializable]
 	public class MA_SnapshotInfo {
 		public AudioMixerSnapshot snapshot;

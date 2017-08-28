@@ -47,22 +47,32 @@ AudioSource:
   MinDistance: 10
   MaxDistance: 50
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 2
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
   rolloffCustomCurve:
     serializedVersion: 2
     m_Curve:
-    - time: 0
+    - time: .200000003
       value: 1
-      inSlope: 0
-      outSlope: 0
+      inSlope: -5.00199175
+      outSlope: -5.00199175
+      tangentMode: 0
+    - time: .400000006
+      value: .5
+      inSlope: -1.25049794
+      outSlope: -1.25049794
+      tangentMode: 0
+    - time: .720673084
+      value: .143890679
+      inSlope: -.588042915
+      outSlope: -.588042915
       tangentMode: 0
     - time: 1
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: -.200079843
+      outSlope: -.200079843
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2

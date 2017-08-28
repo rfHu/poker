@@ -1,6 +1,52 @@
-MASTER AUDIO PLUGIN - By DarkTonic, Inc. (c) 2012-2016
+MASTER AUDIO PLUGIN - By DarkTonic, Inc. (c) 2012-2017
 
 - Code by Brian Hunsaker
+
+-V 4.1.2	- Fixed compile errors for Unity 2017 beta.
+			- Fixed compile error in Unity 4.7.
+			- Fixed bug: Silent Variations would stop a Chained Loop when "played". No longer.
+			- Fixed bug: Occlusion didn't work outside of editor.
+			- Fixed bug: Ambient Sound script was not able to play a "file on internet" if it was not finished loading by the time Ambient Sound told it to play.
+			- Fixed bug: Playing an asyncronously loaded Resource file and then immediately telling it to FadeToVolume caused a Null Reference Exception.
+			- Fixed bug: Pausing a Playlist Controller without auto-advanced on would stop the song.
+			- Fixed bug: Occlusion didn't work if you started your Scene without an Audio Listener.
+			- Added missing "Sound Spawn Mode" dropdown to Footstep Sounds script.
+			- Added "timed to animation % complete" Sound Group + Custom Event firing for the 2 MechanimEvent scripts.
+			- Added multi-timed Sound Groups and "stop sound on state exit" checkboxes to MechanimStateSounds script.
+			- Added commands PauseBusOfTransform / UnpauseBusOfTransform / StopBusOfTransform. Added these to the Bus Commands on Event Sounds script as well.
+			- Song Transition Type "New Clip From Last Known Position" now does not hide the Song Start Position fields, but they are only used the first time each song is played.
+			- Added extension methods for all Master Audio methods that take a Transform object so now you can do the MA methods from the Transform itself. i.e. TransformVariable.StopSoundGroupOfTransform("SoundGroupName");
+			- Added new method: MasterAudio.IsTransformPlayingSoundGroup(string soundGroupName) - returns boolean
+			- Added new method: MasterAudio.GetAllPlayingVariationsOfTransform() - returns a list.
+			- Added "Probability to Play %" field to Variations. Defaults to 100%. If you select something less than 100%, it will calculate a random number (0-99) whenever it is selected to play and if the random number is less than the field, it will not play.
+			- Added 2-way tracking (added a component to caller game object shows all SFX playing from transform, with pause/stop/unpause buttons, and also has those buttons for each Sound Group and for all Sound Groups. This code only happens in the editor since it causes slight garbage collection.
+			- Added new options of willStopAfterFade and willResetVolumeAfterFade to MasterAudio.FadeSoundGroupToVolume and MasterAudio.FadeBusToVolume. Added checkboxes to EventSounds with these options.
+			- Added checkboxes for the new fade options to all the optional integration packages with other plugins.
+			- Added new method: MasterAudio.IsSoundGroupPlaying(string soundGroupName); returns true if any voices are playing or paused.
+			- Added play / stop / pause / unpause buttons in Group inspector.
+			- Added Custom Event Categories for visual organization.
+			- Upped Max Delay Between Looped Chain sounds from 20 seconds to 300.
+			- Added IsSongPlaying(songName) API method to PlaylistController.
+
+-V 4.1.1	- Fixed warnings for Unity 2017 beta.
+
+-V 4.1.0    - Fixed bug: Scene reloading would cause Custom Event Listeners to be shown increasingly more times as Listeners in the Inspectors.
+			- Fixed bug: If LowPassFilter already exists on Variation, Occlusion will log error when trying to add the Component.
+			- Fixed bug: Dynamic Sound Groups with "Use Localized Folder" would not correctly unload Resource files when the DGSC was disabled.
+			- Added "Add to Ducking" button to Bulk Group Changes section on Group Mixer. Will add all selected Groups to Music Ducking.
+			- Added "Use Spatializer" checkbox on Advanced Settings for Unity 5.4 and up. If checked, and you have selected "OculusSpatializer" from the Spatializer Plugin dropdown on AudioManager screen, then "Spatialize" checkbox on all Audio Sources for Sound Groups will be checked when you click enter Play mode.
+			- Added Audio Source Template of "Max Distance 10" and tweaked all Audio Source Templates so 0 is reached at max distance.
+			- Added option for Occlusion to choose whether "Ray Casts Hit Triggers". Defaults to true as that's the normal Unity option.
+			- Fixed Unity 5.6 compilation error.
+
+-V 4.0.9    - Changes to Linked Groups (on Sound Group Inspectors). There is no longer the option of "Play when Requested", only "play when played". Now there are separate sections for "Start Linked Groups" and "Stop Linked Groups". The "Start" ones are as before. The "Stop" ones enable chaining of Sound Groups, and play when the Sound Group's Variations stop playing. This lets you set up chains of FX.
+			- Added "Linked Groups To Play" dropdown for both Linked Group types (start and stop). Choices are "All" (default) and One At Random.
+			- SoundGroupAttribute now has a gear icon to edit the chosen Sound Group, and preview / stop icons.
+			- Added preview and stop buttons to Sound Group settings on Event Sounds.
+			- Master Audio game object is now in the Ignore Raycasts layer.	
+			- All children of Master Audio game object (followers / variations / etc) now take the layer of the MA game object once the Scene starts. This will help make the triggers used by Audio Listener Follower not interfere with raycasts.
+			- Now having more than one of the same Sound Group set up in Music Ducking will log a warning to the Console and show you a red error box in the Inspector.
+			- Added a button to Copy Settings in Sound Group's Inspector so that you can bulk copy the Voices / Weight field from one Variation to any/all others. This field was strangely missing from that section.
 
 -V 4.0.8	- Bug fix: Occlusion code no longer causes any Garbage Collection when occlusion is turned off (or on), except possibly during the frame that you turn it on during runtime (which wouldn't happen in normal game play I think).
 

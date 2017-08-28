@@ -4,7 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-#if UNITY_5
+#if UNITY_5 || UNITY_2017
 using UnityEngine.Audio;
 #endif
 
@@ -37,7 +37,7 @@ namespace DarkTonic.MasterAudio {
         public string startPlaylistName = string.Empty;
         public int syncGroupNum = -1;
 
-#if UNITY_5
+#if UNITY_5 || UNITY_2017
         public AudioMixerGroup mixerChannel;
         public MasterAudio.ItemSpatialBlendType spatialBlendType = MasterAudio.ItemSpatialBlendType.ForceTo2D;
         public float spatialBlend = MasterAudio.SpatialBlend_2DValue;
@@ -206,7 +206,7 @@ namespace DarkTonic.MasterAudio {
             _activeAudio = _audio1;
             _transitioningAudio = _audio2;
 
-#if UNITY_5
+#if UNITY_5 || UNITY_2017
             _audio1.outputAudioMixerGroup = mixerChannel;
             _audio2.outputAudioMixerGroup = mixerChannel;
 
@@ -218,7 +218,7 @@ namespace DarkTonic.MasterAudio {
             _lostFocus = false;
         }
 
-#if UNITY_5
+#if UNITY_5 || UNITY_2017
 
         public void SetSpatialBlend() {
             if (MasterAudio.SafeInstance == null) {
@@ -426,14 +426,14 @@ namespace DarkTonic.MasterAudio {
             }
 
             if (!_activeAudio.loop && _activeAudio.clip != null) {
-                if (!IsAutoAdvance && !_activeAudio.isPlaying) {
+				if (AudioUtil.IsAudioPaused(_activeAudio)) { // 7/12/2017, changed this if before the next one (.isPlaying) because paused tracks were stopping.
+					// do not auto-advance if the audio is paused.
+					goto AfterAutoAdvance;
+				}
+
+				if (!IsAutoAdvance && !_activeAudio.isPlaying) {
                     CeaseAudioSource(_activeAudio); // this will release the resources if not auto-advance
                     return;
-                }
-
-                if (AudioUtil.IsAudioPaused(_activeAudio)) {
-                    // do not auto-advance if the audio is paused.
-                    goto AfterAutoAdvance;
                 }
 
                 var shouldAdvance = false;
@@ -517,6 +517,23 @@ namespace DarkTonic.MasterAudio {
             }
             return null;
         }
+
+		/// <summary>
+		/// This method will tell you if the song you specify by name is playing or not. If it's the current song and paused, this will still return true.
+		/// </summary>
+		/// <returns><c>true</c> if this instance is song playing the specified songName; otherwise, <c>false</c>.</returns>
+		/// <param name="songName">Song name. Here you pass the name of the clip to check.</param>
+		public bool IsSongPlaying(string songName) {
+			if (!HasPlaylist) {
+				return false;
+			}
+			
+			if (ActiveAudioSource == null || ActiveAudioSource.clip == null) {
+				return false;
+			}
+			
+			return ActiveAudioSource.clip.name == songName;
+		}
 
         /// <summary>
         /// Call this method to clear all songs out of the queued songs list.
@@ -1333,6 +1350,7 @@ namespace DarkTonic.MasterAudio {
             // set last known time for current song.
             if (_currentSong != null) {
                 _currentSong.lastKnownTimePoint = _activeAudio.timeSamples;
+				_currentSong.wasLastKnownTimePointSet = true;
             }
 
             if (clipWillBeAudibleNow) {
@@ -1397,7 +1415,7 @@ namespace DarkTonic.MasterAudio {
 
             // this code will adjust the starting position of a song, but shouldn't do so when you first change Playlists.
             if (_currentPlaylist != null) {
-                if (_songsPlayedFromPlaylist <= 1 && !songTimeChanged) {
+				if (_songsPlayedFromPlaylist <= 1 && !songTimeChanged) {
                     _audioClip.timeSamples = 0;
                     // reset pointer so a new Playlist always starts at the beginning, but don't do it for synchronized! We need that first song to use the sync group.
                 } else {
@@ -1448,8 +1466,11 @@ namespace DarkTonic.MasterAudio {
                     }
                 }
 
+				// only use Custom Start Time for "From Last Known Position" if the song hasn't played before and doesn't have a last known position.
+				var isFromLastKnown = _currentPlaylist.songTransitionType == MasterAudio.SongFadeInPosition.NewClipFromLastKnownPosition && !_newSongSetting.wasLastKnownTimePointSet;
+
                 // account for custom start time.
-                if (_currentPlaylist.songTransitionType == MasterAudio.SongFadeInPosition.NewClipFromBeginning) {
+                if (_currentPlaylist.songTransitionType == MasterAudio.SongFadeInPosition.NewClipFromBeginning || isFromLastKnown) {
                     var customStartTime = _newSongSetting.SongStartTime;
                     if (customStartTime > 0f) {
                         // ReSharper disable once PossibleNullReferenceException
@@ -1816,7 +1837,7 @@ namespace DarkTonic.MasterAudio {
             }
         }
 
-#if UNITY_5
+#if UNITY_5 || UNITY_2017
         public void RouteToMixerChannel(AudioMixerGroup group) {
             _activeAudio.outputAudioMixerGroup = group;
             _transitioningAudio.outputAudioMixerGroup = group;

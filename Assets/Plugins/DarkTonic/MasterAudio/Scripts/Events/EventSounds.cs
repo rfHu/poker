@@ -3,13 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-#if UNITY_4_6 || UNITY_4_7 || UNITY_5
+#if UNITY_4_6 || UNITY_4_7 || UNITY_5 || UNITY_2017
 // ReSharper disable once RedundantUsingDirective
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 #endif
 
-#if UNITY_5
+#if UNITY_5 || UNITY_2017
 using UnityEngine.Audio;
 #endif
 
@@ -26,7 +26,7 @@ namespace DarkTonic.MasterAudio {
         public bool showPoolManager = false;
         public bool showNGUI = false;
 
-#if UNITY_4_6 || UNITY_4_7 || UNITY_5
+#if UNITY_4_6 || UNITY_4_7 || UNITY_5 || UNITY_2017
         public UnityUIVersion unityUIMode = UnityUIVersion.uGUI;
 #else
         public UnityUIVersion unityUIMode = UnityUIVersion.Legacy;
@@ -37,7 +37,7 @@ namespace DarkTonic.MasterAudio {
 
         public enum UnityUIVersion {
             Legacy
-#if UNITY_4_6 || UNITY_4_7 || UNITY_5
+#if UNITY_4_6 || UNITY_4_7 || UNITY_5 || UNITY_2017
             // ReSharper disable once InconsistentNaming
             , uGUI
 #endif
@@ -239,7 +239,7 @@ namespace DarkTonic.MasterAudio {
         public bool useUnityToggleSound = false;
         // ReSharper restore InconsistentNaming
 
-#if UNITY_4_6 || UNITY_4_7 || UNITY_5
+#if UNITY_4_6 || UNITY_4_7 || UNITY_5 || UNITY_2017
         // ReSharper disable RedundantNameQualifier
         private UnityEngine.UI.Slider _slider;
         private UnityEngine.UI.Toggle _toggle;
@@ -266,7 +266,7 @@ namespace DarkTonic.MasterAudio {
             _trans = transform;
             _anim = GetComponent<Animator>();
 
-#if UNITY_4_6 || UNITY_4_7 || UNITY_5
+#if UNITY_4_6 || UNITY_4_7 || UNITY_5 || UNITY_2017
             // ReSharper disable RedundantNameQualifier
             _slider = GetComponent<UnityEngine.UI.Slider>();
             _button = GetComponent<UnityEngine.UI.Button>();
@@ -358,7 +358,7 @@ namespace DarkTonic.MasterAudio {
 
         // ReSharper disable once UnusedMember.Local
         private void OnEnable() {
-#if UNITY_4_6 || UNITY_4_7 || UNITY_5
+#if UNITY_4_6 || UNITY_4_7 || UNITY_5 || UNITY_2017
             if (_slider != null) {
                 _slider.onValueChanged.AddListener(SliderChanged);
             }
@@ -393,7 +393,7 @@ namespace DarkTonic.MasterAudio {
 
         // ReSharper disable once UnusedMember.Local
         private void OnDisable() {
-#if UNITY_4_6 || UNITY_4_7 || UNITY_5
+#if UNITY_4_6 || UNITY_4_7 || UNITY_5 || UNITY_2017
             if (_slider != null) {
                 _slider.onValueChanged.RemoveListener(SliderChanged);
             }
@@ -588,7 +588,7 @@ namespace DarkTonic.MasterAudio {
 
         #endregion
 
-#if UNITY_4_6 || UNITY_4_7 || UNITY_5
+#if UNITY_4_6 || UNITY_4_7 || UNITY_5 || UNITY_2017
         #region UI Events
         public void OnPointerEnter(PointerEventData data) {
             if (IsSetToUGUI && useUnityPointerEnterSound) {
@@ -1217,7 +1217,7 @@ namespace DarkTonic.MasterAudio {
                                 break;
                             case MasterAudio.SoundGroupCommand.FadeToVolume:
                                 var targetVol = useSliderValue ? grp.sliderValue : aEvent.fadeVolume;
-                                MasterAudio.FadeSoundGroupToVolume(soundType, targetVol, aEvent.fadeTime);
+                                MasterAudio.FadeSoundGroupToVolume(soundType, targetVol, aEvent.fadeTime, null, aEvent.stopAfterFade, aEvent.restoreVolumeAfterFade);
                                 break;
                             case MasterAudio.SoundGroupCommand.FadeOutAllOfSound:
                                 MasterAudio.FadeOutAllOfSound(soundType, aEvent.fadeTime);
@@ -1299,7 +1299,7 @@ namespace DarkTonic.MasterAudio {
                                 break;
                             case MasterAudio.BusCommand.FadeToVolume:
                                 var targetVol = useSliderValue ? grp.sliderValue : aEvent.fadeVolume;
-                                MasterAudio.FadeBusToVolume(busName, targetVol, aEvent.fadeTime);
+                                MasterAudio.FadeBusToVolume(busName, targetVol, aEvent.fadeTime, null, aEvent.stopAfterFade, aEvent.restoreVolumeAfterFade);
                                 break;
                             case MasterAudio.BusCommand.Pause:
                                 MasterAudio.PauseBus(busName);
@@ -1325,10 +1325,19 @@ namespace DarkTonic.MasterAudio {
                             case MasterAudio.BusCommand.Unsolo:
                                 MasterAudio.UnsoloBus(busName);
                                 break;
-                            case MasterAudio.BusCommand.ChangeBusPitch:
+                            case MasterAudio.BusCommand.ChangePitch: 
                                 MasterAudio.ChangeBusPitch(busName, aEvent.pitch);
                                 break;
-                        }
+							case MasterAudio.BusCommand.PauseBusOfTransform:
+								MasterAudio.PauseBusOfTransform(_trans, aEvent.busName);
+								break;
+							case MasterAudio.BusCommand.UnpauseBusOfTransform:
+								MasterAudio.UnpauseBusOfTransform(_trans, aEvent.busName);
+								break;
+							case MasterAudio.BusCommand.StopBusOfTransform:
+								MasterAudio.StopBusOfTransform(_trans, aEvent.busName);
+								break;
+							}
                     }
 
                     break;
@@ -1379,7 +1388,7 @@ namespace DarkTonic.MasterAudio {
                             break;
                     }
                     break;
-#if UNITY_5
+#if UNITY_5  || UNITY_2017
                 case MasterAudio.EventSoundFunctionType.UnityMixerControl:
                     switch (aEvent.currentMixerCommand) {
                         case MasterAudio.UnityMixerCommand.TransitionToSnapshot:
@@ -1711,7 +1720,7 @@ namespace DarkTonic.MasterAudio {
         #endregion
 
 
-#if UNITY_4_6 || UNITY_4_7 || UNITY_5
+#if UNITY_4_6 || UNITY_4_7 || UNITY_5 || UNITY_2017
         // UGUI events are handled by separate components so that only
         // the events we care about are actually trapped and handled
         private void AddUGUIComponents() {
@@ -1746,7 +1755,7 @@ namespace DarkTonic.MasterAudio {
 
     #region UGUI methods
     // UGUI event handler components
-#if UNITY_4_6 || UNITY_4_7 || UNITY_5
+#if UNITY_4_6 || UNITY_4_7 || UNITY_5 || UNITY_2017
     public class EventSoundsUGUIHandler : MonoBehaviour {
         // ReSharper disable once InconsistentNaming
         public EventSounds eventSounds { get; set; }

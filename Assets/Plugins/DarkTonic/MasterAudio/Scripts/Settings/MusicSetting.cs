@@ -22,7 +22,8 @@ namespace DarkTonic.MasterAudio {
         public float customStartTime;
         public float customStartTimeMax;
         public int lastKnownTimePoint = 0;
-        public int songIndex = 0;
+		public bool wasLastKnownTimePointSet = false;
+		public int songIndex = 0;
         public bool songStartedEventExpanded;
         public string songStartedCustomEvent = string.Empty;
         public bool songChangedEventExpanded;

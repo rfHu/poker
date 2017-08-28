@@ -3,7 +3,7 @@ using DarkTonic.MasterAudio;
 using UnityEditor;
 using UnityEngine;
 
-#if UNITY_5
+#if UNITY_5 || UNITY_2017
 using UnityEngine.Audio;
 #endif
 
@@ -127,7 +127,7 @@ public class PlaylistControllerInspector : Editor {
 
         EditorGUI.indentLevel = 0;
 
-#if UNITY_5
+#if UNITY_5 || UNITY_2017
         var newChan = (AudioMixerGroup)EditorGUILayout.ObjectField("Mixer Group", controller.mixerChannel, typeof(AudioMixerGroup), false);
         if (newChan != controller.mixerChannel) {
             AudioUndoHelper.RecordObjectPropertyForUndo(ref isDirty, controller, "change Unity Mixer Group");

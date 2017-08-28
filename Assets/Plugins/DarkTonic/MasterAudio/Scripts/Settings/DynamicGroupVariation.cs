@@ -6,7 +6,10 @@ namespace DarkTonic.MasterAudio {
     // ReSharper disable once CheckNamespace
     public class DynamicGroupVariation : MonoBehaviour {
         // ReSharper disable InconsistentNaming
-        public bool useLocalization = false;
+		[Range(0f, 1f)]
+		public int probabilityToPlay = 100;
+
+		public bool useLocalization = false;
         public bool useRandomPitch = false;
         public SoundGroupVariation.RandomPitchMode randomPitchMode = SoundGroupVariation.RandomPitchMode.AddToClipPitch;
         public float randomPitchMin = 0f;
@@ -38,8 +41,8 @@ namespace DarkTonic.MasterAudio {
 
         public bool useRandomStartTime = false;
         public float randomStartMinPercent = 0f;
-        public float randomStartMaxPercent = 0f;
-        // ReSharper restore InconsistentNaming
+		public float randomStartMaxPercent = 100f;
+		// ReSharper restore InconsistentNaming
 
         private AudioDistortionFilter _distFilter;
         private AudioEchoFilter _echoFilter;

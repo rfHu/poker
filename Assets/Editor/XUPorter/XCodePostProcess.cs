@@ -16,7 +16,7 @@ public static class XCodePostProcess
 #if UNITY_5
 		if (target != BuildTarget.iOS) {
 #else
-        if (target != BuildTarget.iPhone) {
+        if (target != BuildTarget.iOS) {
 #endif
 			Debug.LogWarning("Target is not iPhone. XCodePostProcess will not run");
 			return;

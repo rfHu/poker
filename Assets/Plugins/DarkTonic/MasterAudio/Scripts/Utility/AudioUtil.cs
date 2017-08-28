@@ -100,7 +100,7 @@ namespace DarkTonic.MasterAudio {
         }
 
         /*! \cond PRIVATE */
-#if UNITY_5
+#if UNITY_5 || UNITY_2017
         public static void UnloadNonPreloadedAudioData(AudioClip clip) {
             if (clip != null && !clip.preloadAudioData) {
                 clip.UnloadAudioData(); // restore memory
@@ -112,7 +112,7 @@ namespace DarkTonic.MasterAudio {
         }
 #endif
 
-#if UNITY_5
+#if UNITY_5 || UNITY_2017
         public static bool AudioClipWillPreload(AudioClip clip) {
             return clip.preloadAudioData;
         }
@@ -122,11 +122,11 @@ namespace DarkTonic.MasterAudio {
         }
 #endif
 
-        public static bool IsClipReadyToPlay(AudioClip clip) {
-#if UNITY_5
-            return clip.loadType != AudioClipLoadType.Streaming;
+        public static bool IsClipReadyToPlay(this AudioClip clip) {
+#if UNITY_5 || UNITY_2017
+            return clip != null && clip.loadType != AudioClipLoadType.Streaming;
 #else
-            return clip.isReadyToPlay;
+            return clip != null && clip.isReadyToPlay;
 #endif
         }
         /*! \endcond */

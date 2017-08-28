@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-#if UNITY_5
+#if UNITY_5 || UNITY_2017
 // ReSharper disable once RedundantUsingDirective
 using UnityEngine.Audio;
 #endif
@@ -21,7 +21,7 @@ namespace DarkTonic.MasterAudio {
 
         public int busIndex = -1;
 
-#if UNITY_5
+#if UNITY_5 || UNITY_2017
         public MasterAudio.ItemSpatialBlendType spatialBlendType = MasterAudio.ItemSpatialBlendType.ForceTo3D;
         public float spatialBlend = 1f;
 #endif
@@ -52,8 +52,11 @@ namespace DarkTonic.MasterAudio {
         public bool copySettingsExpanded = false;
         public int selectedVariationIndex = 0;
 
-        public ChildGroupMode childGroupMode = ChildGroupMode.None;
+        public bool expandLinkedGroups = false;
         public List<string> childSoundGroups = new List<string>();
+        public List<string> endLinkedGroups = new List<string>();
+        public MasterAudio.LinkedGroupSelectionType linkedStartGroupSelectionType = MasterAudio.LinkedGroupSelectionType.All;
+        public MasterAudio.LinkedGroupSelectionType linkedStopGroupSelectionType = MasterAudio.LinkedGroupSelectionType.All;
 
         public LimitMode limitMode = LimitMode.None;
         public int limitPerXFrames = 1;
@@ -77,9 +80,9 @@ namespace DarkTonic.MasterAudio {
         public bool isMuted = false;
 
         public bool soundPlayedEventActive = false;
-		public string soundPlayedCustomEvent = string.Empty;
+        public string soundPlayedCustomEvent = string.Empty;
 
-		public event System.Action LastVariationFinishedPlay;
+        public event System.Action LastVariationFinishedPlay;
         public int frames = 0;
         // ReSharper restore InconsistentNaming
 
@@ -87,12 +90,6 @@ namespace DarkTonic.MasterAudio {
         private string _objectName = string.Empty;
         private Transform _trans;
         private float _originalVolume = 1;
-
-        public enum ChildGroupMode {
-            None,
-            TriggerLinkedGroupsWhenRequested,
-            TriggerLinkedGroupsWhenPlayed
-        }
 
         public enum TargetDespawnedBehavior {
             None,
@@ -157,6 +154,10 @@ namespace DarkTonic.MasterAudio {
 
             var needsUpgrade = false;
 
+            if (Trans.parent != null) {
+                gameObject.layer = Trans.parent.gameObject.layer;
+            }
+
             for (var i = 0; i < Trans.childCount; i++) {
                 var variation = Trans.GetChild(i).GetComponent<SoundGroupVariation>();
                 if (variation == null) {
@@ -217,7 +218,7 @@ namespace DarkTonic.MasterAudio {
             }
         }
 
-#if UNITY_5
+#if UNITY_5 || UNITY_2017
         public float SpatialBlendForGroup {
             get {
                 switch (MasterAudio.Instance.mixerSpatialBlendType) {
@@ -297,6 +298,10 @@ namespace DarkTonic.MasterAudio {
         }
 
         /*! \cond PRIVATE */
+        public bool LoggingEnabledForGroup {
+            get { return logSound || MasterAudio.LogSoundsEnabled; }
+        }
+
         public void FireLastVariationFinishedPlay() {
             if (LastVariationFinishedPlay != null) {
                 LastVariationFinishedPlay();

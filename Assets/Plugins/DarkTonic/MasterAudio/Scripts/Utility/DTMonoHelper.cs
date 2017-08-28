@@ -6,6 +6,14 @@ using System.Collections.Generic;
 namespace DarkTonic.MasterAudio {
     // ReSharper disable once CheckNamespace
     public static class DTMonoHelper {
+        public static Transform GetChildTransform(this Transform transParent, string childName) {
+            #if UNITY_2017_1_OR_NEWER
+                return transParent.Find(childName);
+            #else
+                return transParent.FindChild(childName);
+            #endif
+        }
+
         /// <summary>
         /// This is a cross-Unity-version method to tell you if a GameObject is active in the Scene.
         /// </summary>

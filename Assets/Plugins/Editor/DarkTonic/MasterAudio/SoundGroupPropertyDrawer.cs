@@ -65,7 +65,8 @@ public class SoundGroupPropertyDrawer : PropertyDrawer {
             position.height -= 16;
         }
 
-        index = EditorGUI.Popup(position, label.text, index, groupNames.ToArray());
+		position.width -= 82;
+		index = EditorGUI.Popup(position, label.text, index, groupNames.ToArray());
         groupName = groupNames[index];
 
         switch (groupName) {
@@ -82,5 +83,30 @@ public class SoundGroupPropertyDrawer : PropertyDrawer {
                 property.stringValue = groupName;
                 break;
         }
-    }
+
+		if (typeIn || property.stringValue == MasterAudio.NoGroupName) {
+			return;
+		}
+
+		var sType = property.stringValue;
+		var settingsIcon = MasterAudioInspectorResources.GearTexture;
+		var buttonRect = new Rect(position.xMax + 4, position.y, 24, 16);
+
+		if (GUI.Button(buttonRect, new GUIContent("", settingsIcon))) {
+			var trs = MasterAudio.FindGroupTransform(property.stringValue);
+			if (trs != null) {
+				Selection.activeObject = trs;
+			}
+		}
+
+		buttonRect = new Rect(position.xMax + 30, position.y, 24, 16);
+		if (GUI.Button(buttonRect, new GUIContent("", MasterAudioInspectorResources.PreviewTexture))) {
+			DTGUIHelper.PreviewSoundGroup(sType);
+		}
+
+		buttonRect = new Rect(position.xMax + 56, position.y, 24, 16);
+		if (GUI.Button(buttonRect, new GUIContent("", MasterAudioInspectorResources.StopTexture))) {
+			DTGUIHelper.StopPreview(sType);
+		}
+	}
 }

@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 
-#if UNITY_5
-    using UnityEngine.Audio;
+#if UNITY_5 || UNITY_2017
+using UnityEngine.Audio;
 #endif
 
 // ReSharper disable once CheckNamespace
@@ -24,7 +24,7 @@ namespace DarkTonic.MasterAudio {
         public bool isExisting = false; // for Dynamic Sound Group - referenced Buses
         public bool isUsingOcclusion = false;
 
-#if UNITY_5
+#if UNITY_5 || UNITY_2017
         public AudioMixerGroup mixerChannel = null;
         public bool forceTo2D = false;
 #else
@@ -68,7 +68,7 @@ namespace DarkTonic.MasterAudio {
         }
 
         /// <summary>
-        /// This property will return the original volume of the Sound Group.
+        /// This property will return the original volume of the bus.
         /// </summary>
         public float OriginalVolume {
             get {

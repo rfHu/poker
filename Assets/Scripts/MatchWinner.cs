@@ -122,8 +122,6 @@ public class MatchWinner : MonoBehaviour {
 		Commander.Shared.ShareSNGResult();
 #elif UNITY_ANDROID
         CaptureByUnity();
-#else
-				return null;
 #endif
     }
 
@@ -169,7 +167,7 @@ public class MatchWinner : MonoBehaviour {
 
         Commander.Shared.ShareSNGResult(Application.persistentDataPath + "/" + filename);
 
-        Application.CaptureScreenshot(filename, 0);
+        ScreenCapture.CaptureScreenshot(filename, 0);
 
     }  
 }

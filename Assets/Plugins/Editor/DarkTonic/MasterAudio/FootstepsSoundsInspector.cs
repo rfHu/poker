@@ -49,6 +49,12 @@ public class FootstepsSoundsInspector : Editor {
 
         _sounds = (FootstepSounds)target;
 
+		var newSpawnMode = (MasterAudio.SoundSpawnLocationMode)EditorGUILayout.EnumPopup("Sound Spawn Mode", _sounds.soundSpawnMode);
+		if (newSpawnMode != _sounds.soundSpawnMode) {
+			AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "change Sound Spawn Mode");
+			_sounds.soundSpawnMode = newSpawnMode;
+		}
+
         var newEvent = (FootstepSounds.FootstepTriggerMode)EditorGUILayout.EnumPopup("Event Used", _sounds.footstepEvent);
         if (newEvent != _sounds.footstepEvent) {
             AudioUndoHelper.RecordObjectPropertyForUndo(ref _isDirty, _sounds, "change Event Used");
