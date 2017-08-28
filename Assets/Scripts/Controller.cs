@@ -764,6 +764,10 @@ public class Controller : MonoBehaviour {
 					getRoomEnter();
 				});			
 			}
+            else if (type == 6)
+            {
+                PokerUI.Toast("即将进入钱圈");
+            }
 		}).AddTo(this);
 
 			// Connect.Shared.Enter(GameData.Shared.Room.Value, () => {

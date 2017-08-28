@@ -8,9 +8,20 @@ using System.Collections;
 
 [RequireComponent(typeof(DOPopup))]
 public class UserDetail : MonoBehaviour {
+
 	public RawImage Avatar;
 	public Text Name;
+    public Text CoinsNumber;
     public Text RemarkText;
+
+    public GameObject GameOptionBtn;
+    public CButton AddFriend;   
+    public GameObject UserRemark;
+
+    public GameObject EmoticonsList;
+    public Button[] EmoticonButtons;
+
+    public GameObject NormalPart;
 	public Text Hands;
 	public Text ShowHand;
 	public Text Join;
@@ -19,18 +30,8 @@ public class UserDetail : MonoBehaviour {
 	public Text PreRaise;
 	public Text ThreeBet;
 	public Text CBet;
-    public GameObject GameOptionBtn;
-    public GameObject EmoticonsTeam;
-    public GameObject EmoticonsList;
-    public GameObject R1;
-    public GameObject R2;
-    public Button[] EmoticonButtons;
-    public Button StandUpButton;
-    public GameObject UserRemark;
-    public Text CoinsNumber;
-    public GameObject NormalPart;
 
-    public GameObject SNGPart;
+    public GameObject MatchPart;
     public Text SNGJoin;
     public Text ReturnPercent;
     public Text WinMatchCount;
@@ -69,24 +70,26 @@ public class UserDetail : MonoBehaviour {
         if (GameData.Shared.IsMatch())
         {
             NormalPart.SetActive(false);
-            SNGPart.SetActive(true);
+            MatchPart.SetActive(true);
         }
         else
         {
             NormalPart.SetActive(true);
-            SNGPart.SetActive(false);
+            MatchPart.SetActive(false);
         }
 
         //动态表情
         if (Uid == GameData.Shared.Uid || GameData.Shared.FindPlayerIndex(Uid) == -1 || GameSetting.emoticonClose)
         {
-            EmoticonsTeam.SetActive(false);
+            EmoticonsList.SetActive(false);
             GetComponent<VerticalLayoutGroup>().padding.bottom = 40;
         } else {
-            EmoticonsTeam.SetActive(true);
+            EmoticonsList.SetActive(true);
             EmoticonsList.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
             GetComponent<VerticalLayoutGroup>().padding.bottom = 0;
         }
+
+
 
         RequestById(Uid);
         GetComponent<DOPopup>().Show();
@@ -94,37 +97,35 @@ public class UserDetail : MonoBehaviour {
 
     private void buttonInit(string Uid)
     {
-        if (GameData.Shared.Owner && !GameData.Shared.IsMatch())
-        {
-            GameOptionBtn.SetActive(true);
-        }
-        else 
-        {
-            GameOptionBtn.SetActive(false);
+        bool isMyself = Uid == GameData.Shared.Uid;
+
+        var coinGo = CoinsNumber.transform.parent.gameObject;
+        coinGo.SetActive(isMyself);
+        if (isMyself) {
+            CoinsNumber.text = _.Num2CnDigit(GameData.Shared.Coins);
         }
 
-        var parent = GameOptionBtn.transform.parent.gameObject;
+        RemarkText.gameObject.SetActive(!isMyself);
 
-        if (Uid == GameData.Shared.Uid) {
+        var parent = GameOptionBtn.transform.parent.parent.gameObject;
+
+        if (isMyself) {
             parent.SetActive(false);
         } else {
             parent.SetActive(true);
+            if (GameData.Shared.Owner && !GameData.Shared.IsMatch())
+            {
+                GameOptionBtn.SetActive(true);
+            }
+            else 
+            {
+                GameOptionBtn.SetActive(false);
+            }
+            AddFriend.gameObject.SetActive(true);
         }
     }
 
-	
     void RequestById(string id) {
-        var coinGo = CoinsNumber.transform.parent.gameObject;
-
-        if (Uid == GameData.Shared.Uid) {
-            RemarkText.gameObject.SetActive(false);
-            coinGo.SetActive(true);
-            CoinsNumber.text = _.Num2CnDigit(GameData.Shared.Coins);
-        } else {
-            RemarkText.gameObject.SetActive(true);
-            coinGo.SetActive(false);
-        } 
-
 		var d = new Dictionary<string, object>(){
 			{"uid", id}
 		};
@@ -153,7 +154,7 @@ public class UserDetail : MonoBehaviour {
 
             if (GameData.Shared.IsMatch())
 	        {
-                setSNGText(achieve);
+                setMatchText(achieve);
 	        }
             else
 	        {
@@ -181,10 +182,13 @@ public class UserDetail : MonoBehaviour {
                 EmoticonButtons[pid].GetComponent<Button>().interactable = true;
                 EmoticonButtons[pid].GetComponentInChildren<Text>().text = dict.Int("coin").ToString();
             }
+
+            AddFriend.interactable = data.Int("is_friend_or_audit") == 0;
         });
+
 	}
 
-    private void setSNGText(AchieveModel achieve)
+    private void setMatchText(AchieveModel achieve)
     {
         SNGJoin.text = achieve.total_match_count.ToString();
 
@@ -251,41 +255,23 @@ public class UserDetail : MonoBehaviour {
         GetComponent<DOPopup>().Close();
     }
 
-    private void setStandUpButton(bool interactable)
-    {
-        StandUpButton.interactable = interactable;
-
-        var image = StandUpButton.GetComponent<ProceduralImage>();
-        var text = StandUpButton.transform.Find("Text").GetComponent<Text>();
-        var icon = StandUpButton.transform.Find("Image").GetComponent<VectorImage>();
-        Color color;
-
-        if (interactable)
-        {
-            color = MaterialUI.MaterialColor.cyanA200;
-        }
-        else
-        {
-            color = MaterialUI.MaterialColor.grey400;
-        }
-
-        image.color = color;
-        text.color = color;
-        icon.color = color;
-    }
 
     public void OnRemark() {
         var transform = PoolMan.Spawn("UserRemark");
         transform.GetComponent<UserRemark>().Show(Uid, remark);
     }
 
-    //IEnumerator bgAlphaChange(Transform lastEmo) 
-    //{
-    //    //if (PoolMan.IsSpawned(PoolMan.g))
-    //    //{
-    //    //    yield return new WaitForFixedUpdate();
-    //    //}
+    public void OnClickAddFriend() 
+    {
+        HTTP.Post("/handle-friend", new Dictionary<string, object>()
+        {
+            {"type", 1},
+            {"uid", Uid},
+        }, (data) =>
+        {
+            AddFriend.interactable = false;
+        });
 
-    //    GetComponent<ProceduralImage>().color += new Color(0,0,0,1);
-    //}
+
+    }
 }

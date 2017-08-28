@@ -23,6 +23,11 @@ public class MTTWaiting : MonoBehaviour {
 			if (type == 2) {
 				PokerUI.ToastThenExit("报名人数不足，比赛已取消");
 			}
+            else if (type == 5)
+            {
+
+                PokerUI.ToastThenExit("比赛已取消");
+            }
 		}).AddTo(this);		
 	}
 
