@@ -264,16 +264,23 @@ public class Card : MonoBehaviour {
 			prefab = Resources.Load<GameObject>("Prefab/Card");
 		}
 
-		var rect = parent.GetComponent<RectTransform>().sizeDelta;
+		var parentTransform = parent.GetComponent<RectTransform>();
+		var width = parentTransform.sizeDelta.x;
 
-		var card = GameObject.Instantiate(prefab).GetComponent<Card>();
-		var scale = rect.x / Size.x;
-		var cardTransform = card.GetComponent<RectTransform>();
+		// 公共牌的card需要用parent.parent获取
+		if (width == 0) {
+			width = parent.parent.GetComponent<RectTransform>().sizeDelta.x;
+		}
 
-		cardTransform.SetParent(parent);
-		cardTransform.SetAsFirstSibling();
-		cardTransform.localScale = new Vector2(scale, scale);
-		cardTransform.anchoredPosition = new Vector2(0, 0);
+		var scale = width / Size.x;
+
+		var go = GameObject.Instantiate(prefab, parent, false);
+		var card = go.GetComponent<Card>();
+		var transform = card.GetComponent<RectTransform>();
+
+		transform.SetAsFirstSibling();
+		transform.anchoredPosition = new Vector2(0, 0);		
+		transform.localScale = new Vector2(scale, scale);
 
 		return card;
 	}
