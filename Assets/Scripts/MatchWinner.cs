@@ -7,9 +7,9 @@ using System.IO;
 
 public class MatchWinner : MonoBehaviour {
 
-    public GameObject coinImg;
+    public Text AwardText;
 
-    public Text coinNum;
+    public GameObject TitleMsg;
 
     public GameObject StayInRoom;
 
@@ -47,27 +47,51 @@ public class MatchWinner : MonoBehaviour {
         var score = json.Int("score");
         var isEnd = json.Int("is_end") == 1;
         var win = json.Int("win");
+        var award = json.Dict("award").String("award");
 
         this.gameEnd = isEnd;
 
-        coinImg.SetActive(score != 0);
-        SharePicBtn.SetActive(score != 0 || win > 0);
+        var isDefeat = score == 0 && win == 0;
+        Image _image = GetComponent<Image>();
+        Animator _animator = GetComponent<Animator>();
 
-        var awardText = json.Dict("award").String("award");
-
-        if (score > 0) {
-            coinNum.text = score.ToString();
-        } else if (!string.IsNullOrEmpty(awardText)) {
-            coinNum.text = string.Format("恭喜您获得：\n<size=60>{0}</size>", awardText);
-        } else {
-            coinNum.text = "调整好状态再来一局吧！";
+        //标题
+        if (isDefeat)
+        {
+            _animator.enabled = false;
+            _image.sprite = Resources.Load<Sprite>("Sprite/DefeatPage");
+            Resources.UnloadUnusedAssets();
+            TitleMsg.SetActive(false);
+        }
+        else 
+        {
+            _animator.enabled = true;
+            _image.sprite = Resources.Load<Sprite>("Sprite/WinPage");
+            Resources.UnloadUnusedAssets();
+            TitleMsg.SetActive(true);
+            bool isMTT = GameData.Shared.Type == GameType.MTT;
+            TitleMsg.transform.GetChild(0).gameObject.SetActive(isMTT);
+            TitleMsg.transform.GetChild(1).localScale = isMTT ? new Vector2(0.5f, 0.5f) : Vector2.one;
         }
 
+        //文字显示
+        if (score > 0) {
+            AwardText.text = string.Format("恭喜您获得：\n<size=60>{0}</size>", score);
+            AwardText.color = _.HexColor("#ffd54fff");
+        } else if (!string.IsNullOrEmpty(award)) {
+            AwardText.text = string.Format("恭喜您获得：\n<size=60>{0}</size>", award);
+            AwardText.color = _.HexColor("#ffd54fff");
+        } else {
+            AwardText.text = "您被淘汰了\n<size=60>再接再厉，加油！</size>";
+            AwardText.color = new Color(1, 1, 1, 0.6f);
+        }
+
+        SharePicBtn.SetActive(!isDefeat);
         StayInRoom.SetActive(!gameEnd);
-        setRankNum(rank);
+        SetRankNum(rank);
     }
 
-    private int setRankNum(int rank)
+    private int SetRankNum(int rank)
     {
         List<int> rankNum = new List<int>();
         while (rank != 0)
@@ -101,7 +125,6 @@ public class MatchWinner : MonoBehaviour {
 #else
 				return null;
 #endif
-
     }
 
     public void LeftRoom() 
