@@ -84,7 +84,7 @@ public class MatchWinner : MonoBehaviour {
             AwardText.text = string.Format("恭喜您获得\n<size=72><b>{0}</b></size>", award);
             AwardText.color = _.HexColor("#ffd54fff");
         } else {
-            AwardText.text = "您被淘汰了\n<size=72>调整好状态再来一局吧！</size>";
+            AwardText.text = "您被淘汰了\n<size=55>调整好状态再来一局吧！</size>";
             AwardText.color = new Color(1, 1, 1, 0.6f);
         }
 
