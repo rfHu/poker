@@ -100,7 +100,7 @@ public class DOPopup : MonoBehaviour {
 				if (closeOnClick) {
 					Close();
 				}			
-			});				
+			}, modalColor);				
 			transform.SetAsLastSibling();
 		}
 
