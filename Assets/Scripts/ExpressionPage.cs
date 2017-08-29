@@ -5,17 +5,18 @@ using UnityEngine.UI;
 
 public class ExpressionPage : MonoBehaviour {
 
+    public GameObject[] Buttons;
+
     void Awake()
     {
-        for (int i = 0; i < transform.childCount; i++)
-        {
-            GameObject child = transform.GetChild(i).gameObject;
-            child.AddComponent<Button>();
+        foreach (var item in Buttons)
+	    {
+            item.AddComponent<Button>();
 
-            child.GetComponent<Button>().onClick.AddListener(() =>
+            item.GetComponent<Button>().onClick.AddListener(() =>
             {
                 var dict = new Dictionary<string, object>() {
-			        {"expression", child.name}
+			        {"expression", item.name}
 		        };
 
                 Connect.Shared.Emit(
