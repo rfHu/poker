@@ -19,6 +19,8 @@ public class MatchWinner : MonoBehaviour {
 
     public Sprite[] NumberImgs;
 
+    public Sprite[] BGImgs;
+
     private static Transform instance;
 
     public static bool IsSpawned {
@@ -59,14 +61,14 @@ public class MatchWinner : MonoBehaviour {
         if (isDefeat)
         {
             _animator.enabled = false;
-            _image.sprite = Resources.Load<Sprite>("Sprite/DefeatPage");
+            _image.sprite = BGImgs[1];
             Resources.UnloadUnusedAssets();
             TitleMsg.SetActive(false);
         }
         else 
         {
             _animator.enabled = true;
-            _image.sprite = Resources.Load<Sprite>("Sprite/WinPage");
+            _image.sprite = BGImgs[0];
             Resources.UnloadUnusedAssets();
             TitleMsg.SetActive(true);
             bool isMTT = GameData.Shared.Type == GameType.MTT;
@@ -76,13 +78,13 @@ public class MatchWinner : MonoBehaviour {
 
         //文字显示
         if (score > 0) {
-            AwardText.text = string.Format("恭喜您获得：\n<size=60>{0}</size>", score);
+            AwardText.text = string.Format("恭喜您获得\n<size=72><b>{0}</b></size>", score);
             AwardText.color = _.HexColor("#ffd54fff");
         } else if (!string.IsNullOrEmpty(award)) {
-            AwardText.text = string.Format("恭喜您获得：\n<size=60>{0}</size>", award);
+            AwardText.text = string.Format("恭喜您获得\n<size=72><b>{0}</b></size>", award);
             AwardText.color = _.HexColor("#ffd54fff");
         } else {
-            AwardText.text = "您被淘汰了\n<size=60>再接再厉，加油！</size>";
+            AwardText.text = "您被淘汰了\n<size=72>调整好状态再来一局吧！</size>";
             AwardText.color = new Color(1, 1, 1, 0.6f);
         }
 

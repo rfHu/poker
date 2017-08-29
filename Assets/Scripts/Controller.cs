@@ -552,7 +552,7 @@ public class Controller : MonoBehaviour {
 			GameData.Shared.IsMatchState = false;
 
             var SNGWinner = PoolMan.Spawn("MatchWinner");
-            SNGWinner.GetComponent<DOPopup>().ShowModal(new Color(0, 0, 0, 0.7f), closeOnClick: false);
+            SNGWinner.GetComponent<DOPopup>().ShowModal(new Color(0, 0, 0, 0.6f), closeOnClick: false);
             SNGWinner.GetComponent<MatchWinner>().Init(json.Data);
         }).AddTo(this);
 
