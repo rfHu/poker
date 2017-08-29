@@ -61,9 +61,8 @@ public class UniqueObjectManager : MonoBehaviour
 	public static void DestroyObject(GameObject obj)
 	{
 		// Remove prefab from createdPrefabs list, or throw error if it's not in list.
-		if(!CreatedObjects.Remove(obj))
-			throw new System.Exception("Cannot destroy prefab: No such prefab exists.");
-		
+		createdObjects.Remove(obj);
+
 		// If destroying a parent object, we also need to destroy it's children.
 		foreach(Transform child in obj.transform)
 			DestroyObject(child.gameObject);
@@ -91,6 +90,8 @@ public class UniqueObjectManager : MonoBehaviour
 		// Allows us to get a static reference to this instance.
 		// (Like a singleton)
 		mgr = this;
+		// Clear the createdObjects list incase we've entered from another scene.
+		createdObjects.Clear();
 	}
 	
 	// Static accessor for our scene object array

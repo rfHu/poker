@@ -1,3 +1,14 @@
+v2.8.2
+- Added cloud functionality to Easy Save 3 beta to allow uploading and downloading of files.
+- GameObject functionality now only saves explicitly supported Components.
+
+v2.8.1
+- Fixed bug in 2017.1 where web methods would always return an error.
+- Easy Save 3 beta now supports Windows Store.
+
+- IMPORTANT NOTE -
+- If you already have the Easy Save 3 beta installed, you will need to remove the Assets/Easy Save 3/ folder before updating. Easy Save 3 has moved to Assets/Plugins/Easy Save 3/.
+
 v2.8.0
 - Easy Save 3 Beta Now Available.
 - Various bug fixes.
