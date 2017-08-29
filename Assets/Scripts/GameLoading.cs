@@ -22,8 +22,6 @@ public class GameLoading : MonoBehaviour {
             debugSetup();
         }
 
-        debugSetup();
-
 		BuglyAgent.RegisterLogCallback (CallbackDelegate.Instance.OnApplicationLogCallbackHandler);
 #if UNITY_IPHONE || UNITY_IOS
             BuglyAgent.InitWithAppId ("b3d868488f");
@@ -57,9 +55,9 @@ public class GameLoading : MonoBehaviour {
 
     private void debugSetup() {
         External.Instance.SetSocket("https://socket.dev.poker.top");
-        //External.Instance.SetProxy("http://localhost:8888");
-        var rid = "59a4e61ddac7a273106ef135";
-        var sid = "s%3ArWPWkTy8NK6BcsZOcHvJdm8ILX-TvxAD.zKLkWcL12x%2BiT2CY2RubWH2KccpBS4UgvOqkJ98GoHo";
+        External.Instance.SetProxy("http://localhost:8888");
+		var rid = "59a51ec1bb4fe70323d173ca";
+        var sid = "s%3AqlIml5mQIMLf4kY0e092ae617vuMdJ6u.e9RRqIDThZodOr8OAvxf6mP6NeVRNQaqJBAn5CikADk";
 
         External.Instance.InitGame(rid + "&" + sid);
     }

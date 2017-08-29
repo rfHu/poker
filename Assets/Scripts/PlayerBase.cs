@@ -493,10 +493,10 @@ namespace PokerPlayer {
         }
 
         static public void SetInParent(Transform target, Transform parent) {
-            target.SetParent(parent, true);
+            target.SetParent(parent, false);
 			var rect = target.GetComponent<RectTransform>(); 
             rect.anchoredPosition = new Vector2(0, 0);
-            rect.localScale = new Vector2(1, 1);
+            rect.localScale = new Vector3(1, 1, 1);
         }
     }
 
