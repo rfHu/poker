@@ -112,6 +112,7 @@ namespace PokerPlayer {
             // 取消所有动画
             DOTween.Pause(AnimID);
 
+			SpkText.gameObject.SetActive(false);
             hunterAward.transform.parent.gameObject.SetActive(false);
             lastState = ActionState.None;
             WinCq.gameObject.SetActive(false);
