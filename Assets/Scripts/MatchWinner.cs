@@ -62,14 +62,12 @@ public class MatchWinner : MonoBehaviour {
         {
             _animator.enabled = false;
             _image.sprite = BGImgs[1];
-            Resources.UnloadUnusedAssets();
             TitleMsg.SetActive(false);
         }
         else 
         {
             _animator.enabled = true;
             _image.sprite = BGImgs[0];
-            Resources.UnloadUnusedAssets();
             TitleMsg.SetActive(true);
             bool isMTT = GameData.Shared.Type == GameType.MTT;
             TitleMsg.transform.GetChild(0).gameObject.SetActive(isMTT);
@@ -78,11 +76,9 @@ public class MatchWinner : MonoBehaviour {
 
         //文字显示
         if (score > 0) {
-            AwardText.text = string.Format("恭喜您获得\n<size=72>{0}金币</size>", score);
-            AwardText.color = _.HexColor("#ffd54fff");
+			SetAward(score + "金币");
         } else if (!string.IsNullOrEmpty(award)) {
-            AwardText.text = string.Format("恭喜您获得\n<size=72>{0}</size>", award);
-            AwardText.color = _.HexColor("#ffd54fff");
+			SetAward(award);
         } else {
             AwardText.text = "您被淘汰了\n<size=55>调整好状态再来一局吧！</size>";
             AwardText.color = new Color(1, 1, 1, 0.6f);
@@ -92,6 +88,11 @@ public class MatchWinner : MonoBehaviour {
         StayInRoom.SetActive(!gameEnd);
         SetRankNum(rank);
     }
+
+	private void SetAward(string award) {
+		AwardText.text = string.Format("恭喜您获得\n<size=72>{0}</size>", award);
+        AwardText.color = _.HexColor("#ffd54fff");	
+	}
 
     private int SetRankNum(int rank)
     {
