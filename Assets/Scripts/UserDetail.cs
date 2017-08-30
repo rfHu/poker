@@ -175,12 +175,12 @@ public class UserDetail : MonoBehaviour {
             {
                 var dict = item as Dictionary<string, object>;
                 var pid = dict.Int("id") - 1;
+                EmoticonButtons[pid].GetComponentInChildren<Text>().text = dict.Int("coin").ToString();
 
                 if (GameData.Shared.Coins < dict.Int("coin"))
                     return;
-                    
+
                 EmoticonButtons[pid].GetComponent<Button>().interactable = true;
-                EmoticonButtons[pid].GetComponentInChildren<Text>().text = dict.Int("coin").ToString();
             }
 
             AddFriend.interactable = data.Int("is_friend_or_audit") == 0;
