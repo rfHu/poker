@@ -78,7 +78,7 @@ public class MatchWinner : MonoBehaviour {
 
         //文字显示
         if (score > 0) {
-            AwardText.text = string.Format("恭喜您获得\n<size=72><b>{0}</b></size>", score);
+            AwardText.text = string.Format("恭喜您获得\n<size=72><b>{0}金币</b></size>", score);
             AwardText.color = _.HexColor("#ffd54fff");
         } else if (!string.IsNullOrEmpty(award)) {
             AwardText.text = string.Format("恭喜您获得\n<size=72><b>{0}</b></size>", award);
