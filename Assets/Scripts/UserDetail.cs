@@ -46,9 +46,14 @@ public class UserDetail : MonoBehaviour {
     bool enterLimit;
     bool seatLimit;
     bool talkLimit;
+    ProceduralImage _proceduralImage;
+    IEnumerator SetBGCol;
 
     void Awake() 
     {
+        _proceduralImage = GetComponent<ProceduralImage>();
+        SetBGCol = SetBGColor();
+
         for (var i = 0; i < EmoticonButtons.Length; i++)
         {
             var local = i;
@@ -59,6 +64,11 @@ public class UserDetail : MonoBehaviour {
                 OnEmoticonClick(local + 1);
             }).AddTo(this);
         }
+    }
+
+    public void OnSpawned() 
+    {
+        _proceduralImage.color = _.HexColor("#23282DFF");
     }
 
     public void Init(string Uid)
@@ -251,8 +261,9 @@ public class UserDetail : MonoBehaviour {
 			        {"f", "emoticon"},
 			        {"args", data}
 		        });
-
-        GetComponent<DOPopup>().Close();
+        StopCoroutine(SetBGCol);
+        SetBGCol = SetBGColor();
+        StartCoroutine(SetBGCol);
     }
 
 
@@ -272,7 +283,14 @@ public class UserDetail : MonoBehaviour {
             PokerUI.Toast("好友请求已发送");
             AddFriend.interactable = false;
         });
+    }
 
+    IEnumerator SetBGColor() 
+    {
+        _proceduralImage.color = _.HexColor("#23282D80");
 
+        yield return new WaitForSeconds(3.5f);
+
+        _proceduralImage.color = _.HexColor("#23282DFF");
     }
 }

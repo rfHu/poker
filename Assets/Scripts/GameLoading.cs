@@ -56,8 +56,8 @@ public class GameLoading : MonoBehaviour {
     private void debugSetup() {
         External.Instance.SetSocket("https://socket.dev.poker.top");
         External.Instance.SetProxy("http://localhost:8888");
-		var rid = "59a66316b50176365f4b3c9a";
-        var sid = "s%3AshI1p3tRe8zFzsssZiPfDdpH9xfFmYCv.xwgf3ccwKcb9Qaf2x6DCC4UlCYo%2BkosyBdNBiQDwDRQ";
+        var rid = "59a7e0977026c80647f9eafa";
+        var sid = "s%3ApZ3jjxrF8jFvB7X8YgHQ6HOsvt8EwutY.yghLdSzleA17GpUBWW5KSqufiNoEOruhL%2Byo6ysgjA0";
 
         External.Instance.InitGame(rid + "&" + sid);
     }
