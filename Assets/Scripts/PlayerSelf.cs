@@ -51,9 +51,15 @@ namespace PokerPlayer {
 		} 
         private bool gameover = false;
 
-        public void Init(Player player, Transform parent) {
-            Base.Init(player, parent.GetComponent<Seat>(), this);
-			PlayerBase.SetInParent(transform, parent);
+
+		static public void Init(Player player, Seat seat) {
+			var transform = PoolMan.Spawn("PlayerSelf", seat.transform);
+			transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
+			transform.GetComponent<PlayerSelf>().init(player, seat);
+		}
+
+        private void init(Player player, Seat seat) {
+            Base.Init(player, seat, this);
 
 			gameover = false;
             addEvents();
@@ -64,8 +70,7 @@ namespace PokerPlayer {
 
 		void Awake()
 		{
-			var go = Instantiate(BaseObject, transform, false);
-			Base = go.GetComponent<PlayerBase>();
+			Base = PlayerBase.Load(BaseObject, transform);	
 		}
 
 		void OnDespawned() {
@@ -275,6 +280,8 @@ namespace PokerPlayer {
 	}
 
 	private void turnTo(Dictionary<string, object> dict, int left, bool restore = false,int buyTimeCost = 10) {
+		PlayerBase.CurrentUid = player.Uid;
+
 			showOP(dict, left, buyTimeCost);
 
 			var flag = player.Trust.FlagString();

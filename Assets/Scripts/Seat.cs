@@ -30,6 +30,28 @@ public class Seat : MonoBehaviour {
 
 	private Vector2 realVector;
 
+	private Transform chip;
+
+	public Transform Chip {
+		get {
+			return chip;
+		}
+	}
+
+	public void AddChip(Transform chip) {
+		chip.SetParent(transform, false);
+		chip.SetAsLastSibling();
+		this.chip = chip;
+	}
+
+	public void RemoveChip() {
+		if (chip != null) {
+			PoolMan.Despawn(chip);
+		}
+
+		chip = null;
+	}
+
 	public void Hide() {
 		Container.SetActive(false);
 	}
