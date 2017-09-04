@@ -362,18 +362,7 @@ sealed public class GameData {
             if (e.Data.ContainsKey("maxFiveIndex"))
             {
                 var maxFiveIndex = e.Data.IL("maxFiveIndex");
-                List<bool> selfList = new List<bool>() { false, false };
-                List<bool> publicList = new List<bool>(){false,false,false,false,false};
-
-                foreach (var item in maxFiveIndex)
-                {
-                    if (item < 2)
-                        selfList[item] = true;
-                    else if (item > 1)
-                        publicList[item - 2] = true;
-                }
-                GetMyPlayer().CardHighLight.OnNext(selfList);
-                PublicHighLight.OnNext(publicList);
+                setHighLightCard(maxFiveIndex);
             }
 
 			var pbList = data.IL("-1");
@@ -536,6 +525,22 @@ sealed public class GameData {
             Rank.Value = e.Data.Int("rank");
         });
 	}
+
+    private void setHighLightCard(List<int> maxFiveIndex)
+    {
+        List<bool> selfList = new List<bool>() { false, false };
+        List<bool> publicList = new List<bool>() { false, false, false, false, false };
+
+        foreach (var item in maxFiveIndex)
+        {
+            if (item < 2)
+                selfList[item] = true;
+            else if (item > 1)
+                publicList[item - 2] = true;
+        }
+        GetMyPlayer().CardHighLight.OnNext(selfList);
+        PublicHighLight.OnNext(publicList);
+    }
 
 	private void setState(string uid, int state, int cd) {
 		// 1、带入中，2、审核中，3、游戏中，4、留座中，5、托管中，0、已离座
@@ -817,7 +822,13 @@ sealed public class GameData {
 		}
 		
 		InGame = json.Bool("is_ingame");
+
 		MaxFiveRank.Value = json.Int("maxFiveRank");
+        if (json.ContainsKey("maxFiveIndex"))
+        {
+            var maxFiveIndex = json.IL("maxFiveIndex");
+            setHighLightCard(maxFiveIndex);
+        }
 
         TalkLimit.Value = json.Int("talk_limit") == 1;
         ShowAudit.Value = json.List("un_audit").Count > 0;
@@ -909,7 +920,6 @@ sealed public class GameData {
 	}
 	
 	public ReactiveCollection<int> PublicCards = new ReactiveCollection<int>();
-
 
     public BehaviorSubject<List<bool>> PublicHighLight = new BehaviorSubject<List<bool>>(new List<bool>() { false, false, false, false, false });
 

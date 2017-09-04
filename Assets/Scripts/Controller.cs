@@ -1160,6 +1160,8 @@ public class Controller : MonoBehaviour {
 		foreach(Transform obj in PublicCards) {
 			var card = obj.GetComponent<Card>();
 			card.Turnback(true);
+            var list = new List<bool>() { false, false, false, false, false };
+            GameData.Shared.PublicHighLight.OnNext(list);
 		}		
 	}
 }
