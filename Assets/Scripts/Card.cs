@@ -280,7 +280,7 @@ public class Card : MonoBehaviour {
 
 		transform.SetAsFirstSibling();
 		transform.anchoredPosition = new Vector2(0, 0);		
-		transform.localScale = new Vector2(scale, scale);
+		transform.localScale = new Vector3(scale, scale, 1);
 
 		return card;
 	}
