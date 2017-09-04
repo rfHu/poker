@@ -916,13 +916,13 @@ public class Controller : MonoBehaviour {
 
 			var text = PauseText;
 
-			if (value == 5) {
+			if (value == MatchRoomStat.WaitingStart) {
 				PauseGame.SetActive(true);
 				text.text = "等待全场同步发牌";
-			} else if (value == 10) {
+			} else if (value == MatchRoomStat.Rest) {
 				PauseGame.SetActive(true);
 				text.text = "中场休息5分钟";
-			} else if (value == 15) {
+			} else if (value == MatchRoomStat.WaitingFinal) {
 				PauseGame.SetActive(true);
 				text.text = "决赛等待中";
 			} else {
