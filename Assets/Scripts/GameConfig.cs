@@ -121,6 +121,8 @@ sealed public class Player {
 
     public ReactiveProperty<int> Rank = new ReactiveProperty<int>();
 
+    public BehaviorSubject<List<bool>> CardHighLight = new BehaviorSubject<List<bool>>(new List<bool>() { false, false });
+
     public int AddonCount = 0;
     public int RebuyCount = 0;
 
@@ -357,6 +359,23 @@ sealed public class GameData {
 				}
 			}
 
+            if (e.Data.ContainsKey("maxFiveIndex"))
+            {
+                var maxFiveIndex = e.Data.IL("maxFiveIndex");
+                List<bool> selfList = new List<bool>() { false, false };
+                List<bool> publicList = new List<bool>(){false,false,false,false,false};
+
+                foreach (var item in maxFiveIndex)
+                {
+                    if (item < 2)
+                        selfList[item] = true;
+                    else if (item > 1)
+                        publicList[item - 2] = true;
+                }
+                GetMyPlayer().CardHighLight.OnNext(selfList);
+                PublicHighLight.OnNext(publicList);
+            }
+
 			var pbList = data.IL("-1");
 			var delay = 0.5f;
 			
@@ -367,7 +386,7 @@ sealed public class GameData {
 			Observable.Timer(TimeSpan.FromSeconds(delay)).AsObservable().Subscribe((_) => {
                 if (e.Data.ContainsKey("maxFiveRank"))
                 {
-				    MaxFiveRank.Value = e.Data.Int("maxFiveRank");	           
+				    MaxFiveRank.Value = e.Data.Int("maxFiveRank");
                 }
 			});
 		});
@@ -511,6 +530,10 @@ sealed public class GameData {
 
         RxSubjects.RaiseBlind.Subscribe((e) => {
             BlindLv = e.Data.Int("blind_lv");
+        });
+
+        RxSubjects.CurrentRank.Subscribe((e) => {
+            Rank.Value = e.Data.Int("rank");
         });
 	}
 
@@ -770,7 +793,6 @@ sealed public class GameData {
 
         Type = string2GameType(json.String("type"));
 
-		MatchData.MatchRoomStatus.OnNext(json.Int("match_room_status"));
         if (IsMatch())
         {
             MatchData.Type = options.Int("sub_type");
@@ -778,10 +800,11 @@ sealed public class GameData {
             MatchData.Rebuy = options.Int("rebuy_count");
             MatchData.Addon = options.Int("add_on");
 			MatchData.IsHunter = options.Int("reward_ratio") > 0;
-			LeftTime.Value = json.Int("blind_countdown");
             BlindLv = json.Int("blind_lv");
             MatchData.JoinFee = options.Int("join_fee");
             MatchData.RebuyFee = options.Int("rebuy_fee");
+		    MatchData.MatchRoomStatus.OnNext(json.Int("match_room_status"));
+            LeftTime.Value = MatchData.MatchRoomStatus.Value == 10 ? json.Int("half_break_countdown") : json.Int("blind_countdown");
         } else {
 			LeftTime.Value = json.Int("left_time");
 		}
@@ -886,6 +909,9 @@ sealed public class GameData {
 	}
 	
 	public ReactiveCollection<int> PublicCards = new ReactiveCollection<int>();
+
+
+    public BehaviorSubject<List<bool>> PublicHighLight = new BehaviorSubject<List<bool>>(new List<bool>() { false, false, false, false, false });
 
 	public class MyCmd {
 		public static bool Takecoin = false;

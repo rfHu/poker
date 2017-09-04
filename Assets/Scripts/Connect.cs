@@ -484,6 +484,9 @@ public sealed class Connect  {
 				case "mtt_match":
 					RxSubjects.MTTMatch.OnNext(rxdata);
 					break;
+                case "current_rank":
+                    RxSubjects.CurrentRank.OnNext(rxdata);
+                    break;
 				default:
 					break;
 			}
