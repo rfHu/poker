@@ -21,7 +21,7 @@ public static class Animations {
             canvasGroup.DOFade(1, duration);
 
             // 由小变大
-            rectTransform.localScale = new Vector2((float)0.8, (float)0.8);
+            rectTransform.localScale = new Vector3((float)0.8, (float)0.8, 1);
             tween = rectTransform.DOScale(new Vector3(1, 1, 1), duration);
 		} else {
 			canvasGroup.DOFade(0, duration);

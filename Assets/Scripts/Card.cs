@@ -67,7 +67,7 @@ public class Card : MonoBehaviour {
 			StartCoroutine(flipCard(index, complete));
 		} else {
             setCardFace(index, cardColor);
-			flipTransform.localScale = new Vector2(1, 1);
+			flipTransform.localScale = Vector3.one;
 		}
 
 		_index = index;
@@ -174,7 +174,7 @@ public class Card : MonoBehaviour {
 			time = Mathf.Min(time + Time.deltaTime / TurnCardDuration, 1);
 			float scale = scaleCurve.Evaluate(time);
 
-			Vector2 vector = rectTrans.localScale;
+			Vector3 vector = rectTrans.localScale;
 			vector.x = scale;
 			rectTrans.localScale = vector;
 
@@ -186,7 +186,7 @@ public class Card : MonoBehaviour {
 			yield return new WaitForFixedUpdate();
 		}
 
-		rectTrans.localScale = new Vector2(1, 1);
+		rectTrans.localScale = Vector3.one;
 
 		if (complete != null) {
 			complete();

@@ -88,7 +88,7 @@ namespace PokerPlayer {
 
 		static public PlayerBase Load(GameObject prefab, Transform parent) {
 			var go = Instantiate(prefab, parent, false);
-            go.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
+            go.GetComponent<RectTransform>().anchoredPosition = Vector3.zero;
 			return go.GetComponent<PlayerBase>();
 		}
 
@@ -462,11 +462,12 @@ namespace PokerPlayer {
 
         private void setPrChips(int value) {
             var newChips = PoolMan.Spawn("UpChip");
-			theSeat.AddChip(newChips);
 
             if (theSeat.Chip == null) {
+				theSeat.AddFirstChip(newChips);
                 newChips.GetComponent<ChipsGo>().Create(value, theSeat, player);
             } else {
+				theSeat.AddChip(newChips);
                 newChips.GetComponent<ChipsGo>().AddMore(() => {
 					var chip = theSeat.Chip;
 					if (chip != null) {

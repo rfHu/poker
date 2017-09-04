@@ -93,7 +93,7 @@ namespace PokerPlayer {
 
 		public static void Init(Player player, Seat seat) {
 			var transform = PoolMan.Spawn("PlayerOppo", seat.transform);
-			transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
+			transform.GetComponent<RectTransform>().anchoredPosition = Vector3.zero;
 			transform.GetComponent<PlayerOppo>().init(player, seat);
 		}
 

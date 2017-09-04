@@ -54,7 +54,7 @@ namespace PokerPlayer {
 
 		static public void Init(Player player, Seat seat) {
 			var transform = PoolMan.Spawn("PlayerSelf", seat.transform);
-			transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
+			transform.GetComponent<RectTransform>().anchoredPosition = Vector3.zero;
 			transform.GetComponent<PlayerSelf>().init(player, seat);
 		}
 
@@ -411,11 +411,11 @@ namespace PokerPlayer {
 			}
 
 			var rect = YouWin.GetComponent<RectTransform>();
-			rect.localScale = new Vector2(0, 0);
+			rect.localScale = Vector3.zero;
 			YouWin.SetActive(true);
 
 			var ease = Ease.OutBounce;
-			rect.DOScale(new Vector2(1, 1), 0.5f).SetEase(ease).SetId(Base.AnimID);
+			rect.DOScale(Vector3.one, 0.5f).SetEase(ease).SetId(Base.AnimID);
 
 			WinParticle.Play(true);				
 		}
