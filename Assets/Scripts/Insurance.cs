@@ -32,6 +32,7 @@ public class Insurance : MonoBehaviour {
     public GameObject BuyerButtons;
     public GameObject WatcherText;
     public EventTrigger CASliderUp;
+    public Text WinRate;
   
     [SerializeField]
     private List<CardContainer> PublicCardContainers;
@@ -124,6 +125,7 @@ public class Insurance : MonoBehaviour {
         }
 
         CardDesc.text = Card.GetCardDesc(data.Int("maxFiveRank"));
+        WinRate.text = data.Int("win_rate") + "%";
     }
 
     private void setupAllinPlayers(List<object> allinPlayers)
@@ -134,11 +136,10 @@ public class Insurance : MonoBehaviour {
         foreach (var obj in allinPlayers)
         {
             var data = obj as Dictionary<string, object>;
-            var player = GameData.Shared.FindPlayer(data.String("uid"));
-            var outsNumber = data.Int("ct");
+
 
             var playerMes = PoolMan.Spawn("InsureAllInPlayer",AllinPlayersParent.transform);
-            playerMes.GetComponent<AllInPlayer>().Init(player.Name, player.Cards.Value, player.Uid, outsNumber);
+            playerMes.GetComponent<AllInPlayer>().Init(data);
         }
     }
 

@@ -121,6 +121,8 @@ sealed public class Player {
 
     public ReactiveProperty<int> Rank = new ReactiveProperty<int>();
 
+    public BehaviorSubject<List<bool>> CardHighLight = new BehaviorSubject<List<bool>>(new List<bool>() { false, false });
+
     public int AddonCount = 0;
     public int RebuyCount = 0;
 
@@ -357,6 +359,12 @@ sealed public class GameData {
 				}
 			}
 
+            if (e.Data.ContainsKey("maxFiveIndex"))
+            {
+                var maxFiveIndex = e.Data.IL("maxFiveIndex");
+                setHighLightCard(maxFiveIndex);
+            }
+
 			var pbList = data.IL("-1");
 			var delay = 0.5f;
 			
@@ -367,7 +375,7 @@ sealed public class GameData {
 			Observable.Timer(TimeSpan.FromSeconds(delay)).AsObservable().Subscribe((_) => {
                 if (e.Data.ContainsKey("maxFiveRank"))
                 {
-				    MaxFiveRank.Value = e.Data.Int("maxFiveRank");	           
+				    MaxFiveRank.Value = e.Data.Int("maxFiveRank");
                 }
 			});
 		});
@@ -512,7 +520,27 @@ sealed public class GameData {
         RxSubjects.RaiseBlind.Subscribe((e) => {
             BlindLv = e.Data.Int("blind_lv");
         });
+
+        RxSubjects.CurrentRank.Subscribe((e) => {
+            Rank.Value = e.Data.Int("rank");
+        });
 	}
+
+    private void setHighLightCard(List<int> maxFiveIndex)
+    {
+        List<bool> selfList = new List<bool>() { false, false };
+        List<bool> publicList = new List<bool>() { false, false, false, false, false };
+
+        foreach (var item in maxFiveIndex)
+        {
+            if (item < 2)
+                selfList[item] = true;
+            else if (item > 1)
+                publicList[item - 2] = true;
+        }
+        GetMyPlayer().CardHighLight.OnNext(selfList);
+        PublicHighLight.OnNext(publicList);
+    }
 
 	private void setState(string uid, int state, int cd) {
 		// 1、带入中，2、审核中，3、游戏中，4、留座中，5、托管中，0、已离座
@@ -770,7 +798,6 @@ sealed public class GameData {
 
         Type = string2GameType(json.String("type"));
 
-		MatchData.MatchRoomStatus.OnNext(json.Int("match_room_status"));
         if (IsMatch())
         {
             MatchData.Type = options.Int("sub_type");
@@ -778,10 +805,11 @@ sealed public class GameData {
             MatchData.Rebuy = options.Int("rebuy_count");
             MatchData.Addon = options.Int("add_on");
 			MatchData.IsHunter = options.Int("reward_ratio") > 0;
-			LeftTime.Value = json.Int("blind_countdown");
             BlindLv = json.Int("blind_lv");
             MatchData.JoinFee = options.Int("join_fee");
             MatchData.RebuyFee = options.Int("rebuy_fee");
+		    MatchData.MatchRoomStatus.OnNext(json.Int("match_room_status"));
+            LeftTime.Value = MatchData.MatchRoomStatus.Value == 10 ? json.Int("half_break_countdown") : json.Int("blind_countdown");
         } else {
 			LeftTime.Value = json.Int("left_time");
 		}
@@ -794,7 +822,13 @@ sealed public class GameData {
 		}
 		
 		InGame = json.Bool("is_ingame");
+
 		MaxFiveRank.Value = json.Int("maxFiveRank");
+        if (json.ContainsKey("maxFiveIndex"))
+        {
+            var maxFiveIndex = json.IL("maxFiveIndex");
+            setHighLightCard(maxFiveIndex);
+        }
 
         TalkLimit.Value = json.Int("talk_limit") == 1;
         ShowAudit.Value = json.List("un_audit").Count > 0;
@@ -886,6 +920,8 @@ sealed public class GameData {
 	}
 	
 	public ReactiveCollection<int> PublicCards = new ReactiveCollection<int>();
+
+    public BehaviorSubject<List<bool>> PublicHighLight = new BehaviorSubject<List<bool>>(new List<bool>() { false, false, false, false, false });
 
 	public class MyCmd {
 		public static bool Takecoin = false;
