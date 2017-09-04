@@ -88,6 +88,7 @@ namespace PokerPlayer {
 
         private void playParticle(ParticleSystem particle) {
             particle.gameObject.SetActive(true);
+			particle.Clear();
             particle.Play(true);
         }
 
@@ -497,7 +498,7 @@ namespace PokerPlayer {
             target.SetParent(parent, false);
 			var rect = target.GetComponent<RectTransform>(); 
             rect.anchoredPosition = new Vector2(0, 0);
-            rect.localScale = new Vector3(1, 1, 1);
+            rect.localScale = Vector2.one;
         }
     }
 

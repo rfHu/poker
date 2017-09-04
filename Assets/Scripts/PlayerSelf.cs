@@ -401,13 +401,14 @@ namespace PokerPlayer {
 			}
 
 			var rect = YouWin.GetComponent<RectTransform>();
-			rect.localScale = new Vector2(0, 0);
+			// rect.localScale = Vector2.zero;
 			YouWin.SetActive(true);
 
-			var ease = Ease.OutBounce;
-			rect.DOScale(new Vector2(1, 1), 0.5f).SetEase(ease).SetId(Base.AnimID);
+			// var ease = Ease.OutBounce;
+			// rect.DOScale(Vector2.one, 0.5f).SetEase(ease).SetId(Base.AnimID);
 
-			WinParticle.Play(true);				
+			// WinParticle.Clear();
+			WinParticle.Play(true);			
 		}
 
 		public void WinEnd() {
