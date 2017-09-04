@@ -14,6 +14,7 @@ namespace PokerPlayer {
 
 	    public Text NameLabel;
         public Text CardDesc;
+        public GameObject WinPercent;
 
 		private GameObject cardParent {
 			get {
@@ -115,6 +116,22 @@ namespace PokerPlayer {
             // 中途复原行动
             player.Countdown.AsObservable().Where((obj) => obj.seconds > 0).Subscribe((obj) => {
                 TurnTo(null, obj.seconds);
+            }).AddTo(this);
+
+            player.WinPercent.AsObservable().Subscribe((num) =>
+            {
+                if (num == -1)
+                {
+                    WinPercent.GetComponent<ProceduralImage>().color = _.HexColor("#868d94");
+                    WinPercent.SetActive(false);
+                }
+                WinPercent.SetActive(true);
+                WinPercent.GetComponentInChildren<Text>().text = num + "%";
+            }).AddTo(this);
+
+            player.Largest.AsObservable().Subscribe((n) =>
+            {
+                WinPercent.GetComponent<ProceduralImage>().color = _.HexColor("#ff1744");
             }).AddTo(this);
         }
 

@@ -123,6 +123,10 @@ sealed public class Player {
 
     public BehaviorSubject<List<bool>> CardHighLight = new BehaviorSubject<List<bool>>(new List<bool>() { false, false });
 
+    public BehaviorSubject<int> WinPercent = new BehaviorSubject<int>(-1);
+
+    public BehaviorSubject<int> Largest = new BehaviorSubject<int>(0);
+
     public int AddonCount = 0;
     public int RebuyCount = 0;
 
@@ -359,12 +363,6 @@ sealed public class GameData {
 				}
 			}
 
-            if (e.Data.ContainsKey("maxFiveIndex"))
-            {
-                var maxFiveIndex = e.Data.IL("maxFiveIndex");
-                setHighLightCard(maxFiveIndex);
-            }
-
 			var pbList = data.IL("-1");
 			var delay = 0.5f;
 			
@@ -376,6 +374,41 @@ sealed public class GameData {
                 if (e.Data.ContainsKey("maxFiveRank"))
                 {
 				    MaxFiveRank.Value = e.Data.Int("maxFiveRank");
+                }
+
+                //牌型高亮
+                if (e.Data.ContainsKey("maxFiveIndex"))
+                {
+                    var maxFiveIndex = e.Data.IL("maxFiveIndex");
+                    setHighLightCard(maxFiveIndex);
+                }
+
+                if (e.Data.ContainsKey("win_rates"))
+                {
+                    List<int> largest = new List<int>();
+                    int num = -1;
+                    var winRates = e.Data.Dict("win_rates");
+                    foreach (var item in winRates)
+                    {
+                        var player = GetPlayer(int.Parse(item.Key));
+                        int percent = int.Parse(item.Value.ToString());
+                        player.WinPercent.OnNext(percent);
+                        if (num < percent)
+                        {
+                            num = percent;
+                            largest.Clear();
+                            largest.Add(int.Parse(item.Key));
+                        }
+                        else if (num == percent)
+                        {
+                            largest.Add(int.Parse(item.Key));
+                        }
+                    }
+
+                    foreach (var item in largest)
+                    {
+                        GetPlayer(item).Largest.OnNext(0);
+                    }
                 }
 			});
 		});

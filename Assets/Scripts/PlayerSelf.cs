@@ -14,6 +14,8 @@ namespace PokerPlayer {
         public GameObject[] Eyes; 
         public GameObject AutoArea;
         public GameObject[] AutoOperas; 
+        public GameObject WinPercent;
+
 
 		private Card  card1 {
 			get {
@@ -81,7 +83,7 @@ namespace PokerPlayer {
 			YouWin.SetActive(false);
 			YouWin.GetComponent<CanvasGroup>().alpha = 1;
 			WinParticle.Stop(true);
-			CardDesc.transform.parent.gameObject.SetActive(false);
+			CardDesc.gameObject.SetActive(false);
 
 			cardParent.SetActive(false);
 			card1.Turnback();
@@ -92,7 +94,7 @@ namespace PokerPlayer {
 
         private void addEvents() {
             GameData.Shared.MaxFiveRank.Subscribe((value) => {
-                var parent = CardDesc.transform.parent.gameObject;
+                var parent = CardDesc.gameObject;
 
                 if (value == 0)
                 {
@@ -104,72 +106,85 @@ namespace PokerPlayer {
                 CardDesc.text = Card.GetCardDesc(value);
             }).AddTo(this);
 
-		player.ShowCard.Subscribe((value) => {
-			if (value[0] == '1') {
-				Eyes[0].SetActive(true);
-			} else {
-				Eyes[0].SetActive(false);
-			}
+		    player.ShowCard.Subscribe((value) => {
+			    if (value[0] == '1') {
+				    Eyes[0].SetActive(true);
+			    } else {
+				    Eyes[0].SetActive(false);
+			    }
 
-			if (value[1] == '1') {
-				Eyes[1].SetActive(true);
-			} else {
-				Eyes[1].SetActive(false);
-			}
-		}).AddTo(this);
+			    if (value[1] == '1') {
+				    Eyes[1].SetActive(true);
+			    } else {
+				    Eyes[1].SetActive(false);
+			    }
+		    }).AddTo(this);
 
-		player.Trust.ShouldShow.Subscribe((show) => {
-			AutoArea.SetActive(show);
-		}).AddTo(this);
+		    player.Trust.ShouldShow.Subscribe((show) => {
+			    AutoArea.SetActive(show);
+		    }).AddTo(this);
 
-		player.Trust.CallNumber.Subscribe((num) => {
-			var text = AutoOperas[1].transform.Find("Text").GetComponent<Text>();
+		    player.Trust.CallNumber.Subscribe((num) => {
+			    var text = AutoOperas[1].transform.Find("Text").GetComponent<Text>();
 
-			if (num == 0) {
-				text.text = "自动让牌";
-			} else if (num == -1) {
-				text.text = "全下";
-			} else if (num > 0) {
-				text.text = String.Format("跟注\n<size=40>{0}</size>", _.Num2CnDigit<int>(num));
-			}
+			    if (num == 0) {
+				    text.text = "自动让牌";
+			    } else if (num == -1) {
+				    text.text = "全下";
+			    } else if (num > 0) {
+				    text.text = String.Format("跟注\n<size=40>{0}</size>", _.Num2CnDigit<int>(num));
+			    }
 
-			var flag = player.Trust.FlagString();
-			if (flag == "01") {
-				player.Trust.SelectedFlag.Value = "00";	
-			}
-		}).AddTo(this);
+			    var flag = player.Trust.FlagString();
+			    if (flag == "01") {
+				    player.Trust.SelectedFlag.Value = "00";	
+			    }
+		    }).AddTo(this);
 
-		player.Trust.SelectedFlag.Where((flags) => { return flags != null; }).Subscribe((flags) => {
-			var ncolor = _.HexColor("#2196F300");
-			var scolor = _.HexColor("#2196F3");
+		    player.Trust.SelectedFlag.Where((flags) => { return flags != null; }).Subscribe((flags) => {
+			    var ncolor = _.HexColor("#2196F300");
+			    var scolor = _.HexColor("#2196F3");
 			
-			var img0 = AutoOperas[0].GetComponent<ProceduralImage>();
-			var img1 = AutoOperas[1].GetComponent<ProceduralImage>();
+			    var img0 = AutoOperas[0].GetComponent<ProceduralImage>();
+			    var img1 = AutoOperas[1].GetComponent<ProceduralImage>();
 
-			if (flags[0] == '0') {
-				img0.color = ncolor;
-			} else {
-				img0.color = scolor;
-			}
+			    if (flags[0] == '0') {
+				    img0.color = ncolor;
+			    } else {
+				    img0.color = scolor;
+			    }
 
-			if (flags[1] == '0') {
-				img1.color = ncolor;
-			} else {
-				img1.color = scolor;
-			}
-		}).AddTo(this);
+			    if (flags[1] == '0') {
+				    img1.color = ncolor;
+			    } else {
+				    img1.color = scolor;
+			    }
+		    }).AddTo(this);
 
-        player.CardHighLight.AsObservable().Subscribe((list) => {
-            for (int i = 0; i < cardContainers.Count; i++)
-            {
-                cardContainers[i].transform.GetChild(2).gameObject.SetActive(list[i]);
-            }
-        }).AddTo(this);
+            player.CardHighLight.AsObservable().Subscribe((list) => {
+                for (int i = 0; i < cardContainers.Count; i++)
+                {
+                    cardContainers[i].transform.GetChild(2).gameObject.SetActive(list[i]);
+                }
+            }).AddTo(this);
 
-        RxSubjects.GameOver.Subscribe((_) => {
-            AutoArea.SetActive(false);
-            gameover = true;
-        }).AddTo(this);
+            player.WinPercent.AsObservable().Subscribe((num) => {
+                if (num == -1)
+                {
+                    return;
+                }
+                WinPercent.SetActive(true);
+                WinPercent.GetComponentInChildren<Text>().text = num + "%";
+            }).AddTo(this);
+
+            player.Largest.AsObservable().Subscribe((n) => {
+                WinPercent.GetComponent<ProceduralImage>().color = _.HexColor("#ff1744");
+            }).AddTo(this);
+
+            RxSubjects.GameOver.Subscribe((_) => {
+                AutoArea.SetActive(false);
+                gameover = true;
+            }).AddTo(this);
 
 		  // 中途复原行动
             player.Countdown.AsObservable().Subscribe((obj) => {
@@ -196,6 +211,7 @@ namespace PokerPlayer {
                 }
 			 }).AddTo(this);
         }
+
 
         private void toggleAutoBtns(int index) {
 		var valStr = player.Trust.SelectedFlag.Value;
