@@ -510,6 +510,7 @@ public sealed class Connect  {
 			instance = new Connect();
 		}
 
+		RxSubjects.Connecting.OnNext(true);
 		instance.open();
 	}
 

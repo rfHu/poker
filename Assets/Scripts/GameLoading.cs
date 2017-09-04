@@ -12,6 +12,9 @@ public class GameLoading : MonoBehaviour {
 		Application.targetFrameRate = 60;
 		var external = External.Instance;
 
+		// 事件监听
+		registerEvents();
+
         var debug = false;
         #if UNITY_EDITOR 
         debug = true;
@@ -29,7 +32,6 @@ public class GameLoading : MonoBehaviour {
 
 		// 如果你确认已在对应的iOS工程或Android工程中初始化SDK，那么在脚本中只需启动C#异常捕获上报功能即可
 		BuglyAgent.EnableExceptionHandler ();
-		registerEvents();
 	}
 
 	[SerializeField]private GameObject Loading;
