@@ -271,7 +271,7 @@ public class iOSCommander: ICommander {
     private static extern void _ex_callInitHx(string chatRoomId);
 
     [DllImport("__Internal")]
-    private static extern void _ex_callCloseChat();
+    private static extern void _ex_callCloseChatting();
 
 	public void Exit() {
 		_ex_callExitGame();
@@ -340,7 +340,7 @@ public class iOSCommander: ICommander {
 	}
 
 	public void CloseChat() {
-		_ex_callCloseChat();
+		_ex_callCloseChatting();
 	}
 }
 #endif
