@@ -18,6 +18,7 @@ public class Card : MonoBehaviour {
 	private int _index = -1;
 	[SerializeField]private Image cardBg;
 	[SerializeField]private GameObject darkenCover;
+	[SerializeField]private GameObject highlight;
 
 	private RectTransform flipTransform {
 		get {
@@ -61,7 +62,8 @@ public class Card : MonoBehaviour {
 
 	private void show(int index, bool anim = false, Action complete = null) {	
 		gameObject.SetActive(true);
-		ReColor();
+		highlight.SetActive(false);
+		reColor();
 		
 		if (anim && _index != index) { 
 			StartCoroutine(flipCard(index, complete));
@@ -123,7 +125,7 @@ public class Card : MonoBehaviour {
 		darkenCover.SetActive(true);
 	}
 
-	public void ReColor() {
+	public void reColor() {
 		darkenCover.SetActive(false);
 	}
 
@@ -148,12 +150,17 @@ public class Card : MonoBehaviour {
 		}
 
 		hasReShow = true;
+		highlight.SetActive(false);
 		StartCoroutine(flipCard(_index));
 		G.PlaySound("fapai_1");
 	}
 
 	void OnDisable() {
 		hasReShow = false;
+	}
+
+	public void Hightlight() {
+		highlight.SetActive(true);
 	}
 
 	public void ShowWithSound(int index, bool anim = false) {
@@ -198,8 +205,9 @@ public class Card : MonoBehaviour {
 		cardBg.sprite = CardBack;
 		cardBg.color = Color.white;
 
+		highlight.SetActive(false);
 		cardContent.SetChildrenActive(false);
-		ReColor();
+		reColor();
 
 		if (hide) {
 			gameObject.SetActive(false);
@@ -232,20 +240,33 @@ public class Card : MonoBehaviour {
 		return new int[]{a, b};
 	}
 
-	static public string GetCardDesc(int val) {
-		var value = val >> 20;
+	public enum CardType {
+		High = 1,
+		Pair = 2,
+		TwoPair = 3,
+		Three = 4,
+		Straight = 5,
+		Flush = 6,
+		FullHouse = 7,
+		Four = 8,
+		StraightFlush = 9,
+		RoyalFluash = 10 
+	}
 
-		var map = new Dictionary<int, string> {
-			{1, "高牌"},
-			{2, "一对"},
-			{3, "两对"},
-			{4, "三条"},
-			{5, "顺子"},
-			{6, "同花"},
-			{7, "葫芦"},
-			{8, "四条"},
-			{9, "同花顺"},
-			{10, "皇家同花顺"},
+	static public string GetCardDesc(int val) {
+		var value = (CardType)(val >> 20);
+
+		var map = new Dictionary<CardType, string> {
+			{CardType.High, "高牌"},
+			{CardType.Pair, "一对"},
+			{CardType.TwoPair, "两对"},
+			{CardType.Three, "三条"},
+			{CardType.Straight, "顺子"},
+			{CardType.Flush, "同花"},
+			{CardType.FullHouse, "葫芦"},
+			{CardType.Four, "四条"},
+			{CardType.StraightFlush, "同花顺"},
+			{CardType.RoyalFluash, "皇家同花顺"},
 		};
 
 		if (!map.ContainsKey(value)) {
@@ -277,5 +298,48 @@ public class Card : MonoBehaviour {
 		transform.localScale = new Vector3(scale, scale, 1);
 
 		return card;
+	}
+
+	static public List<int> ExtractHighlightCards(List<int> maxFive, int maxFiveRank) {
+		if (maxFive.Count != 5) {
+			return new List<int>();	
+		}
+
+		var type = (CardType)(maxFiveRank >> 20);
+
+		switch(type) {
+			case CardType.High:
+				return new List<int>();
+			case CardType.TwoPair:  case CardType.Four: case CardType.Three: case CardType.Pair:
+				return extractSome(maxFive);
+			default:
+				return maxFive;
+		}	
+	}
+
+	static private List<int> extractSome(List<int> maxFive) {
+		var list = new List<int>();
+		var dict = new Dictionary<int, List<int>>();
+
+		// 群组	
+		foreach(var value in maxFive) {
+			var key = Card.CardValues(value)[1];
+
+			if (dict.ContainsKey(key)) {
+				dict[key].Add(Card.CardIndex(value));
+			} else {
+				dict[key] = new List<int>{
+					Card.CardIndex(value)
+				};
+			}
+		}
+		
+		foreach(var item in dict) {
+			if (item.Value.Count > 1) {
+				list.AddRange(item.Value);
+			}
+		}
+
+		return list;
 	}
 }

@@ -156,12 +156,12 @@ namespace PokerPlayer {
 			    }
 		    }).AddTo(this);
 
-            player.CardHighLight.AsObservable().Subscribe((list) => {
-                for (int i = 0; i < cardContainers.Count; i++)
-                {
-                    cardContainers[i].transform.GetChild(2).gameObject.SetActive(list[i]);
-                }
-            }).AddTo(this);
+            // player.CardHighLight.AsObservable().Subscribe((list) => {
+            //     for (int i = 0; i < cardContainers.Count; i++)
+            //     {
+            //         cardContainers[i].transform.GetChild(2).gameObject.SetActive(list[i]);
+            //     }
+            // }).AddTo(this);
 
             RxSubjects.Deal.Subscribe((_) => {
                 player.Trust.Hide();

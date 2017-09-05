@@ -29,8 +29,6 @@ public class Controller : MonoBehaviour {
     [SerializeField]
     private List<CardContainer> PublicCardContainers;
 
-    public List<GameObject> PublicHighLight;
-
 	[SerializeField]private Text[] gameInfoTexts;
 
 	public List<GameObject> Seats;	
@@ -434,12 +432,12 @@ public class Controller : MonoBehaviour {
 			setupSeats(value);
 		}).AddTo(this);
 
-        GameData.Shared.PublicHighLight.AsObservable().Subscribe((list) => {
-            for (int i = 0; i < PublicHighLight.Count; i++)
-            {
-                PublicHighLight[i].SetActive(list[i]);
-            }
-        }).AddTo(this);
+        // GameData.Shared.PublicHighLight.AsObservable().Subscribe((list) => {
+        //     for (int i = 0; i < PublicHighLight.Count; i++)
+        //     {
+        //         PublicHighLight[i].SetActive(list[i]);
+        //     }
+        // }).AddTo(this);
 
 		RxSubjects.Connecting.Subscribe((stat) => {
 			LoadingModal.transform.SetAsLastSibling();
@@ -1160,8 +1158,6 @@ public class Controller : MonoBehaviour {
 		foreach(Transform obj in PublicCards) {
 			var card = obj.GetComponent<Card>();
 			card.Turnback(true);
-            var list = new List<bool>() { false, false, false, false, false };
-            GameData.Shared.PublicHighLight.OnNext(list);
 		}		
 	}
 }
