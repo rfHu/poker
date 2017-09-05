@@ -12,6 +12,9 @@ public class GameLoading : MonoBehaviour {
 		Application.targetFrameRate = 60;
 		var external = External.Instance;
 
+		// 事件监听
+		registerEvents();
+
         var debug = false;
         #if UNITY_EDITOR 
         debug = true;
@@ -29,13 +32,16 @@ public class GameLoading : MonoBehaviour {
 
 		// 如果你确认已在对应的iOS工程或Android工程中初始化SDK，那么在脚本中只需启动C#异常捕获上报功能即可
 		BuglyAgent.EnableExceptionHandler ();
-		registerEvents();
 	}
 
 	[SerializeField]private GameObject Loading;
 	[SerializeField]private GameObject MTT; 
 
 	private void registerEvents() {
+		RxSubjects.Connecting.Subscribe((e) => {
+			Loading.SetActive(true);
+		}).AddTo(this);
+
 		RxSubjects.MatchLook.Subscribe((e) => {
 			var state = e.Data.Int("match_state");
 			if (state >= 10) {
@@ -56,7 +62,7 @@ public class GameLoading : MonoBehaviour {
     private void debugSetup() {
         External.Instance.SetSocket("https://socket.dev.poker.top");
         External.Instance.SetProxy("http://localhost:8888");
-        var rid = "59ae2943ae70550fcd00e836";
+        var rid = "59ae3dddae70550fcd00e918";
         var sid = "s%3AdTHMLRWf9UngWkjvKvKyL53l6dmQwYWt.ECGuDvFU1zSId15SSJ3tRPLKutRU6UM75B%2F0LyeIjog";
 
         External.Instance.InitGame(rid + "&" + sid);
