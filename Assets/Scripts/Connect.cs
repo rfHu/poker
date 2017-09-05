@@ -491,9 +491,6 @@ public sealed class Connect  {
                 case "current_rank":
                     RxSubjects.CurrentRank.OnNext(rxdata);
                     break;
-                case "room_notalking":
-                    RxSubjects.RoomNoTalking.OnNext(rxdata);
-                    break;
 				default:
 					break;
 			}
