@@ -1116,7 +1116,8 @@ public class Controller : MonoBehaviour {
         TalkButton.SetActive(!limit);
 #if UNITY_EDITOR
 #else
-				Commander.Shared.VoiceIconToggle(!limit);
+		Commander.Shared.VoiceIconToggle(!limit);
+        Commander.Shared.CloseChat();
 #endif
     }
 
