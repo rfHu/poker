@@ -110,6 +110,10 @@ public class Commander {
     public void CanAudioPlay(bool canPlay) {
         ic.CanAudioPlay(canPlay);
     }
+
+    public void CloseChat() {
+        ic.CloseChat();
+    }
 }
 
 public interface ICommander {
@@ -127,6 +131,7 @@ public interface ICommander {
     void OptionToggle(bool isOpen, int type);
     void InitHx(string chatRoomId);
     void CanAudioPlay(bool canPlay);
+    void CloseChat();
 }
 
 #if UNITY_ANDROID
@@ -213,6 +218,11 @@ public class AndroidCommander: ICommander {
     {
         getJo().Call("canAudioPlay", canPlay);
     }
+
+    public void CloseChat() 
+    {
+        getJo().Call("closeChat");
+    }
 }
 #endif
 
@@ -259,6 +269,9 @@ public class iOSCommander: ICommander {
 
     [DllImport("__Internal")]
     private static extern void _ex_callInitHx(string chatRoomId);
+
+    [DllImport("__Internal")]
+    private static extern void _ex_callCloseChatting();
 
 	public void Exit() {
 		_ex_callExitGame();
@@ -324,6 +337,10 @@ public class iOSCommander: ICommander {
 
 	public void CanAudioPlay(bool canPlay) {
 		_ex_callCanAudioPlay(canPlay);
+	}
+
+	public void CloseChat() {
+		_ex_callCloseChatting();
 	}
 }
 #endif

@@ -1062,14 +1062,22 @@ public class Controller : MonoBehaviour {
             string str = e.Data.String("name");
 
             str += type ? "被房主禁言" : "被解除禁言";
-
-            if (Uid == GameData.Shared.Uid)
-            {
-                TalkLimit(type);
-            }
-
             PokerUI.Toast(str);
 
+        }).AddTo(this);
+
+        RxSubjects.RoomNoTalking.Subscribe((e) => {
+            var type = e.Data.Int("type") == 1;
+            if (type)
+            {
+                PauseGame.SetActive(true);
+                var text = PauseText;
+                text.text = "有玩家ALL IN，全场禁言中";
+            }
+            else
+            {
+                PauseGame.SetActive(false);
+            }
         }).AddTo(this);
 	}
 
@@ -1114,7 +1122,11 @@ public class Controller : MonoBehaviour {
         TalkButton.SetActive(!limit);
 #if UNITY_EDITOR
 #else
-				Commander.Shared.VoiceIconToggle(!limit);
+		Commander.Shared.VoiceIconToggle(!limit);
+        if (limit)
+	    {
+            Commander.Shared.CloseChat();		 
+	    }
 #endif
     }
 

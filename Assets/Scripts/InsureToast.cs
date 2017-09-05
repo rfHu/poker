@@ -10,6 +10,7 @@ public class InsureToast: MonoBehaviour {
     public RawImage Avatar;
     public Text NameText;
     public GameObject SeePage;
+    public GameObject ChatButton;
 
     private CanvasGroup cvg;
     private float duration = 0.2f;
@@ -51,6 +52,8 @@ public class InsureToast: MonoBehaviour {
                 {
                     SeePage.SetActive(false);
                 }
+
+
             }
 
             switch (type)
