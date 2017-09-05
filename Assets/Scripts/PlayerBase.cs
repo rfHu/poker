@@ -197,6 +197,18 @@ namespace PokerPlayer {
             theSeat.SeatPos.Subscribe((pos) => {
                 SpkText.ChangePos(pos);
                 PlayerAct.ChangePos(pos);
+
+				// @FIXME: 这段逻辑给PlayerSelf、PlayerOppo分别实现更合适？
+				var rect = WinPercent.GetComponent<RectTransform>();
+				if (Uid == GameData.Shared.Uid){
+					rect.localPosition = new Vector2(191, -286);
+				}
+				else if (pos == SeatPosition.Left){
+					rect.localPosition = new Vector2(127, -36);
+				}
+				else {
+					rect.localPosition = new Vector2(-127, -36);
+				}
             }).AddTo(this);
 
             player.PrChips.AsObservable().Subscribe((value) => {
@@ -368,6 +380,7 @@ namespace PokerPlayer {
                 PlayerAct.SetActive(false);
                 stopParticle(allinParticle);
                 player.PrChips.Value = 0;
+				player.WinPercent.OnNext(-1); // 隐藏胜率
                 OP.Despawn();
             }).AddTo(this);
 
@@ -429,38 +442,24 @@ namespace PokerPlayer {
             }).AddTo(this);
 
 
-            player.WinPercent.AsObservable().Subscribe((num) =>
+            player.WinPercent.Subscribe((num) =>
             {
                 if (num == -1)
                 {
-                    WinPercent.GetComponent<ProceduralImage>().color = _.HexColor("#868d94");
                     WinPercent.SetActive(false);
                 }
                 else
                 {
                     WinPercent.SetActive(true);
-                    if (player.Index == GameData.Shared.GetMyPlayer().Index){
-                        WinPercent.GetComponent<RectTransform>().localPosition = new Vector2(191, -286);
-                    }
-                    else if (theSeat.GetPos() == SeatPosition.Left){
-                        WinPercent.GetComponent<RectTransform>().localPosition = new Vector2(127, -36);
-                    }
-                    else {
-                        WinPercent.GetComponent<RectTransform>().localPosition = new Vector2(-127, -36);
-                    }
                     WinPercent.GetComponentInChildren<Text>().text = num + "%";
-                }
-            }).AddTo(this);
 
-            player.Largest.AsObservable().Subscribe((n) =>
-            {
-                if (n == 1)
-                {
-                    WinPercent.GetComponent<ProceduralImage>().color = _.HexColor("#ff1744");
-                }
-                else if (n == 0)
-                {
-                    WinPercent.GetComponent<ProceduralImage>().color = _.HexColor("#868d94");
+					var img = WinPercent.GetComponent<ProceduralImage>();
+
+					if (num == Player.MaxWinPercent) {
+						img.color = _.HexColor("#ff1744");	
+					} else {
+						img.color = _.HexColor("#868d94");
+					}
                 }
             }).AddTo(this);
         }
