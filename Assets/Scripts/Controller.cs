@@ -81,6 +81,8 @@ public class Controller : MonoBehaviour {
 
     public Image BackGround;
 
+    public GameObject TalkLimitText;
+
 	void Awake () {
 
 		ObjectsPool.Init();
@@ -637,6 +639,8 @@ public class Controller : MonoBehaviour {
 
 		RxSubjects.ToInsurance.Subscribe((e) =>
         {
+            GameData.Shared.RoomTalkLimit.Value = true;
+
             var InsurancePopup = PoolMan.Spawn("Insurance");
             InsurancePopup.GetComponent<DOPopup>().Show();
             InsurancePopup.GetComponent<Insurance>().Init(e.Data, true);
@@ -1043,9 +1047,25 @@ public class Controller : MonoBehaviour {
             }
         }).AddTo(this);
 
-		GameData.Shared.TalkLimit.Subscribe((limit) => 
+		GameData.Shared.PersonalTalkLimit.Subscribe((limit) => 
         {
+            limit = limit || GameData.Shared.RoomTalkLimit.Value;
             TalkLimit(limit);
+
+        }).AddTo(this);
+
+        GameData.Shared.RoomTalkLimit.Subscribe((limit) =>
+        {
+            bool wholeLimit = limit || GameData.Shared.PersonalTalkLimit.Value;
+            TalkLimit(wholeLimit);
+            if (limit)
+            {
+                TalkLimitText.SetActive(true);
+            }
+            else
+            {
+                TalkLimitText.SetActive(false);
+            }
         }).AddTo(this);
 
         RxSubjects.NoTalking.Subscribe((e) => 
@@ -1059,18 +1079,9 @@ public class Controller : MonoBehaviour {
 
         }).AddTo(this);
 
-        RxSubjects.RoomNoTalking.Subscribe((e) => {
-            var type = e.Data.Int("type") == 1;
-            if (type)
-            {
-                PauseGame.SetActive(true);
-                var text = PauseText;
-                text.text = "有玩家ALL IN，全场禁言中";
-            }
-            else
-            {
-                PauseGame.SetActive(false);
-            }
+        GameData.Shared.RoomTalkLimit.Subscribe((limit) =>
+        {
+
         }).AddTo(this);
 	}
 

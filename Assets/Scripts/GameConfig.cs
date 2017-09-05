@@ -477,6 +477,10 @@ sealed public class GameData {
 
 		RxSubjects.GameOver.Subscribe((e) => {
 			InGame = false;
+            if (NeedInsurance.Value)
+            {
+                RoomTalkLimit.Value = false;
+            }
 
 			var data = e.Data.Dict("scorelist");
 
@@ -541,27 +545,11 @@ sealed public class GameData {
 
         RxSubjects.NoTalking.Subscribe((e) => {
             bool type = e.Data.Int("type") == 1;
-            if (Uid == GameData.Shared.Uid)
+            string uid = e.Data.String("uid");
+            if (uid == GameData.Shared.Uid)
             {
                 GameData.Shared.PersonalTalkLimit.Value = type;
             }
-        });
-
-        RxSubjects.RoomNoTalking.Subscribe((e) =>
-        {
-            bool type = e.Data.Int("type") == 1;
-            GameData.Shared.RoomTalkLimit.Value = type;
-        });
-
-
-        RoomTalkLimit.Subscribe((limit) =>
-        {
-            TalkLimit.Value = limit || PersonalTalkLimit.Value;
-        });
-
-        PersonalTalkLimit.Subscribe((limit) =>
-        {
-            TalkLimit.Value = RoomTalkLimit.Value || limit;
         });
 	}
 
@@ -777,9 +765,8 @@ sealed public class GameData {
 
 	public BehaviorSubject<int> AuditCD = new BehaviorSubject<int>(0);
 
-    private ReactiveProperty<bool> PersonalTalkLimit = new ReactiveProperty<bool>(false);
-    private ReactiveProperty<bool> RoomTalkLimit = new ReactiveProperty<bool>(false);
-    public ReactiveProperty<bool> TalkLimit = new ReactiveProperty<bool>(false);
+    public ReactiveProperty<bool> PersonalTalkLimit = new ReactiveProperty<bool>(false);
+    public ReactiveProperty<bool> RoomTalkLimit = new ReactiveProperty<bool>(false);
 	// private Dictionary<string, object> jsonData;
 
 	private GameType string2GameType(string type) {
@@ -851,7 +838,7 @@ sealed public class GameData {
 		MaxFiveRank.Value = json.Int("maxFiveRank");
 
         PersonalTalkLimit.Value = json.Int("talk_limit") == 1;
-        RoomTalkLimit.Value = json.Int("room_talk_limit") == 1;
+        RoomTalkLimit.Value = false;
         ShowAudit.Value = json.List("un_audit").Count > 0;
 		CreateTime = _.DateTimeFromTimeStamp(json.Int("create_time"));
 
