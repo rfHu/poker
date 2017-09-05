@@ -175,6 +175,7 @@ namespace PokerPlayer {
                 }
 
                  var cards = e.Data.IL("cards");
+				 player.SeeCardAnim = true;
                  myDelegate.ShowCard(cards);
             }).AddTo(this);
 
