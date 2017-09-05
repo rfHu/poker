@@ -140,22 +140,19 @@ namespace PokerPlayer {
 		    }).AddTo(this);
 
 		    player.Trust.SelectedFlag.Where((flags) => { return flags != null; }).Subscribe((flags) => {
-			    var ncolor = _.HexColor("#2196F300");
-			    var scolor = _.HexColor("#2196F3");
-			
 			    var img0 = AutoOperas[0].GetComponent<ProceduralImage>();
 			    var img1 = AutoOperas[1].GetComponent<ProceduralImage>();
 
 			    if (flags[0] == '0') {
-				    img0.color = ncolor;
+				    img0.enabled = false;
 			    } else {
-				    img0.color = scolor;
+				    img0.enabled = true;
 			    }
 
 			    if (flags[1] == '0') {
-				    img1.color = ncolor;
+				    img1.enabled = false;
 			    } else {
-				    img1.color = scolor;
+				    img1.enabled = true;
 			    }
 		    }).AddTo(this);
 
