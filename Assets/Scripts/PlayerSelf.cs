@@ -166,6 +166,10 @@ namespace PokerPlayer {
                 }
             }).AddTo(this);
 
+            RxSubjects.Deal.Subscribe((_) => {
+                player.Trust.Hide();
+            }).AddTo(this);
+
             RxSubjects.GameOver.Subscribe((_) => {
                 AutoArea.SetActive(false);
                 gameover = true;
