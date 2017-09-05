@@ -381,6 +381,10 @@ sealed public class GameData {
 				    MaxFiveRank.Value = e.Data.Int("maxFiveRank");
                 }
 
+				if (e.Data.ContainsKey("maxFive")) {
+					HighlightIndex.Value = Card.ExtractHighlightCards(e.Data.IL("maxFive"), MaxFiveRank.Value);
+				}
+
                 if (e.Data.ContainsKey("win_rates"))
                 {
                     var winRates = e.Data.Dict("win_rates");
@@ -764,6 +768,7 @@ sealed public class GameData {
 	public BehaviorSubject<int> Paused = new BehaviorSubject<int>(0);
 	public ReactiveProperty<string> GameCode = new ReactiveProperty<string>();
 	public ReactiveProperty<int> MaxFiveRank = new ReactiveProperty<int>();
+	public ReactiveProperty<List<int>> HighlightIndex = new ReactiveProperty<List<int>>();
 
 	public ReactiveProperty<int> DealerSeat = new ReactiveProperty<int>();
 
@@ -862,6 +867,9 @@ sealed public class GameData {
 		foreach(int value in cards) {
 			PublicCards.Add(value);
 		}
+
+		// 先设置公共牌，再高亮
+		HighlightIndex.Value = Card.ExtractHighlightCards(json.IL("maxFive"), MaxFiveRank.Value);
 
 		// 逐个删除，才能触发Remove事件
 		foreach(var key in Players.Keys.ToList()) {

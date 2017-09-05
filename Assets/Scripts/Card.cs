@@ -16,6 +16,13 @@ public class Card : MonoBehaviour {
     public Image FigurePic;
     public Sprite[] Figures;
 	private int _index = -1;
+
+	public int Index {
+		get {
+			return _index;
+		}
+	}
+
 	[SerializeField]private Image cardBg;
 	[SerializeField]private GameObject darkenCover;
 	[SerializeField]private GameObject highlight;
@@ -159,7 +166,7 @@ public class Card : MonoBehaviour {
 		hasReShow = false;
 	}
 
-	public void Hightlight() {
+	public void Highlight() {
 		highlight.SetActive(true);
 	}
 
@@ -341,5 +348,17 @@ public class Card : MonoBehaviour {
 		}
 
 		return list;
+	}
+
+	static public void HighlightCards(List<Card> cards, List<int> highlightIndex) {
+		foreach(var index in highlightIndex) {
+			for (var i = 0; i < cards.Count; i++) {
+				var card = cards[i];
+				if (card.Index == index) {
+					card.Highlight();
+					break;
+				}
+			}	
+		}
 	}
 }

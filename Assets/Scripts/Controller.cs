@@ -14,13 +14,13 @@ public class Controller : MonoBehaviour {
 
 	public GameObject startButton;
 
-	private List<Transform> _publicCards;
-    public List<Transform> PublicCards
+	private List<Card> _publicCards;
+    public List<Card> PublicCards
     {
         get
         {
 			if (_publicCards == null) {
-				_publicCards = PublicCardContainers.Select(o => o.CardInstance.transform).ToList();
+				_publicCards = PublicCardContainers.Select(o => o.CardInstance).ToList();
 			}
 
             return _publicCards;
@@ -360,7 +360,7 @@ public class Controller : MonoBehaviour {
 		queueIsActive = true;
 
 		var pair = cardAnimQueue.Dequeue();
-		var card = getCardFrom(pair.Key);
+		var card = PublicCards[pair.Key];
 
 		card.Show(pair.Value, true, () => {
 			queueIsActive = false;
@@ -431,13 +431,6 @@ public class Controller : MonoBehaviour {
 		GameData.Shared.PlayerCount.Where((value) => value > 0).Subscribe((value) => {
 			setupSeats(value);
 		}).AddTo(this);
-
-        // GameData.Shared.PublicHighLight.AsObservable().Subscribe((list) => {
-        //     for (int i = 0; i < PublicHighLight.Count; i++)
-        //     {
-        //         PublicHighLight[i].SetActive(list[i]);
-        //     }
-        // }).AddTo(this);
 
 		RxSubjects.Connecting.Subscribe((stat) => {
 			LoadingModal.transform.SetAsLastSibling();
@@ -1088,7 +1081,7 @@ public class Controller : MonoBehaviour {
 				cardAnimQueue.Enqueue(new KeyValuePair<int, int>(e.Index, e.Value));
 				startQueue();
 			} else {
-				getCardFrom(e.Index).Show(e.Value, false);
+				PublicCards[e.Index].Show(e.Value, false);
 			}
 		}).AddTo(this);
 
@@ -1100,8 +1093,12 @@ public class Controller : MonoBehaviour {
 		var list = GameData.Shared.PublicCards.ToList();
 
 		for (var i = 0; i < list.Count; i++) {
-			getCardFrom(i).Show(list[i], false);	
+			PublicCards[i].Show(list[i], false);	
 		}
+
+		GameData.Shared.HighlightIndex.Subscribe((l) => {
+			Card.HighlightCards(PublicCards, l);	
+		}).AddTo(this);
 	}
 
     private void MatchSetting()
@@ -1137,10 +1134,6 @@ public class Controller : MonoBehaviour {
 		return GameData.Shared.FindPlayerIndex(uid) == -1;
 	}
 
-	private Card getCardFrom(int index) {
-		return PublicCards[index].GetComponent<Card>();
-	}
-
 	private void showAllCards() {
 		var cards = GameData.Shared.PublicCards.ToList();
 
@@ -1157,18 +1150,17 @@ public class Controller : MonoBehaviour {
 			}
 
 			if (time == 0) {
-				getCardFrom(local).Show(cards[local], true);
+				PublicCards[local].Show(cards[local], true);
 			} else {
 				Observable.Timer(TimeSpan.FromSeconds(time)).AsObservable().Subscribe((_) => {
-					getCardFrom(local).Show(cards[local], true);
+					PublicCards[local].Show(cards[local], true);
 				}).AddTo(this);			
 			}
 		}
 	}
 
 	void resetAllCards() {
-		foreach(Transform obj in PublicCards) {
-			var card = obj.GetComponent<Card>();
+		foreach(var card in PublicCards) {
 			card.Turnback(true);
 		}		
 	}

@@ -503,10 +503,8 @@ namespace PokerPlayer {
             var newChips = PoolMan.Spawn("UpChip");
 
             if (theSeat.Chip == null) {
-				theSeat.AddFirstChip(newChips);
                 newChips.GetComponent<ChipsGo>().Create(value, theSeat, player);
             } else {
-				theSeat.AddChip(newChips);
                 newChips.GetComponent<ChipsGo>().AddMore(() => {
 					var chip = theSeat.Chip;
 					if (chip != null) {

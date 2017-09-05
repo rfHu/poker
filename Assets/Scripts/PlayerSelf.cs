@@ -122,6 +122,10 @@ namespace PokerPlayer {
 			    AutoArea.SetActive(show);
 		    }).AddTo(this);
 
+			GameData.Shared.HighlightIndex.Subscribe((list) => {
+				Card.HighlightCards(new List<Card>{card1, card2}, list);
+			}).AddTo(this);
+
 		    player.Trust.CallNumber.Subscribe((num) => {
 			    var text = AutoOperas[1].transform.Find("Text").GetComponent<Text>();
 
@@ -155,13 +159,6 @@ namespace PokerPlayer {
 				    img1.enabled = true;
 			    }
 		    }).AddTo(this);
-
-            // player.CardHighLight.AsObservable().Subscribe((list) => {
-            //     for (int i = 0; i < cardContainers.Count; i++)
-            //     {
-            //         cardContainers[i].transform.GetChild(2).gameObject.SetActive(list[i]);
-            //     }
-            // }).AddTo(this);
 
             RxSubjects.Deal.Subscribe((_) => {
                 player.Trust.Hide();

@@ -30,6 +30,8 @@ public class ChipsGo : MonoBehaviour {
 	}
 
 	public void Create(int value, Seat seat, Player player) {
+		seat.AddFirstChip(transform);
+
 		theSeat = seat;
 		this.player = player;
 		addEvents();
@@ -53,6 +55,8 @@ public class ChipsGo : MonoBehaviour {
 	}
 
 	public void AddMore(Action callback, Seat seat, Player player) {
+		seat.AddChip(transform);
+
 		theSeat = seat;
 		this.player = player;
 		addEvents();
@@ -67,6 +71,10 @@ public class ChipsGo : MonoBehaviour {
 	public void Hide() {
 		if (hided || !PoolMan.IsSpawned(transform)) {
 			return ;
+		}
+
+		if (theSeat != null) {
+			theSeat.RemoveChip();
 		}
 
 		hided = true;

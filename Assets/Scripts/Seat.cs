@@ -45,6 +45,7 @@ public class Seat : MonoBehaviour {
 
 	public void AddChip(Transform chip) {
 		chip.SetParent(transform, false);
+		chip.GetComponent<RectTransform>().localScale = Vector3.one;
 		chip.SetAsLastSibling();
 	}
 
