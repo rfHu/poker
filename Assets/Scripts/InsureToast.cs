@@ -52,8 +52,6 @@ public class InsureToast: MonoBehaviour {
                 {
                     SeePage.SetActive(false);
                 }
-
-
             }
 
             switch (type)
