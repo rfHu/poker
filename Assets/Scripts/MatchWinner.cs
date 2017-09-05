@@ -71,7 +71,7 @@ public class MatchWinner : MonoBehaviour {
             TitleMsg.SetActive(true);
             bool isMTT = GameData.Shared.Type == GameType.MTT;
             TitleMsg.transform.GetChild(0).gameObject.SetActive(isMTT);
-            TitleMsg.transform.GetChild(1).localScale = isMTT ? new Vector2(0.5f, 0.5f) : Vector2.one;
+            TitleMsg.transform.GetChild(1).localScale = isMTT ? new Vector3(0.5f, 0.5f, 1f) : Vector3.one;
         }
 
         //文字显示

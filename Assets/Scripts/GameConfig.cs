@@ -20,6 +20,13 @@ public enum GameType {
 	MTT
 }
 
+public enum MatchRoomStat {
+	Default = 0,
+	WaitingStart = 5,
+	Rest = 10,
+	WaitingFinal = 15
+}
+
 public static class ActionStateExt {
 	public static ActionState ToActionEnum(this String str) {
 		var map = new Dictionary<string, ActionState>() {
@@ -535,12 +542,6 @@ sealed public class GameData {
 				return ;
 			}
 
-			// 中场休息不应该涨盲
-			// @FIXME: MatchRoomStatus后期改为枚举
-			if (GameData.Shared.Type == GameType.MTT && GameData.MatchData.MatchRoomStatus.Value == 10) {
-				return ;
-			}
-
 			var value = Math.Max(0, LeftTime.Value - 1);
 			LeftTime.Value = value;
 		});
@@ -672,7 +673,7 @@ sealed public class GameData {
 		public static bool IsPaused {
 			get {
 				var v = MatchRoomStatus.Value;
-				return GameData.Shared.Type == GameType.MTT && (v == 5 || v == 10);
+				return GameData.Shared.Type == GameType.MTT && (v == MatchRoomStat.Rest || v == MatchRoomStat.WaitingStart);
 			}
 		}
 
@@ -692,7 +693,7 @@ sealed public class GameData {
         public static int Rebuy;
 		public static bool IsHunter;
 
-		public static BehaviorSubject<int> MatchRoomStatus = new BehaviorSubject<int>(1);
+		public static BehaviorSubject<MatchRoomStat> MatchRoomStatus = new BehaviorSubject<MatchRoomStat>(MatchRoomStat.Default);
 
 		public static string MatchString {
 			get {
@@ -843,8 +844,8 @@ sealed public class GameData {
             BlindLv = json.Int("blind_lv");
             MatchData.JoinFee = options.Int("join_fee");
             MatchData.RebuyFee = options.Int("rebuy_fee");
-		    MatchData.MatchRoomStatus.OnNext(json.Int("match_room_status"));
-            LeftTime.Value = MatchData.MatchRoomStatus.Value == 10 ? json.Int("half_break_countdown") : json.Int("blind_countdown");
+		    MatchData.MatchRoomStatus.OnNext((MatchRoomStat)json.Int("match_room_status"));
+			LeftTime.Value = MatchData.MatchRoomStatus.Value == MatchRoomStat.Rest ? json.Int("half_break_countdown") : json.Int("blind_countdown");
         } else {
 			LeftTime.Value = json.Int("left_time");
 		}

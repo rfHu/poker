@@ -38,10 +38,14 @@ public class Seat : MonoBehaviour {
 		}
 	}
 
+	public void AddFirstChip(Transform chip) {
+		AddChip(chip);	
+		this.chip = chip;
+	}
+
 	public void AddChip(Transform chip) {
 		chip.SetParent(transform, false);
 		chip.SetAsLastSibling();
-		this.chip = chip;
 	}
 
 	public void RemoveChip() {
