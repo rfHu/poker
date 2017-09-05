@@ -87,6 +87,8 @@ public class AutoDeposit {
 }
 
 sealed public class Player {
+	public static int MaxWinPercent = -1;
+
 	sealed public class RestoreData {
 		public int BuyTimeCost = 10;
 		public int seconds = 0;
@@ -131,8 +133,6 @@ sealed public class Player {
     public BehaviorSubject<List<bool>> CardHighLight = new BehaviorSubject<List<bool>>(new List<bool>() { false, false });
 
     public BehaviorSubject<int> WinPercent = new BehaviorSubject<int>(-1);
-
-    public BehaviorSubject<int> Largest = new BehaviorSubject<int>(0);
 
     public int AddonCount = 0;
     public int RebuyCount = 0;
@@ -392,31 +392,14 @@ sealed public class GameData {
 
                 if (e.Data.ContainsKey("win_rates"))
                 {
-                    List<int> largest = new List<int>();
-                    int num = -1;
                     var winRates = e.Data.Dict("win_rates");
+					Player.MaxWinPercent = Convert.ToInt16(winRates.Values.Max());
+
                     foreach (var item in winRates)
                     {
                         var player = GetPlayer(int.Parse(item.Key));
-                        int percent = int.Parse(item.Value.ToString());
+                        int percent = Convert.ToInt16(item.Value);
                         player.WinPercent.OnNext(percent);
-                        player.Largest.OnNext(0);
-
-                        if (num < percent)
-                        {
-                            num = percent;
-                            largest.Clear();
-                            largest.Add(int.Parse(item.Key));
-                        }
-                        else if (num == percent)
-                        {
-                            largest.Add(int.Parse(item.Key));
-                        }
-                    }
-
-                    foreach (var item in largest)
-                    {
-                        GetPlayer(item).Largest.OnNext(1);
                     }
                 }
 			});

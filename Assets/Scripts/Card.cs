@@ -264,13 +264,7 @@ public class Card : MonoBehaviour {
 			prefab = Resources.Load<GameObject>("Prefab/Card");
 		}
 
-		var parentTransform = parent.GetComponent<RectTransform>();
-		var width = parentTransform.sizeDelta.x;
-
-		// 公共牌的card需要用parent.parent获取
-		if (width == 0) {
-			width = parent.parent.GetComponent<RectTransform>().sizeDelta.x;
-		}
+		var width = parent.GetComponent<RectTransform>().sizeDelta.x;
 
 		var scale = width / Size.x;
 
