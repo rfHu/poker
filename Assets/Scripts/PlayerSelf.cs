@@ -14,8 +14,6 @@ namespace PokerPlayer {
         public GameObject[] Eyes; 
         public GameObject AutoArea;
         public GameObject[] AutoOperas; 
-        public GameObject WinPercent;
-
 
 		private Card  card1 {
 			get {
@@ -166,19 +164,6 @@ namespace PokerPlayer {
                 {
                     cardContainers[i].transform.GetChild(2).gameObject.SetActive(list[i]);
                 }
-            }).AddTo(this);
-
-            player.WinPercent.AsObservable().Subscribe((num) => {
-                if (num == -1)
-                {
-                    return;
-                }
-                WinPercent.SetActive(true);
-                WinPercent.GetComponentInChildren<Text>().text = num + "%";
-            }).AddTo(this);
-
-            player.Largest.AsObservable().Subscribe((n) => {
-                WinPercent.GetComponent<ProceduralImage>().color = _.HexColor("#ff1744");
             }).AddTo(this);
 
             RxSubjects.GameOver.Subscribe((_) => {

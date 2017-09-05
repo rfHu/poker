@@ -393,6 +393,8 @@ sealed public class GameData {
                         var player = GetPlayer(int.Parse(item.Key));
                         int percent = int.Parse(item.Value.ToString());
                         player.WinPercent.OnNext(percent);
+                        player.Largest.OnNext(0);
+
                         if (num < percent)
                         {
                             num = percent;
@@ -407,7 +409,7 @@ sealed public class GameData {
 
                     foreach (var item in largest)
                     {
-                        GetPlayer(item).Largest.OnNext(0);
+                        GetPlayer(item).Largest.OnNext(1);
                     }
                 }
 			});

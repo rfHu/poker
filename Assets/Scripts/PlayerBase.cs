@@ -6,6 +6,7 @@ using DG.Tweening;
 using System.Linq;
 using System;
 using System.Collections.Generic;
+using UnityEngine.UI.ProceduralImage;
 
 namespace PokerPlayer {
 		public enum PlayerType
@@ -64,6 +65,8 @@ namespace PokerPlayer {
         private Seat theSeat;
 
         private PlayerDelegate myDelegate;
+
+        public GameObject WinPercent;
 
         public void Init(Player player, Seat theSeat, PlayerDelegate myDelegate) {
             this.player = player;
@@ -423,6 +426,42 @@ namespace PokerPlayer {
             player.Rank.Where((rank) => rank > 0 && player.readyState == 0).Subscribe((rank) => {
                 RankText.transform.parent.gameObject.SetActive(true);
                 RankText.text  = string.Format("第<size=42>{0}</size>名", rank);
+            }).AddTo(this);
+
+
+            player.WinPercent.AsObservable().Subscribe((num) =>
+            {
+                if (num == -1)
+                {
+                    WinPercent.GetComponent<ProceduralImage>().color = _.HexColor("#868d94");
+                    WinPercent.SetActive(false);
+                }
+                else
+                {
+                    WinPercent.SetActive(true);
+                    if (player.Index == GameData.Shared.GetMyPlayer().Index){
+                        WinPercent.GetComponent<RectTransform>().localPosition = new Vector2(191, -286);
+                    }
+                    else if (theSeat.GetPos() == SeatPosition.Left){
+                        WinPercent.GetComponent<RectTransform>().localPosition = new Vector2(127, -36);
+                    }
+                    else {
+                        WinPercent.GetComponent<RectTransform>().localPosition = new Vector2(-127, -36);
+                    }
+                    WinPercent.GetComponentInChildren<Text>().text = num + "%";
+                }
+            }).AddTo(this);
+
+            player.Largest.AsObservable().Subscribe((n) =>
+            {
+                if (n == 1)
+                {
+                    WinPercent.GetComponent<ProceduralImage>().color = _.HexColor("#ff1744");
+                }
+                else if (n == 0)
+                {
+                    WinPercent.GetComponent<ProceduralImage>().color = _.HexColor("#868d94");
+                }
             }).AddTo(this);
         }
 
