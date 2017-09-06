@@ -139,7 +139,8 @@ public class Insurance : MonoBehaviour {
         foreach (var obj in allinPlayers)
         {
             var data = obj as Dictionary<string, object>;
-            rate = rate > data.Int("win_rate") ? rate : data.Int("win_rate");
+			var other = data.Int("win_rate");
+            rate = rate > other ? rate : other;
         }
         return rate;
     }
