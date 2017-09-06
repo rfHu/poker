@@ -70,7 +70,6 @@ public class Card : MonoBehaviour {
 
 	private void show(int index, bool anim = false, Action complete = null) {	
 		gameObject.SetActive(true);
-		highlight.SetActive(false);
 		reColor();
 		
 		if (anim && _index != index) { 
@@ -158,7 +157,6 @@ public class Card : MonoBehaviour {
 		}
 
 		hasReShow = true;
-		highlight.SetActive(false);
 		StartCoroutine(flipCard(_index));
 		G.PlaySound("fapai_1");
 	}
@@ -356,15 +354,14 @@ public class Card : MonoBehaviour {
 	}
 
 	static public void HighlightCards(List<Card> cards, List<int> highlightIndex) {
-		foreach(var index in highlightIndex) {
-			for (var i = 0; i < cards.Count; i++) {
-				var card = cards[i];
-				if (card.Index == index) {
-					card.Highlight();
-				} else {
-					card.Unhighlight();
-				}
-			}	
-		}
+		for (var i = 0; i < cards.Count; i++) {
+			var card = cards[i];
+
+			if (highlightIndex.Contains(card.Index)) {
+				card.Highlight();
+			} else {
+				card.Unhighlight();
+			}			
+		}	
 	}
 }

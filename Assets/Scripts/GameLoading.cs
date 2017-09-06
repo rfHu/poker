@@ -38,7 +38,7 @@ public class GameLoading : MonoBehaviour {
 	[SerializeField]private GameObject MTT; 
 
 	private void registerEvents() {
-		RxSubjects.Connecting.Subscribe((e) => {
+		var disposable = RxSubjects.Connecting.Subscribe((e) => {
 			Loading.SetActive(true);
 		}).AddTo(this);
 
@@ -49,6 +49,7 @@ public class GameLoading : MonoBehaviour {
 				return ;
 			}
 
+			disposable.Dispose();
 			Loading.SetActive(false);
 			MTT.SetActive(true);
 			MTT.GetComponent<MTTWaiting>().Init(e.Data);
