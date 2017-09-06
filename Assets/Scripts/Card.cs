@@ -7,6 +7,7 @@ using DarkTonic.MasterAudio;
 using MaterialUI;
 using UniRx;
 using Unity.Linq;
+using System.Linq;
 
 public class Card : MonoBehaviour {
 	public Sprite Face;
@@ -320,7 +321,7 @@ public class Card : MonoBehaviour {
 			case CardType.TwoPair:  case CardType.Four: case CardType.Three: case CardType.Pair:
 				return extractSome(maxFive);
 			default:
-				return maxFive;
+				return maxFive.Select(index => Card.CardIndex(index)).ToList() ;
 		}	
 	}
 
