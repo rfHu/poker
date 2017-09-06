@@ -33,12 +33,12 @@ public class Controller : MonoBehaviour {
 
 	public List<GameObject> Seats;	
 
-	public GameObject PauseGame;
-	private Text PauseText {
+	private GameObject infoGo {
 		get {
-			return PauseGame.transform.Find("Text").GetComponent<Text>();	
+			return infoText.transform.parent.gameObject;
 		}
 	}
+	[SerializeField]private Text infoText;
 
 
 	public GameObject BBGo;
@@ -78,10 +78,6 @@ public class Controller : MonoBehaviour {
 	public static Vector2 LogoVector;
 
 	public Camera FXCam;
-
-    public Image BackGround;
-
-    public GameObject TalkLimitText;
 
 	void Awake () {
 
@@ -255,7 +251,7 @@ public class Controller : MonoBehaviour {
 		go.transform.Find("Value").GetComponent<Text>().text = text;
 	}
 
-	void infoText() {
+	void setInfoText() {
 		if (GameData.Shared.Type == GameType.MTT) {
 			return ;
 		}
@@ -342,13 +338,13 @@ public class Controller : MonoBehaviour {
 	private void setNotStarted() {
 		if (GameData.Shared.Owner && !GameData.Shared.IsMatch()) {
 			startButton.SetActive(true);
-            PauseGame.SetActive(false);
+            infoGo.SetActive(false);
 		} else {
 			startButton.SetActive(false);
-			PauseGame.SetActive(true);
+			infoGo.SetActive(true);
 
 			var text = GameData.Shared.IsMatch() ? "比赛报名中" : "等待房主开始游戏";
-			PauseText.text = text;
+			infoText.text = text;
 		}
 	}
 
@@ -592,7 +588,7 @@ public class Controller : MonoBehaviour {
 
         RxSubjects.GameStart.Subscribe((e) => {
 			gameReload();
-			PauseGame.SetActive(false);
+			infoGo.SetActive(false);
         }).AddTo(this);
 
 		RxSubjects.Look.Subscribe((e) => {
@@ -870,15 +866,15 @@ public class Controller : MonoBehaviour {
 		}).AddTo(this);
 
 		GameData.Shared.IPLimit.Subscribe((_) => {
-			infoText();
+			setInfoText();
 		}).AddTo(this);
 
 		GameData.Shared.GPSLimit.Subscribe((_) => {
-			infoText();
+			setInfoText();
 		}).AddTo(this);
 
 		GameData.Shared.NeedInsurance.Subscribe((_) => {
-			infoText();
+			setInfoText();
 		}).AddTo(this);
 
 		GameData.Shared.RoomName.Subscribe((name) => {
@@ -909,19 +905,19 @@ public class Controller : MonoBehaviour {
 				return ;
 			}
 
-			var text = PauseText;
+			var text = infoText;
 
 			if (value == MatchRoomStat.WaitingStart) {
-				PauseGame.SetActive(true);
+				infoGo.SetActive(true);
 				text.text = "等待全场同步发牌";
 			} else if (value == MatchRoomStat.Rest) {
-				PauseGame.SetActive(true);
+				infoGo.SetActive(true);
 				text.text = "中场休息5分钟";
 			} else if (value == MatchRoomStat.WaitingFinal) {
-				PauseGame.SetActive(true);
+				infoGo.SetActive(true);
 				text.text = "决赛等待中";
 			} else {
-				PauseGame.SetActive(false);
+				infoGo.SetActive(false);
 			}
 		}).AddTo(this);
 
@@ -941,10 +937,10 @@ public class Controller : MonoBehaviour {
 			}
 
 			if (GameData.Shared.InGame || pause != 2) {
-				PauseGame.SetActive(false);
+				infoGo.SetActive(false);
 			} else {
-				PauseText.text = "房主已暂停游戏";
-				PauseGame.SetActive(true);
+				infoText.text = "房主已暂停游戏";
+				infoGo.SetActive(true);
 			}
 		}).AddTo(this);
 
@@ -1047,26 +1043,22 @@ public class Controller : MonoBehaviour {
             }
         }).AddTo(this);
 
-		GameData.Shared.PersonalTalkLimit.Subscribe((limit) => 
-        {
-            limit = limit || GameData.Shared.RoomTalkLimit.Value;
-            TalkLimit(limit);
+		// GameData.Shared.PersonalTalkLimit.Subscribe((limit) => 
+        // {
+        //     limit = limit || GameData.Shared.RoomTalkLimit.Value;
+        //     TalkLimit(limit);
+        // }).AddTo(this);
 
-        }).AddTo(this);
-
-        GameData.Shared.RoomTalkLimit.Subscribe((limit) =>
-        {
-            bool wholeLimit = limit || GameData.Shared.PersonalTalkLimit.Value;
-            TalkLimit(wholeLimit);
-            if (limit)
-            {
-                TalkLimitText.SetActive(true);
-            }
-            else
-            {
-                TalkLimitText.SetActive(false);
-            }
-        }).AddTo(this);
+        // GameData.Shared.RoomTalkLimit.Subscribe((limit) =>
+        // {
+        //     bool wholeLimit = limit || GameData.Shared.PersonalTalkLimit.Value;
+        //     TalkLimit(wholeLimit);
+        //     if (limit)
+        //     {
+        //         infoGo.SetActive(true);
+		// 		infoText.text = "购买保险中，全场禁言…";
+        //     }
+        // }).AddTo(this);
 
         RxSubjects.NoTalking.Subscribe((e) => 
         {

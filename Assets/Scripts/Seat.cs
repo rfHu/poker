@@ -39,6 +39,10 @@ public class Seat : MonoBehaviour {
 	}
 
 	public void AddFirstChip(Transform chip) {
+		if (this.chip != null) {
+			RemoveChip();
+		}
+
 		AddChip(chip);	
 		this.chip = chip;
 	}
@@ -95,6 +99,7 @@ public class Seat : MonoBehaviour {
 
 	void OnDespawned() {
 		_index = -1;	
+		RemoveChip();
 	}
 
 	public SeatPosition GetPos() {

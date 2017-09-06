@@ -376,7 +376,6 @@ namespace PokerPlayer {
 		}
 
 		public void Despawn() {
-			// Destroy(gameObject);
 			PoolMan.Despawn(transform);
         }
 
