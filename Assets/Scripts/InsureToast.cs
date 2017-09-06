@@ -77,7 +77,7 @@ public class InsureToast: MonoBehaviour {
                 case 3:
                     SeePage.SetActive(true);
                     text = cdText(time);
-                    GameData.Shared.RoomTalkLimit.Value = true;
+                    GameData.Shared.InsuranceState.Value = true;
                     break;
                 case 11:
                     if (amount == 0) {
