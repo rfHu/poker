@@ -5,6 +5,7 @@ using UnityEngine.UI.ProceduralImage;
 using MaterialUI;
 using UniRx;
 using System.Collections;
+using DG.Tweening;
 
 [RequireComponent(typeof(DOPopup))]
 public class UserDetail : MonoBehaviour {
@@ -287,10 +288,8 @@ public class UserDetail : MonoBehaviour {
 
     IEnumerator SetBGColor() 
     {
-        _proceduralImage.color = _.HexColor("#23282D80");
-
+		_proceduralImage.DOColor(_.HexColor("#23282D80"), 0.3f);
         yield return new WaitForSeconds(3.5f);
-
-        _proceduralImage.color = _.HexColor("#23282DFF");
+        _proceduralImage.DOColor(_.HexColor("#23282DFF"), 0.3f); 
     }
 }
