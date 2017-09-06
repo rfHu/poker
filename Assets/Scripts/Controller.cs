@@ -8,6 +8,7 @@ using DarkTonic.MasterAudio;
 using SimpleJSON;
 using DG.Tweening;
 using PokerPlayer;
+using UnityEngine.UI.ProceduralImage;
 
 public class Controller : MonoBehaviour {
 	public GameObject LoadingModal;
@@ -32,6 +33,8 @@ public class Controller : MonoBehaviour {
 	[SerializeField]private Text[] gameInfoTexts;
 
 	public List<GameObject> Seats;	
+
+	[SerializeField]private List<ProceduralImage> cardBorders;
 
 	private GameObject infoGo {
 		get {
@@ -128,9 +131,17 @@ public class Controller : MonoBehaviour {
 			{"f", "start"}
 		}, (data, err) => {
 			if (err == 0) {
-				startButton.SetActive(false);
+				setStartButton(false);
 			}
 		});
+	}
+
+	private void setStartButton(bool active) {
+		startButton.SetActive(active);
+
+		foreach(var border in cardBorders) {
+			border.enabled = !active;
+		}
 	}
 
 	public void OnClickSeeCard() 
@@ -337,10 +348,10 @@ public class Controller : MonoBehaviour {
 
 	private void setNotStarted() {
 		if (GameData.Shared.Owner && !GameData.Shared.IsMatch()) {
-			startButton.SetActive(true);
+			setStartButton(true);
             infoGo.SetActive(false);
 		} else {
-			startButton.SetActive(false);
+			setStartButton(false);
 			infoGo.SetActive(true);
 
 			var text = GameData.Shared.IsMatch() ? "比赛报名中" : "等待房主开始游戏";
