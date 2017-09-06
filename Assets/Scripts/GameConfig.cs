@@ -551,6 +551,11 @@ sealed public class GameData {
                 GameData.Shared.TalkLimit.Value = type;
             }
         });
+
+        RxSubjects.HalfBreak.Subscribe((e) => {
+            MatchData.MatchRoomStatus.OnNext(MatchRoomStat.Rest);
+            LeftTime.Value = e.Data.Int("ct");
+        });
 	}
 
 	private void setState(string uid, int state, int cd) {

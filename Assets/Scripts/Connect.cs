@@ -491,6 +491,9 @@ public sealed class Connect  {
                 case "current_rank":
                     RxSubjects.CurrentRank.OnNext(rxdata);
                     break;
+                case "half_break":
+                    RxSubjects.HalfBreak.OnNext(rxdata);
+                    break;
 				default:
 					break;
 			}
