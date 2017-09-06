@@ -143,7 +143,6 @@ namespace PokerPlayer {
             Circle.gameObject.SetActive(true);
             RankText.transform.parent.gameObject.SetActive(false);
 
-			theSeat.RemoveChip();
             Volume.SetActive(false);
             ScoreLabel.gameObject.SetActive(true);
         } 
@@ -500,18 +499,12 @@ namespace PokerPlayer {
 	    }
 
         private void setPrChips(int value) {
-            var newChips = PoolMan.Spawn("UpChip");
+            var chip = PoolMan.Spawn("UpChip");
 
-            if (theSeat.Chip == null) {
-                newChips.GetComponent<ChipsGo>().Create(value, theSeat, player);
-            } else {
-                newChips.GetComponent<ChipsGo>().AddMore(() => {
-					var chip = theSeat.Chip;
-					if (chip != null) {
-                    	chip.GetComponent<ChipsGo>().SetChips(value);
-					}
-                }, theSeat, player);	
-            }	
+			chip.SetParent(theSeat.transform, false);
+			chip.GetComponent<RectTransform>().localScale = Vector3.one;
+			chip.SetAsLastSibling();
+            chip.GetComponent<ChipsGo>().Create(theSeat, player);
         }
 
         private void setReserveCd(int number) {

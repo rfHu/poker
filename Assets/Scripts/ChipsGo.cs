@@ -29,15 +29,12 @@ public class ChipsGo : MonoBehaviour {
 		TextNumber.text = _.Num2CnDigit(chips);
 	}
 
-	public void Create(int value, Seat seat, Player player) {
-		seat.AddFirstChip(transform);
-
+	public void Create(Seat seat, Player player) {
 		theSeat = seat;
 		this.player = player;
 		addEvents();
 
 		TweenCallback cb = () => {
-			SetChips(value);
 			TextNumber.gameObject.SetActive(true);
 			
 			theSeat.SeatPos.AsObservable().Subscribe((pos) => {
@@ -45,36 +42,27 @@ public class ChipsGo : MonoBehaviour {
 			}).AddTo(this);
 		};
 
-		if (player.ChipsChange) {
+		var chip = seat.transform.GetChild(seat.transform.childCount - 1).GetComponent<ChipsGo>();
+
+		if (player.ChipsChange)  {
 			G.PlaySound("chip");
-			doTween().OnComplete(cb);
-		} else {
+
+			if (chip != this) {
+				doTween().OnComplete(() => {
+					PoolMan.Despawn(transform);
+				});
+			} else {
+				doTween().OnComplete(cb);
+			}
+		}  else {
 			GetComponent<RectTransform>().anchoredPosition = getVector();
 			cb();
 		}
 	}
 
-	public void AddMore(Action callback, Seat seat, Player player) {
-		seat.AddChip(transform);
-
-		theSeat = seat;
-		this.player = player;
-		addEvents();
-
-		G.PlaySound("chip");
-		doTween().OnComplete(() => {
-			PoolMan.Despawn(transform);
-			callback();
-		});
-	}
-
 	public void Hide() {
 		if (hided || !PoolMan.IsSpawned(transform)) {
 			return ;
-		}
-
-		if (theSeat != null) {
-			theSeat.RemoveChip();
 		}
 
 		hided = true;
@@ -95,11 +83,17 @@ public class ChipsGo : MonoBehaviour {
 
 	private void addEvents() {
 		player.PrChips.Subscribe((value) => {
-			if (value != 0) {
-				return ;
+			if (value == 0) {
+				Hide();
+			} else {
+				SetChips(value);
 			}
+		}).AddTo(this);
 
-			Hide();
+		player.Destroyed.Subscribe((flag) => {
+			if (flag) {
+				PoolMan.Despawn(transform);
+			}
 		}).AddTo(this);
 	}
 	
