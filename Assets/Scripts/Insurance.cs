@@ -77,6 +77,8 @@ public class Insurance : MonoBehaviour {
         mustBuy = data.Int("must_buy") == 2;
         isFlop = (data.Int("room_state") == 4);
         List<object> allinPlayers = data.List("outs_count");
+        int myRate = data.Int("win_rate");
+
         selectedCards = new HashSet<int>(outsCardArray.ToList());
         isoffToggles = new List<int>();
         OUTSCards = new List<Toggle>();
@@ -111,24 +113,38 @@ public class Insurance : MonoBehaviour {
         Pot.text = potValue.ToString();
         TotalSupass.text = "/ " + outsCardArray.Count.ToString();
 
-        setupAllinPlayers(allinPlayers); 
+        int maxPercent = getMaxPercent(allinPlayers, myRate);
+        setupAllinPlayers(allinPlayers, maxPercent); 
+
         setupPbCards();
         setupOutsCards();
 
         addEvents();
 
+        //底部个人信息
         var buyPlayer = GameData.Shared.FindPlayer(data.String("uid"));
-
         for (int i = 0; i < MyCards.Count; i++)
         {
             MyCards[i].GetComponent<Card>().Show(buyPlayer.Cards.Value[i]);
         }
-
         CardDesc.text = Card.GetCardDesc(data.Int("maxFiveRank"));
-        WinRate.text = data.Int("win_rate") + "%";
+        WinRate.text = myRate + "%";
+        string color = myRate == maxPercent ? "#ff1744" : "#868d94";
+        WinRate.transform.parent.GetComponent<ProceduralImage>().color = _.HexColor(color);
+
     }
 
-    private void setupAllinPlayers(List<object> allinPlayers)
+    private int getMaxPercent(List<object> allinPlayers ,int rate) 
+    {
+        foreach (var obj in allinPlayers)
+        {
+            var data = obj as Dictionary<string, object>;
+            rate = rate > data.Int("win_rate") ? rate : data.Int("win_rate");
+        }
+        return rate;
+    }
+
+    private void setupAllinPlayers(List<object> allinPlayers, int maxPercent)
     {
 
         AllinTitle.text = "落后玩家(" + allinPlayers.Count + ")";
@@ -136,10 +152,8 @@ public class Insurance : MonoBehaviour {
         foreach (var obj in allinPlayers)
         {
             var data = obj as Dictionary<string, object>;
-
-
             var playerMes = PoolMan.Spawn("InsureAllInPlayer",AllinPlayersParent.transform);
-            playerMes.GetComponent<AllInPlayer>().Init(data);
+            playerMes.GetComponent<AllInPlayer>().Init(data, maxPercent);
         }
     }
 
