@@ -171,6 +171,10 @@ public class Card : MonoBehaviour {
 		highlight.SetActive(true);
 	}
 
+	public void Unhighlight() {
+		highlight.SetActive(false);
+	}
+
 	public void ShowWithSound(int index, bool anim = false) {
 		if (index == 0) {
 			return ;
@@ -357,7 +361,8 @@ public class Card : MonoBehaviour {
 				var card = cards[i];
 				if (card.Index == index) {
 					card.Highlight();
-					break;
+				} else {
+					card.Unhighlight();
 				}
 			}	
 		}
