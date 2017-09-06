@@ -56,7 +56,7 @@ public class ModalHelper: MonoBehaviour {
 	void OnDespawned() {
 		_modalCount--;
 
-		if (_modalCount <= 0 && !GameData.Shared.RoomTalkLimit.Value && !GameData.Shared.PersonalTalkLimit.Value) {
+		if (_modalCount <= 0 && !GameData.Shared.TalkLimit.Value) {
 			_.Log("Show Native Voice Button");
 			#if UNITY_EDITOR 
 			#else

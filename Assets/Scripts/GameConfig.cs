@@ -479,7 +479,7 @@ sealed public class GameData {
 			InGame = false;
             if (NeedInsurance.Value)
             {
-                RoomTalkLimit.Value = false;
+                InsuranceState.Value = false;
             }
 
 			var data = e.Data.Dict("scorelist");
@@ -548,7 +548,7 @@ sealed public class GameData {
             string uid = e.Data.String("uid");
             if (uid == GameData.Shared.Uid)
             {
-                GameData.Shared.PersonalTalkLimit.Value = type;
+                GameData.Shared.TalkLimit.Value = type;
             }
         });
 	}
@@ -765,8 +765,8 @@ sealed public class GameData {
 
 	public BehaviorSubject<int> AuditCD = new BehaviorSubject<int>(0);
 
-    public ReactiveProperty<bool> PersonalTalkLimit = new ReactiveProperty<bool>(false);
-    public ReactiveProperty<bool> RoomTalkLimit = new ReactiveProperty<bool>(false);
+    public ReactiveProperty<bool> TalkLimit = new ReactiveProperty<bool>(false);
+    public ReactiveProperty<bool> InsuranceState = new ReactiveProperty<bool>(false);
 	// private Dictionary<string, object> jsonData;
 
 	private GameType string2GameType(string type) {
@@ -837,8 +837,8 @@ sealed public class GameData {
 
 		MaxFiveRank.Value = json.Int("maxFiveRank");
 
-        PersonalTalkLimit.Value = json.Int("talk_limit") == 1;
-        RoomTalkLimit.Value = false;
+        TalkLimit.Value = json.Int("talk_limit") == 1;
+        InsuranceState.Value = false; // 这个重置应该在pause设置之前
         ShowAudit.Value = json.List("un_audit").Count > 0;
 		CreateTime = _.DateTimeFromTimeStamp(json.Int("create_time"));
 

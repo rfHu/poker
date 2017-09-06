@@ -635,7 +635,7 @@ public class Controller : MonoBehaviour {
 
 		RxSubjects.ToInsurance.Subscribe((e) =>
         {
-            GameData.Shared.RoomTalkLimit.Value = true;
+            GameData.Shared.InsuranceState.Value = true;
 
             var InsurancePopup = PoolMan.Spawn("Insurance");
             InsurancePopup.GetComponent<DOPopup>().Show();
@@ -1043,22 +1043,21 @@ public class Controller : MonoBehaviour {
             }
         }).AddTo(this);
 
-		// GameData.Shared.PersonalTalkLimit.Subscribe((limit) => 
-        // {
-        //     limit = limit || GameData.Shared.RoomTalkLimit.Value;
-        //     TalkLimit(limit);
-        // }).AddTo(this);
+		GameData.Shared.TalkLimit.Subscribe((limit) => 
+        {
+            TalkLimit(limit);
+        }).AddTo(this);
 
-        // GameData.Shared.RoomTalkLimit.Subscribe((limit) =>
-        // {
-        //     bool wholeLimit = limit || GameData.Shared.PersonalTalkLimit.Value;
-        //     TalkLimit(wholeLimit);
-        //     if (limit)
-        //     {
-        //         infoGo.SetActive(true);
-		// 		infoText.text = "购买保险中，全场禁言…";
-        //     }
-        // }).AddTo(this);
+        GameData.Shared.InsuranceState.Subscribe((limit) =>
+        {
+            if (limit)
+            {
+                infoGo.SetActive(true);
+				infoText.text = "购买保险中，全场禁言…";
+            } else {
+				infoGo.SetActive(false);
+			}
+        }).AddTo(this);
 
         RxSubjects.NoTalking.Subscribe((e) => 
         {
@@ -1068,12 +1067,6 @@ public class Controller : MonoBehaviour {
 
             str += type ? "被房主禁言" : "被解除禁言";
             PokerUI.Toast(str);
-
-        }).AddTo(this);
-
-        GameData.Shared.RoomTalkLimit.Subscribe((limit) =>
-        {
-
         }).AddTo(this);
 	}
 
