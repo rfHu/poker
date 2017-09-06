@@ -12,9 +12,12 @@ public class OP : MonoBehaviour {
 	public GameObject CallGo;
 	public GameObject CheckGo;
 	public GameObject AllinGo;
+
+	// @FIXME：R1-R4代码比较恶心，望有心人优化
 	public GameObject R1;
 	public GameObject R2;
 	public GameObject R3;
+	public GameObject R4;
 	public Button AccurateCacel;
 	public Button AccurateYes;
     public GameObject BuyTurnTime;
@@ -223,20 +226,25 @@ public class OP : MonoBehaviour {
 			values.Add(2 * bb);
 			values.Add(3 * bb);
 			values.Add(4 * bb);
+			values.Add(5 * bb);
 
 			names.Add("X2\n盲注");
 			names.Add("X3\n盲注");
 			names.Add("X4\n盲注");
+			names.Add("X5\n盲注");
 		} else {
 			var nextPot = pot + call;
-			var value1 = fixBB(Mathf.CeilToInt(nextPot / 2f) + call);
-			var value2 = fixBB(Mathf.CeilToInt(nextPot * 2f / 3f) + call);
-			var value3 = fixBB(nextPot + call);
+			var value1 = fixBB(Mathf.CeilToInt(nextPot / 3f) + call);
+			var value2 = fixBB(Mathf.CeilToInt(nextPot / 2f) + call);
+			var value3 = fixBB(Mathf.CeilToInt(nextPot * 2f / 3f) + call);
+			var value4 = fixBB(nextPot + call);
 			
 			values.Add(value1);
 			values.Add(value2);
 			values.Add(value3);
+			values.Add(value4);
 
+			names.Add("1/3\n底池");
 			names.Add("1/2\n底池");
 			names.Add("2/3\n底池");
 			names.Add("1倍\n底池");
@@ -245,6 +253,7 @@ public class OP : MonoBehaviour {
 		addProperty(R1, names[0], values[0]);	
 		addProperty(R2, names[1], values[1]);	
 		addProperty(R3, names[2], values[2]);
+		addProperty(R4, names[2], values[2]);
 
 		var max = range[1];
 		if (values[0] > max) {
@@ -252,8 +261,12 @@ public class OP : MonoBehaviour {
 		} else if (values[1] > max) {
 			disableBtn(R2) ;
 			disableBtn(R3);
+			disableBtn(R4);
 		} else if (values[2] > max) {
 			disableBtn(R3);
+			disableBtn(R4);
+		} else if (values[3] > max) {
+			disableBtn(R4);
 		}
 	}
 
@@ -437,6 +450,7 @@ public class OP : MonoBehaviour {
 		disableBtn(R1);
 		disableBtn(R2);
 		disableBtn(R3);
+		disableBtn(R4);
 
 		AccurateBtn.GetComponent<CanvasGroup>().alpha = disableAlpha;
 		AccurateBtn.GetComponent<Button>().interactable = false;

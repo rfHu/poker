@@ -63,6 +63,8 @@ public class External : MonoBehaviour{
 			return ;
 		}
 
+		RxSubjects.Connecting.OnNext(true);
+
 		GameData.Shared.Room.Value = info[0].ToString();
 		GameData.Shared.Sid = info[1].ToString();
 
@@ -82,6 +84,8 @@ public class External : MonoBehaviour{
 		if (GameData.Shared.MatchID != matchID && SceneMan.HasInGame) {
 			SceneMan.LoadScene(SceneMan.Scenes.Loading);
 		}
+
+		RxSubjects.Connecting.OnNext(true);
 
 		GameData.Shared.MatchID = matchID;
 		GameData.Shared.Sid = info[1].ToString();

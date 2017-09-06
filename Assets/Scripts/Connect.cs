@@ -75,14 +75,10 @@ public sealed class Connect  {
 			connectDisposa.Dispose();
 		}
 
-		if (SceneMan.HasInGame) {
-			// 2s没有连接上，显示loading
-			connectDisposa = Observable.Timer(TimeSpan.FromSeconds(2)).Subscribe((_) => {
-				RxSubjects.Connecting.OnNext(true);	
-			});
-		} else {
-			RxSubjects.Connecting.OnNext(true);
-		}
+		// 2s没有连接上，显示loading
+		connectDisposa = Observable.Timer(TimeSpan.FromSeconds(2)).Subscribe((_) => {
+			RxSubjects.Connecting.OnNext(true);	
+		});
 	}
 
 	private void onReconnectFail(Socket socket, Packet packet, params object[] args) {
@@ -512,10 +508,7 @@ public sealed class Connect  {
 		if (instance == null) {
 			instance = new Connect();
 		}
-
-		if (!SceneMan.HasInGame) {
-			RxSubjects.Connecting.OnNext(true);
-		}
+	
 		instance.open();
 	}
 

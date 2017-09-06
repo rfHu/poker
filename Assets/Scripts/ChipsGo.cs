@@ -42,12 +42,11 @@ public class ChipsGo : MonoBehaviour {
 			}).AddTo(this);
 		};
 
-		var chip = seat.transform.GetChild(seat.transform.childCount - 1).GetComponent<ChipsGo>();
 
 		if (player.ChipsChange)  {
 			G.PlaySound("chip");
 
-			if (chip != this) {
+			if (getPrev() != null) {
 				doTween().OnComplete(() => {
 					PoolMan.Despawn(transform);
 				});
@@ -58,6 +57,11 @@ public class ChipsGo : MonoBehaviour {
 			GetComponent<RectTransform>().anchoredPosition = getVector();
 			cb();
 		}
+	}
+
+	private ChipsGo getPrev() {
+		var sbIndex = transform.GetSiblingIndex();
+		return transform.parent.GetChild(sbIndex - 1).GetComponent<ChipsGo>();
 	}
 
 	public void Hide() {
