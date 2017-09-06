@@ -548,9 +548,11 @@ sealed public class GameData {
             string uid = e.Data.String("uid");
             if (uid == GameData.Shared.Uid)
             {
-                GameData.Shared.TalkLimit.Value = type;
+                GameData.Shared._talkLimit.Value = type;
             }
         });
+
+		TalkLimit = _talkLimit.CombineLatest(InsuranceState, (x, y) => x || y).ToReadOnlyReactiveProperty();
 
         RxSubjects.HalfBreak.Subscribe((e) => {
             MatchData.MatchRoomStatus.OnNext(MatchRoomStat.Rest);
@@ -770,8 +772,15 @@ sealed public class GameData {
 
 	public BehaviorSubject<int> AuditCD = new BehaviorSubject<int>(0);
 
-    public ReactiveProperty<bool> TalkLimit = new ReactiveProperty<bool>(false);
+	// 内部使用变量，禁言状态
+	private ReactiveProperty<bool> _talkLimit = new ReactiveProperty<bool>(false);
+
+	// 外部使用变量，综合保险与禁言
+    public ReadOnlyReactiveProperty<bool> TalkLimit;
+
+	// 保险状态
     public ReactiveProperty<bool> InsuranceState = new ReactiveProperty<bool>(false);
+	
 	// private Dictionary<string, object> jsonData;
 
 	private GameType string2GameType(string type) {
@@ -842,7 +851,7 @@ sealed public class GameData {
 
 		MaxFiveRank.Value = json.Int("maxFiveRank");
 
-        TalkLimit.Value = json.Int("talk_limit") == 1;
+        _talkLimit.Value = json.Int("talk_limit") == 1;
         InsuranceState.Value = false; // 这个重置应该在pause设置之前
         ShowAudit.Value = json.List("un_audit").Count > 0;
 		CreateTime = _.DateTimeFromTimeStamp(json.Int("create_time"));
