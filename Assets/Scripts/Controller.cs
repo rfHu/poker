@@ -1061,6 +1061,9 @@ public class Controller : MonoBehaviour {
 
         GameData.Shared.InsuranceState.Subscribe((limit) =>
         {
+            if (!GameData.Shared.NeedInsurance.Value)
+                return;
+
             if (limit)
             {
                 infoGo.SetActive(true);
