@@ -103,7 +103,7 @@ public class External : MonoBehaviour{
 	}
 
     public void CanPlay(string uid) {
-        Commander.Shared.CanAudioPlay(GameData.Shared.FindPlayerIndex(uid) != -1);
+        Commander.Shared.CanAudioPlay(GameData.Shared.FindPlayerIndex(uid) != -1 && !GameData.Shared.InsuranceState.Value);
     }
 
 	private void close(Action callback) {
