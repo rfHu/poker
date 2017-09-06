@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UI.ProceduralImage;
 using System.Linq;
 
 public class AllInPlayer : MonoBehaviour {
@@ -25,7 +26,7 @@ public class AllInPlayer : MonoBehaviour {
 
     public Text WinRateText;
 
-    public void Init(Dictionary<string, object> data)
+    public void Init(Dictionary<string, object> data, int maxPercent)
     {
         var player = GameData.Shared.FindPlayer(data.String("uid"));
         var outsNumber = data.Int("ct");
@@ -38,6 +39,8 @@ public class AllInPlayer : MonoBehaviour {
 
         Kind.text = outsNumber.ToString() + "张";
         WinRateText.text = data.Int("win_rate") + "%";
+        string color =  data.Int("win_rate") == maxPercent? "#ff1744" : "#868d94";
+        WinRateText.transform.parent.GetComponent<ProceduralImage>().color = _.HexColor(color);
     }
 
 }
