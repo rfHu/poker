@@ -188,7 +188,7 @@ public class UserDetail : MonoBehaviour {
                 EmoticonButtons[pid].GetComponentInChildren<Text>().text = dict.Int("coin").ToString();
 
                 if (GameData.Shared.Coins < dict.Int("coin"))
-                    return;
+                    continue;
 
                 EmoticonButtons[pid].GetComponent<Button>().interactable = true;
             }
