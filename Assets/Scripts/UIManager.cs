@@ -5,6 +5,9 @@ using HedgehogTeam.EasyTouch;
 
 public class UIManager : MonoBehaviour {
 	private AuditMsg auditMsg;
+	public GameObject RecallPagePrefab;
+	public GameObject ScorePagePrefab;
+	public GameObject MTTScorePagePrefab;
 
 	public void ShowMenu() {
 		var popup = PoolMan.Spawn("MenuPopup");
@@ -34,16 +37,16 @@ public class UIManager : MonoBehaviour {
         Transform target;
 
         if (GameData.Shared.Type == GameType.MTT) {
-            target = PoolMan.Spawn("MTTScorePage");
+            target = PoolMan.Spawn(MTTScorePagePrefab);
         } else {
-            target = PoolMan.Spawn("ScorePage");
+            target = PoolMan.Spawn(ScorePagePrefab);
         }
 
 		target.GetComponent<DOPopup>().Show();	
 	}
 
 	public void OnShowRecalls() {
-		PoolMan.Spawn("RecallPage");
+		PoolMan.Spawn(RecallPagePrefab);
 	}
 
 	public void OnClickChat() {

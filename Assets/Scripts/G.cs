@@ -22,13 +22,13 @@ public class G {
 		}
 	} 
 
-	public static Canvas DialogCvs {
+	public static Transform DialogCvs {
 		get {
 			if (dialogCanvas == null) {
 				dialogCanvas = GameObject.FindGameObjectWithTag("DialogCanvas").GetComponent<Canvas>();
 			}
 
-			return dialogCanvas;
+			return dialogCanvas.transform;
 		}
 	} 
 
@@ -65,11 +65,7 @@ public class PoolMan {
 		return PoolManager.Pools.ContainsKey("Shared");
 	}
 
-	public static Transform Spawn(string name) {
-		return Spawn(name, null);	
-	}
-
-	public static Transform Spawn(string name, Transform parent) {
+	public static Transform Spawn(string name, Transform parent = null) {
 		var pool = PoolManager.Pools["Shared"];
 
 		if (!pool.prefabs.ContainsKey(name)) {
@@ -78,12 +74,23 @@ public class PoolMan {
 			go.name = name;
 			var prefabPool = new PrefabPool(go.transform);
 			pool.CreatePrefabPool(prefabPool);
+		} 
+		
+		return pool.Spawn(pool.prefabs[name], parent);
+	}
+
+	public static Transform Spawn(GameObject go, Transform parent = null) {
+		var pool = PoolManager.Pools["Shared"];
+		var name = go.name;
+
+		if (!pool.prefabs.ContainsKey(name)) {
+			var prefabPool = new PrefabPool(go.transform);
+			pool.CreatePrefabPool(prefabPool);
 		}
 		
-		var transform = pool.Spawn(pool.prefabs[name], parent);
-		// Object.DontDestroyOnLoad(transform.gameObject);
+		var transform = pool.Spawn(go, parent);
 
-		return transform;
+		return transform;	
 	}
 
 	public static void Despawn(Transform transform) {
