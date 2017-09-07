@@ -199,6 +199,11 @@ sealed public class Player {
             RebuyCount = json.Int("rebuy_count");
         }
 
+        if (json.ContainsKey("win_rate"))
+        {
+            WinPercent.OnNext(json.Int("win_rate"));
+        }
+
 		var showValue = Convert.ToString(json.Int("showcard"), 2);
 
 		if (showValue.Length < 2) {
