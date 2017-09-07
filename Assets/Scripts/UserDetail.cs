@@ -9,7 +9,6 @@ using DG.Tweening;
 
 [RequireComponent(typeof(DOPopup))]
 public class UserDetail : MonoBehaviour {
-
 	public RawImage Avatar;
 	public Text Name;
     public Text CoinsNumber;

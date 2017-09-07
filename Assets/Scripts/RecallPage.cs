@@ -7,6 +7,8 @@ using UniRx;
 
 [RequireComponent(typeof(DOPopup))]
 public class RecallPage : MonoBehaviour {
+	public GameObject RecallUserPrefab;
+
 	public GameObject Rect;
 	public GameObject LeftIndicator;
 	public GameObject RightIndicator;
@@ -148,7 +150,7 @@ public class RecallPage : MonoBehaviour {
                     user = users[num];
                     user.gameObject.SetActive(true);
                 } else {
-                    user = PoolMan.Spawn("RecallUser", Rect.transform).GetComponent<RecallUser>();
+                    user = PoolMan.Spawn(RecallUserPrefab, Rect.transform).GetComponent<RecallUser>();
                     user.transform.SetParent(Rect.transform, false);
                 }
 
