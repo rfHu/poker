@@ -100,7 +100,7 @@ namespace MTTMsgPage
 
                 var awardData = new AwardListGoData()
                 {
-                    Rank = msg.Int("rank"),
+                    Rank = msg.String("rank"),
                     Award = msg.String("award"),
                     needbg = (i % 2 == 0),
                 };

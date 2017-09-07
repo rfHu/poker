@@ -17,7 +17,7 @@ namespace MTTMsgPage
 
     public class AwardListGoData : MTTPageData 
     {
-        public int Rank;
+        public string Rank;
         public string Award;
     }
 
