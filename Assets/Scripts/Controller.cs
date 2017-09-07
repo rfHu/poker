@@ -82,9 +82,10 @@ public class Controller : MonoBehaviour {
 
 	public Camera FXCam;
 
-	void Awake () {
+	public GameObject PoolPrefab;
 
-		ObjectsPool.Init();
+	void Awake () {
+		ObjectsPool.Init(PoolPrefab, FXCam);
 		MaterialUI.DialogManager.SetParentCanvas(G.MaterialCvs);
 
 		Instance = this;

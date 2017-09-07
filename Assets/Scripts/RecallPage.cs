@@ -39,6 +39,8 @@ public class RecallPage : MonoBehaviour {
 		}
 	}
 
+	private List<RecallUser> users = new List<RecallUser>();
+
     private string favhand_id;
 	private int handId;
 
@@ -135,9 +137,8 @@ public class RecallPage : MonoBehaviour {
         SetPublicValue(win27Value, Win27Go);
 
 		var comCards = ret.Dict("community").IL("cards");
-
 		var list = ret.List("list");
-        var users = Rect.GetComponentsInChildren<RecallUser>();
+
         for (int num = 0; num < 9; num++)
         {   
             if (list.Count > num) { // 复用的部分
@@ -146,18 +147,19 @@ public class RecallPage : MonoBehaviour {
 
                 RecallUser user;
 
-                if (num < users.Length) {
+                if (num < users.Count) {
                     user = users[num];
                     user.gameObject.SetActive(true);
                 } else {
-                    user = PoolMan.Spawn(RecallUserPrefab, Rect.transform).GetComponent<RecallUser>();
-                    user.transform.SetParent(Rect.transform, false);
+                    var go = GameObject.Instantiate(RecallUserPrefab, Rect.transform);
+					user = go.GetComponent<RecallUser>();
+					users.Add(user);
                 }
 
                 user.Show(dt);
                 user.SetComCard(comCards);
                 user.SetTag(tag);
-            } else if (users.Length > num) { // 超出的部分隐藏
+            } else if (users.Count > num) { // 超出的部分隐藏
                 users[num].gameObject.SetActive(false);
             }
         }
