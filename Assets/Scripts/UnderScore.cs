@@ -86,9 +86,9 @@ public static class _ {
 
     static public Color GetTextColor(int num) {
         string[] colors = new string[]{
-		    "#f44336",
+		    "#ff1744",
 		    "#ffffff",
-		    "#4caf50",
+		    "#00c853",
 	    };
 
         return getColor(colors, num);
