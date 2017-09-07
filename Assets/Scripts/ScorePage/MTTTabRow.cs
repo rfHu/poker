@@ -19,7 +19,7 @@ namespace ScorePage {
             tabs[dt.SelectedIndex].GetComponent<ProceduralImage>().color = _.HexColor("#4a617e");
             tabs[oppo].GetComponent<ProceduralImage>().color = _.HexColor("#383F47");
 
-            tabs[dt.SelectedIndex].Find("Text").GetComponent<Text>().color = MaterialUI.MaterialColor.cyan200;
+            tabs[dt.SelectedIndex].Find("Text").GetComponent<Text>().color = MaterialUI.MaterialColor.cyanA200;
             tabs[oppo].Find("Text").GetComponent<Text>().color = _.HexColor("#FFFFFFB2");
         }
 

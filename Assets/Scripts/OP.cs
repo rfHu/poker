@@ -176,7 +176,7 @@ public class OP : MonoBehaviour {
 	}
 
 	private void setAccurateBtns(AccurateType type) {
-		AccurateBtn.GetComponent<CanvasGroup>().alpha = 1;
+		AccurateBtn.GetComponent<OPColor>().ColorEnabled = true;
 		AccurateBtn.GetComponent<Button>().interactable = true;
 
 		RaiseGo.SetActive(false);
@@ -253,7 +253,7 @@ public class OP : MonoBehaviour {
 		addProperty(R1, names[0], values[0]);	
 		addProperty(R2, names[1], values[1]);	
 		addProperty(R3, names[2], values[2]);
-		addProperty(R4, names[2], values[2]);
+		addProperty(R4, names[3], values[3]);
 
 		var max = range[1];
 		if (values[0] > max) {
@@ -278,7 +278,7 @@ public class OP : MonoBehaviour {
 	private void addProperty(GameObject go, string text, int value) {
 		go.transform.Find("Text").GetComponent<Text>().text = text;
 		go.transform.Find("Number").GetComponent<Text>().text = _.Num2CnDigit(value);
-		go.GetComponent<CanvasGroup>().alpha = 1;
+		go.GetComponent<OPColor>().ColorEnabled = true;
 
 		var btn = go.GetComponent<Button>();
 		btn.onClick.RemoveAllListeners();
@@ -443,7 +443,7 @@ public class OP : MonoBehaviour {
 	private void disableBtn(GameObject go) {
 		var button = go.GetComponent<Button>();
 		button.interactable = false;
-		go.GetComponent<CanvasGroup>().alpha = disableAlpha;	
+		go.GetComponent<OPColor>().ColorEnabled = false;	
 	}
 
 	private void disableAllBtns() {
@@ -452,7 +452,7 @@ public class OP : MonoBehaviour {
 		disableBtn(R3);
 		disableBtn(R4);
 
-		AccurateBtn.GetComponent<CanvasGroup>().alpha = disableAlpha;
+		AccurateBtn.GetComponent<OPColor>().ColorEnabled = false;
 		AccurateBtn.GetComponent<Button>().interactable = false;
 	}
 

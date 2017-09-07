@@ -91,7 +91,9 @@ namespace PokerPlayer {
 
 		static public PlayerBase Load(GameObject prefab, Transform parent) {
 			var go = Instantiate(prefab, parent, false);
-            go.GetComponent<RectTransform>().anchoredPosition = Vector3.zero;
+			var rect = go.GetComponent<RectTransform>();
+            rect.anchoredPosition = Vector3.zero;
+			rect.localScale = Vector3.one;
 			return go.GetComponent<PlayerBase>();
 		}
 

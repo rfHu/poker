@@ -6,29 +6,31 @@ using UniRx;
 using Unity.Linq;
 
 public class BackgroundSprite : MonoBehaviour {
-	private static GameObject prefab;
+	private static GameObject prevGo;
 
-	void Start()
+	void Awake()
 	{
 		GameSetting.TableSprite.Subscribe((type) => {
 			var name = type == 0 ? "TableBlue" : "TableGreen";
 
-			if (prefab != null && prefab.name == name) {
-				fillTable();
+			if (prevGo != null && prevGo.name == name) {
+				setImage();	
 				return ;	
 			} 
 
 			// 这样切换会导致内存极剧加大，后期考虑AssetBundle
 			var prefabPath = string.Format("Prefab/{0}", name);
-			prefab = Resources.Load<GameObject>(prefabPath);	
-			prefab.name = name;	
-		
-			fillTable();
+			var prefab = Resources.Load<GameObject>(prefabPath);	
+			prefab.name = name;
+			prevGo = Instantiate(prefab);
+
+			setImage();	
 		}).AddTo(this);
 	}	
 
-	private void fillTable() {
-		gameObject.Children().Destroy();
-		Instantiate(prefab, transform, false);
+	private void setImage() {
+		var image = GetComponent<Image>();
+		image.sprite = prevGo.GetComponent<TableSpriteKeeper>().ImageSprite;
+		image.enabled = true;
 	}
 }
