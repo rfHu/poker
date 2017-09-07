@@ -3,26 +3,26 @@ using PathologicalGames;
 
 public class ObjectsPool : MonoBehaviour {
     private static bool hasInit = false;
+	private static GameObject shared;
 
-    public static void Init(GameObject prefab, Camera camera) {
+    public static void Init() {
         if (hasInit) {
             return ;
         }
 
-        var shared = (GameObject)Instantiate(prefab);
+		shared = new GameObject();
         shared.name = "PoolManager";
         UnityEngine.Object.DontDestroyOnLoad(shared);
         PoolManager.Pools.Create("Shared", shared);
-		SetCamera(shared, camera);
 
         hasInit = true;
     }
 
-    public static void SetCamera(GameObject gameObject, Camera camera) {
-        var rootCanvas = gameObject.GetComponent<Canvas>();
-        rootCanvas.renderMode = RenderMode.ScreenSpaceCamera;
-        rootCanvas.worldCamera = camera;
-        rootCanvas.sortingLayerName = "AboveParticle";
-        rootCanvas.sortingOrder = 2; 
-    }
+    // public static void SetCamera(Camera camera) {
+    //     var canvas = shared.GetComponent<Canvas>();
+    //     canvas.renderMode = RenderMode.ScreenSpaceCamera;
+    //     canvas.worldCamera = camera;
+    //     canvas.sortingLayerName = "AboveParticle";
+    //     canvas.sortingOrder = 2; 
+    // }
 }

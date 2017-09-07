@@ -234,10 +234,10 @@ public class OP : MonoBehaviour {
 			names.Add("X5\n盲注");
 		} else {
 			var nextPot = pot + call;
-			var value1 = fixBB(Mathf.CeilToInt(nextPot / 3f) + call);
-			var value2 = fixBB(Mathf.CeilToInt(nextPot / 2f) + call);
-			var value3 = fixBB(Mathf.CeilToInt(nextPot * 2f / 3f) + call);
-			var value4 = fixBB(nextPot + call);
+			var value1 = Mathf.CeilToInt(nextPot / 3f) + call;
+			var value2 = Mathf.CeilToInt(nextPot / 2f) + call;
+			var value3 = Mathf.CeilToInt(nextPot * 2f / 3f) + call;
+			var value4 = nextPot + call;
 			
 			values.Add(value1);
 			values.Add(value2);
@@ -268,11 +268,6 @@ public class OP : MonoBehaviour {
 		} else if (values[3] > max) {
 			disableBtn(R4);
 		}
-	}
-
-	private int fixBB(int value) {
-		var num = Mathf.CeilToInt(value / (float)GameData.Shared.BB);
-		return num * GameData.Shared.BB;
 	}
 
 	private void addProperty(GameObject go, string text, int value) {

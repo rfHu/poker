@@ -82,10 +82,8 @@ public class Controller : MonoBehaviour {
 
 	public Camera FXCam;
 
-	public GameObject PoolPrefab;
-
 	void Awake () {
-		ObjectsPool.Init(PoolPrefab, FXCam);
+		ObjectsPool.Init();
 		MaterialUI.DialogManager.SetParentCanvas(G.MaterialCvs);
 
 		Instance = this;
@@ -605,6 +603,10 @@ public class Controller : MonoBehaviour {
 
 		RxSubjects.Look.Subscribe((e) => {
 			gameReload();
+
+			if (GameData.Shared.InGame) {
+				infoGo.SetActive(false);
+			}
         }).AddTo(this);
 
 		RxSubjects.Pass.Subscribe((e) => {

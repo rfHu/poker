@@ -25,10 +25,10 @@ public class G {
 	public static Transform DialogCvs {
 		get {
 			if (dialogCanvas == null) {
-				dialogCanvas = GameObject.FindGameObjectWithTag("DialogCanvas").GetComponent<Canvas>();
+				dialogCanvas = GameObject.FindGameObjectWithTag("DialogCanvas").GetComponent<Canvas>().transform;
 			}
 
-			return dialogCanvas.transform;
+			return dialogCanvas;
 		}
 	} 
 
@@ -43,7 +43,7 @@ public class G {
 	}
 
 	private static Canvas uiCanvas;
-	private static Canvas dialogCanvas;
+	private static Transform dialogCanvas;
 	private static Canvas materialCanvas;
 
 	public static void PlaySound(string name) {
