@@ -488,7 +488,6 @@ public class Controller : MonoBehaviour {
                         isToMe = true;
                 }
             }
-
             var em = PoolMan.Spawn("Emoticon/Emo" + pid);
             em.GetComponent<Emoticon>().Init(fromSeatPos, toSeat, isToMe);
         }).AddTo(this);
