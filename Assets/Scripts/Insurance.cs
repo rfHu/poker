@@ -113,7 +113,12 @@ public class Insurance : MonoBehaviour {
         Pot.text = potValue.ToString();
         TotalSupass.text = "/ " + outsCardArray.Count.ToString();
 
-        int maxPercent = getMaxPercent(allinPlayers, myRate);
+        int maxPercent = -1;
+
+		if (data.ContainsKey("win_rate")) {
+			maxPercent = getMaxPercent(allinPlayers, myRate);
+		}
+
         setupAllinPlayers(allinPlayers, maxPercent); 
 
         setupPbCards();
@@ -140,15 +145,8 @@ public class Insurance : MonoBehaviour {
         foreach (var obj in allinPlayers)
         {
             var data = obj as Dictionary<string, object>;
-            if (data.ContainsKey("win_rate"))
-            {
-                var other = data.Int("win_rate");
-                rate = rate > other ? rate : other;
-            }
-            else 
-            {
-                return -1;
-            }
+			var other = data.Int("win_rate");
+			rate = rate > other ? rate : other;
         }
         return rate;
     }
