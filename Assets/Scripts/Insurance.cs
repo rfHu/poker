@@ -130,6 +130,7 @@ public class Insurance : MonoBehaviour {
         CardDesc.text = Card.GetCardDesc(data.Int("maxFiveRank"));
         WinRate.text = myRate + "%";
         string color = myRate == maxPercent ? "#ff1744" : "#868d94";
+        WinRate.transform.parent.gameObject.SetActive(maxPercent != -1);
         WinRate.transform.parent.GetComponent<ProceduralImage>().color = _.HexColor(color);
 
     }
@@ -139,8 +140,15 @@ public class Insurance : MonoBehaviour {
         foreach (var obj in allinPlayers)
         {
             var data = obj as Dictionary<string, object>;
-			var other = data.Int("win_rate");
-            rate = rate > other ? rate : other;
+            if (data.ContainsKey("win_rate"))
+            {
+                var other = data.Int("win_rate");
+                rate = rate > other ? rate : other;
+            }
+            else 
+            {
+                return -1;
+            }
         }
         return rate;
     }

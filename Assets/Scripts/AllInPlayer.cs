@@ -40,6 +40,7 @@ public class AllInPlayer : MonoBehaviour {
         Kind.text = outsNumber.ToString() + "张";
         WinRateText.text = data.Int("win_rate") + "%";
         string color =  data.Int("win_rate") == maxPercent? "#ff1744" : "#868d94";
+        WinRateText.transform.parent.gameObject.SetActive(maxPercent != -1);
         WinRateText.transform.parent.GetComponent<ProceduralImage>().color = _.HexColor(color);
     }
 
