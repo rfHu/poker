@@ -131,7 +131,7 @@ public class UserDetail : MonoBehaviour {
             {
                 GameOptionBtn.SetActive(false);
             }
-            AddFriend.gameObject.SetActive(true);
+            // AddFriend.gameObject.SetActive(true);
         }
     }
 
@@ -193,7 +193,7 @@ public class UserDetail : MonoBehaviour {
                 EmoticonButtons[pid].GetComponent<Button>().interactable = true;
             }
 
-            AddFriend.interactable = data.Int("is_friend_or_audit") == 0;
+            // AddFriend.interactable = data.Int("is_friend_or_audit") == 0;
         });
 
 	}
@@ -281,7 +281,7 @@ public class UserDetail : MonoBehaviour {
         }, (data) =>
         {
             PokerUI.Toast("好友请求已发送");
-            AddFriend.interactable = false;
+            // AddFriend.interactable = false;
         });
     }
 
