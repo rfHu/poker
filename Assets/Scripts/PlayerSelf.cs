@@ -86,6 +86,7 @@ namespace PokerPlayer {
 			CardDesc.gameObject.SetActive(false);
 
 			cardParent.SetActive(false);
+			resetCards();
 			card1.Turnback();
 			card2.Turnback();
 
@@ -347,7 +348,7 @@ namespace PokerPlayer {
 		}
 	}
 
-	private void resetCard() {
+	private void resetCards() {
 		var transform = cardParent.GetComponent<RectTransform>();
 		
 		transform.anchoredPosition = new Vector2(0, -124);
@@ -367,13 +368,14 @@ namespace PokerPlayer {
 
 			var duration = 0.5f;
 			
-			Ease ease = Ease.InBack;
-			transform.DOMove(Vector2.zero, duration).SetEase(ease).SetId(Base.AnimID).OnComplete(() => {
-				resetCard();
-            	darkenCards();
-			});
+			Ease ease = Ease.Flash;
+			
 			transform.DOScale(new Vector2(0.5f, 0.5f), duration).SetEase(ease).SetId(Base.AnimID);
 			transform.GetComponent<CanvasGroup>().DOFade(0, duration).SetEase(ease).SetId(Base.AnimID);
+			transform.DOMove(Controller.LogoVector, duration).SetEase(ease).SetId(Base.AnimID).OnComplete(() => {
+				resetCards();
+            	darkenCards();
+			});
         }
 
 		public void SetFolded() {

@@ -191,10 +191,10 @@ namespace PokerPlayer {
             Tween tween; 
 
             if (image != null) {
-                tween = image.DOFade(0.2f, duration).SetEase(ease).SetId(Base.AnimID);
+                tween = image.DOFade(0, duration).SetEase(ease).SetId(Base.AnimID);
             } else {
                 var canvasGrp = Cardfaces.GetComponent<CanvasGroup>();
-                tween = canvasGrp.DOFade(0.2f, duration).SetEase(ease).SetId(Base.AnimID);
+                tween = canvasGrp.DOFade(0, duration).SetEase(ease).SetId(Base.AnimID);
             }
 
             tween.OnComplete(() => {
