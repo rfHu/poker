@@ -424,6 +424,10 @@ namespace PokerPlayer {
                 
                 myDelegate.HandOver(data);
 
+				if (winEndDisposable != null) {
+					winEndDisposable.Dispose();
+				}
+
                 // 4s后隐藏动画
                 winEndDisposable = Observable.Timer(TimeSpan.FromSeconds(4)).Subscribe((_) => {
                     hideWinAnim();
