@@ -150,7 +150,7 @@ namespace PokerPlayer {
         } 
 
         private void setScoreText(int number) {
-            if (number == 0 && !player.InGame) {
+            if (number == 0 && !player.InGame && !GameData.Shared.IsMatch()) {
                 ScoreLabel.text = "等待";
             } else {
                 ScoreLabel.text = _.Num2CnDigit(number);

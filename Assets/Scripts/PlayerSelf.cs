@@ -33,6 +33,8 @@ namespace PokerPlayer {
 			}
 		}
 
+		[SerializeField]private Transform ccParent;
+
 		[SerializeField] private List<CardContainer> cardContainers; 
 
 		public Text CardDesc;
@@ -345,11 +347,33 @@ namespace PokerPlayer {
 		}
 	}
 
+	private void resetCard() {
+		var transform = cardParent.GetComponent<RectTransform>();
+		
+		transform.anchoredPosition = new Vector2(0, -124);
+		transform.GetComponent<CanvasGroup>().alpha = 1;
+		transform.localScale = Vector3.one;
+		transform.SetParent(ccParent, false);
+	}
+
         // ===== Delegate =====
 
         public void Fold() {
             MoveOut();
-            darkenCards();
+
+			// 弃牌动画
+			var transform = cardParent.GetComponent<RectTransform>();
+			transform.SetParent(G.UICvs.transform, true);
+
+			var duration = 0.5f;
+			
+			Ease ease = Ease.InBack;
+			transform.DOMove(Vector2.zero, duration).SetEase(ease).SetId(Base.AnimID).OnComplete(() => {
+				resetCard();
+            	darkenCards();
+			});
+			transform.DOScale(new Vector2(0.5f, 0.5f), duration).SetEase(ease).SetId(Base.AnimID);
+			transform.GetComponent<CanvasGroup>().DOFade(0, duration).SetEase(ease).SetId(Base.AnimID);
         }
 
 		public void SetFolded() {
