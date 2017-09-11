@@ -58,7 +58,7 @@ public class RoomMessage : MonoBehaviour {
         OwnerName.text = GameData.Shared.OwnerName;
 
         var cTime = GameData.Shared.CreateTime;
-        StartTime.text = cTime.Month + "月" + cTime.Day + "日   " + cTime.Hour + ":" + cTime.Minute;
+        StartTime.text = cTime.Month + "月" + cTime.Day + "日   " + _.Fix(cTime.Hour) + ":" + _.Fix(cTime.Minute);
 
         GameTime.text = (float)GameData.Shared.Duration / 3600 + "小时";
         AnteMeg.text = GameData.Shared.Ante.Value.ToString();
