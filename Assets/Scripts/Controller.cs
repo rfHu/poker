@@ -850,7 +850,6 @@ public class Controller : MonoBehaviour {
 
 		GameData.Shared.Players.ObserveReplace().Subscribe((data) => {
 			data.OldValue.Destroy();
-			enableSeat(data.OldValue.Index);
 			showPlayer(data.NewValue);	
 		}).AddTo(this);
 
@@ -859,7 +858,9 @@ public class Controller : MonoBehaviour {
 		}).AddTo(this);
 
 		GameData.Shared.Players.ObserveRemove().Subscribe((data) => {
-			enableSeat(data.Value.Index);
+			if (GameData.Shared.MySeat == -1) {
+				enableSeat(data.Value.Index);
+			}
 			data.Value.Destroy();
 		}).AddTo(this);
 

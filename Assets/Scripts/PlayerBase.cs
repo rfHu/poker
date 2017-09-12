@@ -346,13 +346,13 @@ namespace PokerPlayer {
 
             	if (uid == Uid) {
             		myDelegate.TurnTo(e.Data, GameData.Shared.ThinkTime);
-            		setPlayerActive(false, false);
+            		setAct(false, false);
             	} else {
             		myDelegate.MoveOut();
 
             		// 刚发了牌
             		if (dc == 1 || GameData.Shared.PublicCards.Count != actCardsNumber) {
-            			setPlayerActive(false);
+            			setAct(false);
             		}
             	}
 
@@ -522,7 +522,7 @@ namespace PokerPlayer {
             return lastState == ActionState.Allin || lastState == ActionState.Fold;
         }
 
-        private void setPlayerActive(bool active, bool anim = true) {
+        private void setAct(bool active, bool anim = true) {
             if (!active && isPersisState()) {
                 return ;
             }
@@ -533,7 +533,7 @@ namespace PokerPlayer {
         private void dealAct(ActionState state) {
             lastState = state;
 
-            setPlayerActive(true);
+            setAct(true);
             PlayerAct.SetAct(state);
 
             if (state == ActionState.Allin) {
