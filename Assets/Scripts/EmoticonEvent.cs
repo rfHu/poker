@@ -63,7 +63,7 @@ public class EmoticonEvent : MonoBehaviour {
 
     public void SharkEmo2() 
     {
-        PoolMan.Spawn("Emo15_Shark");
+        PoolMan.Spawn("Emoticon/Emo15_Shark").SetParent(G.UICvs.transform, false);
     }
 
     public void GanbeiSound()
