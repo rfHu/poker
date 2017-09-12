@@ -123,6 +123,8 @@ public class Controller : MonoBehaviour {
 		#else
 				Commander.Shared.VoiceIconToggle(true);
 		#endif
+
+        PoolMan.Spawn("NoviceBoot").SetParent(G.UICvs.transform, false);
 	}
 
 	public void OnStartClick() {
