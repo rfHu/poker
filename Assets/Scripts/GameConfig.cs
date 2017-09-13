@@ -11,7 +11,8 @@ public enum ActionState {
 	Check = 2,
 	Allin = 3,
 	Call = 4,
-	Raise = 5
+	Raise = 5,
+	Straddle = 6
 }
 
 public enum GameType {
@@ -895,6 +896,11 @@ sealed public class GameData {
 			// 大小盲
 			if (gameStart && player.PrChips.Value != 0) {
 				player.ChipsChange = true;
+				
+				// Straddle 
+				if (player.PrChips.Value == 2 * GameData.Shared.BB) {
+					player.ActState.OnNext(ActionState.Straddle);
+				}
 			}
 
 			Players[index] = player;

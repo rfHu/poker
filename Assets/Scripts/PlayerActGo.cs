@@ -20,12 +20,15 @@ public class PlayerActGo: MonoBehaviour {
     }
 
     public Color GetColor(ActionState act) {
+		var orange = _.HexColor("#FFAB40");
+
         var map = new Dictionary<ActionState, Color>() {
             {ActionState.Fold, _.HexColor("#BDBDBD")},
             {ActionState.Check, MaterialUI.MaterialColor.cyanA200},
-            {ActionState.Raise, _.HexColor("#FFAB40")},
+            {ActionState.Raise, orange},
             {ActionState.Call, _.HexColor("#40C4FF")},
-            {ActionState.Allin, _.HexColor("#FFAB40")}
+            {ActionState.Allin, orange},
+			{ActionState.Straddle, orange}
         };
 
         return map[act];
@@ -62,7 +65,8 @@ public class PlayerActGo: MonoBehaviour {
             {ActionState.Check, "看牌"},
             {ActionState.Raise, "加注"},
             {ActionState.Call, "跟注"},
-            {ActionState.Allin, "全下"}
+            {ActionState.Allin, "全下"},
+			{ActionState.Straddle, "抓头"}
         };
 
         return map[act];
