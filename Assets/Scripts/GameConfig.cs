@@ -327,12 +327,6 @@ sealed public class GameData {
 		RxSubjects.Look.Subscribe((e) => {
 			PublicCardAnimState = false;
 			byJson(e.Data);
-
-			if (SceneMan.HasInGame) {
-				// skip
-			} else {
-				SceneMan.LoadScene(SceneMan.Scenes.PokerGame);
-			}
 		});
 
 		RxSubjects.Deal.Subscribe((e) => {

@@ -12,6 +12,8 @@ public class GameLoading : MonoBehaviour {
 		Application.targetFrameRate = 60;
 		var external = External.Instance;
 
+		LoadingGo = MTT.transform.parent.gameObject;
+
 		// 事件监听
 		registerEvents();
 
@@ -37,6 +39,10 @@ public class GameLoading : MonoBehaviour {
 	[SerializeField]private GameObject Loading;
 	[SerializeField]private GameObject MTT; 
 
+	private GameObject LoadingGo;
+
+	[SerializeField]private GameObject GameCanvas;	
+
 	private void registerEvents() {
 		RxSubjects.MatchLook.Subscribe((e) => {
 			var state = e.Data.Int("match_state");
@@ -49,10 +55,13 @@ public class GameLoading : MonoBehaviour {
 			MTT.SetActive(true);
 			MTT.GetComponent<MTTWaiting>().Init(e.Data);
 		}).AddTo(this);
-	}
 
-	public void ExitGame() {
-		External.Instance.Exit();
+		RxSubjects.Look.Subscribe((e) => {
+			if (LoadingGo.activeSelf) {
+				LoadingGo.SetActive(false);
+				GameCanvas.SetActive(true);	
+			} 
+		}).AddTo(this);
 	}
 
     private void debugSetup() {
