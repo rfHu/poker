@@ -26,9 +26,9 @@ public class GameLoading : MonoBehaviour {
         }
 
 		BuglyAgent.RegisterLogCallback (CallbackDelegate.Instance.OnApplicationLogCallbackHandler);
-#if UNITY_IPHONE || UNITY_IOS
-            BuglyAgent.InitWithAppId ("b3d868488f");
-#endif
+		#if UNITY_IPHONE || UNITY_IOS
+					BuglyAgent.InitWithAppId ("b3d868488f");
+		#endif
 
 		// 如果你确认已在对应的iOS工程或Android工程中初始化SDK，那么在脚本中只需启动C#异常捕获上报功能即可
 		BuglyAgent.EnableExceptionHandler ();
@@ -38,10 +38,6 @@ public class GameLoading : MonoBehaviour {
 	[SerializeField]private GameObject MTT; 
 
 	private void registerEvents() {
-		// var disposable = RxSubjects.Connecting.Subscribe((e) => {
-		// 	Loading.SetActive(true);
-		// }).AddTo(this);
-
 		RxSubjects.MatchLook.Subscribe((e) => {
 			var state = e.Data.Int("match_state");
 			if (state >= 10) {
