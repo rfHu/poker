@@ -124,7 +124,11 @@ public class Controller : MonoBehaviour {
 				Commander.Shared.VoiceIconToggle(true);
 		#endif
 
-        PoolMan.Spawn("NoviceBoot").SetParent(G.UICvs.transform, false);
+        if (!GameSetting.Opened)
+        {
+            PoolMan.Spawn("NoviceBoot").SetParent(G.UICvs.transform, false);
+            GameSetting.Opened = true;
+        }
 	}
 
 	public void OnStartClick() {

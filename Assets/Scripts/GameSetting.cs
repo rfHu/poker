@@ -97,7 +97,20 @@ public static class GameSetting {
 
 			return tableSprite;
 		}
-	} 
+	}
+
+    public static bool Opened
+    {
+        get
+        {
+            return getValue<bool>(PersistKey.Opened);
+        }
+
+        set
+        {
+            setValue(value, PersistKey.Opened);
+        }
+    } 
 
 	public static class PersistKey {
 		public readonly static string CardColor = "cardColor";
@@ -106,5 +119,6 @@ public static class GameSetting {
 		public readonly static string Mute = "mute";
 		public readonly static string ChatBubble = "chatBubble";
 		public readonly static string EmoticonClose = "emoticonClose";
+        public readonly static string Opened = "opened";
 	}
 }
