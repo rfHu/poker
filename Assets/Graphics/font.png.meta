@@ -1,15 +1,12 @@
 fileFormatVersion: 2
-guid: 2c58b1bb8ba89ec4995ed1c4f1cab5f4
-timeCreated: 1505216064
+guid: 9786a32b517445a469b82bf423719d68
+timeCreated: 1505268462
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
-    21300000: font_0
-    21300002: font_12
-    21300004: font_35
-    21300006: font_41
-    21300008: font_45
-    21300010: font_70
+    21300000: font_8
+    21300002: font_18
+    21300004: font_56
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -92,67 +89,41 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: font_0
+      name: font_8
       rect:
         serializedVersion: 2
-        x: 6
-        y: 189
+        x: 1
+        y: 72
         width: 320
         height: 105
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: font_12
+      name: font_18
       rect:
         serializedVersion: 2
-        x: 336
-        y: 194
-        width: 185
-        height: 98
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: font_41
-      rect:
-        serializedVersion: 2
-        x: 195
-        y: 150
-        width: 6
-        height: 9
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: font_45
-      rect:
-        serializedVersion: 2
-        x: 6
-        y: 71
+        x: 333
+        y: 72
         width: 320
         height: 105
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: font_70
+      name: font_56
       rect:
         serializedVersion: 2
-        x: 5
+        x: 1
         y: 0
-        width: 506
-        height: 71
+        width: 504
+        height: 68
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0

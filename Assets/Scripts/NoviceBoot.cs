@@ -4,21 +4,21 @@ using UnityEngine;
 
 public class NoviceBoot : MonoBehaviour {
 
-    public GameObject[] Staps;
+    public GameObject[] Steps;
 
     int clickTimes = 0;
 
     public void OnClick() 
     {
         clickTimes++;
-        if (clickTimes > 3)
+        if (clickTimes > Steps.Length-1)
         {
             Destroy(gameObject);
         }
         else
         {
-            Staps[clickTimes].SetActive(true);
-            Staps[clickTimes - 1].SetActive(false);
+            Steps[clickTimes].SetActive(true);
+            Steps[clickTimes - 1].SetActive(false);
         }
     }
 }
