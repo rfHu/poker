@@ -35,7 +35,7 @@ public class RoomMessage : MonoBehaviour {
     {
         GameData.Shared.LeftTime.Subscribe((value) =>
         {
-            if (!GameData.Shared.GameStarted)
+            if (!GameData.Shared.GameStarted.Value)
             {
                 setText(LeftTime, "暂未开始");
                 return;
@@ -43,7 +43,7 @@ public class RoomMessage : MonoBehaviour {
             setText(LeftTime, _.SecondStr(value));
         }).AddTo(this);
 
-         GameData.Shared.Paused.Where((_) => GameData.Shared.GameStarted).Subscribe((pause) => {
+         GameData.Shared.Paused.Where((_) => GameData.Shared.GameStarted.Value).Subscribe((pause) => {
             if (pause > 0) {
                 PauseIcon.gameObject.SetActive(false);
                 ContinueIcon.gameObject.SetActive(true);
@@ -104,7 +104,7 @@ public class RoomMessage : MonoBehaviour {
         string f;
         int paused;
 
-        if (GameData.Shared.Paused.Value > 0 && GameData.Shared.GameStarted)
+        if (GameData.Shared.Paused.Value > 0 && GameData.Shared.GameStarted.Value)
         {
             f = "start";
             paused = 1;

@@ -190,7 +190,7 @@ sealed public class Player {
 		Coins = json.Int("coins");
 		Allin.Value = json.Bool("is_allin");
 		LastAct.Value = json.String("last_act");
-        Rank.Value = GameData.Shared.Type == GameType.MTT ? json.Int("rank") : json.Int("match_rank");
+        Rank.Value = GameData.Shared.Type.Value == GameType.MTT ? json.Int("rank") : json.Int("match_rank");
 		readyState = json.Int("is_ready");
 		HeadValue.Value = json.Int("head_value");
 
@@ -299,7 +299,7 @@ sealed public class GameData {
 		});
 
 		RxSubjects.Started.AsObservable().Subscribe((e) => {
-			GameStarted = true;
+			GameStarted.Value = true;
 			LeftTime.Value = e.Data.Int("left_time");
 			Paused.OnNext(0); 
 		});
@@ -316,7 +316,7 @@ sealed public class GameData {
 		});
 
 		RxSubjects.GameStart.AsObservable().Subscribe((e) => {
-			GameStarted = true;
+			GameStarted.Value = true;
 
 			var json = e.Data.Dict("room");
 			PublicCardAnimState = true;
@@ -520,7 +520,7 @@ sealed public class GameData {
 		// 倒计时
 		Observable.Interval(TimeSpan.FromSeconds(1)).AsObservable().Subscribe((_) => {
 			// 游戏已暂停，不需要修改
-			if (GameStarted && Paused.Value > 0) {
+			if (GameStarted.Value && Paused.Value > 0) {
 				return ;
 			}
 
@@ -640,12 +640,12 @@ sealed public class GameData {
 	public ReactiveProperty<string> RoomName = new ReactiveProperty<string>();
 	public ReactiveProperty<int> TableNumber = new ReactiveProperty<int>(-1) ; // MTT牌桌号 
     
-    public GameType Type;
+    public ReactiveProperty<GameType> Type = new ReactiveProperty<GameType>();
     public int BlindLv;
 	public ReactiveProperty<int> Rank = new ReactiveProperty<int>();
 
 	public bool IsMatch() {
-		return Type != GameType.Normal;
+		return Type.Value != GameType.Normal;
 	}
 
 	public class MatchData {
@@ -655,7 +655,7 @@ sealed public class GameData {
 		public static bool IsPaused {
 			get {
 				var v = MatchRoomStatus.Value;
-				return GameData.Shared.Type == GameType.MTT && (v == MatchRoomStat.Rest || v == MatchRoomStat.WaitingStart);
+				return GameData.Shared.Type.Value == GameType.MTT && (v == MatchRoomStat.Rest || v == MatchRoomStat.WaitingStart);
 			}
 		}
 
@@ -740,7 +740,7 @@ sealed public class GameData {
 	}
 
 	// 游戏是否已经开始，跟暂停状态无关
-	public bool GameStarted = false; 
+	public ReactiveProperty<bool> GameStarted = new ReactiveProperty<bool>(false); 
 	public float Rake = 0;
 	public int Duration = 0;
 	public bool NeedAudit = false;
@@ -822,7 +822,7 @@ sealed public class GameData {
 		Pot.Value = json.Int("pot");
 		Pots.Value = json.DL("pots");
 
-        Type = string2GameType(json.String("type"));
+        Type.Value = string2GameType(json.String("type"));
 
         if (IsMatch())
         {
@@ -840,8 +840,8 @@ sealed public class GameData {
 			LeftTime.Value = json.Int("left_time");
 		}
 
-		RoomName.Value = GameData.Shared.Type == GameType.MTT ? json.String("match_name") : json.String("name");
-		if (GameData.Shared.Type == GameType.MTT) {
+		RoomName.Value = GameData.Shared.Type.Value == GameType.MTT ? json.String("match_name") : json.String("name");
+		if (GameData.Shared.Type.Value == GameType.MTT) {
 			TableNumber.Value = json.Int("name"); // MTT的牌桌名称就是牌桌号
 		} else {
 			TableNumber.Value = -1;
@@ -859,7 +859,7 @@ sealed public class GameData {
 		var startTs = json.Int("begin_time");
 		StartTime = _.DateTimeFromTimeStamp(startTs);
 		// 游戏是否已开始
-		GameStarted = startTs != 0;
+		GameStarted.Value = startTs != 0;
 		Paused.OnNext(json.Int("is_pause"));
 		
 		// 删除公共牌重新添加

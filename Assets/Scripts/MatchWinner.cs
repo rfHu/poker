@@ -69,7 +69,7 @@ public class MatchWinner : MonoBehaviour {
             _animator.enabled = true;
             _image.sprite = BGImgs[0];
             TitleMsg.SetActive(true);
-            bool isMTT = GameData.Shared.Type == GameType.MTT;
+            bool isMTT = GameData.Shared.Type.Value == GameType.MTT;
             TitleMsg.transform.GetChild(0).gameObject.SetActive(isMTT);
             TitleMsg.transform.GetChild(1).localScale = isMTT ? new Vector3(0.5f, 0.5f, 1f) : Vector3.one;
         }
@@ -137,7 +137,7 @@ public class MatchWinner : MonoBehaviour {
             var id = "";
             var toPage = "";
 
-            switch (GameData.Shared.Type) 
+            switch (GameData.Shared.Type.Value) 
             {
                 case GameType.MTT: id = GameData.Shared.MatchID; toPage = "record_mtt.html"; break;
                 case GameType.SNG: id = GameData.Shared.Room.Value; toPage = "record_sng.html"; break;

@@ -9,6 +9,7 @@ using SimpleJSON;
 using DG.Tweening;
 using PokerPlayer;
 using UnityEngine.UI.ProceduralImage;
+using MaterialUI;
 
 public class Controller : MonoBehaviour {
 	public GameObject LoadingModal;
@@ -48,8 +49,7 @@ public class Controller : MonoBehaviour {
 	public GameObject InviteCodeGo;
 	public GameObject TimeLeftGo;
 	public GameObject Logo;
-	public GameObject SNGGo;
-	[SerializeField]private GameObject MTTGo; 
+	[SerializeField]private GameObject matchLogo;
 
 	public GameObject SNGBtn;
 
@@ -95,37 +95,21 @@ public class Controller : MonoBehaviour {
 		Instance = this;
     }
 
-	private void init() {
-		load();
-
-        if (GameData.Shared.IsMatch())
-        {
-            OwnerButton.SetActive(false);
-        } else {
-			OwnerButton.SetActive(true);
-		}
-	}
-
 	void OnDestroy()
 	{
 		// 在这里重置相关数据
 		GameData.Shared.PlayerCount.Value = 0;
 	}
 
-	public void load() {
-		MatchSetting();
+	private void init() {
 		gameReload();
 		registerEvents();
 		setupDealer();
 		setOptions();
 
-		if (!GameData.Shared.GameStarted) {
-			setNotStarted();
-		}
-
         if (!GameSetting.Opened)
         {
-            PoolMan.Spawn("NoviceBoot").SetParent(G.UICvs.transform, false);
+            PoolMan.Spawn("NoviceBoot", G.UICvs.transform);
             GameSetting.Opened = true;
         }
 	}
@@ -267,7 +251,7 @@ public class Controller : MonoBehaviour {
 	}
 
 	void setInfoText() {
-		if (GameData.Shared.Type == GameType.MTT) {
+		if (GameData.Shared.Type.Value == GameType.MTT) {
 			return ;
 		}
 
@@ -408,7 +392,7 @@ public class Controller : MonoBehaviour {
 		}
 
 		GameData.Shared.LeftTime.Subscribe((value) => {
-			if (!GameData.Shared.GameStarted) {
+			if (!GameData.Shared.GameStarted.Value) {
 				setText(TimeLeftGo, "未开始");
 				return;
 			}
@@ -548,7 +532,7 @@ public class Controller : MonoBehaviour {
         }).AddTo(this);
 
 		RxSubjects.MatchLook.Subscribe((e) => {
-			if (GameData.Shared.Type != GameType.MTT) {
+			if (GameData.Shared.Type.Value != GameType.MTT) {
 				return ;
 			}
 
@@ -619,16 +603,18 @@ public class Controller : MonoBehaviour {
         }).AddTo(this);
 
 		RxSubjects.Pass.Subscribe((e) => {
-			if (GameData.Shared.Type == GameType.Normal) {
+			var type = GameData.Shared.Type.Value;
+
+			if (type == GameType.Normal) {
 				var msg = "记分牌带入成功";
 
 				if (GameData.Shared.InGame) {
 					msg += "（下一手生效）";
 				}
 				PokerUI.Toast(msg);
-			} else if (GameData.Shared.Type == GameType.SNG) {
+			} else if (type == GameType.SNG) {
 				PokerUI.Toast("报名成功");
-			} else if (GameData.Shared.Type == GameType.MTT) {
+			} else if (type == GameType.MTT) {
 				var inc = e.Data.Int("inc_bankroll");
 				PokerUI.Toast(string.Format("成功购买{0}记分牌（下一手生效）", inc));
 			}
@@ -683,7 +669,7 @@ public class Controller : MonoBehaviour {
 
 			PokerUI.Toast(string.Format("盲注已升至{0}/{1}", bb / 2, bb));			
 
-			if (GameData.Shared.Type == GameType.MTT) {
+			if (GameData.Shared.Type.Value == GameType.MTT) {
 				var lv = e.Data.Int("blind_lv");
 
 				// 下一级别无法重购
@@ -747,7 +733,7 @@ public class Controller : MonoBehaviour {
             var page = "";
 			// 清理
 			External.Instance.ExitCb(() => {
-                switch (GameData.Shared.Type)
+                switch (GameData.Shared.Type.Value)
                 {
                     case GameType.Normal:
                         ID = roomID;
@@ -770,7 +756,7 @@ public class Controller : MonoBehaviour {
 		}).AddTo(this);
 
 		RxSubjects.MTTMatch.Subscribe((e) => {
-			if (GameData.Shared.Type != GameType.MTT) {
+			if (GameData.Shared.Type.Value != GameType.MTT) {
 				return ;
 			}
 
@@ -803,7 +789,7 @@ public class Controller : MonoBehaviour {
 			return ;
 		}
 
-		if (GameData.Shared.Type != GameType.MTT || GameData.Shared.Players.Count > 0) {
+		if (GameData.Shared.Type.Value != GameType.MTT || GameData.Shared.Players.Count > 0) {
 			return ;
 		}
 
@@ -885,6 +871,35 @@ public class Controller : MonoBehaviour {
 	}
 
 	private void subsRoomSetting() {
+		GameData.Shared.Type.Subscribe((type) => {
+			if (GameData.Shared.IsMatch())
+			{
+				OwnerButton.SetActive(false);
+			} else {
+				OwnerButton.SetActive(true);
+			}
+
+			var image = matchLogo.GetComponent<VectorImage>();
+
+			if (type == GameType.MTT) {
+				matchLogo.SetActive(true);			
+				image.vectorImageData = CustomIconHelper.GetIcon("mtt").vectorImageData;
+			} else if (type == GameType.SNG) {
+				matchLogo.SetActive(true);			
+				image.vectorImageData = CustomIconHelper.GetIcon("sng").vectorImageData;
+			} else {
+				matchLogo.SetActive(false);
+			}
+		}).AddTo(this);
+
+		GameData.Shared.GameStarted.Subscribe((started) => {
+			if (!started) {
+				setNotStarted();
+			} else {
+				startButton.SetActive(false);
+			}
+		}).AddTo(this);
+
 		RxSubjects.Ending.Subscribe((e) => {
 			PokerUI.Toast("房主提前结束牌局");	
 		}).AddTo(this);
@@ -914,7 +929,7 @@ public class Controller : MonoBehaviour {
 			}
 		}).AddTo(this);
 
-		GameData.Shared.TableNumber.Where((_) => GameData.Shared.Type == GameType.MTT).Subscribe((num) => {
+		GameData.Shared.TableNumber.Where((_) => GameData.Shared.Type.Value == GameType.MTT).Subscribe((num) => {
 			if (num != 0) {
 				gameInfoTexts[1].text = "牌桌" + num;
 			} else {
@@ -925,7 +940,7 @@ public class Controller : MonoBehaviour {
 		}).AddTo(this);
 
 		GameData.MatchData.MatchRoomStatus.Subscribe((value) => {
-			if (GameData.Shared.Type != GameType.MTT) {
+			if (GameData.Shared.Type.Value != GameType.MTT) {
 				return ;
 			}
 
@@ -956,7 +971,7 @@ public class Controller : MonoBehaviour {
 				return ;
 			}
 			
-			if (!GameData.Shared.GameStarted) {
+			if (!GameData.Shared.GameStarted.Value) {
 				return ;
 			}
 
@@ -1123,18 +1138,6 @@ public class Controller : MonoBehaviour {
 			Card.HighlightCards(PublicCards, l);	
 		}).AddTo(this);
 	}
-
-    private void MatchSetting()
-    {
-		SNGGo.SetActive(false);
-		MTTGo.SetActive(false);
-
-		if (GameData.Shared.Type == GameType.MTT) {
-			MTTGo.SetActive(true);
-		} else if (GameData.Shared.Type == GameType.SNG) {
-			SNGGo.SetActive(true);	
-		}
-    }
 
     private void TalkLimit(bool limit)
     {

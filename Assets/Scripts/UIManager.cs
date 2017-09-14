@@ -36,7 +36,7 @@ public class UIManager : MonoBehaviour {
 	public void ScorePage() {
         Transform target;
 
-        if (GameData.Shared.Type == GameType.MTT) {
+        if (GameData.Shared.Type.Value == GameType.MTT) {
             target = PoolMan.Spawn(MTTScorePagePrefab);
         } else {
             target = PoolMan.Spawn(ScorePagePrefab);
@@ -81,7 +81,7 @@ public class UIManager : MonoBehaviour {
 
             //根据类别生成不同预制体
             Transform transform;
-            if (GameData.Shared.Type == GameType.Normal)
+            if (GameData.Shared.Type.Value == GameType.Normal)
             {
                 transform = PoolMan.Spawn("Supplement");
             }
@@ -144,10 +144,12 @@ public class UIManager : MonoBehaviour {
         string str = "";
         str += "\"" + GameData.Shared.Name + "\"邀请您加入\"" + GameData.Shared.RoomName + "\"";
 
-        if (GameData.Shared.Type == GameType.SNG)
+		var type = GameData.Shared.Type.Value;
+
+        if (type == GameType.SNG)
         {
             str += "SNG" + GameData.MatchData.MatchString;
-        } else if (GameData.Shared.Type == GameType.MTT) {
+        } else if (type == GameType.MTT) {
             str += "MTT" + GameData.MatchData.MatchString;
         }
 

@@ -35,7 +35,7 @@ public class Seat : MonoBehaviour {
 	}
 
 	public void Show() {
-		if (GameData.Shared.Type == GameType.MTT) {
+		if (GameData.Shared.Type.Value == GameType.MTT) {
 			return ;
 		}
 
@@ -126,7 +126,7 @@ public class Seat : MonoBehaviour {
 			ButtonText.text = "坐下";
 		}
 
-		if (GameData.Shared.Type == GameType.MTT) {
+		if (GameData.Shared.Type.Value == GameType.MTT) {
 			Hide();
  		} else {
 			Show();

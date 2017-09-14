@@ -22,7 +22,7 @@ public class WaitForAudit : MonoBehaviour {
 			
 			string type;
 
-			switch(GameData.Shared.Type) {
+			switch(GameData.Shared.Type.Value) {
 				case GameType.MTT:
 					type = "购买";
 					break;

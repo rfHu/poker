@@ -5,13 +5,15 @@ using UnityEngine.UI.ProceduralImage;
 
 public class SNGBtn: MonoBehaviour {
     public void OnClick() {
-        if (GameData.Shared.Type == GameType.SNG)
+		var type = GameData.Shared.Type.Value;
+
+        if (type == GameType.SNG)
         {
             var SNGMsgPage = PoolMan.Spawn("SNGMsgPage");
             SNGMsgPage.GetComponent<DOPopup>().Show();
             SNGMsgPage.GetComponent<SNGMsgPage>().Init();
         }
-        else if (GameData.Shared.Type == GameType.MTT)
+        else if (type == GameType.MTT)
         {
             var MTTMsgPage = PoolMan.Spawn("MTTMsg");
             MTTMsgPage.GetComponent<DOPopup>().Show();

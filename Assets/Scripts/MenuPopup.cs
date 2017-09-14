@@ -41,7 +41,7 @@ public class MenuPopup : MonoBehaviour {
         var player = GameData.Shared.GetMyPlayer();
 
         // （非MTT || 过了增购级别 || 游客）不展示按钮 
-        if (GameData.Shared.Type != GameType.MTT 
+        if (GameData.Shared.Type.Value != GameType.MTT 
             || !GameData.MatchData.CanBuyLv() 
             || !player.IsValid()
             || GameData.Shared.TableNumber.Value == 0
