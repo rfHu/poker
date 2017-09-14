@@ -12,6 +12,8 @@ public class GameLoading : MonoBehaviour {
 		Application.targetFrameRate = 60;
 		var external = External.Instance;
 
+		LoadingGo = MTT.transform.parent.gameObject;
+
 		// 事件监听
 		registerEvents();
 
@@ -26,9 +28,9 @@ public class GameLoading : MonoBehaviour {
         }
 
 		BuglyAgent.RegisterLogCallback (CallbackDelegate.Instance.OnApplicationLogCallbackHandler);
-#if UNITY_IPHONE || UNITY_IOS
-            BuglyAgent.InitWithAppId ("b3d868488f");
-#endif
+		#if UNITY_IPHONE || UNITY_IOS
+					BuglyAgent.InitWithAppId ("b3d868488f");
+		#endif
 
 		// 如果你确认已在对应的iOS工程或Android工程中初始化SDK，那么在脚本中只需启动C#异常捕获上报功能即可
 		BuglyAgent.EnableExceptionHandler ();
@@ -37,11 +39,11 @@ public class GameLoading : MonoBehaviour {
 	[SerializeField]private GameObject Loading;
 	[SerializeField]private GameObject MTT; 
 
-	private void registerEvents() {
-		// var disposable = RxSubjects.Connecting.Subscribe((e) => {
-		// 	Loading.SetActive(true);
-		// }).AddTo(this);
+	private GameObject LoadingGo;
 
+	[SerializeField]private GameObject GameCanvas;	
+
+	private void registerEvents() {
 		RxSubjects.MatchLook.Subscribe((e) => {
 			var state = e.Data.Int("match_state");
 			if (state >= 10) {
@@ -53,17 +55,20 @@ public class GameLoading : MonoBehaviour {
 			MTT.SetActive(true);
 			MTT.GetComponent<MTTWaiting>().Init(e.Data);
 		}).AddTo(this);
-	}
 
-	public void ExitGame() {
-		External.Instance.Exit();
+		RxSubjects.Look.Subscribe((e) => {
+			if (LoadingGo.activeSelf) {
+				LoadingGo.SetActive(false);
+				GameCanvas.SetActive(true);	
+			} 
+		}).AddTo(this);
 	}
 
     private void debugSetup() {
-        External.Instance.SetSocket("https://socket.dev.poker.top");
+        External.Instance.SetSocket("https://socket.poker.top");
         External.Instance.SetProxy("http://localhost:8888");
-        var rid = "59b9e555575f4858f37be06d";
-        var sid = "s%3AG22legA8RjA9GLkLG9qCpFVxqlD_QFHX.0NpgqBH5hGCfXJExs2WxpIx8Qpn6%2FcLV0Uuc44BHB%2Bw";
+        var rid = "59b92dbbea016f2ba72bf289";
+		var sid = "s%3At0oBMcZ2aTiXaHPb7K01z82IO2sDpDlJ.DWLduOoLfiGkTXUFUDY4xMsBtfaRhJxzswkLu9P5fy4";
 
         External.Instance.InitGame(rid + "&" + sid);
     }

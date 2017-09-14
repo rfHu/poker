@@ -7,6 +7,7 @@ using System.Linq;
 using System;
 using System.Collections.Generic;
 using UnityEngine.UI.ProceduralImage;
+using MaterialUI;
 
 namespace PokerPlayer {
 		public enum PlayerType
@@ -399,21 +400,33 @@ namespace PokerPlayer {
                 if (gain > 0) {
                     playParticle(winParticle);
                 }
+				
+				if (data.prize > 0) { // 回收大于0
+					var cvg = WinCq.GetComponent<CanvasGroup>();
+					cvg.alpha = 0;
+					cvg.DOFade(1, 0.3f).SetId(AnimID);
 
-                // 收回大于0，展示盈亏
-                if (data.prize > 0) {
-                    var cvg = WinCq.GetComponent<CanvasGroup>();
-                    cvg.alpha = 0;
-                    cvg.DOFade(1, 0.3f).SetId(AnimID);
+					var rect = WinCq.GetComponent<RectTransform>();
+					rect.anchoredPosition = new Vector2(0, -300);
+					rect.DOAnchorPos(new Vector2(0, -224), 0.3f).SetId(AnimID);
 
-                    var rect = WinCq.GetComponent<RectTransform>();
-                    rect.anchoredPosition = new Vector2(0, -300);
-                    rect.DOAnchorPos(new Vector2(0, -224), 0.3f).SetId(AnimID);
+					var image = WinCq.GetComponent<Image>();
 
-                    WinCq.SetActive(true); 
-                    WinNumber.text = _.Number2Text(gain);
-                    ScoreParent.SetActive(false);
-                }
+					if (gain >= 0) {
+						image.enabled = true;	
+						WinNumber.fontSize = 36;
+						WinNumber.color = _.HexColor("#FAD028FF");
+					} 
+					else {
+						image.enabled = false;
+						WinNumber.fontSize = 42;
+						WinNumber.color = MaterialColor.greenA200;
+					}
+
+					WinCq.SetActive(true); 
+					WinNumber.text = _.Number2Text(gain);
+					ScoreParent.SetActive(false);
+				}
 
                 // 重新计算用户的bankroll                
                 player.Bankroll.Value = player.Bankroll.Value + data.prize;

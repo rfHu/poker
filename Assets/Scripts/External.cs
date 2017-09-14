@@ -80,13 +80,6 @@ public class External : MonoBehaviour{
 
 		var matchID = info[0].ToString();
 
-		// 已在游戏场景，但收到不同的MatchID
-		if (GameData.Shared.MatchID != matchID && SceneMan.HasInGame) {
-			SceneMan.LoadScene(SceneMan.Scenes.Loading);
-		}
-
-		// RxSubjects.Connecting.OnNext(true);
-
 		GameData.Shared.MatchID = matchID;
 		GameData.Shared.Sid = info[1].ToString();
 
@@ -115,8 +108,6 @@ public class External : MonoBehaviour{
 		GameData.Shared.Sid = "";
 		GameData.Shared.Room.Value = "";
 		GameData.Shared.MatchID = "";
-
-		SceneMan.LoadScene(SceneMan.Scenes.Loading);
 
 		// 延时执行退出逻辑
 		Observable.Timer(TimeSpan.FromMilliseconds(90)).AsObservable().Subscribe((_) => {

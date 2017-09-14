@@ -131,40 +131,40 @@ public class PoolMan {
 	}
 }
 
-public class SceneMan {
-	static private string currentScene = "";
+// public class SceneMan {
+// 	static private string currentScene = "";
 
-	public static void LoadScene(string name) {
-		// 不允许一个Scene没加载完，立刻加载同一个Scene
-		if (currentScene == name && ActiveScene.name != name) {
-			return ;
-		}
+// 	public static void LoadScene(string name) {
+// 		// 不允许一个Scene没加载完，立刻加载同一个Scene
+// 		if (currentScene == name && ActiveScene.name != name) {
+// 			return ;
+// 		}
 
-		// @FIXME: 已切换场景，但没加载完
-		if (!string.IsNullOrEmpty(currentScene) && ActiveScene.name != name) {
-		} 
+// 		// @FIXME: 已切换场景，但没加载完
+// 		if (!string.IsNullOrEmpty(currentScene) && ActiveScene.name != name) {
+// 		} 
 		
-		currentScene = name;
-		PoolMan.DespawnAll();
-		// SceneManager.LoadSceneAsync(name);
-		SceneManager.LoadScene(name);
-	}
+// 		currentScene = name;
+// 		PoolMan.DespawnAll();
+// 		// SceneManager.LoadSceneAsync(name);
+// 		SceneManager.LoadScene(name);
+// 	}
 
-	public static bool HasInGame {
-		get {
-			return ActiveScene.name == Scenes.PokerGame;
-		}
-	}
+// 	public static bool HasInGame {
+// 		get {
+// 			return ActiveScene.name == Scenes.PokerGame;
+// 		}
+// 	}
 
-	public static Scene ActiveScene {
-		get {
-			return SceneManager.GetActiveScene();
-		}
-	}
+// 	public static Scene ActiveScene {
+// 		get {
+// 			return SceneManager.GetActiveScene();
+// 		}
+// 	}
 
-	public struct Scenes {
-		public static string Loading = "GameLoading";
-		public static string PokerGame = "PokerGame";
+// 	public struct Scenes {
+// 		public static string Loading = "GameLoading";
+// 		public static string PokerGame = "PokerGame";
  
-	}
-}
+// 	}
+// }

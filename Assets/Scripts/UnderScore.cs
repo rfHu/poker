@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.IO;
 using BestHTTP;
+using MaterialUI;
 
 public static class _ {
     public static DateTime DateTimeFromTimeStamp(double timeStamp)
@@ -73,41 +74,15 @@ public static class _ {
         int n;
 		return int.TryParse(number, out n);
     }
-
-    static public Color GetBgColor(int num) {
-        string[] colors = new string[]{
-		    "#ff1744",
-		    "#646464",
-		    "#00c853",
-	    };
-        
-        return getColor(colors, num);
-    }
-
+    
     static public Color GetTextColor(int num) {
-        string[] colors = new string[]{
-		    "#ff1744",
-		    "#ffffff",
-		    "#00c853",
-	    };
-
-        return getColor(colors, num);
-    }
-
-    static private Color getColor(string[] colors, int num) {
-        var color = new Color();
-		string c;
-
 		if (num > 0) {
-			c = colors[0];
+			return MaterialColor.redA400;
 		} else if (num < 0) {
-			c = colors[2];
+			return MaterialColor.greenA700;
 		} else {
-			c = colors[1];
-		}
-
-		ColorUtility.TryParseHtmlString(c, out color);
-		return color;
+			return Color.white;
+		} 
     }
 
     static public string Number2Text(int num) {
