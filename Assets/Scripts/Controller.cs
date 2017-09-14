@@ -109,7 +109,7 @@ public class Controller : MonoBehaviour {
 
         if (!GameSetting.Opened)
         {
-            PoolMan.Spawn("NoviceBoot", G.UICvs.transform);
+            PoolMan.Spawn("NoviceBoot").GetComponent<DOPopup>().ShowModal(new Color(0, 0, 0, 0.6f));
             GameSetting.Opened = true;
         }
 	}
