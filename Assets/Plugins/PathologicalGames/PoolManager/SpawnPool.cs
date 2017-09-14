@@ -827,15 +827,6 @@ namespace PathologicalGames
         /// <param name="item">The transform of the gameobject to process</param>
         public void Despawn(Transform instance)
         {
-            // @FIXME: instance不应该被destroy
-            if (instance == null) {
-                this._spawned.Remove(instance);
-                return ;
-            }
-
-            var worldPositionStays = !(instance is RectTransform);
-            instance.SetParent(this.group, worldPositionStays);
-
             // Find the item and despawn it
             bool despawned = false;
             for (int i = 0; i < this._prefabPools.Count; i++)
@@ -847,6 +838,11 @@ namespace PathologicalGames
                 }  // Protection - Already despawned?
                 else if (this._prefabPools[i]._despawned.Contains(instance))
                 {
+                    Debug.LogError(
+                        string.Format("SpawnPool {0}: {1} has already been despawned. " +
+                                       "You cannot despawn something more than once!",
+                                        this.poolName,
+                                        instance.name));
                     return;
                 }
             }
@@ -891,15 +887,28 @@ namespace PathologicalGames
         /// <param name="seconds">The time in seconds to wait before despawning</param>
         public void Despawn(Transform instance, float seconds)
         {
-            this.StartCoroutine(this.DoDespawnAfterSeconds(instance, seconds));
+            this.StartCoroutine(this.DoDespawnAfterSeconds(instance, seconds, false, null));
         }
+
+
+        /// <summary>
+        ///	See docs for Despawn(Transform instance) for basic functionalty information.
+        ///		
+        /// Convienince overload to provide the option to re-parent for the instance 
+        /// just before despawn.
+        /// </summary>
+        public void Despawn(Transform instance, float seconds, Transform parent)
+        {
+            this.StartCoroutine(this.DoDespawnAfterSeconds(instance, seconds, true, parent));
+        }
+
 
         /// <summary>
         /// Waits X seconds before despawning. See the docs for DespawnAfterSeconds()
         /// the argument useParent is used because a null parent is valid in Unity. It will 
         /// make the scene root the parent
         /// </summary>
-        private IEnumerator DoDespawnAfterSeconds(Transform instance, float seconds)
+        private IEnumerator DoDespawnAfterSeconds(Transform instance, float seconds, bool useParent, Transform parent)
         {
             GameObject go = instance.gameObject;
             while (seconds > 0)
@@ -912,8 +921,11 @@ namespace PathologicalGames
                 
                 seconds -= Time.deltaTime;
             }
-            
-            this.Despawn(instance);
+
+            if (useParent)
+                this.Despawn(instance, parent);
+            else
+                this.Despawn(instance);
         }
 
 
