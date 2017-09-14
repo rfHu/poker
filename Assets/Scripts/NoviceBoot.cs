@@ -13,7 +13,7 @@ public class NoviceBoot : MonoBehaviour {
         clickTimes++;
         if (clickTimes > Steps.Length-1)
         {
-            Destroy(gameObject);
+            GetComponent<DOPopup>().Close();
         }
         else
         {

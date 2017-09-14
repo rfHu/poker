@@ -126,7 +126,7 @@ public class Controller : MonoBehaviour {
 
         if (!GameSetting.Opened)
         {
-            PoolMan.Spawn("NoviceBoot").SetParent(G.UICvs.transform, false);
+            PoolMan.Spawn("NoviceBoot").GetComponent<DOPopup>().ShowModal(new Color(0, 0, 0, 0.6f));
             GameSetting.Opened = true;
         }
 	}
