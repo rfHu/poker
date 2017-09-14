@@ -86,12 +86,16 @@ public class Controller : MonoBehaviour {
 		ObjectsPool.Init();
 		MaterialUI.DialogManager.SetParentCanvas(G.MaterialCvs);
 
-		Instance = this;
 		LogoVector = Logo.transform.position;
     }
 
     void Start() 
     {
+		init();	
+		Instance = this;
+    }
+
+	private void init() {
 		load();
 
         if (GameData.Shared.IsMatch())
@@ -100,7 +104,7 @@ public class Controller : MonoBehaviour {
         } else {
 			OwnerButton.SetActive(true);
 		}
-    }
+	}
 
 	void OnDestroy()
 	{
@@ -403,6 +407,11 @@ public class Controller : MonoBehaviour {
 	private bool requesting = false;
 
 	private void registerEvents() {
+		// 只允许初始化一次
+		if (Instance != null) {
+			return ;
+		}
+
 		GameData.Shared.LeftTime.Subscribe((value) => {
 			if (!GameData.Shared.GameStarted) {
 				setText(TimeLeftGo, "未开始");

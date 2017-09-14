@@ -12,24 +12,14 @@ public class GameLoading : MonoBehaviour {
 		Application.targetFrameRate = 60;
 		var external = External.Instance;
 
-		LoadingGo = MTT.transform.parent.gameObject;
-
 		// 事件监听
 		registerEvents();
 
-        var debug = false;
-        #if UNITY_EDITOR 
-        debug = true;
-		#endif
-
-        if (Debug.isDebugBuild || debug)
-        {
-            debugSetup();
-        }
+		debugSetup();
 
 		BuglyAgent.RegisterLogCallback (CallbackDelegate.Instance.OnApplicationLogCallbackHandler);
 		#if UNITY_IPHONE || UNITY_IOS
-					BuglyAgent.InitWithAppId ("b3d868488f");
+			BuglyAgent.InitWithAppId ("b3d868488f");
 		#endif
 
 		// 如果你确认已在对应的iOS工程或Android工程中初始化SDK，那么在脚本中只需启动C#异常捕获上报功能即可
@@ -39,9 +29,8 @@ public class GameLoading : MonoBehaviour {
 	[SerializeField]private GameObject Loading;
 	[SerializeField]private GameObject MTT; 
 
-	private GameObject LoadingGo;
-
-	[SerializeField]private GameObject GameCanvas;	
+	[SerializeField]private GameObject loadingScene;
+	[SerializeField]private GameObject gameScene;
 
 	private void registerEvents() {
 		RxSubjects.MatchLook.Subscribe((e) => {
@@ -57,19 +46,29 @@ public class GameLoading : MonoBehaviour {
 		}).AddTo(this);
 
 		RxSubjects.Look.Subscribe((e) => {
-			if (LoadingGo.activeSelf) {
-				LoadingGo.SetActive(false);
-				GameCanvas.SetActive(true);	
-			} 
+			if (loadingScene.activeSelf) {
+				loadingScene.SetActive(false);
+				gameScene.SetActive(true);
+			} 	
+		}).AddTo(this);
+
+		RxSubjects.GameExit.Subscribe((_) => {
+			loadingScene.SetActive(true);
+			gameScene.SetActive(false);
+
+			// 编辑器模式下会自动重新加载
+			debugSetup();
 		}).AddTo(this);
 	}
 
     private void debugSetup() {
-        External.Instance.SetSocket("https://socket.poker.top");
-        External.Instance.SetProxy("http://localhost:8888");
-        var rid = "59b92dbbea016f2ba72bf289";
-		var sid = "s%3At0oBMcZ2aTiXaHPb7K01z82IO2sDpDlJ.DWLduOoLfiGkTXUFUDY4xMsBtfaRhJxzswkLu9P5fy4";
+        #if UNITY_EDITOR 
+			External.Instance.SetSocket("https://socket.poker.top");
+			External.Instance.SetProxy("http://localhost:8888");
+			var rid = "59ba04b4ea016f2ba7325717";
+			var sid = "s%3At0oBMcZ2aTiXaHPb7K01z82IO2sDpDlJ.DWLduOoLfiGkTXUFUDY4xMsBtfaRhJxzswkLu9P5fy4";
 
-        External.Instance.InitGame(rid + "&" + sid);
+			External.Instance.InitGame(rid + "&" + sid);
+		#endif
     }
 }
