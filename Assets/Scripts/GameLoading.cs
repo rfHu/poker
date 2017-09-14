@@ -64,6 +64,8 @@ public class GameLoading : MonoBehaviour {
 
 			// 编辑器模式下会自动重新加载
 			debugSetup();
+
+			Loading.GetComponent<Loading>().SetRndText();
 		}).AddTo(this);
 	}
 

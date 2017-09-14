@@ -22,6 +22,10 @@ public class Loading : MonoBehaviour {
 
 	void Awake()
 	{
+		SetRndText();	
+	}
+
+	public void SetRndText() {
 		if (string.IsNullOrEmpty(Txt)) {
 			var rnd = new System.Random();
 			int index = rnd.Next(10);
