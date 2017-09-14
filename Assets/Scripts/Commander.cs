@@ -89,6 +89,9 @@ public class Commander {
     }
 
     public void VoiceIconToggle(bool isShowing) {
+		#if UNITY_EDITOR
+			return ;
+		#endif
         ic.VoiceIconToggle(isShowing);
     }
 

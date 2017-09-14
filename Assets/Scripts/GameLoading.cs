@@ -49,12 +49,18 @@ public class GameLoading : MonoBehaviour {
 			if (loadingScene.activeSelf) {
 				loadingScene.SetActive(false);
 				gameScene.SetActive(true);
+
+				// 打开声音发送按钮
+				Commander.Shared.VoiceIconToggle(true);
 			} 	
 		}).AddTo(this);
 
 		RxSubjects.GameExit.Subscribe((_) => {
 			loadingScene.SetActive(true);
 			gameScene.SetActive(false);
+
+			// 关闭声音发送按钮
+			Commander.Shared.VoiceIconToggle(false);
 
 			// 编辑器模式下会自动重新加载
 			debugSetup();

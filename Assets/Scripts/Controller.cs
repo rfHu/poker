@@ -122,11 +122,6 @@ public class Controller : MonoBehaviour {
 		if (!GameData.Shared.GameStarted) {
 			setNotStarted();
 		}
-		
-		#if UNITY_EDITOR
-		#else
-				Commander.Shared.VoiceIconToggle(true);
-		#endif
 
         if (!GameSetting.Opened)
         {
