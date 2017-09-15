@@ -23,7 +23,7 @@ public class ModalHelper: MonoBehaviour {
 	public void Show(Transform parent, Action onClick, Color modalColor) {
 		this.onClick = onClick;
 		
-		transform.SetParent(parent);
+		transform.SetParent(parent, false);
 		_.FillParent(gameObject);
 		
 		transform.SetAsLastSibling();
