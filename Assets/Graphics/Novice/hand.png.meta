@@ -1,12 +1,11 @@
 fileFormatVersion: 2
-guid: 9786a32b517445a469b82bf423719d68
-timeCreated: 1505268462
+guid: 7d0950305099af142aac405a7f8749eb
+timeCreated: 1505215350
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
-    21300000: font_8
-    21300002: font_18
-    21300004: font_56
+    21300000: hand_0
+    21300002: hand_1
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -56,7 +55,7 @@ TextureImporter:
   - buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 2
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -64,23 +63,23 @@ TextureImporter:
   - buildTarget: Standalone
     maxTextureSize: 2048
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 2
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
   - buildTarget: iPhone
     maxTextureSize: 2048
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
+    textureFormat: 54
+    textureCompression: 2
+    compressionQuality: 100
     crunchedCompression: 0
     allowsAlphaSplitting: 0
-    overridden: 0
+    overridden: 1
   - buildTarget: Android
     maxTextureSize: 2048
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 2
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -89,46 +88,33 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: font_8
+      name: hand_0
       rect:
         serializedVersion: 2
-        x: 1
-        y: 72
-        width: 320
-        height: 105
+        x: 3
+        y: 25
+        width: 137
+        height: 137
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: font_18
+      name: hand_1
       rect:
         serializedVersion: 2
-        x: 333
-        y: 72
-        width: 320
-        height: 105
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: font_56
-      rect:
-        serializedVersion: 2
-        x: 1
-        y: 0
-        width: 504
-        height: 68
+        x: 147
+        y: 3
+        width: 155
+        height: 162
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     outline: []
-  spritePackingTag: 
+  spritePackingTag: Pack1
   userData: 
   assetBundleName: 
   assetBundleVariant: 
