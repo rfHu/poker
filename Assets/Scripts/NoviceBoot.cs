@@ -8,6 +8,20 @@ public class NoviceBoot : MonoBehaviour {
 
     int clickTimes = 0;
 
+	private ModalHelper modal;
+
+	void Awake()
+	{
+		modal = ModalHelper.Create();	
+		modal.Show(transform.parent, null, new Color(0, 0, 0, 102 / 255f));
+		transform.SetAsLastSibling();
+	}
+
+	void OnDestroy()
+	{
+		modal.Despawn();		
+	}
+
     public void OnClick() 
     {
         clickTimes++;

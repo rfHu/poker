@@ -16,7 +16,7 @@ public class ModalHelper: MonoBehaviour {
 
 	public static Color DefaultColor = new Color(0, 0, 0, 40 / 255f);
 
-	public void Show(Transform parent, Action onClick) {
+	public void Show(Transform parent, Action onClick = null) {
 		Show(parent, onClick, DefaultColor);
 	}
 
