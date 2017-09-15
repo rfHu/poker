@@ -12,6 +12,8 @@ public sealed class Connect  {
 
 	private SocketManager manager;
 
+	private bool logining = false;
+
 	private Dictionary<int, Action<Dictionary<string, object>, int>> successCallbacks = new Dictionary<int, Action<Dictionary<string, object>, int>>();
 
 	private int seq = 0;
@@ -65,9 +67,16 @@ public sealed class Connect  {
 			// 登陆成功，写用户数据
 			saveUserInfo(json);
 
+			logining = false;
+
 			// 进入房间
 			EnterGame();
+		}, () => {
+			logining = false;
+			PokerUI.ToastThenExit("连接服务器超时，请稍后再试~");
 		});
+
+		logining = true;
 	}
 
 	private void onDisconnect(Socket socket, Packet packet, params object[] args) {
@@ -162,6 +171,10 @@ public sealed class Connect  {
 		}
 
 		if (string.IsNullOrEmpty(GameData.Shared.Sid)) {
+			return ;
+		}
+
+		if (logining) {
 			return ;
 		}
 
