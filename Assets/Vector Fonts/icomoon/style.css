@@ -1,0 +1,254 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon.eot?6vishw');
+  src:  url('fonts/icomoon.eot?6vishw#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?6vishw') format('truetype'),
+    url('fonts/icomoon.woff?6vishw') format('woff'),
+    url('fonts/icomoon.svg?6vishw#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-arrow1:before {
+  content: "\e919";
+}
+.icon-arrow2:before {
+  content: "\e94b";
+}
+.icon-logo:before {
+  content: "\e925";
+}
+.icon-selected:before {
+  content: "\e901";
+}
+.icon-baoming_chip:before {
+  content: "\e935";
+}
+.icon-left2start:before {
+  content: "\e949";
+}
+.icon-menu_11:before {
+  content: "\e937";
+}
+.icon-mtt:before {
+  content: "\e936";
+}
+.icon-pattern_0:before {
+  content: "\e944";
+}
+.icon-pattern_1:before {
+  content: "\e945";
+}
+.icon-pattern_2:before {
+  content: "\e946";
+}
+.icon-pattern_3:before {
+  content: "\e947";
+}
+.icon-poker_1:before {
+  content: "\e948";
+}
+.icon-poker_2:before {
+  content: "\e93b";
+}
+.icon-poker_3:before {
+  content: "\e93c";
+}
+.icon-poker_4:before {
+  content: "\e93d";
+}
+.icon-poker_5:before {
+  content: "\e93e";
+}
+.icon-poker_6:before {
+  content: "\e93f";
+}
+.icon-poker_7:before {
+  content: "\e940";
+}
+.icon-poker_8:before {
+  content: "\e941";
+}
+.icon-poker_9:before {
+  content: "\e942";
+}
+.icon-poker_10:before {
+  content: "\e943";
+}
+.icon-poker_11:before {
+  content: "\e938";
+}
+.icon-poker_12:before {
+  content: "\e939";
+}
+.icon-poker_13:before {
+  content: "\e93a";
+}
+.icon-rank:before {
+  content: "\e934";
+}
+.icon-right2end:before {
+  content: "\e94a";
+}
+.icon-sng:before {
+  content: "\e933";
+}
+.icon-biaoqian:before {
+  content: "\e932";
+}
+.icon-jieshu:before {
+  content: "\e927";
+}
+.icon-kaishi:before {
+  content: "\e92d";
+}
+.icon-menu_10:before {
+  content: "\e931";
+}
+.icon-next:before {
+  content: "\e92c";
+}
+.icon-write:before {
+  content: "\e930";
+}
+.icon-xianzhi1:before {
+  content: "\e928";
+}
+.icon-xianzhi2:before {
+  content: "\e929";
+}
+.icon-xianzhi3:before {
+  content: "\e92a";
+}
+.icon-zanting:before {
+  content: "\e92b";
+}
+.icon-zoom:before {
+  content: "\e92e";
+}
+.icon-battery:before {
+  content: "\e904";
+}
+.icon-clock:before {
+  content: "\e917";
+}
+.icon-delete:before {
+  content: "\e920";
+}
+.icon-fangzu:before {
+  content: "\e905";
+}
+.icon-lagan_1:before {
+  content: "\e90d";
+}
+.icon-lagan_4:before {
+  content: "\e910";
+}
+.icon-lagan_5:before {
+  content: "\e911";
+}
+.icon-menu_7:before {
+  content: "\e922";
+}
+.icon-menu_8:before {
+  content: "\e923";
+}
+.icon-qipao:before {
+  content: "\e926";
+}
+.icon-smile:before {
+  content: "\e921";
+}
+.icon-huigu:before {
+  content: "\e906";
+}
+.icon-menu_6:before {
+  content: "\e924";
+}
+.icon-microphone:before {
+  content: "\e912";
+}
+.icon-end:before {
+  content: "\e903";
+}
+.icon-huigu_collection1:before {
+  content: "\e908";
+}
+.icon-huigu_collection2:before {
+  content: "\e909";
+}
+.icon-huigu_left:before {
+  content: "\e90a";
+}
+.icon-huigu_right:before {
+  content: "\e90b";
+}
+.icon-huigu_share:before {
+  content: "\e90c";
+}
+.icon-lagan_2:before {
+  content: "\e90e";
+}
+.icon-lagan_3:before {
+  content: "\e90f";
+}
+.icon-lagan_7:before {
+  content: "\e907";
+}
+.icon-lock:before {
+  content: "\e913";
+}
+.icon-menu_1:before {
+  content: "\e915";
+}
+.icon-menu_2:before {
+  content: "\e916";
+}
+.icon-menu_4:before {
+  content: "\e918";
+}
+.icon-menu:before {
+  content: "\e914";
+}
+.icon-message:before {
+  content: "\e91a";
+}
+.icon-real_time:before {
+  content: "\e91b";
+}
+.icon-remove:before {
+  content: "\e91c";
+}
+.icon-stand:before {
+  content: "\e91d";
+}
+.icon-suspend:before {
+  content: "\e91e";
+}
+.icon-time:before {
+  content: "\e91f";
+}
+.icon-asset:before {
+  content: "\e900";
+}
+.icon-chip:before {
+  content: "\e902";
+}
+.icon-menu_9:before {
+  content: "\e92f";
+}
