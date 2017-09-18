@@ -90,4 +90,9 @@ public class EmoticonEvent : MonoBehaviour {
     {
         G.PlaySound("mf_shark");
     }
+
+    public void win27Sound() 
+    {
+        G.PlaySound("win27Sound");
+    }
 }
