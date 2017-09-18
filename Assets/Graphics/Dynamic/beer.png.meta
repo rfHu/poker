@@ -1,13 +1,12 @@
 fileFormatVersion: 2
-guid: c5de3c481a409e14b88fcc2faaa5a3ec
-timeCreated: 1505101758
+guid: 6ffd3b4c93758b842a59f76d84af4b36
+timeCreated: 1505724170
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
     21300000: beer_0
     21300002: beer_1
-    21300004: beer_2
-    21300006: beer_6
+    21300004: beer_3
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -57,7 +56,7 @@ TextureImporter:
   - buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
     textureFormat: -1
-    textureCompression: 2
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -65,23 +64,23 @@ TextureImporter:
   - buildTarget: Standalone
     maxTextureSize: 2048
     textureFormat: -1
-    textureCompression: 2
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
   - buildTarget: iPhone
     maxTextureSize: 2048
-    textureFormat: 54
-    textureCompression: 2
-    compressionQuality: 100
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
-    overridden: 1
+    overridden: 0
   - buildTarget: Android
     maxTextureSize: 2048
     textureFormat: -1
-    textureCompression: 2
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -93,12 +92,12 @@ TextureImporter:
       name: beer_0
       rect:
         serializedVersion: 2
-        x: 9
-        y: 8
-        width: 158
-        height: 172
+        x: 4
+        y: 36
+        width: 107
+        height: 131
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -106,30 +105,30 @@ TextureImporter:
       name: beer_1
       rect:
         serializedVersion: 2
-        x: 175
-        y: 2
-        width: 158
-        height: 173
+        x: 120
+        y: 36
+        width: 107
+        height: 131
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: beer_2
+      name: beer_3
       rect:
         serializedVersion: 2
-        x: 338
-        y: 139
-        width: 54
-        height: 31
+        x: 66
+        y: 3
+        width: 44
+        height: 26
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     outline: []
-  spritePackingTag: Dynamic
+  spritePackingTag: 
   userData: 
   assetBundleName: 
   assetBundleVariant: 
