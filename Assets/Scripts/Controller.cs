@@ -107,7 +107,7 @@ public class Controller : MonoBehaviour {
 		setupDealer();
 		setOptions();
 
-        if (GameSetting.Opened)
+        if (!GameSetting.Opened)
         {
 			Instantiate(Resources.Load<GameObject>("Prefab/NoviceBoot"), G.UICvs.transform, false);
             GameSetting.Opened = true;
