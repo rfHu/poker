@@ -4,7 +4,6 @@ using UnityEngine.UI;
 using System;
 using System.Linq;
 using UniRx;
-using DarkTonic.MasterAudio;
 using SimpleJSON;
 using DG.Tweening;
 using PokerPlayer;
@@ -307,9 +306,6 @@ public class Controller : MonoBehaviour {
 	}
 
 	private void setOptions() {
-		if (GameSetting.muted) {
-			MasterAudio.MuteEverything();
-		}
         Commander.Shared.OptionToggle(!GameSetting.talkSoundClose, 2);
         Commander.Shared.OptionToggle(!GameSetting.chatBubbleClose, 1);
 	}

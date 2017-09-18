@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using DG.Tweening;
 using UniRx;
 using System;
-using DarkTonic.MasterAudio;
 using System.Linq;
 
 public class ChipsGo : MonoBehaviour {

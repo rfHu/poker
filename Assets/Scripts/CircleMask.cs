@@ -3,7 +3,6 @@ using UnityEngine.UI.ProceduralImage;
 using System.Collections;
 using UnityEngine.UI;
 using System;
-using DarkTonic.MasterAudio;
 using UniRx;
 
 public class CircleMask : MonoBehaviour {

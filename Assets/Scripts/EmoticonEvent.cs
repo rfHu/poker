@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using DarkTonic.MasterAudio;
 using DG.Tweening;
 
 public class EmoticonEvent : MonoBehaviour {

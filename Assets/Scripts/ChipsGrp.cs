@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-using DarkTonic.MasterAudio;
 using UnityEngine.UI;
 using UnityEngine.UI.ProceduralImage;
 using System;

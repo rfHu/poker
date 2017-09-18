@@ -1,5 +1,4 @@
-﻿using DarkTonic.MasterAudio;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -91,15 +90,6 @@ public class Option : MonoBehaviour {
 
         if (GameSetting.muted == Toggles[1].isOn)
         {
-            if (GameSetting.muted)
-            {
-                MasterAudio.UnmuteEverything();
-            }
-            else
-            {
-                MasterAudio.MuteEverything();
-            }
-
             GameSetting.muted = !Toggles[1].isOn;
         }
 
