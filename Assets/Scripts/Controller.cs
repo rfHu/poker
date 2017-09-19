@@ -460,6 +460,7 @@ public class Controller : MonoBehaviour {
             int fromSeatIndex = e.Data.Int("seat");
             int toSeatIndex = e.Data.Int("toseat");
             int pid = e.Data.Int("pid");
+            int[] canTurnEmo = { 4, 5, 6, 7, 10, 12 };
             bool isToMe = false;
 
             var fromSeatPos = new Vector2(0, 1920); 
@@ -479,7 +480,7 @@ public class Controller : MonoBehaviour {
                 }
             }
             var em = PoolMan.Spawn("Emoticon/Emo" + pid);
-            em.GetComponent<Emoticon>().Init(fromSeatPos, toSeat, isToMe);
+            em.GetComponent<Emoticon>().Init(fromSeatPos, toSeat, isToMe, canTurnEmo.Contains(pid));
         }).AddTo(this);
 
 		var expressions = new Dictionary<string, Transform>();

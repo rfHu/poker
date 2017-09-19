@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 4efcfc3bbb45a414796a346d38eee82c
-timeCreated: 1505101090
+guid: 31cf51be7bb5a78409b25a67be30d088
+timeCreated: 1505725208
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
@@ -58,7 +58,7 @@ TextureImporter:
   - buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
     textureFormat: -1
-    textureCompression: 2
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -66,23 +66,23 @@ TextureImporter:
   - buildTarget: Standalone
     maxTextureSize: 2048
     textureFormat: -1
-    textureCompression: 2
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
   - buildTarget: iPhone
     maxTextureSize: 2048
-    textureFormat: 54
-    textureCompression: 2
-    compressionQuality: 100
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
-    overridden: 1
+    overridden: 0
   - buildTarget: Android
     maxTextureSize: 2048
     textureFormat: -1
-    textureCompression: 2
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -94,10 +94,10 @@ TextureImporter:
       name: zan_0
       rect:
         serializedVersion: 2
-        x: 4
-        y: 295
-        width: 139
-        height: 186
+        x: 2
+        y: 173
+        width: 107
+        height: 144
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -107,10 +107,10 @@ TextureImporter:
       name: zan_1
       rect:
         serializedVersion: 2
-        x: 153
-        y: 286
-        width: 152
-        height: 208
+        x: 115
+        y: 166
+        width: 118
+        height: 161
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -120,10 +120,10 @@ TextureImporter:
       name: zan_2
       rect:
         serializedVersion: 2
-        x: 319
-        y: 296
-        width: 139
-        height: 186
+        x: 242
+        y: 174
+        width: 107
+        height: 144
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -133,10 +133,10 @@ TextureImporter:
       name: zan_3
       rect:
         serializedVersion: 2
-        x: 7
-        y: 67
-        width: 219
-        height: 212
+        x: 4
+        y: 2
+        width: 168
+        height: 162
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -146,17 +146,17 @@ TextureImporter:
       name: zan_4
       rect:
         serializedVersion: 2
-        x: 236
-        y: 67
-        width: 219
-        height: 212
+        x: 179
+        y: 2
+        width: 168
+        height: 162
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     outline: []
-  spritePackingTag: Dynamic
+  spritePackingTag: 
   userData: 
   assetBundleName: 
   assetBundleVariant: 

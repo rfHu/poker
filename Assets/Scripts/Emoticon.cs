@@ -6,14 +6,14 @@ using UnityEngine.UI;
 
 public class Emoticon : MonoBehaviour {
 
-    public void Init(Vector2 fromSeat, GameObject toSeat, bool isToMe) 
+    public void Init(Vector2 fromSeat, GameObject toSeat, bool isToMe, bool canTurn = true) 
     {
         transform.SetParent(G.UICvs.transform, false);
 
         var _rectTransform = GetComponent<RectTransform>();
         _rectTransform.anchoredPosition = fromSeat;
 
-        if (toSeat.GetComponent<Seat>().GetPos() == SeatPosition.Left)
+        if (toSeat.GetComponent<Seat>().GetPos() == SeatPosition.Left && canTurn)
         {
             transform.localScale = new Vector3(-1, 1);
         }
