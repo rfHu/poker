@@ -351,7 +351,7 @@ namespace PokerPlayer {
 	private void resetCards() {
 		var transform = cardParent.GetComponent<RectTransform>();
 		
-		transform.anchoredPosition = new Vector2(0, -124);
+		transform.anchoredPosition3D = new Vector3(0, -124, 0);
 		transform.GetComponent<CanvasGroup>().alpha = 1;
 		transform.localScale = Vector3.one;
 		transform.SetParent(ccParent, false);
@@ -408,6 +408,21 @@ namespace PokerPlayer {
 		public void ShowCard(List<int> cards) {
 			cardParent.SetActive(true);
 
+			if (cards[0] == 0) {
+				cards[0] = -1;
+			}
+
+			if (cards[1] == 0) {
+				cards[1] = -1;
+			}
+
+			// Not in game but receive "ShowCard"
+			if (!player.InGame) {
+				card1.ShowDardken(cards[0]);
+				card2.ShowDardken(cards[1]);
+				return ;
+			}
+
 			if (player.SeeCardAnim) {
 				if (hasShowCard) { // 同时开牌
 					reShow(card1, cards[0]);
@@ -428,6 +443,7 @@ namespace PokerPlayer {
 
 		public void HandOver(GameOverJson data) {
 			player.SeeCardAnim = true;
+
 			ShowCard(data.cards);
 
 			if (data.Gain() <= 0) {

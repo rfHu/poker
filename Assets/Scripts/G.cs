@@ -76,7 +76,13 @@ public class PoolMan {
 			pool.CreatePrefabPool(prefabPool);
 		} 
 		
-		return pool.Spawn(pool.prefabs[name], parent);
+		var transform = pool.Spawn(pool.prefabs[name], parent);
+
+		// Unity bug，重置z轴
+		var rect = transform.GetComponent<RectTransform>();
+		rect.anchoredPosition3D = new Vector3(rect.anchoredPosition.x, rect.anchoredPosition.y, 0);
+
+		return transform;
 	}
 
 	public static Transform Spawn(GameObject go, Transform parent = null) {

@@ -9,6 +9,7 @@ using DG.Tweening;
 using PokerPlayer;
 using UnityEngine.UI.ProceduralImage;
 using MaterialUI;
+using System.Collections;
 
 public class Controller : MonoBehaviour {
 	public GameObject LoadingModal;
@@ -90,8 +91,7 @@ public class Controller : MonoBehaviour {
 
     void Start() 
     {
-		init();	
-		Instance = this;
+		init();
     }
 
 	void OnDestroy()
@@ -111,6 +111,8 @@ public class Controller : MonoBehaviour {
 			Instantiate(Resources.Load<GameObject>("Prefab/NoviceBoot"), G.UICvs.transform, false);
             GameSetting.Opened = true;
         }
+
+		Instance = this;
 	}
 
 	public void OnStartClick() {

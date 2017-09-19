@@ -136,13 +136,21 @@ public class Card : MonoBehaviour {
 	}
 
 	public void Show(int index, bool anim = false, Action complete = null) {
-		if (index <= 0) {
-			Turnback();
+		if (index < 0) {
 			return ;
 		}
 
-		var realIndex = Card.CardIndex(index);
-		show(realIndex, anim, complete);
+		if (index == 0) {
+			Turnback();
+		} else {
+			var realIndex = Card.CardIndex(index);
+			show(realIndex, anim, complete);
+		}
+	}
+
+	public void ShowDardken(int index) {
+		Show(index);
+		Darken();
 	}
 
     public void ShowInExplain(int index) 
