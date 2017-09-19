@@ -218,6 +218,7 @@ public class OP : MonoBehaviour {
 	private void setRaiseButtons(int call) {
 		var pot = GameData.Shared.Pot.Value;
 		var bb = GameData.Shared.BB;
+		var minRaise = 2 * call;
 
 		List<int> values = new List<int>(); 
 		List<string> names = new List<string>();
@@ -256,6 +257,7 @@ public class OP : MonoBehaviour {
 		addProperty(R4, names[3], values[3]);
 
 		var max = range[1];
+
 		if (values[0] > max) {
 			disableAllBtns();
 		} else if (values[1] > max) {
@@ -267,6 +269,19 @@ public class OP : MonoBehaviour {
 			disableBtn(R4);
 		} else if (values[3] > max) {
 			disableBtn(R4);
+		}
+
+		if (values[3] < minRaise) {
+			disableAllBtns();
+		} else if (values[2] < minRaise) {
+			disableBtn(R1);
+			disableBtn(R2);
+			disableBtn(R3);
+		} else if (values[1] < minRaise) {
+			disableBtn(R1);
+			disableBtn(R2);
+		} else if (values[0] < minRaise) {
+			disableBtn(R1);
 		}
 	}
 
