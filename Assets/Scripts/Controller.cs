@@ -368,6 +368,7 @@ public class Controller : MonoBehaviour {
 	}
 
 	private void gameReload() {
+		setInfoText();
 		SeeLeftCard.SetActive(false);
 		cardAnimQueue.Clear();
 		queueIsActive = false;
