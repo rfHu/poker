@@ -124,7 +124,7 @@ namespace MTTMsgPage
 
                 timer = timer + 1;
                 setTimeText(); 
-            });
+            }).AddTo(this);
         }
 
         private void SetHighLighCol(Color color)

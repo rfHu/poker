@@ -454,6 +454,14 @@ public class Controller : MonoBehaviour {
 		subsPlayer();
 		subsRoomSetting();
 
+		// RxSubjects.GameExit.Subscribe((_) => {
+		// 	var players = GameData.Shared.Players;
+
+		// 	foreach(var key in players.Keys.ToList()) {
+		// 		players.Remove(key);
+		// 	}	
+		// }).AddTo(this);
+
         RxSubjects.Emoticon.Subscribe((e) =>
         {
             if (GameSetting.emoticonClose)

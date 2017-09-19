@@ -76,7 +76,7 @@ public class RebuyOrAddon : MonoBehaviour {
             } else {
                 setMessage(time);
             }
-        });
+        }).AddTo(this);
     }
 
     private void setMessage(int time) {

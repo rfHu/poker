@@ -32,6 +32,10 @@ public class GameLoading : MonoBehaviour {
 	[SerializeField]private GameObject loadingScene;
 	[SerializeField]private GameObject gameScene;
 
+	public void Exit() {
+		External.Instance.Exit();
+	}
+
 	private void registerEvents() {
 		RxSubjects.MatchLook.Subscribe((e) => {
 			var state = e.Data.Int("match_state");
@@ -57,6 +61,8 @@ public class GameLoading : MonoBehaviour {
 		}).AddTo(this);
 
 		RxSubjects.GameExit.Subscribe((_) => {
+			PoolMan.DespawnAll();
+
 			loadingScene.SetActive(true);
 			gameScene.transform.parent.gameObject.SetActive(false);
 
