@@ -13,7 +13,8 @@ public class ObjectsPool : MonoBehaviour {
 		shared = new GameObject();
         shared.name = "PoolManager";
         UnityEngine.Object.DontDestroyOnLoad(shared);
-        PoolManager.Pools.Create("Shared", shared);
+        var pool = PoolManager.Pools.Create("Shared", shared);
+		pool.dontReparent = true;
 
         hasInit = true;
     }
