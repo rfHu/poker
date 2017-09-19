@@ -48,6 +48,7 @@ public class GameLoading : MonoBehaviour {
 		RxSubjects.Look.Subscribe((e) => {
 			if (loadingScene.activeSelf) {
 				loadingScene.SetActive(false);
+				gameScene.transform.parent.gameObject.SetActive(true);
 				gameScene.SetActive(true);
 
 				// 打开声音发送按钮
@@ -57,7 +58,7 @@ public class GameLoading : MonoBehaviour {
 
 		RxSubjects.GameExit.Subscribe((_) => {
 			loadingScene.SetActive(true);
-			gameScene.SetActive(false);
+			gameScene.transform.parent.gameObject.SetActive(false);
 
 			// 关闭声音发送按钮
 			Commander.Shared.VoiceIconToggle(false);
