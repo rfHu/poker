@@ -45,7 +45,7 @@ public class ChipsGo : MonoBehaviour {
 		if (player.ChipsChange)  {
 			G.PlaySound("chip");
 
-			if (getPrev() != null) {
+			if (hasExist()) {
 				doTween().OnComplete(() => {
 					PoolMan.Despawn(transform);
 				});
@@ -58,9 +58,11 @@ public class ChipsGo : MonoBehaviour {
 		}
 	}
 
-	private ChipsGo getPrev() {
+	private bool hasExist() {
 		var sbIndex = transform.GetSiblingIndex();
-		return transform.parent.GetChild(sbIndex - 1).GetComponent<ChipsGo>();
+		var chip = transform.parent.GetChild(sbIndex - 1).GetComponent<ChipsGo>();
+
+		return chip != null && chip.gameObject.activeSelf;
 	}
 
 	public void Hide() {
