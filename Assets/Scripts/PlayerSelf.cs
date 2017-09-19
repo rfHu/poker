@@ -331,7 +331,7 @@ namespace PokerPlayer {
 	}
 
 	private void delayCall(Action cb) {
-		Observable.Timer(TimeSpan.FromSeconds(0.5)).Subscribe((_) => {
+		Observable.Timer(TimeSpan.FromSeconds(0.1)).Subscribe((_) => {
 			cb();
 		}).AddTo(this);
 	}
@@ -370,8 +370,8 @@ namespace PokerPlayer {
 			
 			Ease ease = Ease.Flash;
 			
-			transform.DOScale(new Vector2(0.5f, 0.5f), duration).SetEase(ease).SetId(Base.AnimID);
-			transform.GetComponent<CanvasGroup>().DOFade(0, duration).SetEase(ease).SetId(Base.AnimID);
+			transform.DOScale(new Vector2(0.4f, 0.4f), duration).SetEase(ease).SetId(Base.AnimID);
+			transform.GetComponent<CanvasGroup>().DOFade(0.4f, duration).SetEase(ease).SetId(Base.AnimID);
 			transform.DOMove(Controller.LogoVector, duration).SetEase(ease).SetId(Base.AnimID).OnComplete(() => {
 				resetCards();
             	darkenCards();
