@@ -1924,14 +1924,14 @@ namespace DarkTonic.MasterAudio {
             // ReSharper disable once PossibleNullReferenceException
             var maGroup = audioGroup.Group;
 
-            // if (maGroup.curVariationMode == MasterAudioGroup.VariationMode.Normal && info.Source.isPlaying) {
-            //     var playedPercentage = AudioUtil.GetAudioPlayedPercentage(info.Source);
-            //     var retriggerPercent = maGroup.retriggerPercentage;
+            if (maGroup.curVariationMode == MasterAudioGroup.VariationMode.Normal && info.Source.isPlaying) {
+                var playedPercentage = AudioUtil.GetAudioPlayedPercentage(info.Source);
+                var retriggerPercent = maGroup.retriggerPercentage;
 
-            //     if (playedPercentage < retriggerPercent) {
-            //         return null; // wait for this to stop playing or play further.
-            //     }
-            // }
+                if (playedPercentage < retriggerPercent) {
+                    return null; // wait for this to stop playing or play further.
+                }
+            }
 
             info.Variation.Stop(false, true);
             info.Variation.ObjectToFollow = null;

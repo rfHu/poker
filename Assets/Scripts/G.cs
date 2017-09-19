@@ -51,7 +51,8 @@ public class G {
 			return ;
 		}
 
-		MasterAudio.PlaySound(name);		
+		var clip = Resources.Load<AudioClip>("Audio/" + name);
+		AudioSource.PlayClipAtPoint(clip, Camera.main.transform.position);
 	}
 
 	public static Color Black = new Color(0, 0, 0, 0.9f);

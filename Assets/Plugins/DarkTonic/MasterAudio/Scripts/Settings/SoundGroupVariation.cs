@@ -362,7 +362,6 @@ namespace DarkTonic.MasterAudio {
             curFadeMode = FadeMode.None;
             curDetectEndMode = DetectEndMode.DetectEnd;
             _maxVol = maxVolume;
-
             switch (audLocation) {
                 case MasterAudio.AudioLocation.Clip:
                     FinishSetupToPlay();
@@ -456,7 +455,6 @@ namespace DarkTonic.MasterAudio {
             }
 
             ParentGroup.AddActiveAudioSourceId(InstanceId);
-
 			EnableUpdater();
 
             _attachToSource = false;
@@ -468,7 +466,6 @@ namespace DarkTonic.MasterAudio {
                 return;
             }
             _attachToSource = _playSndParam.AttachToSource;
-
             if (VariationUpdater != null) {
                 VariationUpdater.FollowObject(_attachToSource, ObjectToFollow, useClipAgePriority);
             }
