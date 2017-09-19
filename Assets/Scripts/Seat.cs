@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UniRx;
 using UnityEngine.UI;
+using UniRx;
 
 public enum SeatPosition {
 	Top,
@@ -70,6 +71,17 @@ public class Seat : MonoBehaviour {
 		_index = -1;	
 	}
 
+	void Awake()
+	{
+		GameData.Shared.Type.Where((type) => type != GameType.MTT).Subscribe((type) => {
+			if (type == GameType.SNG) {
+				ButtonText.text = "参赛";
+			} else {
+				ButtonText.text = "坐下";
+			}		
+		}).AddTo(this);
+	}
+
 	public SeatPosition GetPos() {
 		var h = G.UICvs.GetComponent<RectTransform>().rect.height;
 		var x = realVector.x;
@@ -119,12 +131,6 @@ public class Seat : MonoBehaviour {
 		GetComponent<RectTransform>().anchoredPosition = vector;
 
 		SeatPos.Value = GetPos();
-
-		if (GameData.Shared.IsMatch()) {
-			ButtonText.text = "参赛";
-		} else {
-			ButtonText.text = "坐下";
-		}
 
 		if (GameData.Shared.Type.Value == GameType.MTT) {
 			Hide();
