@@ -64,6 +64,12 @@ public class UserDetail : MonoBehaviour {
                 OnEmoticonClick(local + 1);
             }).AddTo(this);
         }
+
+        RxSubjects.Emoticon.Subscribe((e) =>{
+            StopCoroutine(SetBGCol);
+            SetBGCol = SetBGColor();
+            StartCoroutine(SetBGCol);
+        }).AddTo(this);
     }
 
     public void OnSpawned() 
@@ -261,9 +267,9 @@ public class UserDetail : MonoBehaviour {
 			        {"f", "emoticon"},
 			        {"args", data}
 		        });
-        StopCoroutine(SetBGCol);
-        SetBGCol = SetBGColor();
-        StartCoroutine(SetBGCol);
+        //StopCoroutine(SetBGCol);
+        //SetBGCol = SetBGColor();
+        //StartCoroutine(SetBGCol);
     }
 
 
