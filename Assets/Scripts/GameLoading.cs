@@ -55,6 +55,8 @@ public class GameLoading : MonoBehaviour {
 				gameScene.transform.parent.gameObject.SetActive(true);
 				gameScene.SetActive(true);
 
+				gameScene.GetComponent<Controller>().ReEnter();
+
 				// 打开声音发送按钮
 				Commander.Shared.VoiceIconToggle(true);
 			} 	

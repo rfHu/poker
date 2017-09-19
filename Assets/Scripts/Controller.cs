@@ -76,7 +76,7 @@ public class Controller : MonoBehaviour {
 
 	private bool hasShowEnding = false;
 
-	public static Controller Instance; 
+	public static bool isReady = false; 
 
 	public static Vector2 LogoVector;
 
@@ -94,10 +94,10 @@ public class Controller : MonoBehaviour {
 		init();
     }
 
-	void OnDestroy()
-	{
-		// 在这里重置相关数据
-		GameData.Shared.PlayerCount.Value = 0;
+	public void ReEnter() {
+		if (!isReady) {
+			return ;
+		}
 	}
 
 	private void init() {
@@ -112,7 +112,7 @@ public class Controller : MonoBehaviour {
             GameSetting.Opened = true;
         }
 
-		Instance = this;
+		isReady = true;
 	}
 
 	public void OnStartClick() {
@@ -147,14 +147,13 @@ public class Controller : MonoBehaviour {
         });
     }
 
-	private int currentIndex = -1;
 
 	void changePositions(int index, bool anim = true) {
-		if (currentIndex == index) {
+		var mySeat = Seats[index].GetComponent<Seat>();
+
+		if (mySeat.GetPos() == SeatPosition.Bottom) {
 			return ;
 		}
-
-		currentIndex = index;
 
 		var count = GameData.Shared.PlayerCount.Value;
 		var left = anchorPositions.Skip(count - index).Take(index);
@@ -312,7 +311,15 @@ public class Controller : MonoBehaviour {
         Commander.Shared.OptionToggle(!GameSetting.chatBubbleClose, 1);
 	}
 
+	private int cacheSeatsCount = -1;
+
 	private void setupSeats(int numberOfPlayers) {
+		if (cacheSeatsCount == numberOfPlayers) {
+			return ;
+		}
+
+		cacheSeatsCount = numberOfPlayers;
+
 		// 删除已有座位
 		var seats = FindObjectsOfType<Seat>();
 		foreach(var seat in seats) {
@@ -386,7 +393,7 @@ public class Controller : MonoBehaviour {
 
 	private void registerEvents() {
 		// 只允许初始化一次
-		if (Instance != null) {
+		if (isReady) {
 			return ;
 		}
 
@@ -430,7 +437,6 @@ public class Controller : MonoBehaviour {
         }).AddTo(this);
 
 		GameData.Shared.PlayerCount.Where((value) => value > 0).Subscribe((value) => {
-			currentIndex = -1; 
 			setupSeats(value);
 		}).AddTo(this);
 
@@ -456,13 +462,9 @@ public class Controller : MonoBehaviour {
 		subsPlayer();
 		subsRoomSetting();
 
-		// RxSubjects.GameExit.Subscribe((_) => {
-		// 	var players = GameData.Shared.Players;
-
-		// 	foreach(var key in players.Keys.ToList()) {
-		// 		players.Remove(key);
-		// 	}	
-		// }).AddTo(this);
+		RxSubjects.GameExit.Subscribe((_) => {
+			cacheSeatsCount = -1;
+		}).AddTo(this);
 
         RxSubjects.Emoticon.Subscribe((e) =>
         {
