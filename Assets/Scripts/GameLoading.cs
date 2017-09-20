@@ -66,6 +66,9 @@ public class GameLoading : MonoBehaviour {
 			PoolMan.DespawnAll();
 
 			loadingScene.SetActive(true);
+			Loading.SetActive(true);
+			MTT.SetActive(false);
+
 			gameScene.transform.parent.gameObject.SetActive(false);
 
 			// 关闭声音发送按钮
