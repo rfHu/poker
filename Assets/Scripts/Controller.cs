@@ -340,15 +340,18 @@ public class Controller : MonoBehaviour {
 	}
 
 	private void setNotStarted() {
-		if (GameData.Shared.Owner && !GameData.Shared.IsMatch()) {
+		if (GameData.Shared.Type.Value == GameType.SNG) {
+			infoText.text = "比赛报名中";
+			return ;
+		}
+
+		if (GameData.Shared.Owner) {
 			setStartButton(true);
             infoGo.SetActive(false);
 		} else {
 			setStartButton(false);
 			infoGo.SetActive(true);
-
-			var text = GameData.Shared.IsMatch() ? "比赛报名中" : "等待房主开始游戏";
-			infoText.text = text;
+			infoText.text = "等待房主开始游戏";
 		}
 	}
 
@@ -904,6 +907,10 @@ public class Controller : MonoBehaviour {
 		}).AddTo(this);
 
 		GameData.Shared.GameStarted.Subscribe((started) => {
+			if (GameData.Shared.Type.Value == GameType.MTT) {
+				return ;
+			}
+
 			if (!started) {
 				setNotStarted();
 			} else {

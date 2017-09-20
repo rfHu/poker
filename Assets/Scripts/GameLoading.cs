@@ -66,6 +66,9 @@ public class GameLoading : MonoBehaviour {
 			PoolMan.DespawnAll();
 
 			loadingScene.SetActive(true);
+			Loading.SetActive(true);
+			MTT.SetActive(false);
+
 			gameScene.transform.parent.gameObject.SetActive(false);
 
 			// 关闭声音发送按钮
@@ -82,7 +85,7 @@ public class GameLoading : MonoBehaviour {
         #if UNITY_EDITOR 
 			External.Instance.SetSocket("https://socket.dev.poker.top");
 			External.Instance.SetProxy("http://localhost:8888");
-			var rid = "59c08ba172a2a92de5a6010c";
+			var rid = "59c1e1928874674cfac303b3";
 			var sid = "s%3A5XayMo2RqWZGaTaavquAx5aIk-WF9zBC.er0LUXC4YuXLk6UmbvRiSUkPyTn06SXaKkOfSnvS8tI";
 
 			External.Instance.InitGame(rid + "&" + sid);
