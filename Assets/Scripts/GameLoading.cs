@@ -76,11 +76,11 @@ public class GameLoading : MonoBehaviour {
 
 			#if UNITY_EDITOR
 				// 切换房间测试逻辑
-				// var rid = "59c233413c28486a74e4d5ab";
-				// var sid = "s%3AgVdbMTULjxgjP5DIOLPmH5J9uspdnTah.v1h%2FfPUlebGPTeDt0oSGXnJ%2FMkssAtVYZjidmMPB9Zo";
-				// External.Instance.InitGame(rid + "&" + sid);
+				var rid = "59c2516d04e1206dde927125";
+				var sid = "s%3ALONS5SFbtD_FMsZcwwq1Yu424LyodQO6.Cmyswe9%2FrTd3UVetkZAOkyGkmN%2FxCSITmLjnOLETHIo";
+				External.Instance.InitGame(rid + "&" + sid);
 
-				debugSetup();
+				// debugSetup();
 			#endif
 
 
@@ -97,8 +97,8 @@ public class GameLoading : MonoBehaviour {
 
 			// External.Instance.InitGame(rid + "&" + sid);
 
-			var rid = "59c244a93c28486a74e53dc3";
-			var sid = "s%3AgVdbMTULjxgjP5DIOLPmH5J9uspdnTah.v1h%2FfPUlebGPTeDt0oSGXnJ%2FMkssAtVYZjidmMPB9Zo";
+			var rid = "59c2429b3c28486a74e538f4";
+			var sid = "s%3ALONS5SFbtD_FMsZcwwq1Yu424LyodQO6.Cmyswe9%2FrTd3UVetkZAOkyGkmN%2FxCSITmLjnOLETHIo";
 
 			External.Instance.InitGame(rid + "&" + sid);
 		#endif
