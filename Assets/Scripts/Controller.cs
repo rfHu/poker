@@ -115,6 +115,12 @@ public class Controller : MonoBehaviour {
 		isReady = true;
 	}
 
+	private void setInfoText(string text) {
+		infoText.text = text;
+		infoGo.SetActive(true);
+		setStartButton(false);
+	}
+
 	public void OnStartClick() {
 		Connect.Shared.Emit(new Dictionary<string, object>(){
 			{"f", "start"}
@@ -250,7 +256,7 @@ public class Controller : MonoBehaviour {
 		go.transform.Find("Value").GetComponent<Text>().text = text;
 	}
 
-	void setInfoText() {
+	void setRoomSetting() {
 		if (GameData.Shared.Type.Value == GameType.MTT) {
 			return ;
 		}
@@ -341,17 +347,12 @@ public class Controller : MonoBehaviour {
 
 	private void setNotStarted() {
 		if (GameData.Shared.Type.Value == GameType.SNG) {
-			infoText.text = "比赛报名中";
-			return ;
-		}
-
-		if (GameData.Shared.Owner) {
+			setInfoText("比赛报名中");
+		} else if (GameData.Shared.Owner) {
 			setStartButton(true);
             infoGo.SetActive(false);
 		} else {
-			setStartButton(false);
-			infoGo.SetActive(true);
-			infoText.text = "等待房主开始游戏";
+			setInfoText("等待房主开始游戏");
 		}
 	}
 
@@ -378,7 +379,7 @@ public class Controller : MonoBehaviour {
 	}
 
 	private void gameReload() {
-		setInfoText();
+		setRoomSetting();
 		SeeLeftCard.SetActive(false);
 		cardAnimQueue.Clear();
 		queueIsActive = false;
@@ -923,15 +924,15 @@ public class Controller : MonoBehaviour {
 		}).AddTo(this);
 
 		GameData.Shared.IPLimit.Subscribe((_) => {
-			setInfoText();
+			setRoomSetting();
 		}).AddTo(this);
 
 		GameData.Shared.GPSLimit.Subscribe((_) => {
-			setInfoText();
+			setRoomSetting();
 		}).AddTo(this);
 
 		GameData.Shared.NeedInsurance.Subscribe((_) => {
-			setInfoText();
+			setRoomSetting();
 		}).AddTo(this);
 
 		GameData.Shared.RoomName.Subscribe((name) => {
@@ -962,17 +963,12 @@ public class Controller : MonoBehaviour {
 				return ;
 			}
 
-			var text = infoText;
-
 			if (value == MatchRoomStat.WaitingStart) {
-				infoGo.SetActive(true);
-				text.text = "等待全场同步发牌";
+				setInfoText("等待全场同步发牌");
 			} else if (value == MatchRoomStat.Rest) {
-				infoGo.SetActive(true);
-				text.text = "中场休息5分钟";
+				setInfoText("中场休息5分钟");
 			} else if (value == MatchRoomStat.WaitingFinal) {
-				infoGo.SetActive(true);
-				text.text = "决赛等待中";
+				setInfoText("决赛等待中");
 			} else {
 				infoGo.SetActive(false);
 			}
@@ -996,8 +992,7 @@ public class Controller : MonoBehaviour {
 			if (GameData.Shared.InGame || pause != 2) {
 				infoGo.SetActive(false);
 			} else {
-				infoText.text = "房主已暂停游戏";
-				infoGo.SetActive(true);
+				setInfoText("房主已暂停游戏");
 			}
 		}).AddTo(this);
 
@@ -1112,8 +1107,7 @@ public class Controller : MonoBehaviour {
 
             if (limit)
             {
-                infoGo.SetActive(true);
-				infoText.text = "购买保险中，全场禁言…";
+				setInfoText("购买保险中，全场禁言…");
             } else {
 				infoGo.SetActive(false);
 			}
