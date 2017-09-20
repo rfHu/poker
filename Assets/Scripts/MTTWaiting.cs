@@ -31,6 +31,13 @@ public class MTTWaiting : MonoBehaviour {
 		}).AddTo(this);		
 	}
 
+	void OnDisable()
+	{
+		if (disposable != null) {
+			disposable.Dispose();		
+		}
+	}
+
 	public void Init(Dictionary<string, object> data) {
 		var code = GameData.Shared.GameCode.Value = data.String("code");
 		var name = GameData.Shared.RoomName.Value = data.String("name");
