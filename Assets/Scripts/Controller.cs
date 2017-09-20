@@ -171,11 +171,7 @@ public class Controller : MonoBehaviour {
 		var right = anchorPositions.Take(count - index);
 		var newVectors = left.Concat(right).ToList(); 
 
-		for (var i = 0; i < Seats.Count; i++) {
-			if (i >= newVectors.Count) {
-				break;
-			}
-
+		for (var i = 0; i < count; i++) {
 			Seats[i].GetComponent<Seat>().ChgPos(newVectors[i], anim);
 		}
 	}
