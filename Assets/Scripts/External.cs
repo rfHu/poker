@@ -150,10 +150,6 @@ public class External : MonoBehaviour{
 
 	void OnApplicationFocus(bool focusStatus)
 	{	
-		// if (focusStatus) {
-		// 	_.Log("focus");
-		// } else {
-		// 	_.Log("unfocus");
-		// }
+		
 	}
 }
