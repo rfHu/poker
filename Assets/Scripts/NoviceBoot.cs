@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
 public class NoviceBoot : MonoBehaviour {
 
@@ -11,8 +12,11 @@ public class NoviceBoot : MonoBehaviour {
 	void Awake()
 	{
 		modal = ModalHelper.Create();	
-		modal.Show(transform.parent, null, new Color(0, 0, 0, 102 / 255f));
-		transform.SetAsLastSibling();
+		modal.Show(G.DialogCvs.transform, null, new Color(0, 0, 0, 153 / 255f));
+
+		RxSubjects.GameExit.Subscribe((_) => {
+			Destroy(gameObject);
+		}).AddTo(this);
 	}
 
 	void OnDestroy()

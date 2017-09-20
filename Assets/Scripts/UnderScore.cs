@@ -108,7 +108,7 @@ public static class _ {
 		rect.sizeDelta = new Vector2(0, 0);
 		rect.anchorMin = new Vector2(0, 0);
 		rect.anchorMax = new Vector2(1, 1);
-		rect.anchoredPosition = new Vector2(0, 0);
+		rect.anchoredPosition3D = new Vector3(0, 0, 0);
     }
 
     static public void Log(object obj) {
