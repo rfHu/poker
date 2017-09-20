@@ -75,7 +75,15 @@ public class GameLoading : MonoBehaviour {
 			Commander.Shared.VoiceIconToggle(false);
 
 			// 编辑器模式下会自动重新加载
-			debugSetup();
+			// debugSetup();
+
+			#if UNITY_EDITOR
+				// 切换房间测试逻辑
+				var rid = "59c1e1928874674cfac303b3";
+				var sid = "s%3AsAgz8nuZ15cD6lyIv6zC1hfUABIpTukA.cXisQhX16Lgqf1YB8ZjZzw4I1%2FIe40%2FHyQDQzRnPpXo";
+				External.Instance.InitGame(rid + "&" + sid);
+			#endif
+
 
 			Loading.GetComponent<Loading>().SetRndText();
 		}).AddTo(this);
@@ -85,7 +93,12 @@ public class GameLoading : MonoBehaviour {
         #if UNITY_EDITOR 
 			External.Instance.SetSocket("https://socket.dev.poker.top");
 			External.Instance.SetProxy("http://localhost:8888");
-			var rid = "59c1e1928874674cfac303b3";
+			// var rid = "59c1e1928874674cfac303b3";
+			// var sid = "s%3AsAgz8nuZ15cD6lyIv6zC1hfUABIpTukA.cXisQhX16Lgqf1YB8ZjZzw4I1%2FIe40%2FHyQDQzRnPpXo";
+
+			// External.Instance.InitGame(rid + "&" + sid);
+
+			var rid = "59c2102aad2edd68e2e60eca";
 			var sid = "s%3AsAgz8nuZ15cD6lyIv6zC1hfUABIpTukA.cXisQhX16Lgqf1YB8ZjZzw4I1%2FIe40%2FHyQDQzRnPpXo";
 
 			External.Instance.InitGame(rid + "&" + sid);
