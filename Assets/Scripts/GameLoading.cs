@@ -97,10 +97,11 @@ public class GameLoading : MonoBehaviour {
 
 			// External.Instance.InitGame(rid + "&" + sid);
 
-			var rid = "59c2429b3c28486a74e538f4";
-			var sid = "s%3ALONS5SFbtD_FMsZcwwq1Yu424LyodQO6.Cmyswe9%2FrTd3UVetkZAOkyGkmN%2FxCSITmLjnOLETHIo";
+            var rid = "59c266e7e02b326af2e9fd5b";
+            var sid = "s%3A781xdExjZTYPvW0kjsz6yYmkG2BP35uI.SXCH3urqDKwDBZHzPbUmbupAr3Ebh7bNQkfVDeQGlPM";
 
-			External.Instance.InitGame(rid + "&" + sid);
+            //External.Instance.InitGame(rid + "&" + sid);
+            External.Instance.InitMatch(rid + "&" + sid);
 		#endif
     }
 }
