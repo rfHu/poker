@@ -299,7 +299,7 @@ sealed public class GameData {
 		});
 
 		RxSubjects.Started.AsObservable().Subscribe((e) => {
-			GameStarted.Value = true;
+			GameStarted.OnNext(true);
 			LeftTime.Value = e.Data.Int("left_time");
 			Paused.OnNext(0); 
 		});
@@ -316,7 +316,7 @@ sealed public class GameData {
 		});
 
 		RxSubjects.GameStart.AsObservable().Subscribe((e) => {
-			GameStarted.Value = true;
+			GameStarted.OnNext(true);
 
 			var json = e.Data.Dict("room");
 			PublicCardAnimState = true;
@@ -740,7 +740,7 @@ sealed public class GameData {
 	}
 
 	// 游戏是否已经开始，跟暂停状态无关
-	public ReactiveProperty<bool> GameStarted = new ReactiveProperty<bool>(false); 
+	public BehaviorSubject<bool> GameStarted = new BehaviorSubject<bool>(false); 
 	public float Rake = 0;
 	public int Duration = 0;
 	public bool NeedAudit = false;
@@ -859,7 +859,7 @@ sealed public class GameData {
 		var startTs = json.Int("begin_time");
 		StartTime = _.DateTimeFromTimeStamp(startTs);
 		// 游戏是否已开始
-		GameStarted.Value = startTs != 0;
+		GameStarted.OnNext(startTs != 0);
 		Paused.OnNext(json.Int("is_pause"));
 		
 		// 删除公共牌重新添加
