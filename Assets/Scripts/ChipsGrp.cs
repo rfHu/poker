@@ -4,6 +4,7 @@ using DG.Tweening;
 using UnityEngine.UI;
 using UnityEngine.UI.ProceduralImage;
 using System;
+using UniRx;
 
 public class ChipsGrp : MonoBehaviour {
 	public List<GameObject> Chips;
@@ -13,6 +14,9 @@ public class ChipsGrp : MonoBehaviour {
 
 	void Awake()
 	{
+		RxSubjects.GameExit.Subscribe((_) => {
+			Destroy(gameObject);
+		}).AddTo(this);
 	}
 
 	public void OnlyChips() {
