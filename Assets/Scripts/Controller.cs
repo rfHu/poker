@@ -498,7 +498,7 @@ public class Controller : MonoBehaviour {
 
             foreach (var seat in Seats)
             {
-                if (seat.GetComponent<Seat>().Index == fromSeatIndex)
+                if (seat.GetComponent<Seat>().Index == fromSeatIndex && fromSeatIndex > -1)
                     fromSeatPos = seat.GetComponent<RectTransform>().anchoredPosition;
                 
                 if (seat.GetComponent<Seat>().Index == toSeatIndex)
