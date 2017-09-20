@@ -476,6 +476,7 @@ public class Controller : MonoBehaviour {
 
 		RxSubjects.GameExit.Subscribe((_) => {
 			cacheSeatsCount = -1;
+			infoGo.SetActive(false);
 		}).AddTo(this);
 
         RxSubjects.Emoticon.Subscribe((e) =>
