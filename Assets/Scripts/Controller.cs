@@ -32,8 +32,9 @@ public class Controller : MonoBehaviour {
     private List<CardContainer> PublicCardContainers;
 
 	[SerializeField]private Text[] gameInfoTexts;
+	[SerializeField]private GameObject seatPrefab;
 
-	public List<GameObject> Seats;	
+	public List<GameObject> Seats = new List<GameObject>();	
 
 	[SerializeField]private List<ProceduralImage> cardBorders;
 
@@ -155,6 +156,10 @@ public class Controller : MonoBehaviour {
 
 
 	void changePositions(int index, bool anim = true) {
+		if (index >= Seats.Count) {
+			return ;
+		}
+
 		var mySeat = Seats[index].GetComponent<Seat>();
 
 		if (mySeat.GetPos() == SeatPosition.Bottom) {
@@ -326,22 +331,25 @@ public class Controller : MonoBehaviour {
 
 		cacheSeatsCount = numberOfPlayers;
 
-		// 删除已有座位
-		var seats = FindObjectsOfType<Seat>();
-		foreach(var seat in seats) {
-			PoolMan.Despawn(seat.transform);
+		if (Seats.Count == 0) {
+			for(var i = 0; i < 9; i++) {
+				GameObject cpseat = (GameObject)Instantiate(seatPrefab);
+				Seats.Add(cpseat);
+			}
 		}
-		Seats.Clear();
 		
 		anchorPositions = getVectors (numberOfPlayers);
 
-		for (int i = 0; i < numberOfPlayers; i++) {
-			GameObject cpseat = PoolMan.Spawn("Seat").gameObject;
-			cpseat.SetActive(true);
-			
-			var st = cpseat.GetComponent<Seat>();
-			st.Init(i, anchorPositions[i]);		
-			Seats.Add (cpseat);
+		for (int i = 0; i < 9; i++) {
+			var seat = Seats[i];
+
+			if (numberOfPlayers <= i) {
+				seat.SetActive(false);
+			} else {
+				seat.SetActive(true);
+				var st = seat.GetComponent<Seat>();
+				st.Init(i, anchorPositions[i]);		
+			}
 		}
 	}
 
@@ -848,6 +856,10 @@ public class Controller : MonoBehaviour {
 		};
 
 		Action<int> enableSeat = (index) => {
+			if (index >= Seats.Count) {
+				return ;
+			}
+
 			Seats[index].GetComponent<Seat>().Show();
 		};
 
@@ -890,6 +902,7 @@ public class Controller : MonoBehaviour {
 			if (GameData.Shared.IsMatch())
 			{
 				OwnerButton.SetActive(false);
+				setStartButton(false);
 			} else {
 				OwnerButton.SetActive(true);
 			}
@@ -915,7 +928,7 @@ public class Controller : MonoBehaviour {
 			if (!started) {
 				setNotStarted();
 			} else {
-				startButton.SetActive(false);
+				setStartButton(false);
 			}
 		}).AddTo(this);
 
