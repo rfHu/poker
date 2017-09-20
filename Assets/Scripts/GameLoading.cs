@@ -74,14 +74,13 @@ public class GameLoading : MonoBehaviour {
 			// 关闭声音发送按钮
 			Commander.Shared.VoiceIconToggle(false);
 
-			// 编辑器模式下会自动重新加载
-			// debugSetup();
-
 			#if UNITY_EDITOR
 				// 切换房间测试逻辑
-				var rid = "59c233413c28486a74e4d5ab";
-				var sid = "s%3AgVdbMTULjxgjP5DIOLPmH5J9uspdnTah.v1h%2FfPUlebGPTeDt0oSGXnJ%2FMkssAtVYZjidmMPB9Zo";
-				External.Instance.InitGame(rid + "&" + sid);
+				// var rid = "59c233413c28486a74e4d5ab";
+				// var sid = "s%3AgVdbMTULjxgjP5DIOLPmH5J9uspdnTah.v1h%2FfPUlebGPTeDt0oSGXnJ%2FMkssAtVYZjidmMPB9Zo";
+				// External.Instance.InitGame(rid + "&" + sid);
+
+				debugSetup();
 			#endif
 
 
@@ -98,7 +97,7 @@ public class GameLoading : MonoBehaviour {
 
 			// External.Instance.InitGame(rid + "&" + sid);
 
-			var rid = "59c225550370466b99ff836a";
+			var rid = "59c244a93c28486a74e53dc3";
 			var sid = "s%3AgVdbMTULjxgjP5DIOLPmH5J9uspdnTah.v1h%2FfPUlebGPTeDt0oSGXnJ%2FMkssAtVYZjidmMPB9Zo";
 
 			External.Instance.InitGame(rid + "&" + sid);
