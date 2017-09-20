@@ -797,6 +797,7 @@ sealed public class GameData {
 		var options = json.Dict("options");
 		var gamers = json.Dict("gamers");
 
+        Type.Value = string2GameType(json.String("type"));
 		Coins = json.Int("coins");
 		Bankroll.Value = json.Int("bankroll");	
 		BB = options.Int("limit") ;
@@ -821,8 +822,6 @@ sealed public class GameData {
 		DealerSeat.Value = json.Int("dealer_seat");
 		Pot.Value = json.Int("pot");
 		Pots.Value = json.DL("pots");
-
-        Type.Value = string2GameType(json.String("type"));
 
         if (IsMatch())
         {
