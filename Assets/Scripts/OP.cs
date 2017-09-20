@@ -218,7 +218,7 @@ public class OP : MonoBehaviour {
 	private void setRaiseButtons(int call) {
 		var pot = GameData.Shared.Pot.Value;
 		var bb = GameData.Shared.BB;
-		var minRaise = 2 * call;
+		var minRaise = Mathf.Max(2 * call, bb);
 
 		List<int> values = new List<int>(); 
 		List<string> names = new List<string>();

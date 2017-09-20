@@ -66,6 +66,10 @@ public class UserDetail : MonoBehaviour {
         }
 
         RxSubjects.Emoticon.Subscribe((e) =>{
+			if (!gameObject.activeSelf) {
+				return ;
+			}
+
             StopCoroutine(SetBGCol);
             SetBGCol = SetBGColor();
             StartCoroutine(SetBGCol);
