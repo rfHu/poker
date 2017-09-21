@@ -477,6 +477,9 @@ public class Controller : MonoBehaviour {
 		RxSubjects.GameExit.Subscribe((_) => {
 			cacheSeatsCount = -1;
 			infoGo.SetActive(false);
+
+			// 清空material ui组件
+			PokerUI.DestroyElements();
 		}).AddTo(this);
 
         RxSubjects.Emoticon.Subscribe((e) =>
@@ -1017,10 +1020,8 @@ public class Controller : MonoBehaviour {
 			if (type == 5) {
 				text = "服务器即将升级，牌局将强制暂停";
 			} else {
-				text = "房主已暂停游戏";
-
 				if (GameData.Shared.InGame) {
-					text += "（下一手生效）";
+					text += "房主已暂停游戏（下一手生效）";
 				}
 			}
 

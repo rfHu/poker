@@ -12,6 +12,21 @@ public class PokerUI: MonoBehaviour {
 		}
 	}
 
+	static public void DestroyElements() {
+		var cvs = G.MaterialCvs;
+		var toast = cvs.GetComponentInChildren<ToastManager>();
+
+		if (toast) {
+			Destroy(toast.gameObject);
+		}
+
+		var dialog = cvs.GetComponentInChildren<DialogManager>();
+
+		if (dialog) {
+			Destroy(dialog.gameObject);
+		}
+	}
+
 	static public DialogAlert ShowDialog(string text, Action yesAction, string yesText, Action cancelAction, string cancelText) {
 		if (dialogAlert != null) {
 			dialogAlert.Hide();
@@ -62,6 +77,7 @@ public class PokerUI: MonoBehaviour {
 	static public void Toast(string msg, float seconds = 2) {
 		var canvasHierarchy = G.MaterialCvs.transform.Find("MaterialUI");
 		ToastManager.Show(msg, seconds, MaterialColor.grey900, new Color(1, 1, 1, 1), 39, canvasHierarchy);
+		// ToastManager.Hide();
 	}
 
 	static public void ToastThenExit(string msg) {

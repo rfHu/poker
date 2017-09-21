@@ -54,7 +54,8 @@ public sealed class Connect  {
 
 	private void onConnect(Socket socket, Packet packet, params object[] args) {
 		_.Log("Unity: 连接建立成功，执行login逻辑……");
-		
+
+		logining = false;
 		Emit(new Dictionary<string, object>{
 			{"f", "login"},
 			{"args", new Dictionary<string, object>{
@@ -63,10 +64,11 @@ public sealed class Connect  {
 		}, (json) => {
 			_.Log("Unity: 登陆成功，准备进入房间……");
 
+			logining = false;
+
 			// 登陆成功，写用户数据
 			saveUserInfo(json);
 
-			logining = false;
 
 			// 进入房间
 			EnterGame();
