@@ -80,11 +80,11 @@ public class GameLoading : MonoBehaviour {
 
 			#if UNITY_EDITOR
 				// // 切换房间测试逻辑
-				// var rid = "59c327043cd0b31b60c94849";
-				// var sid = "s%3AZCRd1PKK5XocACGHDIhVIJ1XLw35WmZE.MBMn43t7zVkyfY3xWVJRC4f6Xl4ARR447Hk6SN8D93Q";
-				// External.Instance.InitGame(rid + "&" + sid);
+				var rid = "59c38cbe6a007e545ed0a2ae";
+				var sid = "s%3ALq49kS4bIomBNiKEq8yHbXHFCavRAPXC.EJiBchVuMVcoXilDMTY6uy1cKgnM55rKbSp9zZrGfY0";
+				External.Instance.InitGame(rid + "&" + sid);
 
-				debugSetup();
+				// debugSetup();
 			#endif
 
 
@@ -94,15 +94,15 @@ public class GameLoading : MonoBehaviour {
 
     private void debugSetup() {
         #if UNITY_EDITOR 
-			External.Instance.SetSocket("https://socket.dev.poker.top");
+			External.Instance.SetSocket("https://socket.pre.poker.top");
 			External.Instance.SetProxy("http://localhost:8888");
 			// var rid = "59c1e1928874674cfac303b3";
 			// var sid = "s%3AsAgz8nuZ15cD6lyIv6zC1hfUABIpTukA.cXisQhX16Lgqf1YB8ZjZzw4I1%2FIe40%2FHyQDQzRnPpXo";
 
 			// External.Instance.InitGame(rid + "&" + sid);
 
-            var rid = "59c332393cd0b31b60c95bdd";
-            var sid = "s%3AqO3LuM1oxpS3q2tKLYWDofquy7TQ7Zy-.UIWsRAQCWfFEKqZasgNyOgXxNwNxCL%2BZbACFkobI3n4";
+            var rid = "59c38cb56a007e545ed0a299";
+            var sid = "s%3ALq49kS4bIomBNiKEq8yHbXHFCavRAPXC.EJiBchVuMVcoXilDMTY6uy1cKgnM55rKbSp9zZrGfY0";
 
 			External.Instance.InitGame(rid + "&" + sid);
 		#endif

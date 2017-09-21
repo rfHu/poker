@@ -114,7 +114,9 @@ public class External : MonoBehaviour{
 
 		// 延时执行退出逻辑
 		Observable.Timer(TimeSpan.FromMilliseconds(90)).AsObservable().Subscribe((_) => {
-			// RxSubjects.GameExit.OnNext(true);
+			#if UNITY_EDITOR
+				RxSubjects.GameEnter.OnNext(true);
+			#endif
 			callback();
 		});
 	}

@@ -80,6 +80,11 @@ public class Seat : MonoBehaviour {
 				ButtonText.text = "坐下";
 			}		
 		}).AddTo(this);
+
+		// 还原座位
+		RxSubjects.GameEnter.Subscribe((_) => {
+			Show();
+		}).AddTo(this);
 	}
 
 	public SeatPosition GetPos() {
