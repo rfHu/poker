@@ -322,15 +322,7 @@ public class Controller : MonoBehaviour {
         Commander.Shared.OptionToggle(!GameSetting.chatBubbleClose, 1);
 	}
 
-	private int cacheSeatsCount = -1;
-
 	private void setupSeats(int numberOfPlayers) {
-		if (cacheSeatsCount == numberOfPlayers) {
-			return ;
-		}
-
-		cacheSeatsCount = numberOfPlayers;
-
 		if (Seats.Count == 0) {
 			for(var i = 0; i < 9; i++) {
 				GameObject cpseat = (GameObject)Instantiate(seatPrefab);
@@ -474,8 +466,7 @@ public class Controller : MonoBehaviour {
 		subsPlayer();
 		subsRoomSetting();
 
-		RxSubjects.GameExit.Subscribe((_) => {
-			cacheSeatsCount = -1;
+		RxSubjects.GameEnter.Subscribe((_) => {
 			infoGo.SetActive(false);
 
 			// 清空material ui组件

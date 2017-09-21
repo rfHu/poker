@@ -62,7 +62,7 @@ public class GameLoading : MonoBehaviour {
 			} 	
 		}).AddTo(this);
 
-		RxSubjects.GameExit.Subscribe((_) => {
+		RxSubjects.GameEnter.Subscribe((_) => {
 			PoolMan.DespawnAll();
 
 			loadingScene.SetActive(true);
