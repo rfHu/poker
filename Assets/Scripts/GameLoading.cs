@@ -50,7 +50,7 @@ public class GameLoading : MonoBehaviour {
 		}).AddTo(this);
 
 		RxSubjects.Look.Subscribe((e) => {
-			if (loadingScene.activeSelf) {
+			if (loadingScene.activeInHierarchy) {
 				loadingScene.SetActive(false);
 				gameScene.transform.parent.gameObject.SetActive(true);
 				gameScene.SetActive(true);
@@ -63,6 +63,10 @@ public class GameLoading : MonoBehaviour {
 		}).AddTo(this);
 
 		RxSubjects.GameEnter.Subscribe((_) => {
+			if(!gameScene.activeInHierarchy) {
+				return ;
+			}
+
 			PoolMan.DespawnAll();
 
 			loadingScene.SetActive(true);

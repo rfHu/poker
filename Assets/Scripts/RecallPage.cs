@@ -56,7 +56,7 @@ public class RecallPage : MonoBehaviour {
     {
         // 切换房间了，把弹框关闭
         GameData.Shared.Room.Subscribe((rid) => {
-            if (!gameObject.activeSelf || string.IsNullOrEmpty(roomID)) {
+            if (!gameObject.activeInHierarchy || string.IsNullOrEmpty(roomID)) {
                 return ;
             }
 

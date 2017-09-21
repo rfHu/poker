@@ -62,7 +62,7 @@ public class ChipsGo : MonoBehaviour {
 		var sbIndex = transform.GetSiblingIndex();
 		var chip = transform.parent.GetChild(sbIndex - 1).GetComponent<ChipsGo>();
 
-		return chip != null && chip.gameObject.activeSelf;
+		return chip != null && chip.gameObject.activeInHierarchy;
 	}
 
 	public void Hide() {

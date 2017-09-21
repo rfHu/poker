@@ -119,7 +119,7 @@ namespace PokerPlayer {
         }
 
         void Update() {
-            if (winParticle.gameObject.activeSelf && winParticle.isStopped) {
+            if (winParticle.gameObject.activeInHierarchy && winParticle.isStopped) {
                 winParticle.Play(true);
             }
         }
@@ -321,7 +321,7 @@ namespace PokerPlayer {
 
             RxSubjects.GainChip.Where((gainChip) => gainChip.Uid == Uid).Subscribe((gainChip) => {
                 gainChip.Grp.ToParent(transform, () => {
-                    if (!gameObject.activeSelf) {
+                    if (!gameObject.activeInHierarchy) {
                         return ;
                     } 
 
@@ -492,7 +492,7 @@ namespace PokerPlayer {
         }
 
         public void DoFade(GameObject go, Action callback = null) {
-            if (!go.activeSelf) {
+            if (!go.activeInHierarchy) {
                 return ;
             }
 
