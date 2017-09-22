@@ -62,34 +62,36 @@ public class GameLoading : MonoBehaviour {
 			} 	
 		}).AddTo(this);
 
-		RxSubjects.GameEnter.Subscribe((_) => {
-			if(!gameScene.activeInHierarchy) {
-				return ;
-			}
-
-			PoolMan.DespawnAll();
-
-			loadingScene.SetActive(true);
-			Loading.SetActive(true);
-			MTT.SetActive(false);
-
-			gameScene.transform.parent.gameObject.SetActive(false);
-
-			// 关闭声音发送按钮
-			Commander.Shared.VoiceIconToggle(false);
-
-			#if UNITY_EDITOR
-				// // 切换房间测试逻辑
-				var rid = "59c38cbe6a007e545ed0a2ae";
-				var sid = "s%3ALq49kS4bIomBNiKEq8yHbXHFCavRAPXC.EJiBchVuMVcoXilDMTY6uy1cKgnM55rKbSp9zZrGfY0";
-				External.Instance.InitGame(rid + "&" + sid);
-
-				// debugSetup();
-			#endif
-
-
-			Loading.GetComponent<Loading>().SetRndText();
+		RxSubjects.GameReset.Subscribe((_) => {
+			back2LoadingScene();	
 		}).AddTo(this);
+	}
+
+	private void back2LoadingScene() {
+		if(!gameScene.activeInHierarchy) {
+			return ;
+		}
+
+		PoolMan.DespawnAll();
+		loadingScene.SetActive(true);
+		Loading.SetActive(true);
+		MTT.SetActive(false);
+
+		gameScene.transform.parent.gameObject.SetActive(false);
+
+		// 关闭声音发送按钮
+		Commander.Shared.VoiceIconToggle(false);
+
+		#if UNITY_EDITOR
+			// // 切换房间测试逻辑
+			var rid = "59c38cbe6a007e545ed0a2ae";
+			var sid = "s%3ALq49kS4bIomBNiKEq8yHbXHFCavRAPXC.EJiBchVuMVcoXilDMTY6uy1cKgnM55rKbSp9zZrGfY0";
+			External.Instance.InitGame(rid + "&" + sid);
+
+			// debugSetup();
+		#endif
+
+		Loading.GetComponent<Loading>().SetRndText();	
 	}
 
     private void debugSetup() {

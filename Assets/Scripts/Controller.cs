@@ -466,10 +466,8 @@ public class Controller : MonoBehaviour {
 		subsPlayer();
 		subsRoomSetting();
 
-		RxSubjects.GameEnter.Subscribe((_) => {
+		RxSubjects.GameReset.Subscribe((_) => {
 			infoGo.SetActive(false);
-
-			// 清空material ui组件
 			PokerUI.DestroyElements();
 		}).AddTo(this);
 
@@ -1006,17 +1004,16 @@ public class Controller : MonoBehaviour {
 
 		RxSubjects.Pausing.Subscribe((e) => {
 			var type = e.Data.Int("type");
-			var text = "";
 
 			if (type == 5) {
-				text = "服务器即将升级，牌局将强制暂停";
+				var text = "服务器即将升级，牌局将强制暂停";
+				PokerUI.Toast(text);
 			} else {
 				if (GameData.Shared.InGame) {
-					text += "房主已暂停游戏（下一手生效）";
+					var text = "房主已暂停游戏（下一手生效）";
+					PokerUI.Toast(text);
 				}
 			}
-
-			PokerUI.Toast(text);
 		}).AddTo(this);
 
 		RxSubjects.Modify.Subscribe((e) =>{

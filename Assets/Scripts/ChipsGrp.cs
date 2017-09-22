@@ -14,7 +14,7 @@ public class ChipsGrp : MonoBehaviour {
 
 	void Awake()
 	{
-		RxSubjects.GameEnter.Subscribe((_) => {
+		RxSubjects.GameReset.Subscribe((_) => {
 			Destroy(gameObject);
 		}).AddTo(this);
 	}
