@@ -15,8 +15,11 @@ public class Insurance : MonoBehaviour {
     public Text AllinTitle;
     public Transform AllinPlayersParent;
     public Text Odds;
-    public Text SelectNum;
-    public Transform OutsCardsParent;
+    public Text LoseSelectNum;
+    public Text TieSelectNum;
+    public Text[] SupassNums;
+    public GameObject[] OutsCardTitles;
+    public Transform[] OutsCardsParents;
     public Text SumInsured;
     public Text ClaimAmount;
     public Slider CASlider;
@@ -24,9 +27,8 @@ public class Insurance : MonoBehaviour {
     public Button ExitButton;
     public CButton EqualButton;
     public CButton BreakEventButton;
-    public Toggle CheckAllToggle;
+    public Toggle[] CheckAllToggles;
     public GameObject BuyTime;
-    public Text TotalSupass;
     public Text CardDesc;
     public Text BuyButtonNum;
     public GameObject BuyerButtons;
@@ -56,11 +58,18 @@ public class Insurance : MonoBehaviour {
 
     // scope是赔付额
     List<int> scope;
+
     bool mustBuy = false;
     private bool isFlop = false;
     bool isBuyer;
+
     HashSet<int> selectedCards; 
     List<Toggle> OUTSCards;
+    int loseOutsCount;
+    int tieOutsCount { get { return OUTSCards.Count - loseOutsCount; } }
+    int selectLoseOutsCount;
+    int selectTieOutsCount;
+
     List<int> isoffToggles;
 
     IEnumerator myCoroutine;
@@ -70,7 +79,16 @@ public class Insurance : MonoBehaviour {
     {
         this.isBuyer = isBuyer;
 
-        outsCardArray = data.IL("outs");
+        List<int> loseOuts = data.IL("lose_outs");
+        List<int> tieOuts = data.IL("tie_outs");
+        outsCardArray = new List<int>();
+        outsCardArray.AddRange(loseOuts);
+        outsCardArray.AddRange(tieOuts);
+        loseOutsCount = loseOuts.Count;
+        selectLoseOutsCount = 0;
+        selectTieOutsCount = 0;
+
+
         potValue = data.Int("pot");
         cost = data.Int("cost");
         scope = data.IL("scope");
@@ -83,11 +101,12 @@ public class Insurance : MonoBehaviour {
         isoffToggles = new List<int>();
         OUTSCards = new List<Toggle>();
 
+        //设置倒计时动画
         var time = data.Int("time");
         myCoroutine = Timer(time);
         StartCoroutine(myCoroutine);
-
         BuyTime.SetActive(true);
+
         if (mustBuy && isBuyer)
         {
             ExitButton.gameObject.SetActive(false);
@@ -97,32 +116,35 @@ public class Insurance : MonoBehaviour {
             ExitButton.gameObject.SetActive(true);
         }
 
-        //必须购买设置
-        CheckAllToggle.gameObject.SetActive(!mustBuy);
+        OutsCardTitles[0].SetActive(loseOuts.Count > 0);
+        OutsCardTitles[1].SetActive(tieOuts.Count > 0);
+        SupassNums[0].text = "/ " + loseOutsCount;
+        SupassNums[1].text = "/ " + tieOuts.Count;
+
+        foreach (var item in CheckAllToggles)
+        {
+            item.gameObject.SetActive(!mustBuy);
+            item.interactable = isBuyer;
+        }
 
         //区分观看者和购买者
         BuyerButtons.SetActive(isBuyer);
         WatcherText.SetActive(!isBuyer);
-        CheckAllToggle.interactable = isBuyer;
         CASlider.interactable = isBuyer;
-
 
         SetOdds();
         CASlider.value = CASlider.minValue;
 
         Pot.text = potValue.ToString();
-        TotalSupass.text = "/ " + outsCardArray.Count.ToString();
 
         int maxPercent = -1;
-
 		if (data.ContainsKey("win_rate")) {
 			maxPercent = getMaxPercent(allinPlayers, myRate);
 		}
-
         setupAllinPlayers(allinPlayers, maxPercent); 
 
         setupPbCards();
-        setupOutsCards();
+        setupOutsCards(loseOuts.Count);
 
         addEvents();
 
@@ -183,10 +205,10 @@ public class Insurance : MonoBehaviour {
 		}
     }
 
-    private void setupOutsCards() {
+    private void setupOutsCards(int loseNum) {
         foreach (var cardNum in outsCardArray)
         {
-            var card = PoolMan.Spawn("InsureCard",OutsCardsParent.transform);
+            var card = PoolMan.Spawn("InsureCard", outsCardArray.IndexOf(cardNum) < loseNum ? OutsCardsParents[0] : OutsCardsParents[1]);
             card.GetComponent<CardContainer>().CardInstance.Show(cardNum);
             card.GetComponent<Toggle>().isOn = true;
 
@@ -202,26 +224,27 @@ public class Insurance : MonoBehaviour {
                 card.GetComponent<Toggle>().interactable = true;
             }
 
-             toggle.OnValueChangedAsObservable().Subscribe((bool value) => 
+            toggle.OnValueChangedAsObservable().Subscribe((bool value) =>
             {
-                SelectedChanged(value, cardNum, toggle);
-                if (isBuyer)
-                {
-                    if (!value)
-                    {
-                        isoffToggles.Add(outsCardArray.IndexOf(cardNum));
-                    }
-                    else 
-                    {
-                        isoffToggles.Remove(outsCardArray.IndexOf(cardNum));
-                    }
-                    RPCRsyncInsurance();
-                }
-            }).AddTo(this);
+               SelectedChanged(value, cardNum, toggle);
+               if (isBuyer)
+               {
+                   if (!value)
+                   {
+                       isoffToggles.Add(outsCardArray.IndexOf(cardNum));
+                   }
+                   else
+                   {
+                       isoffToggles.Remove(outsCardArray.IndexOf(cardNum));
+                   }
+                   RPCRsyncInsurance();
+               }
+           }).AddTo(this);
         }
     }
 
     private void addEvents() {
+        //加时
         RxSubjects.Moretime.Subscribe((e) =>{
             var model = e.Data.ToObject<MoreTimeModel>();
 
@@ -235,10 +258,12 @@ public class Insurance : MonoBehaviour {
             StartCoroutine(myCoroutine);
         }).AddTo(this);
 
+        //中途进入房间逻辑
         RxSubjects.Look.Subscribe((e) => {
             GetComponent<DOPopup>().Close();
         }).AddTo(this);
 
+        //旁观他人
         RxSubjects.RsyncInsurance.Subscribe((e) => {
             if (e.Data.Int("closeflag") == 1)
             {
@@ -262,6 +287,7 @@ public class Insurance : MonoBehaviour {
             CASlider.value = CASlidernum;
         }).AddTo(this);
 
+        //直接退出不购买保险
         ExitButton.OnClickAsObservable().Subscribe((_) => {
             if (isBuyer)
             {
@@ -271,8 +297,52 @@ public class Insurance : MonoBehaviour {
             }
             GetComponent<DOPopup>().Close();
         }).AddTo(this);
+
+        foreach (var item in CheckAllToggles)
+        {
+            item.OnValueChangedAsObservable().Subscribe((isOn) => {
+                if (mustBuy || !isBuyer)
+                    return;
+
+
+            }).AddTo(this);
+        }
     }
 
+
+    public void OnSLButtonClick(int index)
+    {
+        if (mustBuy || !isBuyer)
+        {
+            return;
+        }
+
+        int selectNum = index == 0 ? selectLoseOutsCount : selectTieOutsCount;
+        int wholeNum = index == 0 ? loseOutsCount : tieOutsCount;
+        int max = index == 0 ? loseOutsCount : OUTSCards.Count;
+        int min = index == 0 ? 0 : loseOutsCount;
+
+
+        if (selectNum == wholeNum)
+        {
+            for (var i = max - 1; i >= min; i--)
+            {
+                OUTSCards[i].isOn = false;
+            }
+        }
+        else
+        {
+            for (var i = max - 1; i >= min; i--)
+            {
+                OUTSCards[i].isOn = true;
+            }
+        }
+
+        SetOdds();
+    }
+
+
+    //点击结束发送操作
     public void ClickUp() 
     {
         if (!isBuyer)
@@ -305,6 +375,7 @@ public class Insurance : MonoBehaviour {
             BuyButton.interactable = true;
         }
 
+        //翻牌圈限制
         if (isFlop) {
             var limit = (int)Math.Floor(potValue / 3f); 
             maxValue = Math.Min(limit, maxValue);
@@ -317,11 +388,15 @@ public class Insurance : MonoBehaviour {
         BreakEventButton.interactable = !(beValue > maxValue);
     }
 
+    /// <summary>
+    /// 选牌数改变导致赔率和显示的改变
+    /// </summary>
     private void SetOdds()
     {
         var selected = selectedCards.Count;
 
-        SelectNum.text = selected.ToString();
+        LoseSelectNum.text = selectLoseOutsCount.ToString();
+        TieSelectNum.text = selectTieOutsCount.ToString();
 
         int num = selected - 1;
         if (num > 19)
@@ -341,20 +416,27 @@ public class Insurance : MonoBehaviour {
 
     private void SelectedChanged(bool value, int num, Toggle toggle)
     {
+        bool isLose = outsCardArray.IndexOf(num) < loseOutsCount;
         if (value) {
             selectedCards.Add(num);
+            selectLoseOutsCount += isLose ? 1 : 0;
+            selectTieOutsCount += isLose ? 0 : 1;
         }
         else if (!value) {
             selectedCards.Remove(num);
+            selectLoseOutsCount -= isLose ? 1 : 0;
+            selectTieOutsCount -= isLose ? 0 : 1;
         }
 
-        if (selectedCards.Count == outsCardArray.Count) {
-            SetCheckAllToggle(true);
-        }
+        if (selectLoseOutsCount == loseOutsCount) 
+            SetCheckAllToggle(true, 0);
         else 
-        {
-            SetCheckAllToggle(false);
-        }
+            SetCheckAllToggle(false, 0);
+
+        if (selectTieOutsCount == tieOutsCount)
+            SetCheckAllToggle(true, 1);
+        else
+            SetCheckAllToggle(false, 1);
 
         SetOdds();
         DependOnClaimAmount();
@@ -397,12 +479,14 @@ public class Insurance : MonoBehaviour {
         }
     }
 
+    //保本按钮
     public void OnBEButtonClick() 
     {
         CASlider.value = beValue;
         RPCRsyncInsurance();
     }
 
+    //等利按钮
     public void OnEPButtonClick() 
     {
         CASlider.value = eqValue;
@@ -456,36 +540,10 @@ public class Insurance : MonoBehaviour {
         BuyTime.SetActive(false);
     }
 
-    public void OnSLButtonClick() 
-    {
-
-        if (mustBuy || !isBuyer) {
-            return ;
-        }
-            
-        if (selectedCards.Count == outsCardArray.Count) 
-        {
-            var count = OUTSCards.Count;
-
-            for (var i = count - 1; i >= 0; i--) {
-                OUTSCards[i].isOn = false;
-            }
-        }
-        else 
-        {
-            foreach (var item in OUTSCards)
-            {
-                item.isOn = true;
-            }
-        }
-
-        SetOdds();
-    }
-
-    private void SetCheckAllToggle(bool isOn) {
-        CheckAllToggle.isOn = isOn;
+    private void SetCheckAllToggle(bool isOn, int index) {
+        CheckAllToggles[index].isOn = isOn;
         
-        var img = CheckAllToggle.transform.Find("Background").GetComponent<ProceduralImage>();
+        var img = CheckAllToggles[index].transform.Find("Background").GetComponent<ProceduralImage>();
 
         if (isOn) {
             img.color = MaterialUI.MaterialColor.cyanA200;
@@ -534,9 +592,13 @@ public class Insurance : MonoBehaviour {
             }
         }
 
-        for (int i = OutsCardsParent.childCount - 1; i > -1; i--)
+        foreach (var item in OutsCardsParents)
         {
-            PoolMan.Despawn(OutsCardsParent.GetChild(i));
+        for (int i = item.childCount - 1; i > -1; i--)
+            {
+                PoolMan.Despawn(item.GetChild(i));
+            }
         }
+        
     }
 }
