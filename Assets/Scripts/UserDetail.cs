@@ -66,7 +66,7 @@ public class UserDetail : MonoBehaviour {
         }
 
         RxSubjects.Emoticon.Subscribe((e) =>{
-			if (!gameObject.activeSelf) {
+			if (!gameObject.activeInHierarchy) {
 				return ;
 			}
 

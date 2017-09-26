@@ -612,7 +612,7 @@ sealed public class GameData {
 	public bool Owner = false;
     public string OwnerName;
 	public List<int> BankrollMul;
-	public BehaviorSubject <int> PlayerCount = new BehaviorSubject<int>(0);
+	public ReactiveProperty <int> PlayerCount = new ReactiveProperty<int>(0);
 	public string Sid; 
 	public string Uid = "";
 	public string Pin = "";
@@ -805,7 +805,7 @@ sealed public class GameData {
 		Owner = options.String("ownerid") == GameData.Shared.Uid;
 		BankrollMul = options.IL("bankroll_multiple"); 
 		Ante.Value = options.Int("ante");
-		PlayerCount.OnNext(options.Int("max_seats"));
+		PlayerCount.Value = options.Int("max_seats");
 		Rake = options.Float("rake_percent");
 		Duration = options.Int("time_limit");
 		NeedAudit = options.Int("need_audit") == 1;

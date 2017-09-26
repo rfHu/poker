@@ -50,7 +50,7 @@ public class GameLoading : MonoBehaviour {
 		}).AddTo(this);
 
 		RxSubjects.Look.Subscribe((e) => {
-			if (loadingScene.activeSelf) {
+			if (loadingScene.activeInHierarchy) {
 				loadingScene.SetActive(false);
 				gameScene.transform.parent.gameObject.SetActive(true);
 				gameScene.SetActive(true);
@@ -62,7 +62,11 @@ public class GameLoading : MonoBehaviour {
 			} 	
 		}).AddTo(this);
 
-		RxSubjects.GameExit.Subscribe((_) => {
+		RxSubjects.GameEnter.Subscribe((_) => {
+			if(!gameScene.activeInHierarchy) {
+				return ;
+			}
+
 			PoolMan.DespawnAll();
 
 			loadingScene.SetActive(true);
@@ -76,11 +80,11 @@ public class GameLoading : MonoBehaviour {
 
 			#if UNITY_EDITOR
 				// // 切换房间测试逻辑
-				// var rid = "59c327043cd0b31b60c94849";
-				// var sid = "s%3AZCRd1PKK5XocACGHDIhVIJ1XLw35WmZE.MBMn43t7zVkyfY3xWVJRC4f6Xl4ARR447Hk6SN8D93Q";
-				// External.Instance.InitGame(rid + "&" + sid);
+				var rid = "59c38cbe6a007e545ed0a2ae";
+				var sid = "s%3ALq49kS4bIomBNiKEq8yHbXHFCavRAPXC.EJiBchVuMVcoXilDMTY6uy1cKgnM55rKbSp9zZrGfY0";
+				External.Instance.InitGame(rid + "&" + sid);
 
-				debugSetup();
+				// debugSetup();
 			#endif
 
 
@@ -97,8 +101,8 @@ public class GameLoading : MonoBehaviour {
 
 			// External.Instance.InitGame(rid + "&" + sid);
 
-            var rid = "59c9cc38e987d37cd7596446";
-            var sid = "s%3Ausvg2OToHfx-6P_QWwXkrLDu42j6Q5CP.GUoj2EFFMFwVYOCMHYhOridzSB5O6gGUr%2BZMfTqqos4";
+            var rid = "59c38cb56a007e545ed0a299";
+            var sid = "s%3ALq49kS4bIomBNiKEq8yHbXHFCavRAPXC.EJiBchVuMVcoXilDMTY6uy1cKgnM55rKbSp9zZrGfY0";
 
 			External.Instance.InitGame(rid + "&" + sid);
 		#endif

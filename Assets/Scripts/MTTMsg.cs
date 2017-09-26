@@ -117,7 +117,7 @@ namespace MTTMsgPage
 
             disposable = Observable.Interval(TimeSpan.FromSeconds(1)).AsObservable().Subscribe((__) =>
             {
-                if (!gameObject.activeSelf)
+                if (!gameObject.activeInHierarchy)
                 {
                     return;
                 }
