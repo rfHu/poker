@@ -53,11 +53,6 @@ public class UIManager : MonoBehaviour {
 		Commander.Shared.Chat();
 	}
 
-    public void OnClickShareGame() {
-        string shareText = ShareGame();
-        Commander.Shared.ShareGameRoom(shareText);
-    }
-
     public void OnClickExpressionPage() 
     {
         var expressionPage = PoolMan.Spawn("ExpressionPage");
@@ -137,41 +132,5 @@ public class UIManager : MonoBehaviour {
 
             auditMsg.GetComponent<DOPopup>().Show(modal: false, singleton: false);
         }).AddTo(this);	
-    }
-
-    public string ShareGame() 
-    {
-        string str = "";
-        str += "\"" + GameData.Shared.Name + "\"邀请您加入\"" + GameData.Shared.RoomName + "\"";
-
-		var type = GameData.Shared.Type.Value;
-
-        if (type == GameType.SNG)
-        {
-            str += "SNG" + GameData.MatchData.MatchString;
-        } else if (type == GameType.MTT) {
-            str += "MTT" + GameData.MatchData.MatchString;
-        }
-
-        if (!string.IsNullOrEmpty(GameData.Shared.GameCode.Value))
-            str += "，邀请码[" + GameData.Shared.GameCode + "]";
-
-
-        if (!GameData.Shared.IsMatch())
-        {
-            str += "，盲注[";
-
-            if (GameData.Shared.Straddle.Value)
-                str += GameData.Shared.SB/2 + "/";
-
-            str += GameData.Shared.SB + "/" + GameData.Shared.BB + "]";
-
-            if (GameData.Shared.Ante.Value > 0)
-                str += "，前注[" + GameData.Shared.Ante + "]";           
-        }
-        
-        
-        str += "。一键约局，与好友畅享德州扑克的乐趣。";
-        return str;
     }
 }
