@@ -34,11 +34,11 @@ public class InsuranceOuts : MonoBehaviour {
 			return ;
 		}
 
-		TotalText.text = outs.Count.ToString();
+		SetCheckAllToggle(true);
 		SelectedText.text = outs.Count.ToString();
+		TotalText.text = "/ " + outs.Count.ToString();
 
 		checkAllToggle.gameObject.SetActive(!caller.mustBuy);
-        checkAllToggle.interactable = caller.isBuyer;
 
 		renderCards();
 
@@ -100,6 +100,8 @@ public class InsuranceOuts : MonoBehaviour {
 					SelectedOuts.Remove(cardNum);
 				}
 
+				SelectedText.text = SelectedOuts.Count.ToString();
+
 				if (SelectedOuts.Count == togglesDict.Count) {
 					SetCheckAllToggle(true);
 				} else {
@@ -133,8 +135,11 @@ public class InsuranceOuts : MonoBehaviour {
             return;
         }
 
+		var isOn = !checkAllToggle.isOn;
+		checkAllToggle.isOn = isOn;
+
 		foreach(var toggle in togglesDict) {
-			toggle.Value.isOn = checkAllToggle.isOn;
+			toggle.Value.isOn = isOn;
 		}
     }
 }
