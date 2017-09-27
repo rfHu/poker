@@ -665,14 +665,12 @@ public class Controller : MonoBehaviour {
             GameData.Shared.InsuranceState.Value = true;
 
             var InsurancePopup = PoolMan.Spawn("Insurance");
-            InsurancePopup.GetComponent<DOPopup>().Show();
             InsurancePopup.GetComponent<Insurance>().Init(e.Data, true);
         }).AddTo(this);
 
         RxSubjects.ShowInsurance.Subscribe((e) =>
         {
             var InsurancePopup = PoolMan.Spawn("Insurance");
-            InsurancePopup.GetComponent<DOPopup>().Show();
             InsurancePopup.GetComponent<Insurance>().Init(e.Data, false);
         }).AddTo(this);
 

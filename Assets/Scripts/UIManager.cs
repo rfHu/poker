@@ -8,7 +8,7 @@ public class UIManager : MonoBehaviour {
 	public GameObject RecallPagePrefab;
 	public GameObject ScorePagePrefab;
 	public GameObject MTTScorePagePrefab;
-    public GameObject WinnerPagePrefab;
+    public GameObject HoldCardPagePrefab;
 
 	public void ShowMenu() {
 		var popup = PoolMan.Spawn("MenuPopup");
@@ -50,9 +50,9 @@ public class UIManager : MonoBehaviour {
 		PoolMan.Spawn(RecallPagePrefab);
 	}
 
-    public void OnClickWinnerPage()
+    public void OnClickHoldCardPage()
     {
-        PoolMan.Spawn(WinnerPagePrefab);
+        PoolMan.Spawn(HoldCardPagePrefab);
     }
 
 	public void OnClickChat() {
