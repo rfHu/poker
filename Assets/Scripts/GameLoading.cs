@@ -101,8 +101,8 @@ public class GameLoading : MonoBehaviour {
 
 			// External.Instance.InitGame(rid + "&" + sid);
 
-            var rid = "59c38cb56a007e545ed0a299";
-            var sid = "s%3ALq49kS4bIomBNiKEq8yHbXHFCavRAPXC.EJiBchVuMVcoXilDMTY6uy1cKgnM55rKbSp9zZrGfY0";
+            var rid = "59cb6251dc422722d0aa8581";
+            var sid = "s%3Ausvg2OToHfx-6P_QWwXkrLDu42j6Q5CP.GUoj2EFFMFwVYOCMHYhOridzSB5O6gGUr%2BZMfTqqos4";
 
 			External.Instance.InitGame(rid + "&" + sid);
 		#endif

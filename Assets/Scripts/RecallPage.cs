@@ -299,4 +299,3 @@ public class RecallPage : MonoBehaviour {
         request((int)HandSlider.value);
     }
 }
-
