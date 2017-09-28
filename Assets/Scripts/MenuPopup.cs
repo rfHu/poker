@@ -177,6 +177,14 @@ public class MenuPopup : MonoBehaviour {
     }
 
 	public void Exit() {
+		if (GameData.Shared.InGame) {
+			PokerUI.Alert("现在退出将直接弃牌，是否强行退出？", exit);
+		} else {
+			exit();
+		}
+	}
+
+	private void exit() {
         GetComponent<DOPopup>().Close();
 		External.Instance.Exit();
 	}
