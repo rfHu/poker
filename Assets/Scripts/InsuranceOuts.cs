@@ -82,6 +82,7 @@ public class InsuranceOuts : MonoBehaviour {
 
         foreach(var toggle in togglesDict)
 		{
+			toggle.Value.onValueChanged.RemoveAllListeners();
 			PoolMan.Despawn(toggle.Value.transform);
 		}
 	}
@@ -95,6 +96,8 @@ public class InsuranceOuts : MonoBehaviour {
             card.Show(cardNum);
 
             var toggle = transform.GetComponent<Toggle>();
+			toggle.onValueChanged.RemoveAllListeners(); // 先移除事件
+
             transform.GetComponent<Toggle>().isOn = true;
 
 			togglesDict.Add(cardNum, toggle);
@@ -108,8 +111,6 @@ public class InsuranceOuts : MonoBehaviour {
                 toggle.interactable = true;
             }
 
-			toggle.onValueChanged.RemoveAllListeners();
-
 			toggle.onValueChanged.AddListener((isOn) => {
 				if (isOn) {
 					SelectedOuts.Add(cardNum);
@@ -119,7 +120,7 @@ public class InsuranceOuts : MonoBehaviour {
 
 				SelectedText.text = SelectedOuts.Count.ToString();
 
-				if (SelectedOuts.Count == togglesDict.Count) {
+				if (SelectedOuts.Count >= togglesDict.Count) {
 					SetCheckAllToggle(true);
 				} else {
 					SetCheckAllToggle(false);
