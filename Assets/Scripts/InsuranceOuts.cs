@@ -31,8 +31,12 @@ public class InsuranceOuts : MonoBehaviour {
 
 		if (outs.Count == 0) {
 			gameObject.SetActive(false);
+			CardList.gameObject.SetActive(false);
 			return ;
 		}
+
+		gameObject.SetActive(true);
+		CardList.gameObject.SetActive(true);
 
 		SetCheckAllToggle(true);
 		SelectedText.text = outs.Count.ToString();
@@ -43,7 +47,20 @@ public class InsuranceOuts : MonoBehaviour {
 		renderCards();
 
 		 RxSubjects.RsyncInsurance.Subscribe((e) => {
-            HashSet<int> selected = new HashSet<int>(e.Data.IL("selectedOuts"));
+			 HashSet<int> selected ;
+
+			 if (e.Data.ContainsKey("isoff")) {
+				var off = e.Data.IL("isoff");
+				selected = new HashSet<int>(outs);
+
+				foreach(var value in off) {
+					if (selected.Contains(value)) {
+						selected.Remove(value); 
+					}
+				}
+			 } else {
+            	selected = new HashSet<int>(e.Data.IL("selectedOuts"));
+			 }
 
             foreach(var toggle in togglesDict) {
 				if (selected.Contains(toggle.Key)) {
