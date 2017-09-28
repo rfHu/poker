@@ -14,7 +14,7 @@ public class NoviceBoot : MonoBehaviour {
 		modal = ModalHelper.Create();	
 		modal.Show(G.DialogCvs.transform, null, new Color(0, 0, 0, 153 / 255f));
 
-		RxSubjects.GameEnter.Subscribe((_) => {
+		RxSubjects.GameReset.Subscribe((_) => {
 			Destroy(gameObject);
 		}).AddTo(this);
 	}
