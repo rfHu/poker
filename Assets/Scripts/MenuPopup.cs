@@ -53,7 +53,7 @@ public class MenuPopup : MonoBehaviour {
 
         RebuyAddonGo.SetActive(true);
 
-        var text = RebuyAddonGo.GetComponentInChildren<Text>(); 
+        var text = RebuyAddonGo.transform.GetChild(0).GetComponentInChildren<Text>(); 
         var interactable = true; 
 
         if (GameData.MatchData.CanRebuyLv())
@@ -178,6 +178,17 @@ public class MenuPopup : MonoBehaviour {
 
 	public void Exit() {
         GetComponent<DOPopup>().Close();
+
+		var player = GameData.Shared.GetMyPlayer();
+
+		if (player.IsValid() && player.InGame && player.Chips > 0) {
+			PokerUI.Alert("现在退出将直接弃牌，是否强行退出？", exit, null);
+		} else {
+			exit();
+		}
+	}
+
+	private void exit() {
 		External.Instance.Exit();
 	}
 

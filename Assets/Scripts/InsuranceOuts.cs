@@ -59,7 +59,11 @@ public class InsuranceOuts : MonoBehaviour {
 					}
 				}
 			 } else {
-            	selected = new HashSet<int>(e.Data.IL("selectedOuts"));
+				 if (e.Data.ContainsKey("selectedOuts")) {
+            		selected = new HashSet<int>(e.Data.IL("selectedOuts"));
+				 } else {
+					selected = new HashSet<int>(outs);
+				 }
 			 }
 
             foreach(var toggle in togglesDict) {

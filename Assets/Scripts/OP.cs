@@ -94,6 +94,8 @@ public class OP : MonoBehaviour {
 
 		return instance;		
 	}
+
+	private bool canCheck = false;
 	
 	public void StartWithCmds(Dictionary<string, object> data, int left, int buyTimeCost = 10) {
 		// 设置购买时间按钮
@@ -103,6 +105,8 @@ public class OP : MonoBehaviour {
 		var check = cmds.Bool("check");
 		var callNum = cmds.Int("call");
 		var allin = cmds.Bool("all_in");
+
+		canCheck = check;
 
 		range = cmds.IL("raise");
 
@@ -411,7 +415,13 @@ public class OP : MonoBehaviour {
 	}
 
 	public void OnFoldClick() {
-		OPS.Fold();
+		if (canCheck) {
+			PokerUI.Alert("当前可以看牌，您确定要弃牌？", () => {
+				OPS.Fold();
+			}, null);
+		} else {
+			OPS.Fold();
+		}
 	}
 
 	public void OnSliderOK() {
