@@ -144,9 +144,9 @@ public class External : MonoBehaviour{
 
 	void OnApplicationPause(bool pauseStatus)
 	{
-		// #if UNITY_EDITOR
-		// 	return ;
-		// #endif
+		#if UNITY_EDITOR
+			return ;
+		#endif
 
 		if (pauseStatus) {
 			_.Log("Unity: 游戏暂停");

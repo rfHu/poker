@@ -314,6 +314,7 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
 
         odds = OddsNums[num];
         Odds.text = odds.ToString();
+		ClaimAmount.text = claimAmountValue.ToString();
         BreakEventButton.transform.Find("Text").GetComponent<Text>().text = beValue.ToString();
         EqualButton.transform.Find("Text").GetComponent<Text>().text = eqValue.ToString();
         SetCASlider();
@@ -322,8 +323,11 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
     public void OnCASliderChange() 
     {
 		sliderChange();
-		RPCRsyncInsurance();
     }
+
+	public void OnCASliderPointerUp() {
+		RPCRsyncInsurance();
+	}
 
 	private void sliderChange() {
 		SumInsured.text = (CASlider.value).ToString();
@@ -336,7 +340,6 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
         var buyValue = (int)Math.Round(c / odds); 
     
         CASlider.value = buyValue;
-        sliderChange();
     }
 
     private int claimAmountValue {
