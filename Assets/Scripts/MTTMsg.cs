@@ -100,8 +100,18 @@ namespace MTTMsgPage
                     return;
 
                 SetGoSize(true);
-
                 SetHighLighCol(new Color(1, 1, 1, 0.6f));
+                var parent = P3GoParent.parent;
+                if (P3GoParent.childCount == 56 && GameData.MatchData.MTTType == MTTType.Fast)
+                {
+                    Destroy(P3GoParent.gameObject);
+                    P3GoParent = PoolMan.Spawn("MTTFastList",parent);
+                }
+                else if (P3GoParent.childCount == 30 && GameData.MatchData.MTTType == MTTType.Normal)
+                {
+                    Destroy(P3GoParent.gameObject);
+                    P3GoParent = PoolMan.Spawn("MTTNormalList", parent);
+                }
                 highLightLevel = GameData.Shared.BlindLv;
                 SetHighLighCol(openCol);
             });
@@ -129,9 +139,9 @@ namespace MTTMsgPage
 
         private void SetHighLighCol(Color color)
         {
-            Transform turnNormal = P3GoParent.GetChild(highLightLevel);
-            turnNormal.GetChild(1).GetComponentInChildren<Text>().color = color;
-            turnNormal.GetChild(2).GetComponentInChildren<Text>().color = color;
+            Transform turnColor = P3GoParent.GetChild(highLightLevel);
+            turnColor.GetChild(1).GetComponentInChildren<Text>().color = color;
+            turnColor.GetChild(2).GetComponentInChildren<Text>().color = color;
         }
 
         private void setTimeText() {

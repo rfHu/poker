@@ -21,6 +21,11 @@ public enum GameType {
 	MTT
 }
 
+public enum MTTType { 
+    Normal,
+    Fast
+}
+
 public enum MatchRoomStat {
 	Default = 0,
 	WaitingStart = 5,
@@ -735,7 +740,7 @@ sealed public class GameData {
         public static int JoinFee;
         public static int RebuyFee;
 
-
+        public static MTTType MTTType;
 
 	}
 
@@ -835,6 +840,7 @@ sealed public class GameData {
             MatchData.RebuyFee = options.Int("rebuy_fee");
 		    MatchData.MatchRoomStatus.OnNext((MatchRoomStat)json.Int("match_room_status"));
 			LeftTime.Value = MatchData.MatchRoomStatus.Value == MatchRoomStat.Rest ? json.Int("half_break_countdown") : json.Int("blind_countdown");
+            MatchData.MTTType = options.Int("blind_type") == 0 ? MTTType.Normal : MTTType.Fast;
         } else {
 			LeftTime.Value = json.Int("left_time");
 		}
