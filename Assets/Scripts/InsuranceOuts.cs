@@ -12,7 +12,6 @@ public class InsuranceOuts : MonoBehaviour {
 	
 	public Transform CardList;
 
-	private List<int> outs;
 
 	private Dictionary<int, Toggle> togglesDict; // 保存一个冗余的数据结构，方便查询
 
@@ -23,10 +22,28 @@ public class InsuranceOuts : MonoBehaviour {
 
 	public HashSet<int> SelectedOuts; 
 
+	private HashSet<int> totalOuts;
+	// @TODO：暂时兼容，后期弃掉
+	public List<int> offOuts {
+		get {
+			var list = new List<int>();
+			foreach(var item in totalOuts) {
+				if (SelectedOuts.Contains(item)) {
+					continue;
+				} 
+
+				list.Add(item);
+			}
+
+			return list;
+		}
+	}
+
 	public void SetOuts(List<int> outs, InsuranceStruct caller) {
 		SelectedOuts = new HashSet<int>(outs);
 		togglesDict = new Dictionary<int, Toggle>();
 		this.caller  = caller;
+		this.totalOuts = new HashSet<int>(outs);
 
 		if (outs.Count == 0) {
 			gameObject.SetActive(false);

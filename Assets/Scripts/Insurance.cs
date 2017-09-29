@@ -43,6 +43,8 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
 
 	private IDisposable throttle;
 
+	private int savedSliderValue = 0;
+
 	public void OnSelectedChange(InsuranceOuts insOuts) {
 		// 节流，防止执行太频繁
 		if (throttle != null) {
@@ -53,9 +55,11 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
 			SetOdds();
 
 			if (isBuyer) {
-        		DependOnClaimAmount();
+        		SliderChangeByClaimAmount();
+        		RPCRsyncInsurance(selectedChange: 1);
+			} else {
+				CASlider.value = savedSliderValue;
 			}
-        	RPCRsyncInsurance();
 		}).AddTo(this);
 	}
 
@@ -94,6 +98,15 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
 		get {
 			var list = insuranceOutsList[0].SelectedOuts.Union(insuranceOutsList[1].SelectedOuts);
 			return list.ToList();
+		}
+	}
+
+	// @todo: 兼容老版本，后面去掉
+	private List<int> offOuts {
+		get {
+			var list = insuranceOutsList[0].offOuts;
+			list.AddRange(insuranceOutsList[1].offOuts);
+			return list;
 		}
 	}
 
@@ -242,8 +255,11 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
                 return;
             }
 
-            int CASlidernum = e.Data.Int("CASlidernum");
-            CASlider.value = CASlidernum;
+            savedSliderValue = e.Data.Int("CASlidernum");
+
+			if (e.Data.Int("selectedChange") == 0) {
+            	CASlider.value = savedSliderValue;
+			}
         }).AddTo(this);
     }
 
@@ -315,7 +331,7 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
         BuyButtonNum.text = CASlider.value.ToString();
 	}
 
-    private void DependOnClaimAmount() {
+    private void SliderChangeByClaimAmount() {
         var c = int.Parse(ClaimAmount.text);
         var buyValue = (int)Math.Round(c / odds); 
     
@@ -413,7 +429,7 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
         GetComponent<DOPopup>().Close();
     }
 
-    void RPCRsyncInsurance(int closeFlag = 0)
+    void RPCRsyncInsurance(int closeFlag = 0, int selectedChange = 0)
     {
 		if (!isBuyer) {
 			return ;
@@ -421,8 +437,10 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
 
         var data = new Dictionary<string, object>(){
 			        {"selectedOuts", SelectedOuts},
+					{"isoff", offOuts},
                     {"CASlidernum", (int)(CASlider.value)},
-                    {"closeflag", closeFlag}
+                    {"closeflag", closeFlag},
+					{"selecetdChange", selectedChange}
 		};
 
         Connect.Shared.Emit(new Dictionary<string, object>() {
