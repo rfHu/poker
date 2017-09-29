@@ -31,6 +31,14 @@ public class HoldCardMsg : MonoBehaviour {
     public void Show(Dictionary<string, object> dict) 
     {
         Name.text = dict.String("winner");
+        if (dict.String("winner") == GameData.Shared.Name)
+        {
+            Name.color = MaterialUI.MaterialColor.cyanA200;
+        }
+        else 
+        {
+            Name.color = MaterialUI.MaterialColor.grey400;
+        }
         Pot.text = dict.Int("pot").ToString();
 
         var cards = dict.IL("cards");
