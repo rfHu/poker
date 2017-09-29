@@ -302,17 +302,22 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
 
     public void OnCASliderChange() 
     {
-        SumInsured.text = (CASlider.value).ToString();
+		sliderChange();
+		RPCRsyncInsurance();
+    }
+
+	private void sliderChange() {
+		SumInsured.text = (CASlider.value).ToString();
         ClaimAmount.text = claimAmountValue.ToString();
         BuyButtonNum.text = CASlider.value.ToString();
-    }
+	}
 
     private void DependOnClaimAmount() {
         var c = int.Parse(ClaimAmount.text);
         var buyValue = (int)Math.Round(c / odds); 
     
         CASlider.value = buyValue;
-        OnCASliderChange();
+        sliderChange();
     }
 
     private int claimAmountValue {

@@ -82,7 +82,7 @@ public class Seat : MonoBehaviour {
 		}).AddTo(this);
 
 		// 还原座位
-		RxSubjects.GameEnter.Subscribe((_) => {
+		RxSubjects.GameReset.Subscribe((_) => {
 			Show();
 		}).AddTo(this);
 	}

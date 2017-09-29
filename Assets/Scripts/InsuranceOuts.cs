@@ -31,8 +31,12 @@ public class InsuranceOuts : MonoBehaviour {
 
 		if (outs.Count == 0) {
 			gameObject.SetActive(false);
+			CardList.gameObject.SetActive(false);
 			return ;
 		}
+
+		gameObject.SetActive(true);
+		CardList.gameObject.SetActive(true);
 
 		SetCheckAllToggle(true);
 		SelectedText.text = outs.Count.ToString();
@@ -43,7 +47,20 @@ public class InsuranceOuts : MonoBehaviour {
 		renderCards();
 
 		 RxSubjects.RsyncInsurance.Subscribe((e) => {
-            HashSet<int> selected = new HashSet<int>(e.Data.IL("selectedOuts"));
+			 HashSet<int> selected ;
+
+			 if (e.Data.ContainsKey("isoff")) {
+				var off = e.Data.IL("isoff");
+				selected = new HashSet<int>(outs);
+
+				foreach(var value in off) {
+					if (selected.Contains(value)) {
+						selected.Remove(value); 
+					}
+				}
+			 } else {
+            	selected = new HashSet<int>(e.Data.IL("selectedOuts"));
+			 }
 
             foreach(var toggle in togglesDict) {
 				if (selected.Contains(toggle.Key)) {
@@ -65,6 +82,7 @@ public class InsuranceOuts : MonoBehaviour {
 
         foreach(var toggle in togglesDict)
 		{
+			toggle.Value.onValueChanged.RemoveAllListeners();
 			PoolMan.Despawn(toggle.Value.transform);
 		}
 	}
@@ -78,6 +96,8 @@ public class InsuranceOuts : MonoBehaviour {
             card.Show(cardNum);
 
             var toggle = transform.GetComponent<Toggle>();
+			toggle.onValueChanged.RemoveAllListeners(); // 先移除事件
+
             transform.GetComponent<Toggle>().isOn = true;
 
 			togglesDict.Add(cardNum, toggle);
@@ -91,8 +111,6 @@ public class InsuranceOuts : MonoBehaviour {
                 toggle.interactable = true;
             }
 
-			toggle.onValueChanged.RemoveAllListeners();
-
 			toggle.onValueChanged.AddListener((isOn) => {
 				if (isOn) {
 					SelectedOuts.Add(cardNum);
@@ -102,7 +120,7 @@ public class InsuranceOuts : MonoBehaviour {
 
 				SelectedText.text = SelectedOuts.Count.ToString();
 
-				if (SelectedOuts.Count == togglesDict.Count) {
+				if (SelectedOuts.Count >= togglesDict.Count) {
 					SetCheckAllToggle(true);
 				} else {
 					SetCheckAllToggle(false);

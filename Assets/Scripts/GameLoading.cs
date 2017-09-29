@@ -62,34 +62,36 @@ public class GameLoading : MonoBehaviour {
 			} 	
 		}).AddTo(this);
 
-		RxSubjects.GameEnter.Subscribe((_) => {
-			if(!gameScene.activeInHierarchy) {
-				return ;
-			}
-
-			PoolMan.DespawnAll();
-
-			loadingScene.SetActive(true);
-			Loading.SetActive(true);
-			MTT.SetActive(false);
-
-			gameScene.transform.parent.gameObject.SetActive(false);
-
-			// 关闭声音发送按钮
-			Commander.Shared.VoiceIconToggle(false);
-
-			#if UNITY_EDITOR
-				// // 切换房间测试逻辑
-				// var rid = "59c38cbe6a007e545ed0a2ae";
-				// var sid = "s%3ALq49kS4bIomBNiKEq8yHbXHFCavRAPXC.EJiBchVuMVcoXilDMTY6uy1cKgnM55rKbSp9zZrGfY0";
-				// External.Instance.InitGame(rid + "&" + sid);
-
-				debugSetup();
-			#endif
-
-
-			Loading.GetComponent<Loading>().SetRndText();
+		RxSubjects.GameReset.Subscribe((_) => {
+			back2LoadingScene();	
 		}).AddTo(this);
+	}
+
+	private void back2LoadingScene() {
+		if(!gameScene.activeInHierarchy) {
+			return ;
+		}
+
+		PoolMan.DespawnAll();
+		loadingScene.SetActive(true);
+		Loading.SetActive(true);
+		MTT.SetActive(false);
+
+		gameScene.transform.parent.gameObject.SetActive(false);
+
+		// 关闭声音发送按钮
+		Commander.Shared.VoiceIconToggle(false);
+
+		#if UNITY_EDITOR
+			// // 切换房间测试逻辑
+			// var rid = "59c38cbe6a007e545ed0a2ae";
+			// var sid = "s%3ALq49kS4bIomBNiKEq8yHbXHFCavRAPXC.EJiBchVuMVcoXilDMTY6uy1cKgnM55rKbSp9zZrGfY0";
+			// External.Instance.InitGame(rid + "&" + sid);
+
+			debugSetup();
+		#endif
+
+		Loading.GetComponent<Loading>().SetRndText();	
 	}
 
     private void debugSetup() {
@@ -97,11 +99,10 @@ public class GameLoading : MonoBehaviour {
 			External.Instance.SetSocket("https://socket.dev.poker.top");
 			External.Instance.SetProxy("http://localhost:8888");
 
-            var rid = "59cd039025b272764fa09909";
-            var sid = "s%3Ausvg2OToHfx-6P_QWwXkrLDu42j6Q5CP.GUoj2EFFMFwVYOCMHYhOridzSB5O6gGUr%2BZMfTqqos4";
+            var rid = "59ccedf325b272764f9fcc59";
+            var sid = "s%3AMPaam_5ZEg7XXXy0Y-Q7AN5c7QW4JBrd.W29Ib58hB3%2BqaVuJBTGp4PdsXBRMqPvLQ3bKwNCzbFU";
 
-            //External.Instance.InitGame(rid + "&" + sid);
-            External.Instance.InitMatch(rid + "&" + sid);
+			External.Instance.InitGame(rid + "&" + sid);
 		#endif
     }
 }

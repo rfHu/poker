@@ -57,13 +57,18 @@ public class External : MonoBehaviour{
 		});
 	}
 
+	private bool needReset = false;
+
 	public void InitGame(string gameInfo) {
 		var info = gameInfo.Split("&".ToCharArray());
 		if (gameInfo.Length < 2) {
 			return ;
 		}
 
-		RxSubjects.GameEnter.OnNext(true);
+		if (needReset) {
+			RxSubjects.GameReset.OnNext(true);
+		}
+		needReset = true;
 
 		// RxSubjects.Connecting.OnNext(true);
 
@@ -80,7 +85,11 @@ public class External : MonoBehaviour{
 			return ;
 		}
 
-		RxSubjects.GameEnter.OnNext(true);
+		if (needReset) {
+			RxSubjects.GameReset.OnNext(true);
+		}
+		needReset = true;
+
 		var matchID = info[0].ToString();
 
 		GameData.Shared.MatchID = matchID;
@@ -114,9 +123,8 @@ public class External : MonoBehaviour{
 
 		// 延时执行退出逻辑
 		Observable.Timer(TimeSpan.FromMilliseconds(90)).AsObservable().Subscribe((_) => {
-			#if UNITY_EDITOR
-				RxSubjects.GameEnter.OnNext(true);
-			#endif
+			RxSubjects.GameReset.OnNext(true);
+			needReset = false;
 			callback();
 		});
 	}
@@ -136,9 +144,9 @@ public class External : MonoBehaviour{
 
 	void OnApplicationPause(bool pauseStatus)
 	{
-		#if UNITY_EDITOR
-			return ;
-		#endif
+		// #if UNITY_EDITOR
+		// 	return ;
+		// #endif
 
 		if (pauseStatus) {
 			_.Log("Unity: 游戏暂停");
