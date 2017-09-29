@@ -51,7 +51,10 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
 
 		throttle = Observable.Timer(TimeSpan.FromMilliseconds(50)).Subscribe((_) => {
 			SetOdds();
-        	DependOnClaimAmount();
+
+			if (isBuyer) {
+        		DependOnClaimAmount();
+			}
         	RPCRsyncInsurance();
 		}).AddTo(this);
 	}
@@ -356,7 +359,7 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
     {
         var data = new Dictionary<string, object>(){
 			        {"outs", SelectedOuts},
-                    {"amount", int.Parse(SumInsured.text)},
+                    {"amount", (int)(CASlider.value)},
 		        };
 
         Connect.Shared.Emit(new Dictionary<string, object>() {
@@ -418,7 +421,7 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
 
         var data = new Dictionary<string, object>(){
 			        {"selectedOuts", SelectedOuts},
-                    {"CASlidernum", int.Parse(SumInsured.text)},
+                    {"CASlidernum", (int)(CASlider.value)},
                     {"closeflag", closeFlag}
 		};
 

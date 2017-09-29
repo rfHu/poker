@@ -26,7 +26,6 @@ public class InsuranceOuts : MonoBehaviour {
 	public void SetOuts(List<int> outs, InsuranceStruct caller) {
 		SelectedOuts = new HashSet<int>(outs);
 		togglesDict = new Dictionary<int, Toggle>();
-		this.outs = outs;
 		this.caller  = caller;
 
 		if (outs.Count == 0) {
@@ -44,7 +43,7 @@ public class InsuranceOuts : MonoBehaviour {
 
 		checkAllToggle.gameObject.SetActive(!caller.mustBuy);
 
-		renderCards();
+		renderCards(outs);
 
 		 RxSubjects.RsyncInsurance.Subscribe((e) => {
 			 HashSet<int> selected ;
@@ -91,10 +90,11 @@ public class InsuranceOuts : MonoBehaviour {
 		}
 	}
 
-	private void renderCards() {
+	private void renderCards(List<int> outs) {
         foreach (var cardNum in outs)
         {
             var transform = PoolMan.Spawn("InsureCard", CardList);
+			transform.SetAsLastSibling();
 			var card = transform.GetComponent<CardContainer>().CardInstance;
 
             card.Show(cardNum);
