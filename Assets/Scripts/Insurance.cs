@@ -440,7 +440,7 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
 					{"isoff", offOuts},
                     {"CASlidernum", (int)(CASlider.value)},
                     {"closeflag", closeFlag},
-					{"selecetdChange", selectedChange}
+					{"selectedChange", selectedChange}
 		};
 
         Connect.Shared.Emit(new Dictionary<string, object>() {
