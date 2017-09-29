@@ -31,7 +31,7 @@ public class HoldCardMsg : MonoBehaviour {
     public void Show(Dictionary<string, object> dict) 
     {
         Name.text = dict.String("winner");
-        if (dict.String("winner") == GameData.Shared.Name)
+        if (dict.String("winnerid") == GameData.Shared.Uid)
         {
             Name.color = MaterialUI.MaterialColor.cyanA200;
         }
