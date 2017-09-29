@@ -105,12 +105,12 @@ namespace MTTMsgPage
                 if (P3GoParent.name == "MTTNormalList" && GameData.MatchData.MTTType == MTTType.Fast)
                 {
                     Destroy(P3GoParent.gameObject);
-                    P3GoParent = PoolMan.Spawn("MTTFastList",parent);
+                    P3GoParent = ((GameObject)Instantiate(Resources.Load("Prefab/MTTFastList"), parent)).transform;
                 }
                 else if (P3GoParent.name == "MTTFastList" && GameData.MatchData.MTTType == MTTType.Normal)
                 {
                     Destroy(P3GoParent.gameObject);
-                    P3GoParent = PoolMan.Spawn("MTTNormalList", parent);
+                    P3GoParent = ((GameObject)Instantiate(Resources.Load("Prefab/MTTNormalList"), parent)).transform;
                 }
                 highLightLevel = GameData.Shared.BlindLv;
                 SetHighLighCol(openCol);
