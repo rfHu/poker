@@ -418,7 +418,7 @@ public class OP : MonoBehaviour {
 		if (canCheck) {
 			PokerUI.Alert("当前可以看牌，您确定要弃牌？", () => {
 				OPS.Fold();
-			});
+			}, null);
 		} else {
 			OPS.Fold();
 		}

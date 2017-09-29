@@ -101,6 +101,7 @@ sealed public class Player {
 	public string Uid = "";
 	public ReactiveProperty<int> Bankroll = new ReactiveProperty<int>();
 	public int Index = -1;
+	public int Chips = 0;
 
 	public ReactiveProperty<int> PrChips = new ReactiveProperty<int>();
 	public bool InGame = false;
@@ -183,6 +184,9 @@ sealed public class Player {
 
 		// 用户该轮上的筹码
 		PrChips.Value = json.Int("pr_chips");
+
+		// 用户该手上的总筹码
+		Chips = json.Int("chips");
 
 		Index = index;
 		InGame = json.Bool("is_ingame");	

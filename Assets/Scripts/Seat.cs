@@ -83,7 +83,7 @@ public class Seat : MonoBehaviour {
 
 		// 还原座位
 		RxSubjects.GameReset.Subscribe((_) => {
-			Show();
+			Container.SetActive(true);
 		}).AddTo(this);
 	}
 
