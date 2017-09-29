@@ -21,7 +21,8 @@ public class MenuPopup : MonoBehaviour {
 
     public GameObject RebuyAddonGo;
 
-    public GameObject ShareGo;
+	public Text RebuyOrAddonText;
+
 
 	public void Supplement() {
 		if (!GameData.MyCmd.Takecoin) {
@@ -53,18 +54,17 @@ public class MenuPopup : MonoBehaviour {
 
         RebuyAddonGo.SetActive(true);
 
-        var text = RebuyAddonGo.transform.GetChild(0).GetComponentInChildren<Text>(); 
         var interactable = true; 
 
         if (GameData.MatchData.CanRebuyLv())
         {
-            text.text = "重购";
+            RebuyOrAddonText.text = "重购";
             bool lessRoll = player.Bankroll.Value <= GameData.MatchData.BankrollNum;
             interactable = player.CanRebuy && lessRoll; 
         }
         else if (GameData.MatchData.CanAddonLv())
         {
-            text.text = "增购";
+         	RebuyOrAddonText.text = "增购";
             interactable = player.CanAddon;
         }
 
