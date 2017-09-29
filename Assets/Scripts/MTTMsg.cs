@@ -102,12 +102,12 @@ namespace MTTMsgPage
                 SetGoSize(true);
                 SetHighLighCol(new Color(1, 1, 1, 0.6f));
                 var parent = P3GoParent.parent;
-                if (P3GoParent.childCount == 56 && GameData.MatchData.MTTType == MTTType.Fast)
+                if (P3GoParent.name == "MTTNormalList" && GameData.MatchData.MTTType == MTTType.Fast)
                 {
                     Destroy(P3GoParent.gameObject);
                     P3GoParent = PoolMan.Spawn("MTTFastList",parent);
                 }
-                else if (P3GoParent.childCount == 30 && GameData.MatchData.MTTType == MTTType.Normal)
+                else if (P3GoParent.name == "MTTFastList" && GameData.MatchData.MTTType == MTTType.Normal)
                 {
                     Destroy(P3GoParent.gameObject);
                     P3GoParent = PoolMan.Spawn("MTTNormalList", parent);
