@@ -163,11 +163,21 @@ public class MenuPopup : MonoBehaviour {
 			return ;
 		}
 
+		var player = GameData.Shared.GetMyPlayer();
+
+		if (player.IsValid() && player.Chips > 0 && player.InGame) {
+			PokerUI.Alert("站起将直接弃牌，是否继续？", standup, null);
+		} else {
+			standup();
+		}
+
+		gameObject.GetComponent<DOPopup>().Close();
+	}
+
+	private void standup() {
 		Connect.Shared.Emit(new Dictionary<string, object>(){
 			{"f", "unseat"}
 		});
-
-		gameObject.GetComponent<DOPopup>().Close();
 	}
 
     public void Option() 
