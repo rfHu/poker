@@ -37,7 +37,7 @@ public class HoldCardMsg : MonoBehaviour {
         }
         else 
         {
-            Name.color = MaterialUI.MaterialColor.grey400;
+            Name.color = Color.white;
         }
         Pot.text = dict.Int("pot").ToString();
 
