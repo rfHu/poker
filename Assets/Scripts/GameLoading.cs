@@ -67,15 +67,21 @@ public class GameLoading : MonoBehaviour {
 		}).AddTo(this);
 	}
 
+	private void resetLoading() {
+		loadingScene.SetActive(true);
+		Loading.SetActive(true);
+		MTT.SetActive(false);
+		Loading.GetComponent<Loading>().SetRndText();	
+	}
+
 	private void back2LoadingScene() {
+		resetLoading();
+
 		if(!gameScene.activeInHierarchy) {
 			return ;
 		}
 
 		PoolMan.DespawnAll();
-		loadingScene.SetActive(true);
-		Loading.SetActive(true);
-		MTT.SetActive(false);
 
 		gameScene.transform.parent.gameObject.SetActive(false);
 
@@ -90,8 +96,6 @@ public class GameLoading : MonoBehaviour {
 
 			debugSetup();
 		#endif
-
-		Loading.GetComponent<Loading>().SetRndText();	
 	}
 
     private void debugSetup() {
