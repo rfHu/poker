@@ -379,6 +379,8 @@ namespace PokerPlayer {
             }).AddTo(this);
 
             RxSubjects.GameOver.Subscribe((e) => {
+				player.InGame = false;
+
                 myDelegate.MoveOut();
                 PlayerAct.SetActive(false);
                 stopParticle(allinParticle);

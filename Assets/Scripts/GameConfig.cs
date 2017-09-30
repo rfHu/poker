@@ -448,7 +448,9 @@ sealed public class GameData {
 			var index = e.Data.Int("seat");
 
 			if (Players.ContainsKey(index)) {
-				Players[index].ActState.OnNext(ActionState.Fold);
+				var player = Players[index];
+				player.InGame = false;
+				player.ActState.OnNext(ActionState.Fold);
 			}
 		});
 
