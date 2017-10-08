@@ -22,14 +22,11 @@ public class Option : MonoBehaviour {
 
     void Awake() 
     {
-		pokerColType = GameSetting.CardColor.Value;
-		bgColType = GameSetting.TableSprite.Value;
-
         foreach (var toggle in Toggles)
         {
             toggle.onValueChanged.AddListener((isOn) => 
             {
-                Text text = toggle.transform.parent.Find("Text (1)").GetComponent<Text>();
+                Text text = toggle.transform.parent.GetChild(0).GetComponent<Text>();
                 OnToggleChange(text, isOn);
             });
         }
@@ -57,14 +54,20 @@ public class Option : MonoBehaviour {
                 }
             });
         }
-        PokerCol[pokerColType].isOn = true;
+    }
+
+	void OnSpawned() {
+		pokerColType = GameSetting.CardColor.Value;
+		bgColType = GameSetting.TableSprite.Value;
+
+		PokerCol[pokerColType].isOn = true;
         BgCol[bgColType].isOn = true;
 
         Toggles[0].isOn = !GameSetting.talkSoundClose;
         Toggles[1].isOn = !GameSetting.muted;
         Toggles[2].isOn = !GameSetting.chatBubbleClose;
         Toggles[3].isOn = !GameSetting.emoticonClose;
-    }
+	}
 
     public void OnToggleChange(Text text, bool isOn) 
     {

@@ -25,7 +25,7 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
     public Transform AllinPlayersParent;
     public Text Odds;
     public Text SumInsured;
-    public Text ClaimAmount;
+    public Text Compensate;
     public Slider CASlider;
     public VButton BuyButton;
     public Button ExitButton;
@@ -52,10 +52,10 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
 		}
 
 		throttle = Observable.Timer(TimeSpan.FromMilliseconds(50)).Subscribe((_) => {
-			SetOdds();
+			SetOddsValueBySelectedCount();
 
 			if (isBuyer) {
-        		SliderChangeByClaimAmount();
+        		SliderChangeByCompensate();
         		RPCRsyncInsurance(selectedChange: 1);
 			} else {
 				CASlider.value = savedSliderValue;
@@ -79,7 +79,7 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
     [SerializeField]
     private List<CardContainer> MyCardContainers; 
 
-    float odds;
+    ReactiveProperty<float> oddsRatio = new ReactiveProperty<float>();
     float[] OddsNums = { 30, 16, 10, 8, 6, 5, 4, 3.5f, 3, 2.5f, 2.2f, 2, 1.7f, 1.5f, 1.3f, 1.1f, 1, 0.8f, 0.6f, 0.5f };
 
     private int potValue;
@@ -111,7 +111,6 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
 	}
 
     IEnumerator myCoroutine;
-
 
     public void Init(Dictionary<string, object> data, bool isBuyer = false) 
     {
@@ -146,8 +145,7 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
         WatcherText.SetActive(!isBuyer);
         CASlider.interactable = isBuyer;
 
-        SetOdds();
-        CASlider.value = CASlider.minValue;
+        SetOddsValueBySelectedCount();
 
         Pot.text = potValue.ToString();
 
@@ -160,6 +158,7 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
         setupPbCards();
 
         addEvents();
+        CASlider.value = CASlider.minValue; // 还原最小值
 
         //底部个人信息
         var buyPlayer = GameData.Shared.FindPlayer(data.String("uid"));
@@ -218,6 +217,15 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
     }
 
     private void addEvents() {
+		oddsRatio.Subscribe((odd) => {
+			Odds.text = oddsRatio.Value.ToString();
+			Compensate.text = CompensateValue.ToString();
+			BreakEventButton.transform.Find("Text").GetComponent<Text>().text = beValue.ToString();
+			EqualButton.transform.Find("Text").GetComponent<Text>().text = eqValue.ToString();
+			AdjustCASliderSetting();
+			adjustCalcText();
+		}).AddTo(this);
+
         //加时
         RxSubjects.Moretime.Subscribe((e) =>{
             var model = e.Data.ToObject<MoreTimeModel>();
@@ -263,7 +271,7 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
         }).AddTo(this);
     }
 
-    private void SetCASlider()
+    private void AdjustCASliderSetting()
     {
 		if (scope.Count < 2) {
 			BuyButton.interactable = false;
@@ -272,6 +280,8 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
 			BreakEventButton.interactable = false;
 			return ;
 		}	
+
+		var odds = (float)oddsRatio.Value;
 
         // 最小值向上取整
         var minValue = Mathf.CeilToInt(scope[0] / odds);
@@ -298,13 +308,14 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
         BreakEventButton.interactable = !(beValue > maxValue);
     }
 
+
+
     /// <summary>
     /// 选牌数改变导致赔率和显示的改变
     /// </summary>
-    private void SetOdds()
+    private void SetOddsValueBySelectedCount()
     {
-
-        int num = SelectedCount - 1;
+		int num = SelectedCount - 1;
         if (num > 19)
         {
             num = 19;
@@ -312,51 +323,46 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
             num = 0;
         }
 
-        odds = OddsNums[num];
-        Odds.text = odds.ToString();
-		ClaimAmount.text = claimAmountValue.ToString();
-        BreakEventButton.transform.Find("Text").GetComponent<Text>().text = beValue.ToString();
-        EqualButton.transform.Find("Text").GetComponent<Text>().text = eqValue.ToString();
-        SetCASlider();
+        oddsRatio.Value = OddsNums[num];
     }
 
     public void OnCASliderChange() 
     {
-		sliderChange();
+		adjustCalcText();
     }
 
 	public void OnCASliderPointerUp() {
 		RPCRsyncInsurance();
 	}
 
-	private void sliderChange() {
-		SumInsured.text = (CASlider.value).ToString();
-        ClaimAmount.text = claimAmountValue.ToString();
+	private void adjustCalcText() {
+		SumInsured.text = CASlider.value.ToString();
+        Compensate.text = CompensateValue.ToString();
         BuyButtonNum.text = CASlider.value.ToString();
 	}
 
-    private void SliderChangeByClaimAmount() {
-        var c = int.Parse(ClaimAmount.text);
-        var buyValue = (int)Math.Round(c / odds); 
+    private void SliderChangeByCompensate() {
+        var c = int.Parse(Compensate.text);
+        var buyValue = (int)Math.Round(c / oddsRatio.Value); 
     
         CASlider.value = buyValue;
     }
 
-    private int claimAmountValue {
+    private int CompensateValue {
         get {
-            return (int)Math.Ceiling(CASlider.value * odds);
+            return (int)Math.Ceiling(CASlider.value * oddsRatio.Value);
         }
     }
    
     private int beValue {
         get {
-            return (int)Math.Ceiling(cost / odds);
+            return (int)Math.Ceiling(cost / oddsRatio.Value);
         }
     }
 
     private int eqValue {
         get {
-            return (int)Math.Ceiling(potValue / (odds + 1));
+            return (int)Math.Ceiling(potValue / (oddsRatio.Value + 1));
         }
     }
 

@@ -331,9 +331,9 @@ namespace PokerPlayer {
 	}
 
 	private void delayCall(Action cb) {
-		Observable.Timer(TimeSpan.FromSeconds(0.1)).Subscribe((_) => {
+		// Observable.Timer(TimeSpan.FromSeconds(0.1)).Subscribe((_) => {
 			cb();
-		}).AddTo(this);
+		// }).AddTo(this);
 	}
 
 	private void reShow(Card card, int index) {

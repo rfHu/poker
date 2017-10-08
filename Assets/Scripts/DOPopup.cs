@@ -70,6 +70,8 @@ public class DOPopup : MonoBehaviour {
 	}
 
 	private void show() {
+		showModalIfNeeded();
+
 		var contentSizeFitter = GetComponent<ContentSizeFitter>();
 
 		// 暂时兼容的写法
@@ -83,26 +85,10 @@ public class DOPopup : MonoBehaviour {
 		} else {
 			animateIn();
 		}
-
 	}
 
 	private void animateIn() {
 		autoFit();
-
-		if (modal) {
-			modalHelper = ModalHelper.Create();
-
-			modalHelper.Show(transform.parent, () => {
-				if (onClickModal != null) {
-					onClickModal();
-				}
-
-				if (closeOnClick) {
-					Close();
-				}			
-			}, modalColor);				
-			transform.SetAsLastSibling();
-		}
 
 		switch(Animate) {
 			case AnimType.Up2Down: case AnimType.Left2Right: case AnimType.Right2Left: case AnimType.Custom: case AnimType.Down2Up:
@@ -116,6 +102,23 @@ public class DOPopup : MonoBehaviour {
 		// 保存起来，singleton只允许出现一个
 		if (singleton) {
 			instance = this;
+		}
+	}
+
+	private void showModalIfNeeded() {
+		if (modal) {
+			modalHelper = ModalHelper.Create();
+
+			modalHelper.Show(transform.parent, () => {
+				if (onClickModal != null) {
+					onClickModal();
+				}
+
+				if (closeOnClick) {
+					Close();
+				}			
+			}, modalColor);				
+			transform.SetAsLastSibling();
 		}
 	}
 
