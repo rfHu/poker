@@ -12,18 +12,18 @@ namespace MTTMsgPage
     {
         protected MTTPageData _data;
 
-        protected ProceduralImage _produralImage;
+        protected Image _Image;
 
         public virtual void SetData(MTTPageData data)
         {
             _data = data;
-            _produralImage.enabled = data.needbg;
+            _Image.enabled = data.needbg;
         }
 
         override public void CollectViews() 
         {
             base.CollectViews();
-            _produralImage = root.GetComponent<ProceduralImage>();
+            _Image = root.GetComponent<Image>();
         }
 
         public abstract bool CanPresentModelType(Type modelType);
