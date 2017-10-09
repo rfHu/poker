@@ -88,9 +88,12 @@ namespace MTTMsgPage
 
             var roomsMsg = awardMsg.List("list");
 
-            transform.parent.parent.GetComponent<MTTMsg>().SetGoSize(roomsMsg.Count > 5);
+            bool needWaiting = transform.parent.parent.GetComponent<MTTMsg>().SetGoSize(roomsMsg.Count > 5);
 
-            yield return new WaitForSeconds(0.2f);
+            if (needWaiting)
+            {
+                yield return new WaitForSeconds(0.2f);
+            }
 
             _Adapter.Init(adapterParams);
 

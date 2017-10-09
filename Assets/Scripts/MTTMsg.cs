@@ -50,13 +50,11 @@ namespace MTTMsgPage
         public Toggle[] Toggles;
 
         private Color selectCol = new Color(33 / 255, 41 / 255, 50 / 255);
-        private Color openCol = new Color(24 / 255, 1, 1);
         private int timer = 0;
         private RectTransform _rectTransform;
 
-        private int highLightLevel;
-
         private IDisposable disposable;
+
 
         void Awake()
         {
@@ -99,21 +97,7 @@ namespace MTTMsgPage
                 if (!isOn)
                     return;
 
-                SetGoSize(true);
-                SetHighLighCol(new Color(1, 1, 1, 0.6f));
-                var parent = P3GoParent.parent;
-                if (P3GoParent.name == "MTTNormalList" && GameData.MatchData.MTTType == MTTType.Fast)
-                {
-                    Destroy(P3GoParent.gameObject);
-                    P3GoParent = ((GameObject)Instantiate(Resources.Load("Prefab/MTTFastList"), parent)).transform;
-                }
-                else if (P3GoParent.name == "MTTFastList" && GameData.MatchData.MTTType == MTTType.Normal)
-                {
-                    Destroy(P3GoParent.gameObject);
-                    P3GoParent = ((GameObject)Instantiate(Resources.Load("Prefab/MTTNormalList"), parent)).transform;
-                }
-                highLightLevel = GameData.Shared.BlindLv;
-                SetHighLighCol(openCol);
+                P3GoParent.GetComponent<MTTMsgP3>().SetPage();
             });
 
 
@@ -135,13 +119,6 @@ namespace MTTMsgPage
                 timer = timer + 1;
                 setTimeText(); 
             }).AddTo(this);
-        }
-
-        private void SetHighLighCol(Color color)
-        {
-            Transform turnColor = P3GoParent.GetChild(highLightLevel);
-            turnColor.GetChild(1).GetComponentInChildren<Text>().color = color;
-            turnColor.GetChild(2).GetComponentInChildren<Text>().color = color;
         }
 
         private void setTimeText() {
@@ -195,16 +172,19 @@ namespace MTTMsgPage
             Toggles[0].isOn = true;
         }
 
-        public void SetGoSize(bool addHeight)
+        public bool SetGoSize(bool addHeight)
         {
             if (addHeight && _rectTransform.sizeDelta.y != 1286)
             {
                 _rectTransform.DOSizeDelta(new Vector2(860, 1286), 0.2f);
+                return true;
             }
             else if (!addHeight && _rectTransform.sizeDelta.y != 1010)
             {
                 _rectTransform.DOSizeDelta(new Vector2(860, 1010), 0.2f);
+                return true;
             }
+            return false;
         }
     }
 }

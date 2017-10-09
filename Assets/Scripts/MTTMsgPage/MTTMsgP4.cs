@@ -79,9 +79,12 @@ namespace MTTMsgPage
             var rowData = new List<MTTPageData>();
             var roomsMsg = Json.Decode(data) as List<object>;
 
-            transform.parent.parent.GetComponent<MTTMsg>().SetGoSize(roomsMsg.Count > 8);
+            bool needWaiting = transform.parent.parent.GetComponent<MTTMsg>().SetGoSize(roomsMsg.Count > 8);
+            if (needWaiting)
+            {
+                yield return new WaitForSeconds(0.2f);
+            }
 
-            yield return new WaitForSeconds(0.2f);
             _Adapter.Init(adapterParams);
 
 

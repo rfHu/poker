@@ -22,6 +22,7 @@ public enum GameType {
 }
 
 public enum MTTType { 
+    None,
     Normal,
     Fast
 }
