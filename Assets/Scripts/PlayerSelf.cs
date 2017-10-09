@@ -77,9 +77,9 @@ namespace PokerPlayer {
 
 		void OnDespawned() {
 			this.Dispose();	
+			RxSubjects.Seating.OnNext(false);
 
 			hasShowCard = false;
-			RxSubjects.Seating.OnNext(false);
 			YouWin.SetActive(false);
 			YouWin.GetComponent<CanvasGroup>().alpha = 1;
 			WinParticle.Stop(true);
@@ -297,9 +297,9 @@ namespace PokerPlayer {
 				var check = dict.Dict("cmds").Bool("check");
 
 				if (check) {
-					delayCall(OP.OPS.Check);
+					OP.OPS.Check();
  				} else {
-					delayCall(OP.OPS.Fold);
+					OP.OPS.Fold();
 				 }
 			} else if (flag == "01") { // 选中右边
 				var data = dict.Dict("cmds");
@@ -310,11 +310,11 @@ namespace PokerPlayer {
 					OP.Despawn();
 
 					if (callNum == 0) {
-						delayCall(OP.OPS.Check);
+						OP.OPS.Check();
 					} else if (callNum == -1) {
-						delayCall(OP.OPS.AllIn);
+						OP.OPS.AllIn();
 					} else {
-						delayCall(OP.OPS.Call);
+						OP.OPS.Call();
 					}
 				} else {
 					if (!restore) {
@@ -328,12 +328,6 @@ namespace PokerPlayer {
 			}
 			
 			player.Trust.SelectedFlag.Value = "00";
-	}
-
-	private void delayCall(Action cb) {
-		// Observable.Timer(TimeSpan.FromSeconds(0.1)).Subscribe((_) => {
-			cb();
-		// }).AddTo(this);
 	}
 
 	private void reShow(Card card, int index) {
