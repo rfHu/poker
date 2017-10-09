@@ -28,4 +28,11 @@ namespace MTTMsgPage
         public int Min;
         public int Max;
     }
+
+    public class BBLevelListGoData : MTTPageData 
+    {
+        public int Level;
+        public int BB;
+        public int Ante;
+    }
 }

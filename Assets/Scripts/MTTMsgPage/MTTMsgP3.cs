@@ -1,28 +1,78 @@
-﻿using MTTMsgPage;
+﻿using frame8.Logic.Misc.Visual.UI.ScrollRectItemsAdapter;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MTTMsgP3 : MonoBehaviour {
 
-    public Transform Content;
-
-    public GameObject ChildPerfab;
-
-    private List<MTTP3ChildGo> childGos = new List<MTTP3ChildGo>();
-    private int highLightLevel;
-    private Color openCol = new Color(24 / 255, 1, 1);
-    MTTType nowType;
-
-    public void SetPage() 
+namespace MTTMsgPage
+{
+    public class MTTMsgP3 : MonoBehaviour
     {
-        transform.parent.parent.GetComponent<MTTMsg>().SetGoSize(true);
-        SetHighLightCol(new Color(1, 1, 1, 0.6f), highLightLevel);
+        MTTType nowType;
 
-        if (nowType != GameData.MatchData.MTTType)
+        public MyParams adapterParams;
+
+        MyScrollRectAdapter _Adapter;
+
+        void OnEnable()
         {
-            nowType = GameData.MatchData.MTTType;
+            _Adapter = new MyScrollRectAdapter();
+            _Adapter.Init(adapterParams);
+        }
+
+        void OnDisable()
+        {
+            if (_Adapter != null)
+                _Adapter.Dispose();
+        }
+
+        [Serializable]
+        public class MyParams : BaseParams
+        {
+            public RectTransform BBLevelListGo;
+
+            public List<MTTPageData> rowData = new List<MTTPageData>();
+        }
+
+        public class MyScrollRectAdapter : ScrollRectItemsAdapter8<MyParams, MTTCellView>
+        {
+            protected override float GetItemWidth(int index)
+            { return 780; }
+
+            protected override float GetItemHeight(int index)
+            { return 64; }
+
+            protected override MTTCellView CreateViewsHolder(int itemIndex)
+            {
+                var data = _Params.rowData[itemIndex];
+                MTTCellView instance;
+
+                instance = new BBLevelListGo();
+                instance.Init(_Params.BBLevelListGo, itemIndex);
+
+                return instance;
+            }
+
+            protected override void UpdateViewsHolder(MTTCellView newOrRecycled)
+            {
+                MTTPageData model = _Params.rowData[newOrRecycled.itemIndex];
+                newOrRecycled.SetData(model);
+            }
+
+            protected override bool IsRecyclable(MTTCellView potentiallyRecyclable, int indexOfItemThatWillBecomeVisible, float heightOfItemThatWillBecomeVisible)
+            { return potentiallyRecyclable.CanPresentModelType(_Params.rowData[indexOfItemThatWillBecomeVisible].cachedType); }
+        }
+
+        public void SetPage() 
+        {
+            StartCoroutine(SetPageCor());
+        }
+
+        IEnumerator SetPageCor()
+        {
+            var rowData = new List<MTTPageData>();
 
             int[,] newArr = new int[,] { };
             if (GameData.MatchData.MTTType == MTTType.Normal)
@@ -39,45 +89,30 @@ public class MTTMsgP3 : MonoBehaviour {
                         {16000, 2000}, {24000, 4000}, {32000, 6000}, {40000, 6000}, {64000, 8000}, {80000, 12000}, {120000, 20000},
                         {160000, 20000}, {240000, 40000}, {320000, 60000}, {400000, 60000}, {640000, 80000},{800000, 120000} };
 
-            for (int num = 0; num < 56; num++)
+            bool needWaiting = transform.parent.parent.GetComponent<MTTMsg>().SetGoSize(true);
+
+            if (needWaiting)
             {
-                if (newArr.GetLength(0) > num)
-                { // 复用的部分
-
-                    MTTP3ChildGo user;
-
-                    if (num < childGos.Count)
-                    {
-                        user = childGos[num];
-                        user.gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        var go = GameObject.Instantiate(ChildPerfab, Content);
-                        user = go.GetComponent<MTTP3ChildGo>();
-                        childGos.Add(user);
-                    }
-
-                    user.SetText(num + 1, newArr[num, 0], newArr[num, 1]);
-                }
-                else if (childGos.Count > num)
-                { // 超出的部分隐藏
-                    childGos[num].gameObject.SetActive(false);
-                }
+                yield return new WaitForSeconds(0.2f);
             }
 
+            _Adapter.Init(adapterParams);
+
+            for (int i = 0; i < newArr.GetLength(0); i++)
+            {
+                var awardData = new BBLevelListGoData()
+                {
+                    Level = i + 1,
+                    BB = newArr[i, 0],
+                    Ante = newArr[i, 1],
+                };
+
+                rowData.Add(awardData);
+            }
+
+            adapterParams.rowData.Clear();
+            adapterParams.rowData.AddRange(rowData);
+            _Adapter.ChangeItemCountTo(rowData.Count);
         }
-        highLightLevel = GameData.Shared.BlindLv;
-        SetHighLightCol(openCol, highLightLevel);
-    }
-
-    private void SetHighLightCol(Color color, int num)
-    {
-        if (num >= Content.childCount)
-            return;
-
-        Transform turnColor = Content.GetChild(num);
-        turnColor.GetChild(1).GetComponentInChildren<Text>().color = color;
-        turnColor.GetChild(2).GetComponentInChildren<Text>().color = color;
     }
 }
