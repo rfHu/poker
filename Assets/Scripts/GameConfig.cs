@@ -295,7 +295,11 @@ public class GameOverJson {
 }
 
 sealed public class GameData {
+	private CompositeDisposable disposable;  
+
 	private GameData() {
+		disposable = new CompositeDisposable();
+
 		RxSubjects.TakeSeat.Subscribe((e) => {
 			var index = e.Data.Int("where");
 			var playerInfo = e.Data.Dict("who");
@@ -346,6 +350,7 @@ sealed public class GameData {
 				Pots.Value = e.Data.DL("pots");
 			}
 
+			// 引入一个变量记录动画状态
 			PublicCardAnimState = true;
 
 			var state = e.Data.Int("state");
@@ -395,19 +400,25 @@ sealed public class GameData {
 					HighlightIndex.Value = Card.ExtractHighlightCards(e.Data.IL("maxFive"), MaxFiveRank.Value);
 				}
 
-                if (e.Data.ContainsKey("win_rates"))
-                {
-                    var winRates = e.Data.Dict("win_rates");
-					Player.MaxWinPercent = Convert.ToInt16(winRates.Values.Max());
+                // if (e.Data.ContainsKey("win_rates"))
+                // {
+                //     var winRates = e.Data.Dict("win_rates");
+				// 	Player.MaxWinPercent = Convert.ToInt16(winRates.Values.Max());
 
-                    foreach (var item in winRates)
-                    {
-                        var player = GetPlayer(int.Parse(item.Key));
-                        int percent = Convert.ToInt16(item.Value);
-                        player.WinPercent.OnNext(percent);
-                    }
-                }
-			});
+                //     foreach (var item in winRates)
+                //     {
+                //         var player = GetPlayer(int.Parse(item.Key));
+                //         int percent = Convert.ToInt16(item.Value);
+                //         player.WinPercent.OnNext(percent);
+                //     }
+                // }
+			}).AddTo(disposable);
+		});
+
+		RxSubjects.GamePause.Subscribe((pause) => {
+			if (pause) {
+				disposable.Clear();
+			}
 		});
 
 		Action<RxData> updateCoins = (e) => {

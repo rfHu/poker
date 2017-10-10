@@ -72,7 +72,7 @@ public class Card : MonoBehaviour {
 		reColor();
 		
 		if (anim && _index != index) { 
-			StartCoroutine(flipCard(index, complete));
+			startShow(index, complete);
 		} else {
             setCardFace(index, cardColor);
 			flipTransform.localScale = Vector3.one;
@@ -164,8 +164,16 @@ public class Card : MonoBehaviour {
 		}
 
 		hasReShow = true;
-		StartCoroutine(flipCard(_index));
+		startShow(_index);
 		G.PlaySound("fapai_1");
+	}
+
+	private IEnumerator flipCoroutine; 
+
+	private void startShow(int index, Action complete = null) {
+		StopCoroutine(flipCoroutine);
+		flipCoroutine = flipCard(index, complete);
+		StartCoroutine(flipCoroutine);
 	}
 
 	void OnDisable() {
@@ -225,6 +233,8 @@ public class Card : MonoBehaviour {
 		highlight.SetActive(false);
 		cardContent.SetChildrenActive(false);
 		reColor();
+
+		GetComponent<RectTransform>().localScale = Vector3.one;
 
 		if (hide) {
 			gameObject.SetActive(false);

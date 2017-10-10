@@ -155,9 +155,11 @@ public class External : MonoBehaviour{
 			}
 			// 暂停的时候，断开连接 
 			Connect.Shared.CloseImmediate();
+			RxSubjects.GamePause.OnNext(true);
 		} else {
 			_.Log("Unity: 游戏恢复");
 			Connect.Setup();	
+			RxSubjects.GamePause.OnNext(false);
 		}
 	}
 
