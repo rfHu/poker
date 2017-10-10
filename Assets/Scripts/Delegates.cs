@@ -65,6 +65,7 @@ public class RxSubjects {
 	public static Subject<RxData> MTTMatch = new Subject<RxData>();
     public static Subject<RxData> CurrentRank = new Subject<RxData>();
     public static Subject<RxData> HalfBreak = new Subject<RxData>();
+
 	// 跟网络无关事件
 	public static Subject<int> ChangeVectorsByIndex = new Subject<int>();
 	public static Subject<int> ChangeVectorsByIndexAnimate = new Subject<int>();
@@ -76,6 +77,7 @@ public class RxSubjects {
 	public static Subject<GainChip> GainChip = new Subject<GainChip>();
 	public static Subject<int> MTTChangeTabIndex = new Subject<int>();
 	public static Subject<bool> GameReset = new Subject<bool>();
+	public static Subject<bool> GamePause = new Subject<bool>();
 }
 
 public struct GainChip {

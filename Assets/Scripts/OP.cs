@@ -332,22 +332,7 @@ public class OP : MonoBehaviour {
 		var pointerDown = false;
 
 		Slid.OnValueChangedAsObservable().Subscribe((value) => {
-			int newValue;
-
-			if (value >= range[1]) {
-				newValue = (int)value;
-			} else {
-				newValue = value.StepValue(GameData.Shared.BB);
-			}
-
-			// 解决赋值循环导致崩溃		
-			if (newValue > Slid.maxValue) {
-				return ;
-			}
-
-			Slid.value = newValue;			
-
-			if (newValue < range[1]) {
+			if (value < range[1]) {
 				Allin.SetActive(false);
 
 				if (pointerDown) {
@@ -358,8 +343,8 @@ public class OP : MonoBehaviour {
 				RoundTipsGo.SetActive(false);
 			}
 			
-			RaiseNumber.text = _.Num2CnDigit(newValue);
-			TipsText.text = _.Num2CnDigit(newValue);
+			RaiseNumber.text = _.Num2CnDigit(value);
+			TipsText.text = _.Num2CnDigit(value);
 		}).AddTo(slidDisposables);
 
 		Slid.OnPointerDownAsObservable().Subscribe((pointerEvt) => {

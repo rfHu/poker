@@ -72,7 +72,7 @@ public class Card : MonoBehaviour {
 		reColor();
 		
 		if (anim && _index != index) { 
-			StartCoroutine(flipCard(index, complete));
+			startShow(index, complete);
 		} else {
             setCardFace(index, cardColor);
 			flipTransform.localScale = Vector3.one;
@@ -164,8 +164,18 @@ public class Card : MonoBehaviour {
 		}
 
 		hasReShow = true;
-		StartCoroutine(flipCard(_index));
+		startShow(_index);
 		G.PlaySound("fapai_1");
+	}
+
+	private IEnumerator flipCoroutine; 
+
+	private void startShow(int index, Action complete = null) {
+		if (flipCoroutine != null) {
+			StopCoroutine(flipCoroutine);
+		}
+		flipCoroutine = flipCard(index, complete);
+		StartCoroutine(flipCoroutine);
 	}
 
 	void OnDisable() {
@@ -191,16 +201,16 @@ public class Card : MonoBehaviour {
 
 	IEnumerator flipCard(int index, Action complete = null) {
 		float time = 0f;
-		var rectTrans = flipTransform;
+		var transform = flipTransform;
 		var hasSet = false;
 		
 		while(time < 1f) {
 			time = Mathf.Min(time + Time.deltaTime / TurnCardDuration, 1);
 			float scale = scaleCurve.Evaluate(time);
 
-			Vector3 vector = rectTrans.localScale;
+			Vector3 vector = transform.localScale;
 			vector.x = scale;
-			rectTrans.localScale = vector;
+			transform.localScale = vector;
 
 			if (time >= 0.5 && !hasSet) {
                 setCardFace(index, cardColor);
@@ -210,7 +220,7 @@ public class Card : MonoBehaviour {
 			yield return new WaitForFixedUpdate();
 		}
 
-		rectTrans.localScale = Vector3.one;
+		transform.localScale = Vector3.one;
 
 		if (complete != null) {
 			complete();
@@ -225,6 +235,8 @@ public class Card : MonoBehaviour {
 		highlight.SetActive(false);
 		cardContent.SetChildrenActive(false);
 		reColor();
+
+		flipTransform.localScale = Vector3.one;
 
 		if (hide) {
 			gameObject.SetActive(false);
