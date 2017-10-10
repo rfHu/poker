@@ -171,7 +171,9 @@ public class Card : MonoBehaviour {
 	private IEnumerator flipCoroutine; 
 
 	private void startShow(int index, Action complete = null) {
-		StopCoroutine(flipCoroutine);
+		if (flipCoroutine != null) {
+			StopCoroutine(flipCoroutine);
+		}
 		flipCoroutine = flipCard(index, complete);
 		StartCoroutine(flipCoroutine);
 	}
@@ -199,16 +201,16 @@ public class Card : MonoBehaviour {
 
 	IEnumerator flipCard(int index, Action complete = null) {
 		float time = 0f;
-		var rectTrans = flipTransform;
+		var transform = flipTransform;
 		var hasSet = false;
 		
 		while(time < 1f) {
 			time = Mathf.Min(time + Time.deltaTime / TurnCardDuration, 1);
 			float scale = scaleCurve.Evaluate(time);
 
-			Vector3 vector = rectTrans.localScale;
+			Vector3 vector = transform.localScale;
 			vector.x = scale;
-			rectTrans.localScale = vector;
+			transform.localScale = vector;
 
 			if (time >= 0.5 && !hasSet) {
                 setCardFace(index, cardColor);
@@ -218,7 +220,7 @@ public class Card : MonoBehaviour {
 			yield return new WaitForFixedUpdate();
 		}
 
-		rectTrans.localScale = Vector3.one;
+		transform.localScale = Vector3.one;
 
 		if (complete != null) {
 			complete();
@@ -234,7 +236,7 @@ public class Card : MonoBehaviour {
 		cardContent.SetChildrenActive(false);
 		reColor();
 
-		GetComponent<RectTransform>().localScale = Vector3.one;
+		flipTransform.localScale = Vector3.one;
 
 		if (hide) {
 			gameObject.SetActive(false);
