@@ -9,6 +9,10 @@ public class HoldCardMsg : MonoBehaviour {
 
     public Text Pot;
 
+	public Text Score;
+
+	public Text CardType;
+
     private Card card1
     {
         get
@@ -39,10 +43,27 @@ public class HoldCardMsg : MonoBehaviour {
         {
             Name.color = Color.white;
         }
-        Pot.text = dict.Int("pot").ToString();
 
+		// 分数
+		var score = dict.Int("score");
+        Score.text = _.Num2CnDigit(score, true);
+		Score.color = _.GetTextColor(score);
+
+		// 底池
+		Pot.text = _.Num2CnDigit(dict.Int("pot"));
+
+		// 牌型
+		var desc = Card.GetCardDesc(dict.Int("maxFiveRank"));
+		var cardTypeParent = CardType.transform.parent.gameObject;
+		if (string.IsNullOrEmpty(desc)) {
+			cardTypeParent.SetActive(false);
+		} else {
+			cardTypeParent.SetActive(true);
+			CardType.text = desc;
+		}
+
+		// 手牌
         var cards = dict.IL("cards");
-
         if (cards.Count <= 0)
         {
             card1.Turnback();
