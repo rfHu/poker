@@ -39,7 +39,7 @@ public class HoldCardMsg : MonoBehaviour {
         {
             Name.color = Color.white;
         }
-        Pot.text = dict.Int("pot").ToString();
+        Pot.text = _.Num2CnDigit(dict.Int("score"), true);
 
         var cards = dict.IL("cards");
 
