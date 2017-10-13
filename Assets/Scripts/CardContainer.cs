@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-class CardContainer: MonoBehaviour {
+public class CardContainer: MonoBehaviour {
 	public Card CardInstance {
 		get {
 			return card;

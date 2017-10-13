@@ -15,17 +15,7 @@ namespace PokerPlayer {
         public GameObject AutoArea;
         public GameObject[] AutoOperas; 
 
-		private Card  card1 {
-			get {
-				return cardContainers[0].CardInstance;
-			}
-		}
-
-		private Card card2 {
-			get {
-				return cardContainers[1].CardInstance;
-			}
-		}
+		private UserCards userCards;
 
 		private GameObject cardParent {
 			get {
@@ -43,8 +33,6 @@ namespace PokerPlayer {
 		public GameObject BackGameBtn;
         
         private OP OPMono;
-
-		private bool hasShowCard = false;
 
         private Player player {
 			get {
@@ -79,7 +67,6 @@ namespace PokerPlayer {
 			this.Dispose();	
 			RxSubjects.Seating.OnNext(false);
 
-			hasShowCard = false;
 			YouWin.SetActive(false);
 			YouWin.GetComponent<CanvasGroup>().alpha = 1;
 			WinParticle.Stop(true);
@@ -87,9 +74,7 @@ namespace PokerPlayer {
 
 			cardParent.SetActive(false);
 			resetCards();
-			card1.Turnback();
-			card2.Turnback();
-
+			userCards.Despawn();
 			OP.Despawn();
 		}
 
@@ -126,7 +111,7 @@ namespace PokerPlayer {
 		    }).AddTo(this);
 
 			GameData.Shared.HighlightIndex.Subscribe((list) => {
-				Card.HighlightCards(new List<Card>{card1, card2}, list);
+				Card.HighlightCards(userCards.Cards, list);
 			}).AddTo(this);
 
 		    player.Trust.CallNumber.Subscribe((num) => {
@@ -265,11 +250,6 @@ namespace PokerPlayer {
 		toggleAutoBtns(1);	
 	}
 
-    private void darkenCards() {
-		card1.Darken();
-		card2.Darken();
-	}
-
 	private void showOP(Dictionary<string, object> data, int left, int buyTimeCost = 10) {
 		if (!PoolMan.IsSpawned(transform)) {
 			return ;
@@ -330,22 +310,6 @@ namespace PokerPlayer {
 			player.Trust.SelectedFlag.Value = "00";
 	}
 
-	private void reShow(Card card, int index) {
-		if (index <= 0) {
-			return ;
-		}
-
-		if (!hasShowCard) {
-			card.ShowWithSound(index, player.SeeCardAnim);
-		} else if (index > 0) {
-			card.ReShow();
-		}
-
-		if (!player.InGame) {
-			card.Darken();
-		}
-	}
-
 	private void resetCards() {
 		var transform = cardParent.GetComponent<RectTransform>();
 		
@@ -372,12 +336,12 @@ namespace PokerPlayer {
 			transform.GetComponent<CanvasGroup>().DOFade(0.4f, duration).SetEase(ease).SetId(Base.AnimID);
 			transform.DOMove(Controller.LogoVector, duration).SetEase(ease).SetId(Base.AnimID).OnComplete(() => {
 				resetCards();
-            	darkenCards();
+            	userCards.Darken();
 			});
         }
 
 		public void SetFolded() {
-			darkenCards();
+			userCards.Darken();
 		}
 
         public void MoveOut() {
@@ -415,21 +379,13 @@ namespace PokerPlayer {
 			}
 
 			if (player.SeeCardAnim) {
-				if (hasShowCard) { // 同时开牌
-					reShow(card1, cards[0]);
-					reShow(card2, cards[1]);
-				} else { // 间隔开牌
-					reShow(card1, cards[0]);
-					Observable.Timer(TimeSpan.FromSeconds(0.3)).Subscribe((_) => {
-						reShow(card2, cards[1]);	
-						hasShowCard = true;
-					}).AddTo(this);
+				userCards.Show(cards);
+
+				if (!player.InGame) {
+					userCards.Darken();
 				}
 			} else {
-				card1.ShowIfDarken(cards[0], player.InGame);
-				card2.ShowIfDarken(cards[1], player.InGame);
-
-				hasShowCard = true;
+				userCards.ShowIfDarken(cards, player.InGame);
 			}
 		}	
 
