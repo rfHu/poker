@@ -21,9 +21,7 @@ public class UserCards: MonoBehaviour {
 			StopCoroutine(coroutine);
 		}
 
-		iterate((card) => {
-			card.Turnback();
-		});	
+		Turnback();	
 	}
 
 	private IEnumerator coroutine; 
@@ -36,6 +34,12 @@ public class UserCards: MonoBehaviour {
 		coroutine = reShow(indexList);
 		StartCoroutine(coroutine);
 		hasShow = true;
+	}
+
+	public void Show(List<int> indexList, bool anim) {
+		iterateIndex((card, i) => {
+			card.Show(indexList[i], anim);
+		});
 	}
 
 	private IEnumerator reShow(List<int> indexList) {
@@ -77,6 +81,12 @@ public class UserCards: MonoBehaviour {
 		iterate((card) => {
 			card.Darken();
 		});
+	}
+
+	public void Turnback() {
+		iterate((card) => {
+			card.Turnback();
+		});	
 	}
 
 	private void iterate(Action<Card> cb) {

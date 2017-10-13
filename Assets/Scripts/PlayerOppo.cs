@@ -21,17 +21,7 @@ namespace PokerPlayer {
 			}
 		}
 
-		private Card card1 {
-			get {
-				return cardContainers[0].CardInstance;
-			}
-		}
-
-		private Card card2 {
-			get {
-				return cardContainers[1].CardInstance;
-			}
-		}
+		private UserCards userCards;		
 
 
         [SerializeField]
@@ -76,20 +66,10 @@ namespace PokerPlayer {
             Cardfaces.GetComponent<CanvasGroup>().alpha = 1;
 
             MoveOut();
-			turnbackCards();
+			userCards.Despawn();
             cardParent.SetActive(false);
             NameLabel.gameObject.SetActive(true);
         }
-
-		private void turnbackCards() {
-			if (card1 != null) {
-				card1.Turnback();
-			}
-
-			if (card2 != null) {
-				card2.Turnback();
-			}
-		}
 
 		public static void Init(Player player, Seat seat) {
 			var transform = PoolMan.Spawn("PlayerOppo", seat.transform);
@@ -141,8 +121,8 @@ namespace PokerPlayer {
                 cardParent.SetActive(true);
 
                 // 显示手牌
-      			card1.Show(cards[0], anim);
-                card2.Show(cards[1], anim);
+
+      			userCards.Show(cards, anim);
 
                 if (Cardfaces != null) {
                     Cardfaces.gameObject.SetActive(false);
