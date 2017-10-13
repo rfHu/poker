@@ -886,6 +886,20 @@ public class Controller : MonoBehaviour {
 		}	
 	}
 
+	private Dictionary<GameType, string> iconTypeMap = new Dictionary<GameType, string>() {
+		{GameType.KingThree, "king_three"},
+		{GameType.MTT, "mtt"},
+		{GameType.SNG, "sng"},
+		{GameType.Omaha, "omaha"},
+		{GameType.SixPlus, "six_plus"},
+	};
+
+	private void setIconByType(GameType type) {
+		var image = matchLogo.GetComponent<VectorImage>();
+		image.vectorImageData = CustomIconHelper.GetIcon(iconTypeMap[type]).vectorImageData;
+		matchLogo.SetActive(true);
+	}
+
 	private void subsRoomSetting() {
 		GameData.Shared.Type.Subscribe((type) => {
 			if (GameData.Shared.IsMatch())
@@ -896,16 +910,11 @@ public class Controller : MonoBehaviour {
 				OwnerButton.SetActive(true);
 			}
 
-			var image = matchLogo.GetComponent<VectorImage>();
 
-			if (type == GameType.MTT) {
-				matchLogo.SetActive(true);			
-				image.vectorImageData = CustomIconHelper.GetIcon("mtt").vectorImageData;
-			} else if (type == GameType.SNG) {
-				matchLogo.SetActive(true);			
-				image.vectorImageData = CustomIconHelper.GetIcon("sng").vectorImageData;
-			} else {
+			if (type == GameType.Normal) {
 				matchLogo.SetActive(false);
+			} else {
+				setIconByType(GameData.Shared.Type.Value);
 			}
 		}).AddTo(this);
 
