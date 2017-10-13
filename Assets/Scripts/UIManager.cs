@@ -82,7 +82,7 @@ public class UIManager : MonoBehaviour {
 
             //根据类别生成不同预制体
             Transform transform;
-            if (GameData.Shared.Type.Value == GameType.Normal)
+            if (!GameData.Shared.IsMatch())
             {
                 transform = PoolMan.Spawn("Supplement");
             }

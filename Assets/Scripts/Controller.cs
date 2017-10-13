@@ -621,7 +621,7 @@ public class Controller : MonoBehaviour {
 		RxSubjects.Pass.Subscribe((e) => {
 			var type = GameData.Shared.Type.Value;
 
-			if (type == GameType.Normal) {
+			if (!GameData.Shared.IsMatch()) {
 				var msg = "记分牌带入成功";
 
 				if (GameData.Shared.InGame) {
@@ -749,10 +749,6 @@ public class Controller : MonoBehaviour {
 			External.Instance.ExitCb(() => {
                 switch (GameData.Shared.Type.Value)
                 {
-                    case GameType.Normal:
-                        ID = roomID;
-                        page = "record.html";
-                        break;
                     case GameType.SNG:
                         ID = roomID;
                         page = "record_sng.html";
@@ -762,6 +758,8 @@ public class Controller : MonoBehaviour {
                         page = "record_mtt.html";
                         break;
                     default:
+						ID = roomID;
+                        page = "record.html";
                         break;
                 }
 

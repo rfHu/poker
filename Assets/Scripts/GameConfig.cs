@@ -671,7 +671,7 @@ sealed public class GameData {
 	public ReactiveProperty<int> Rank = new ReactiveProperty<int>();
 
 	public bool IsMatch() {
-		return Type.Value != GameType.Normal;
+		return Type.Value == GameType.MTT || Type.Value == GameType.SNG;
 	}
 
 	public class MatchData {
