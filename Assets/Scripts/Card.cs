@@ -148,9 +148,11 @@ public class Card : MonoBehaviour {
 		}
 	}
 
-	public void ShowDardken(int index) {
+	public void ShowIfDarken(int index, bool darken) {
 		Show(index);
-		Darken();
+		if (darken) {
+			Darken();
+		}
 	}
 
     public void ShowInExplain(int index) 

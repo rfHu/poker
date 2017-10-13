@@ -340,6 +340,10 @@ namespace PokerPlayer {
 		} else if (index > 0) {
 			card.ReShow();
 		}
+
+		if (!player.InGame) {
+			card.Darken();
+		}
 	}
 
 	private void resetCards() {
@@ -410,13 +414,6 @@ namespace PokerPlayer {
 				cards[1] = -1;
 			}
 
-			// Not in game but receive "ShowCard"
-			if (!player.InGame) {
-				card1.ShowDardken(cards[0]);
-				card2.ShowDardken(cards[1]);
-				return ;
-			}
-
 			if (player.SeeCardAnim) {
 				if (hasShowCard) { // 同时开牌
 					reShow(card1, cards[0]);
@@ -429,8 +426,9 @@ namespace PokerPlayer {
 					}).AddTo(this);
 				}
 			} else {
-				card1.Show(cards[0]);
-				card2.Show(cards[1]);
+				card1.ShowIfDarken(cards[0], player.InGame);
+				card2.ShowIfDarken(cards[1], player.InGame);
+
 				hasShowCard = true;
 			}
 		}	

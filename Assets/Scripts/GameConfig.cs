@@ -18,7 +18,10 @@ public enum ActionState {
 public enum GameType {
 	Normal,
 	SNG,
-	MTT
+	MTT,
+	SixPlus,
+	KingThree,
+	Omaha
 }
 
 public enum MTTType { 
@@ -804,14 +807,18 @@ sealed public class GameData {
 	// 保险状态
     public ReactiveProperty<bool> InsuranceState = new ReactiveProperty<bool>(false);
 	
-	// private Dictionary<string, object> jsonData;
-
 	private GameType string2GameType(string type) {
-		if (type == "sng") {
-			return GameType.SNG;
-		} else if (type == "mtt") {
-			return GameType.MTT;
-		}
+		var map = new Dictionary<string, GameType>() {
+			{"sng", GameType.SNG},
+			{"mtt", GameType.MTT},
+			{"six_plus", GameType.SixPlus},
+			{"king_three", GameType.KingThree},
+			{"omaha", GameType.Omaha}
+		};
+
+		if (map.ContainsKey(type)) {
+			return map[type];
+		}		
 
 		return GameType.Normal;	
 	}
