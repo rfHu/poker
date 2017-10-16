@@ -326,14 +326,6 @@ namespace PokerPlayer {
 		public void ShowCard(List<int> cards) {
 			selfCards.gameObject.SetActive(true);
 
-			if (cards[0] == 0) {
-				cards[0] = -1;
-			}
-
-			if (cards[1] == 0) {
-				cards[1] = -1;
-			}
-
 			if (player.SeeCardAnim) {
 				selfCards.Show(cards);
 
@@ -341,7 +333,7 @@ namespace PokerPlayer {
 					selfCards.Darken();
 				}
 			} else {
-				selfCards.ShowIfDarken(cards, player.InGame);
+				selfCards.ShowIfDarken(cards, !player.InGame);
 			}
 		}	
 

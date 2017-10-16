@@ -15,7 +15,7 @@ public class Card : MonoBehaviour {
     public VectorImage SuitPic;
     public Image FigurePic;
     public Sprite[] Figures;
-	private int _index = -1;
+	private int _index = 0;
 
 	public int Index {
 		get {
@@ -53,7 +53,7 @@ public class Card : MonoBehaviour {
 
 	void Awake() {
         GameSetting.CardColor.Subscribe((num) => {
-			if (_index < 0) {
+			if (_index <= 0) {
 				return ;
 			}
             setCardFace(_index, num);
@@ -231,7 +231,7 @@ public class Card : MonoBehaviour {
 	}
 
 	public void Turnback(bool hide = false) {
-		_index = -1;
+		_index = 0;
 		cardBg.sprite = CardBack;
 		cardBg.color = Color.white;
 

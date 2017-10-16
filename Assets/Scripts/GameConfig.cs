@@ -218,13 +218,7 @@ sealed public class Player {
             WinPercent.OnNext(json.Int("win_rate"));
         }
 
-		var showValue = Convert.ToString(json.Int("showcard"), 2);
-
-		if (showValue.Length < 2) {
-			showValue = "0" + showValue;
-		} 
-
-		ShowCard.Value = showValue;
+		ShowCard.Value = Convert.ToString(json.Int("showcard"), 2);
 
 		var trust = json.Dict("trust");
 		SetTrust(trust);

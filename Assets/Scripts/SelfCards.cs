@@ -29,9 +29,10 @@ public class SelfCards: MonoBehaviour {
 
 	void Awake() {
 		for(var i = 0; i < Containers.Count; i++) {
-			var btn = Containers[i].GetComponent<Button>();
+			var j = i;
+			var btn = Containers[j].GetComponent<Button>();
 			btn.onClick.AddListener(() => {
-				toggleEye(i);
+				toggleEye(j);
 			});
 		}
 	}
@@ -52,7 +53,7 @@ public class SelfCards: MonoBehaviour {
 	private IEnumerator coroutine; 
 
 	private void toggleEye(int index) {
-		var value = new System.Text.StringBuilder(player.ShowCard.Value);
+		var value = new System.Text.StringBuilder(player.ShowCard.Value.PadLeft(4, '0'));
 
 		// 这一手结束后，只能亮牌，不能关闭亮牌
 		if (value[index] == '1' && gameover) {
@@ -82,7 +83,6 @@ public class SelfCards: MonoBehaviour {
 
 		coroutine = reShow(indexList);
 		StartCoroutine(coroutine);
-		hasShow = true;
 	}
 
 	public void Show(List<int> indexList, bool anim) {
@@ -102,12 +102,13 @@ public class SelfCards: MonoBehaviour {
 			show(card, index);
 
 			if (!hasShow) {
-				yield return new WaitForSeconds(0.2f);
+				yield return new WaitForSeconds(0.1f);
 			}
 
 			i++;
 		}
 
+		hasShow = true;
 		yield return null;
 	}
 
@@ -119,9 +120,9 @@ public class SelfCards: MonoBehaviour {
 		}
 	}
 
-	public void ShowIfDarken(List<int> indexList, bool inGame) {
+	public void ShowIfDarken(List<int> indexList, bool darken) {
 		iterateIndex((card, i) => {
-			card.ShowIfDarken(indexList[i], inGame);
+			card.ShowIfDarken(indexList[i], darken);
 		});
 		hasShow = true;
 	}
@@ -162,6 +163,8 @@ public class SelfCards: MonoBehaviour {
 		}).AddTo(this);
 
 		player.ShowCard.Subscribe((value) => {
+			value = value.PadLeft(4, '0');
+
 			for(var i = 0; i < value.Length; i++) {
 				var c = value[i];
 				if (c == '1') {
