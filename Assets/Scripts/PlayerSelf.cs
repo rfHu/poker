@@ -16,12 +16,6 @@ namespace PokerPlayer {
 
 		private SelfCards selfCards;
 
-		private GameObject cardParent {
-			get {
-				return selfCards.Containers[0].transform.parent.gameObject;
-			}
-		}
-
 		[SerializeField]private Transform ccParent;
 
 		public Text CardDesc;
@@ -44,6 +38,10 @@ namespace PokerPlayer {
 		}
 
         private void init(Player player, Seat seat) {
+			var prefab = GameData.Shared.Type.Value == GameType.Omaha ? OmahaCardPrefab	: NormalCardPrefab;
+			selfCards = SelfCards.Create(prefab, player);
+			resetCards();
+
             Base.Init(player, seat, this);
 
             addEvents();
@@ -60,12 +58,6 @@ namespace PokerPlayer {
 			Base = PlayerBase.Load(BaseObject, transform);	
 		}
 
-		void OnSpawned() {
-			var prefab = GameData.Shared.Type.Value == GameType.Omaha ? OmahaCardPrefab	: NormalCardPrefab;
-			selfCards = SelfCards.Create(prefab, player);
-			resetCards();
-		}
-
 		void OnDespawned() {
 			this.Dispose();	
 			RxSubjects.Seating.OnNext(false);
@@ -75,7 +67,6 @@ namespace PokerPlayer {
 			WinParticle.Stop(true);
 			CardDesc.gameObject.SetActive(false);
 
-			cardParent.SetActive(false);
 			selfCards.Despawn();
 			OP.Despawn();
 		}
@@ -279,7 +270,7 @@ namespace PokerPlayer {
 	}
 
 	private void resetCards() {
-		var transform = cardParent.GetComponent<RectTransform>();
+		var transform = selfCards.GetComponent<RectTransform>();
 		
 		transform.anchoredPosition3D = new Vector3(0, -234, 1);
 		transform.GetComponent<CanvasGroup>().alpha = 1;
@@ -293,7 +284,7 @@ namespace PokerPlayer {
             MoveOut();
 
 			// 弃牌动画
-			var transform = cardParent.GetComponent<RectTransform>();
+			var transform = selfCards.GetComponent<RectTransform>();
 			transform.SetParent(G.UICvs.transform, true);
 
 			var duration = 0.5f;
@@ -333,7 +324,7 @@ namespace PokerPlayer {
         }
 
 		public void ShowCard(List<int> cards) {
-			cardParent.SetActive(true);
+			selfCards.gameObject.SetActive(true);
 
 			if (cards[0] == 0) {
 				cards[0] = -1;

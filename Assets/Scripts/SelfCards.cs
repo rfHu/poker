@@ -8,7 +8,18 @@ using UnityEngine.UI;
 
 public class SelfCards: MonoBehaviour {
 	public List<CardContainer> Containers;
-	public List<Card> Cards;
+
+	public List<Card> Cards {
+		get {
+			if (cards == null) {
+				cards = Containers.Select((o) => o.CardInstance).ToList();
+			}	
+
+			return cards;
+		}
+	}
+	private List<Card> cards;
+
 	private Player player;
 	
 	public List<GameObject> Eyes;
@@ -16,32 +27,13 @@ public class SelfCards: MonoBehaviour {
 	private bool hasShow = false;
 	private bool gameover;
 
-	public void Awake() {
-		Cards = Containers.Select(o => o.CardInstance).ToList();
-
+	void Awake() {
 		for(var i = 0; i < Containers.Count; i++) {
 			var btn = Containers[i].GetComponent<Button>();
 			btn.onClick.AddListener(() => {
 				toggleEye(i);
 			});
 		}
-	}
-
-	void OnSpawned() {
-		RxSubjects.GameOver.Subscribe((_) => {
-			gameover = true;
-		}).AddTo(this);
-
-		player.ShowCard.Subscribe((value) => {
-			for(var i = 0; i < value.Length; i++) {
-				var c = value[i];
-				if (c == '1') {
-					Eyes[i].SetActive(true); 
-				} else {
-					Eyes[i].SetActive(false);
-				}
-			}
-		}).AddTo(this);
 	}
 
 	void OnDespawned() {
@@ -164,10 +156,28 @@ public class SelfCards: MonoBehaviour {
 		PoolMan.Despawn(transform);
 	}
 
+	private void addEvents() {
+		RxSubjects.GameOver.Subscribe((_) => {
+			gameover = true;
+		}).AddTo(this);
+
+		player.ShowCard.Subscribe((value) => {
+			for(var i = 0; i < value.Length; i++) {
+				var c = value[i];
+				if (c == '1') {
+					Eyes[i].SetActive(true); 
+				} else {
+					Eyes[i].SetActive(false);
+				}
+			}
+		}).AddTo(this);	
+	}
+
 	public static SelfCards Create(GameObject prefab, Player player) {
 		var transform = PoolMan.Spawn(prefab);
 		var sc = transform.GetComponent<SelfCards>();
 		sc.player = player;
+		sc.addEvents();
 		return sc;
 	}
 }

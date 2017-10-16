@@ -166,6 +166,7 @@ public class Card : MonoBehaviour {
 		}
 
 		hasReShow = true;
+		gameObject.SetActive(true);
 		startShow(_index);
 		G.PlaySound("fapai_1");
 	}
@@ -378,11 +379,11 @@ public class Card : MonoBehaviour {
 		for (var i = 0; i < cards.Count; i++) {
 			var card = cards[i];
 
-			if (highlightIndex.Contains(card.Index)) {
-				card.Highlight();
-			} else {
-				card.Unhighlight();
-			}			
+			// if (highlightIndex.Contains(card.Index)) {
+			// 	card.Highlight();
+			// } else {
+			// 	card.Unhighlight();
+			// }			
 		}	
 	}
 }
