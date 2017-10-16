@@ -167,6 +167,11 @@ public class SelfCards: MonoBehaviour {
 
 			for(var i = 0; i < value.Length; i++) {
 				var c = value[i];
+
+				if (i >= Eyes.Count) {
+					break;
+				}
+
 				if (c == '1') {
 					Eyes[i].SetActive(true); 
 				} else {

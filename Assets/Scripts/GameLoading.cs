@@ -90,11 +90,11 @@ public class GameLoading : MonoBehaviour {
 
 		#if UNITY_EDITOR
 			// // 切换房间测试逻辑
-			// var rid = "59c38cbe6a007e545ed0a2ae";
-			// var sid = "s%3ALq49kS4bIomBNiKEq8yHbXHFCavRAPXC.EJiBchVuMVcoXilDMTY6uy1cKgnM55rKbSp9zZrGfY0";
-			// External.Instance.InitGame(rid + "&" + sid);
+			var rid = "59e49da543842a10fff51631";
+			var sid = "s%3AsF7HMvYzII20fOFynbzgvaJd8qAo09kk.IT7xTx2KDUjs2KPHZA6qmuj1FCC5ySCOR%2F8gYs69J7Q";
+			External.Instance.InitGame(rid + "&" + sid);
 
-			debugSetup();
+			// debugSetup();
 		#endif
 	}
 
