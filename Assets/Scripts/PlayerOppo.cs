@@ -15,14 +15,7 @@ namespace PokerPlayer {
 	    public Text NameLabel;
         public Text CardDesc;
 
-		private GameObject cardParent {
-			get {
-				return cardContainers[0].transform.parent.gameObject;
-			}
-		}
-
-		// private SelfCards userCards;		
-
+		[SerializeField]private GameObject cardParent;
 
         [SerializeField]
         private List<CardContainer> cardContainers; 
@@ -54,10 +47,6 @@ namespace PokerPlayer {
             cardParent.transform.SetAsLastSibling();
         }
 
-        void OnDestroy()
-	{
-	}
-
         void OnDespawned() {
             this.Dispose(); 
 
@@ -66,10 +55,16 @@ namespace PokerPlayer {
             Cardfaces.GetComponent<CanvasGroup>().alpha = 1;
 
             MoveOut();
-			// userCards.Despawn();
+			hideCards();
             cardParent.SetActive(false);
             NameLabel.gameObject.SetActive(true);
         }
+
+		private void hideCards() {
+			foreach(var c in cardContainers) {
+				c.gameObject.SetActive(false);
+			}
+		} 
 
 		public static void Init(Player player, Seat seat) {
 			var transform = PoolMan.Spawn("PlayerOppo", seat.transform);
@@ -117,17 +112,25 @@ namespace PokerPlayer {
 
             Base.PlayerAct.SetActive(false);		
         
-            if (cards[0] > 0 || cards[1] > 0) {
+            if (cards.Any(c => c > 0)) {
                 cardParent.SetActive(true);
 
                 // 显示手牌
-      			// userCards.Show(cards, anim);
+      			showCards(cards, anim);
 
                 if (Cardfaces != null) {
                     Cardfaces.gameObject.SetActive(false);
                 }
             }
         }
+
+		private void showCards(List<int> cards, bool anim) {
+			for (var i = 0; i < cards.Count; i++) {
+				var c = cardContainers[i];
+				c.gameObject.SetActive(true);
+				c.CardInstance.Show(cards[i], anim);
+			}
+		}
 
         private IEnumerator turnTo(int left) {
             Countdown.gameObject.SetActive(true);

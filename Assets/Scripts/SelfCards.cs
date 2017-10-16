@@ -85,12 +85,6 @@ public class SelfCards: MonoBehaviour {
 		StartCoroutine(coroutine);
 	}
 
-	public void Show(List<int> indexList, bool anim) {
-		iterateIndex((card, i) => {
-			card.Show(indexList[i], anim);
-		});
-	}
-
 	private IEnumerator reShow(List<int> indexList) {
 		var i = 0;
 		foreach(var card in Cards) {
