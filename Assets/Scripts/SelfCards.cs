@@ -3,19 +3,52 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UniRx;
+using UnityEngine.UI;
 
-public class UserCards: MonoBehaviour {
+public class SelfCards: MonoBehaviour {
 	public List<CardContainer> Containers;
 	public List<Card> Cards;
+	private Player player;
+	
+	public List<GameObject> Eyes;
 
 	private bool hasShow = false;
+	private bool gameover;
 
-	public void Initial() {
+	public void Awake() {
 		Cards = Containers.Select(o => o.CardInstance).ToList();
+
+		for(var i = 0; i < Containers.Count; i++) {
+			var btn = Containers[i].GetComponent<Button>();
+			btn.onClick.AddListener(() => {
+				toggleEye(i);
+			});
+		}
+	}
+
+	void OnSpawned() {
+		RxSubjects.GameOver.Subscribe((_) => {
+			gameover = true;
+		}).AddTo(this);
+
+		player.ShowCard.Subscribe((value) => {
+			for(var i = 0; i < value.Length; i++) {
+				var c = value[i];
+				if (c == '1') {
+					Eyes[i].SetActive(true); 
+				} else {
+					Eyes[i].SetActive(false);
+				}
+			}
+		}).AddTo(this);
 	}
 
 	void OnDespawned() {
+		this.Dispose();
+
 		hasShow = false;
+		gameover = false;
 
 		if (coroutine != null) {
 			StopCoroutine(coroutine);
@@ -25,6 +58,30 @@ public class UserCards: MonoBehaviour {
 	}
 
 	private IEnumerator coroutine; 
+
+	private void toggleEye(int index) {
+		var value = new System.Text.StringBuilder(player.ShowCard.Value);
+
+		// 这一手结束后，只能亮牌，不能关闭亮牌
+		if (value[index] == '1' && gameover) {
+			return ;
+		}
+
+		value[index] =  value[index] == '0' ? '1' : '0';
+
+		player.ShowCard.Value = value.ToString();
+
+		// 转换10进制
+		var num = Convert.ToInt16(value.ToString(), 2); 
+
+		// 发送请求
+		Connect.Shared.Emit(new Dictionary<string, object> {
+			{"f", "showcard"},
+			{"args", new Dictionary<string, object> {
+				{"showcard", num}
+			}}
+		});
+	}
 
 	public void Show(List<int> indexList) {
 		if (coroutine != null) {
@@ -105,5 +162,12 @@ public class UserCards: MonoBehaviour {
 
 	public void Despawn() {
 		PoolMan.Despawn(transform);
+	}
+
+	public static SelfCards Create(GameObject prefab, Player player) {
+		var transform = PoolMan.Spawn(prefab);
+		var sc = transform.GetComponent<SelfCards>();
+		sc.player = player;
+		return sc;
 	}
 }

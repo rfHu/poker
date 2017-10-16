@@ -11,21 +11,18 @@ namespace PokerPlayer {
     public class PlayerSelf: MonoBehaviour, PlayerDelegate {
 		public GameObject BaseObject;
         public PlayerBase Base;
-        public GameObject[] Eyes; 
         public GameObject AutoArea;
         public GameObject[] AutoOperas; 
 
-		private UserCards userCards;
+		private SelfCards selfCards;
 
 		private GameObject cardParent {
 			get {
-				return cardContainers[0].transform.parent.gameObject;
+				return selfCards.Containers[0].transform.parent.gameObject;
 			}
 		}
 
 		[SerializeField]private Transform ccParent;
-
-		[SerializeField] private List<CardContainer> cardContainers; 
 
 		public Text CardDesc;
 		public GameObject YouWin;
@@ -39,8 +36,6 @@ namespace PokerPlayer {
 				return Base.player;
 			}
 		} 
-        private bool gameover = false;
-
 
 		static public void Init(Player player, Seat seat) {
 			var transform = PoolMan.Spawn("PlayerSelf", seat.transform);
@@ -51,16 +46,24 @@ namespace PokerPlayer {
         private void init(Player player, Seat seat) {
             Base.Init(player, seat, this);
 
-			gameover = false;
             addEvents();
 
             RxSubjects.ChangeVectorsByIndex.OnNext(GameData.Shared.MySeat);
             RxSubjects.Seating.OnNext(true);
         }
 
+		public GameObject OmahaCardPrefab;
+		public GameObject NormalCardPrefab;
+
 		void Awake()
 		{
 			Base = PlayerBase.Load(BaseObject, transform);	
+		}
+
+		void OnSpawned() {
+			var prefab = GameData.Shared.Type.Value == GameType.Omaha ? OmahaCardPrefab	: NormalCardPrefab;
+			selfCards = SelfCards.Create(prefab, player);
+			resetCards();
 		}
 
 		void OnDespawned() {
@@ -73,8 +76,7 @@ namespace PokerPlayer {
 			CardDesc.gameObject.SetActive(false);
 
 			cardParent.SetActive(false);
-			resetCards();
-			userCards.Despawn();
+			selfCards.Despawn();
 			OP.Despawn();
 		}
 
@@ -92,26 +94,12 @@ namespace PokerPlayer {
                 CardDesc.text = Card.GetCardDesc(value);
             }).AddTo(this);
 
-		    player.ShowCard.Subscribe((value) => {
-			    if (value[0] == '1') {
-				    Eyes[0].SetActive(true);
-			    } else {
-				    Eyes[0].SetActive(false);
-			    }
-
-			    if (value[1] == '1') {
-				    Eyes[1].SetActive(true);
-			    } else {
-				    Eyes[1].SetActive(false);
-			    }
-		    }).AddTo(this);
-
 		    player.Trust.ShouldShow.Subscribe((show) => {
 			    AutoArea.SetActive(show);
 		    }).AddTo(this);
 
 			GameData.Shared.HighlightIndex.Subscribe((list) => {
-				Card.HighlightCards(userCards.Cards, list);
+				Card.HighlightCards(selfCards.Cards, list);
 			}).AddTo(this);
 
 		    player.Trust.CallNumber.Subscribe((num) => {
@@ -154,7 +142,6 @@ namespace PokerPlayer {
 
             RxSubjects.GameOver.Subscribe((_) => {
                 AutoArea.SetActive(false);
-                gameover = true;
             }).AddTo(this);
 
 		  // 中途复原行动
@@ -182,9 +169,8 @@ namespace PokerPlayer {
                 }
 			 }).AddTo(this);
         }
-
-
-        private void toggleAutoBtns(int index) {
+	
+	private void toggleAutoBtns(int index) {
 		var valStr = player.Trust.SelectedFlag.Value;
 
 		if (String.IsNullOrEmpty(valStr)) {
@@ -197,38 +183,6 @@ namespace PokerPlayer {
 		value[index ^ 1] = '0';	
 
 		player.Trust.SelectedFlag.Value = value.ToString();	
-	}
-	
-	private void toggleEye(int index) {
-		var value = new System.Text.StringBuilder(player.ShowCard.Value);
-
-		// 这一手结束后，只能亮牌，不能关闭亮牌
-		if (value[index] == '1' && gameover) {
-			return ;
-		}
-
-		value[index] =  value[index] == '0' ? '1' : '0';
-
-		player.ShowCard.Value = value.ToString();
-
-		// 转换10进制
-		var num = Convert.ToInt16(value.ToString(), 2); 
-
-		// 发送请求
-		Connect.Shared.Emit(new Dictionary<string, object> {
-			{"f", "showcard"},
-			{"args", new Dictionary<string, object> {
-				{"showcard", num}
-			}}
-		});
-	}
-
-	public void ShowFirstCard() {
-		toggleEye(0);	
-	}
-
-	public void ShowSecondCard() {
-		toggleEye(1);
 	}
 
 	public void BackGame() {
@@ -259,61 +213,75 @@ namespace PokerPlayer {
 		OPMono.StartWithCmds(data, left, buyTimeCost);
 		Base.Circle.gameObject.SetActive(false);
 	}
-
-	 void OnDestroy()
-	{
-	}
-
+	
 	private void turnTo(Dictionary<string, object> dict, int left, bool restore = false,int buyTimeCost = 10) {
 		PlayerBase.CurrentUid = player.Uid;
 
-			showOP(dict, left, buyTimeCost);
+		showOP(dict, left, buyTimeCost);
 
-			var flag = player.Trust.FlagString();
-			var callNum = player.Trust.CallNumber.Value;
+		var flag = player.Trust.FlagString();
+		var callNum = player.Trust.CallNumber.Value;
 
-			if (flag == "10") { // 选中左边
+		if (flag == "10")
+		{ // 选中左边
+			OP.Despawn();
+			var check = dict.Dict("cmds").Bool("check");
+
+			if (check)
+			{
+				OP.OPS.Check();
+			}
+			else
+			{
+				OP.OPS.Fold();
+			}
+		}
+		else if (flag == "01")
+		{ // 选中右边
+			var data = dict.Dict("cmds");
+			var call = data.Int("call");
+			var check = data.Bool("check");
+
+			if (callNum == -1 || (callNum == 0 && check) || (callNum == call && call != 0))
+			{
 				OP.Despawn();
-				var check = dict.Dict("cmds").Bool("check");
 
-				if (check) {
+				if (callNum == 0)
+				{
 					OP.OPS.Check();
- 				} else {
-					OP.OPS.Fold();
-				 }
-			} else if (flag == "01") { // 选中右边
-				var data = dict.Dict("cmds");
-				var call = data.Int("call");
-				var check = data.Bool("check");
-
-				if (callNum == -1 || (callNum == 0 && check) || (callNum == call && call != 0)) {
-					OP.Despawn();
-
-					if (callNum == 0) {
-						OP.OPS.Check();
-					} else if (callNum == -1) {
-						OP.OPS.AllIn();
-					} else {
-						OP.OPS.Call();
-					}
-				} else {
-					if (!restore) {
-						G.PlaySound("on_turn");
-					}
 				}
-			} else {
-				if (!restore) {
+				else if (callNum == -1)
+				{
+					OP.OPS.AllIn();
+				}
+				else
+				{
+					OP.OPS.Call();
+				}
+			}
+			else
+			{
+				if (!restore)
+				{
 					G.PlaySound("on_turn");
 				}
 			}
-			
-			player.Trust.SelectedFlag.Value = "00";
+		}
+		else
+		{
+			if (!restore)
+			{
+				G.PlaySound("on_turn");
+			}
+		}
+
+		player.Trust.SelectedFlag.Value = "00";
 	}
 
 	private void resetCards() {
 		var transform = cardParent.GetComponent<RectTransform>();
 		
-		transform.anchoredPosition3D = new Vector3(0, -124, 0);
+		transform.anchoredPosition3D = new Vector3(0, -234, 1);
 		transform.GetComponent<CanvasGroup>().alpha = 1;
 		transform.localScale = Vector3.one;
 		transform.SetParent(ccParent, false);
@@ -336,12 +304,12 @@ namespace PokerPlayer {
 			transform.GetComponent<CanvasGroup>().DOFade(0.4f, duration).SetEase(ease).SetId(Base.AnimID);
 			transform.DOMove(Controller.LogoVector, duration).SetEase(ease).SetId(Base.AnimID).OnComplete(() => {
 				resetCards();
-            	userCards.Darken();
+            	selfCards.Darken();
 			});
         }
 
 		public void SetFolded() {
-			userCards.Darken();
+			selfCards.Darken();
 		}
 
         public void MoveOut() {
@@ -360,9 +328,6 @@ namespace PokerPlayer {
             OPMono.Reset(total);
         }
 
-		void OnSpawned() {
-		}
-
 		public void Despawn() {
 			PoolMan.Despawn(transform);
         }
@@ -379,13 +344,13 @@ namespace PokerPlayer {
 			}
 
 			if (player.SeeCardAnim) {
-				userCards.Show(cards);
+				selfCards.Show(cards);
 
 				if (!player.InGame) {
-					userCards.Darken();
+					selfCards.Darken();
 				}
 			} else {
-				userCards.ShowIfDarken(cards, player.InGame);
+				selfCards.ShowIfDarken(cards, player.InGame);
 			}
 		}	
 

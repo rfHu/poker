@@ -21,7 +21,7 @@ namespace PokerPlayer {
 			}
 		}
 
-		private UserCards userCards;		
+		// private SelfCards userCards;		
 
 
         [SerializeField]
@@ -66,7 +66,7 @@ namespace PokerPlayer {
             Cardfaces.GetComponent<CanvasGroup>().alpha = 1;
 
             MoveOut();
-			userCards.Despawn();
+			// userCards.Despawn();
             cardParent.SetActive(false);
             NameLabel.gameObject.SetActive(true);
         }
@@ -121,8 +121,7 @@ namespace PokerPlayer {
                 cardParent.SetActive(true);
 
                 // 显示手牌
-
-      			userCards.Show(cards, anim);
+      			// userCards.Show(cards, anim);
 
                 if (Cardfaces != null) {
                     Cardfaces.gameObject.SetActive(false);
