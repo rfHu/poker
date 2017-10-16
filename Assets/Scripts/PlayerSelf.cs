@@ -40,6 +40,7 @@ namespace PokerPlayer {
         private void init(Player player, Seat seat) {
 			var prefab = GameData.Shared.Type.Value == GameType.Omaha ? OmahaCardPrefab	: NormalCardPrefab;
 			selfCards = SelfCards.Create(prefab, player);
+			selfCards.gameObject.SetActive(false);
 			resetCards();
 
             Base.Init(player, seat, this);
