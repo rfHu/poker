@@ -12,22 +12,33 @@ public class ExplainEvent : MonoBehaviour {
 
     public GameObject NormalText;
 
-    void Awake() 
-    {
-        GameData.Shared.Type.Subscribe((type) => 
-        {
-            SetList();
-        }).AddTo(this);
+    public GameObject[] Toggles;
 
-        SetList();
+    ToggleGroup Group;
+
+    void OnSpawned() 
+    {
+        SetList(GameData.Shared.Type.Value);
     }
 
-    private void SetList()
+    private void SetList(GameType type)
     {
-        bool isKingThree = GameData.Shared.Type.Value == GameType.KingThree;
+        Toggles[0].SetActive(!GameData.Shared.IsMatch() && type != GameType.SixPlus);
+        Toggles[2].SetActive(type == GameType.Omaha);
 
+        bool isKingThree = type == GameType.KingThree;
         NormalList.SetActive(!isKingThree);
         KingThreeList.SetActive(isKingThree);
         NormalText.SetActive(!isKingThree);
+
+        GetComponent<ToggleGroup>().SetAllTogglesOff();
+        foreach (var item in Toggles)
+        {
+            if (item.activeInHierarchy)
+            {
+                item.GetComponent<Toggle>().isOn = true;
+                break;
+            }
+        }
     }
 }
