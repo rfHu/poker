@@ -164,7 +164,15 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
         var buyPlayer = GameData.Shared.FindPlayer(data.String("uid"));
         for (int i = 0; i < MyCards.Count; i++)
         {
-            MyCards[i].GetComponent<Card>().Show(buyPlayer.Cards.Value[i]);
+            if (i < buyPlayer.Cards.Value.Count)
+            {
+                MyCards[i].gameObject.SetActive(true);
+                MyCards[i].GetComponent<Card>().Show(buyPlayer.Cards.Value[i]);
+            }
+            else 
+            {
+                MyCards[i].gameObject.SetActive(false);
+            }
         }
         CardDesc.text = Card.GetCardDesc(data.Int("maxFiveRank"));
         // WinRate.text = myRate + "%";
