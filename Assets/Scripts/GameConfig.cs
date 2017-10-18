@@ -640,6 +640,7 @@ sealed public class GameData {
 	public string Name = ""; 
 	public string Avatar = "";
 	public ReactiveProperty<string> Room = new ReactiveProperty<string>();
+    public string Lid;
 
 	public int MySeat {
 		get {
