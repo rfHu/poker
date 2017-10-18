@@ -15,6 +15,8 @@ namespace PokerPlayer {
 	    public Text NameLabel;
         public Text CardDesc;
 
+		public List<Image> OmahaCards;
+
 		[SerializeField]private GameObject cardParent;
 
         [SerializeField]
@@ -51,7 +53,7 @@ namespace PokerPlayer {
             this.Dispose(); 
 
             CardDesc.transform.parent.gameObject.SetActive(false);
-            Cardfaces.GetComponent<RectTransform>().anchoredPosition = new Vector2(40, -20);
+            Cardfaces.GetComponent<RectTransform>().anchoredPosition = new Vector2(40, -40);
             Cardfaces.GetComponent<CanvasGroup>().alpha = 1;
 
             MoveOut();
@@ -62,6 +64,9 @@ namespace PokerPlayer {
 
 		private void hideCards() {
 			foreach(var c in cardContainers) {
+				if (c.CardInstance != null) {
+					c.CardInstance.Turnback();
+				}
 				c.gameObject.SetActive(false);
 			}
 		} 
@@ -91,6 +96,14 @@ namespace PokerPlayer {
             player.Countdown.AsObservable().Where((obj) => obj.seconds > 0).Subscribe((obj) => {
                 TurnTo(null, obj.seconds);
             }).AddTo(this);
+
+			GameData.Shared.Type.Subscribe((type) => {
+				foreach(var card in OmahaCards) {
+					card.enabled = type == GameType.Omaha;
+				}
+
+				cardParent.GetComponent<HorizontalLayoutGroup>().spacing = type == GameType.Omaha ? -48 : 0;
+			}).AddTo(this);
         }
 
         private void showCardType(int maxFive) {
