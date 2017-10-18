@@ -8,6 +8,153 @@ using UniRx;
 using Unity.Linq;
 using System.Linq;
 
+public abstract class CardType {
+	internal List<int> extractSome(List<int> maxFive) {
+		var list = new List<int>();
+		var dict = new Dictionary<int, List<int>>();
+
+		// 群组	
+		foreach(var value in maxFive) {
+			var key = Card.CardValues(value)[1];
+
+			if (dict.ContainsKey(key)) {
+				dict[key].Add(Card.CardIndex(value));
+			} else {
+				dict[key] = new List<int>{
+					Card.CardIndex(value)
+				};
+			}
+		}
+		
+		foreach(var item in dict) {
+			if (item.Value.Count > 1) {
+				list.AddRange(item.Value);
+			}
+		}
+
+		return list;
+	}
+
+	public string GetCardDesc(int val) {
+		var value = val >> Digit; 
+
+		if (!TypeMap.ContainsKey(value)) {
+			return "";
+		}
+
+		return TypeMap[value];
+	}
+
+	public abstract int Digit {get;}
+
+	public abstract Dictionary<int, string> TypeMap {get;}
+
+	abstract public List<int> ExtractHighlightCards(List<int> maxFive, int maxFiveRank);
+}
+
+public class NormalCardType: CardType {
+	public enum Type {
+		High = 1,
+		Pair,
+		TwoPair,
+		Three,
+		Straight,
+		Flush,
+		FullHouse,
+		Four,
+		StraightFlush,
+		RoyalFluash 
+	};
+
+	public override int Digit {
+		get {
+			return 20;
+		}
+	}
+
+	public override Dictionary<int, string> TypeMap {
+		get {
+			return new Dictionary<int, string>() {
+				{(int)Type.High, "高牌"},
+				{(int)Type.Pair, "一对"},
+				{(int)Type.TwoPair, "两对"},
+				{(int)Type.Three, "三条"},
+				{(int)Type.Straight, "顺子"},
+				{(int)Type.Flush, "同花"},
+				{(int)Type.FullHouse, "葫芦"},
+				{(int)Type.Four, "四条"},
+				{(int)Type.StraightFlush, "同花顺"},
+				{(int)Type.RoyalFluash, "皇家同花顺"},
+			};
+		}
+	} 
+
+	public override List<int> ExtractHighlightCards(List<int> maxFive, int maxFiveRank) {
+		if (maxFive.Count != 5) {
+			return new List<int>();	
+		}
+
+		var type = (Type)(maxFiveRank >> Digit);
+
+		switch(type) {
+			case Type.High:
+				return new List<int>();
+			case Type.TwoPair:  case Type.Four: case Type.Three: case Type.Pair:
+				return extractSome(maxFive);
+			default:
+				return maxFive.Select(index => Card.CardIndex(index)).ToList() ;
+		}	
+	}
+}
+
+public class KingThreeCardType: CardType {
+	public enum Type {
+		High = 1,
+		Pair,
+		Fluash,
+		Straight,
+		StraightFlush,
+		Three	
+	}
+
+	public override Dictionary<int, string> TypeMap {
+		get {
+			return new Dictionary<int, string>() {
+				{(int)Type.High, "高牌"},
+				{(int)Type.Pair, "一对"},
+				{(int)Type.Fluash, "同花"},
+				{(int)Type.Straight, "顺子"},
+				{(int)Type.StraightFlush, "同花顺"},
+				{(int)Type.Three, "豹子"},
+			};
+		}
+	}	
+
+	public override int Digit {
+		get {
+			return 12;
+		}
+	}
+
+	public override List<int> ExtractHighlightCards(List<int> maxFive, int maxFiveRank) {
+		if (maxFive.Count != 3) {
+			return new List<int>();	
+		}
+
+		var type = (Type)(maxFiveRank >> Digit);
+
+		switch(type) {
+			case Type.High:
+				return new List<int>();
+			case Type.Pair:
+				return extractSome(maxFive);
+			default:
+				return maxFive.Select(index => Card.CardIndex(index)).ToList() ;
+		}	
+	}	
+}
+
+
 public class Card : MonoBehaviour {
 	public Sprite Face;
 	public Sprite CardBack;
@@ -272,40 +419,18 @@ public class Card : MonoBehaviour {
 		return new int[]{a, b};
 	}
 
-	public enum CardType {
-		High = 1,
-		Pair = 2,
-		TwoPair = 3,
-		Three = 4,
-		Straight = 5,
-		Flush = 6,
-		FullHouse = 7,
-		Four = 8,
-		StraightFlush = 9,
-		RoyalFluash = 10 
+	static private CardType cardType {
+		get {
+			if (GameData.Shared.Type.Value == GameType.KingThree){
+				return new KingThreeCardType();
+			}
+
+			return new NormalCardType();
+		}
 	}
 
 	static public string GetCardDesc(int val) {
-		var value = (CardType)(val >> 20);
-
-		var map = new Dictionary<CardType, string> {
-			{CardType.High, "高牌"},
-			{CardType.Pair, "一对"},
-			{CardType.TwoPair, "两对"},
-			{CardType.Three, "三条"},
-			{CardType.Straight, "顺子"},
-			{CardType.Flush, "同花"},
-			{CardType.FullHouse, "葫芦"},
-			{CardType.Four, "四条"},
-			{CardType.StraightFlush, "同花顺"},
-			{CardType.RoyalFluash, "皇家同花顺"},
-		};
-
-		if (!map.ContainsKey(value)) {
-			return "";
-		}
-
-		return map[value];
+		return cardType.GetCardDesc(val);	
 	}
 
 	static public Vector2 Size = new Vector2(126, 172); 
@@ -333,46 +458,7 @@ public class Card : MonoBehaviour {
 	}
 
 	static public List<int> ExtractHighlightCards(List<int> maxFive, int maxFiveRank) {
-		if (maxFive.Count != 5) {
-			return new List<int>();	
-		}
-
-		var type = (CardType)(maxFiveRank >> 20);
-
-		switch(type) {
-			case CardType.High:
-				return new List<int>();
-			case CardType.TwoPair:  case CardType.Four: case CardType.Three: case CardType.Pair:
-				return extractSome(maxFive);
-			default:
-				return maxFive.Select(index => Card.CardIndex(index)).ToList() ;
-		}	
-	}
-
-	static private List<int> extractSome(List<int> maxFive) {
-		var list = new List<int>();
-		var dict = new Dictionary<int, List<int>>();
-
-		// 群组	
-		foreach(var value in maxFive) {
-			var key = Card.CardValues(value)[1];
-
-			if (dict.ContainsKey(key)) {
-				dict[key].Add(Card.CardIndex(value));
-			} else {
-				dict[key] = new List<int>{
-					Card.CardIndex(value)
-				};
-			}
-		}
-		
-		foreach(var item in dict) {
-			if (item.Value.Count > 1) {
-				list.AddRange(item.Value);
-			}
-		}
-
-		return list;
+		return cardType.ExtractHighlightCards(maxFive, maxFiveRank);	
 	}
 
 	static public void HighlightCards(List<Card> cards, List<int> highlightIndex) {
