@@ -90,7 +90,7 @@ public class GameLoading : MonoBehaviour {
 
 		#if UNITY_EDITOR
 			// // 切换房间测试逻辑
-			var rid = "59e70b798f686d02a78ac199";
+			var rid = "59e72a48d799460e51c062de";
 			var sid = "s%3AsF7HMvYzII20fOFynbzgvaJd8qAo09kk.IT7xTx2KDUjs2KPHZA6qmuj1FCC5ySCOR%2F8gYs69J7Q";
 			External.Instance.InitGame(rid + "&" + sid);
 
@@ -103,7 +103,7 @@ public class GameLoading : MonoBehaviour {
 			External.Instance.SetSocket("https://socket.dev.poker.top");
 			External.Instance.SetProxy("http://localhost:8888");
 
-            var rid = "59e708368f686d02a78ac09c";
+            var rid = "59e72a48d799460e51c062de";
             var sid = "s%3AsF7HMvYzII20fOFynbzgvaJd8qAo09kk.IT7xTx2KDUjs2KPHZA6qmuj1FCC5ySCOR%2F8gYs69J7Q";
 
             //External.Instance.InitGame(rid + "&" + sid); 

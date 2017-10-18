@@ -28,6 +28,15 @@ public class Controller : MonoBehaviour {
             return _publicCards;
         }
     }
+
+	private Card getCard(int index) {
+		if (GameData.Shared.Type.Value == GameType.KingThree) {
+			return PublicCards[index + 1];
+		} else {
+			return PublicCards[index];
+		}
+	}
+
     [SerializeField]
     private List<CardContainer> PublicCardContainers;
 
@@ -366,7 +375,7 @@ public class Controller : MonoBehaviour {
 		queueIsActive = true;
 
 		var pair = cardAnimQueue.Dequeue();
-		var card = PublicCards[pair.Key];
+		var card = getCard(pair.Key);
 
 		card.Show(pair.Value, true, () => {
 			queueIsActive = false;
@@ -916,6 +925,18 @@ public class Controller : MonoBehaviour {
 			} else {
 				setIconByType(GameData.Shared.Type.Value);
 			}
+
+			var p1 = PublicCardContainers[0].transform.parent.gameObject;
+			var p5 = PublicCardContainers[4].transform.parent.gameObject;
+
+			// 金山顺公共牌逻辑兼容
+			if (type == GameType.KingThree) {
+				p1.SetActive(false);
+				p5.SetActive(false);
+			} else {
+				p1.SetActive(true);
+				p5.SetActive(true);
+			}
 		}).AddTo(this);
 
 		GameData.Shared.GameStarted.Subscribe((started) => {
@@ -1139,7 +1160,7 @@ public class Controller : MonoBehaviour {
 				cardAnimQueue.Enqueue(new KeyValuePair<int, int>(e.Index, e.Value));
 				startQueue();
 			} else {
-				PublicCards[e.Index].Show(e.Value, false);
+				getCard(e.Index).Show(e.Value, false);
 			}
 		}).AddTo(this);
 
@@ -1151,7 +1172,7 @@ public class Controller : MonoBehaviour {
 		var list = GameData.Shared.PublicCards.ToList();
 
 		for (var i = 0; i < list.Count; i++) {
-			PublicCards[i].Show(list[i], false);	
+			getCard(i).Show(list[i], false);	
 		}
 
 		GameData.Shared.HighlightIndex.Subscribe((l) => {
@@ -1196,10 +1217,10 @@ public class Controller : MonoBehaviour {
 			}
 
 			if (time == 0) {
-				PublicCards[local].Show(cards[local], true);
+				getCard(local).Show(cards[local], true);
 			} else {
 				Observable.Timer(TimeSpan.FromSeconds(time)).AsObservable().Subscribe((_) => {
-					PublicCards[local].Show(cards[local], true);
+					getCard(local).Show(cards[local], true);
 				}).AddTo(this);			
 			}
 		}
