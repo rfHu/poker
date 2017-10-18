@@ -83,18 +83,27 @@ public class RecallUser : MonoBehaviour {
 
 		var earn = dict.Int("coin") - dict.Int("chips");
 		Score.text = _.Number2Text(earn);
-		setScoreColor(earn);	
+		setScoreColor(earn);
+
+        //omaha特殊处理
+        bool isOmaha = GameData.Shared.Type.Value == GameType.Omaha;
+        CardContainers[2].gameObject.SetActive(isOmaha);
+        CardContainers[3].gameObject.SetActive(isOmaha);
 
 		var cards = dict.IL("cards");
 
 		if (cards.Count <= 0) {
-			card1.Turnback();
-			card2.Turnback();
+            foreach (var card in CardContainers)
+            {
+                card.CardInstance.Turnback();
+            }
 			return ;
-		}	
+		}
 
-		card1.Show(cards[0]);
-		card2.Show(cards[1]);
+        for (int i = 0; i < cards.Count; i++)
+        {
+            CardContainers[i].CardInstance.Show(cards[i]);
+        }
 
         var actions = dict.List("action");
         actCount = actions.Count;
