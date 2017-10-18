@@ -16,6 +16,7 @@ public class MenuPopup : MonoBehaviour {
 	public GameObject HangGo;
 	public GameObject ReserveGo;
     public GameObject ExchangeGo;
+    public GameObject ShareGo;
 
     public GameObject[] SNGHideGos;
 
@@ -113,6 +114,8 @@ public class MenuPopup : MonoBehaviour {
         }
 
         fitState(GameData.Shared.SelfState.Value);
+
+        ShareGo.SetActive(GameData.Shared.Lid != "");
     }
 
 	void Awake()
