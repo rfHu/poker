@@ -90,7 +90,7 @@ public class GameLoading : MonoBehaviour {
 
 		#if UNITY_EDITOR
 			// // 切换房间测试逻辑
-			var rid = "59e6cfb5d19c3d7169155e43";
+			var rid = "59e70b798f686d02a78ac199";
 			var sid = "s%3AsF7HMvYzII20fOFynbzgvaJd8qAo09kk.IT7xTx2KDUjs2KPHZA6qmuj1FCC5ySCOR%2F8gYs69J7Q";
 			External.Instance.InitGame(rid + "&" + sid);
 
