@@ -170,10 +170,12 @@ public class RecallUser : MonoBehaviour {
         UText.color = textColor;
 	}
 
-	public void SetComCard(List<int> list) {
+	public void SetComCard(List<int> list, GameType type) {
 		for (var i = 0; i < 5; i++) {
 			ComCards[i].gameObject.SetActive(false);
 		}
+
+        ComCards[2].transform.parent.GetComponent<RectTransform>().anchoredPosition = type == GameType.KingThree ? new Vector2(578, 0) : new Vector2(468, 0);
 
 		for (var i = 0; i < getComCardsCount(actCount) && i < list.Count; i++) {
 			var card = ComCards[i];
