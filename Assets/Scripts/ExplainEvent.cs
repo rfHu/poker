@@ -16,6 +16,18 @@ public class ExplainEvent : MonoBehaviour {
 
     ToggleGroup Group;
 
+    void Awake() 
+    {
+        foreach (var item in Toggles)
+        {
+            item.GetComponent<Toggle>().onValueChanged.AddListener((isOn) =>
+            {
+                Text text = item.transform.GetComponentInChildren<Text>();
+                text.color = isOn ? _.HexColor("#18FFFFFF") : new Color(1, 1, 1, 0.6f);
+            });
+        }
+    }
+
     void OnSpawned() 
     {
         SetList(GameData.Shared.Type.Value);
