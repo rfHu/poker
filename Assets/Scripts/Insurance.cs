@@ -80,7 +80,8 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
     private List<CardContainer> MyCardContainers; 
 
     ReactiveProperty<float> oddsRatio = new ReactiveProperty<float>();
-    float[] OddsNums = { 30, 16, 10, 8, 6, 5, 4, 3.5f, 3, 2.5f, 2.2f, 2, 1.7f, 1.5f, 1.3f, 1.1f, 1, 0.8f, 0.6f, 0.5f };
+    float[] NormalOddsNums = { 30, 16, 10, 8, 6, 5, 4, 3.5f, 3, 2.5f, 2.2f, 2, 1.8f, 1.6f, 1.4f, 1.2f, 1, 0.8f, 0.6f, 0.5f };
+	float[] OmahaOddsNums = {24, 12, 8, 6, 4.5f, 4, 3.2f, 2.7f, 2.3f, 2, 1.7f, 1.5f, 1.3f, 1.2f, 1.1f, 1, 0.8f, 0.7f, 0.6f, 0.5f  };
 
     private int potValue;
     int cost;
@@ -331,7 +332,7 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
             num = 0;
         }
 
-        oddsRatio.Value = OddsNums[num];
+        oddsRatio.Value = GameData.Shared.Type.Value == GameType.Omaha ? OmahaOddsNums[num] : NormalOddsNums[num];
     }
 
     public void OnCASliderChange() 
