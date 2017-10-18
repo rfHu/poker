@@ -176,6 +176,7 @@ public class InsureToast: MonoBehaviour {
             disposable.Dispose();
         }
 
+		gameObject.SetActive(true);
         tween = cvg.DOFade(1, duration).OnComplete(startCd);
     }
 
@@ -189,6 +190,9 @@ public class InsureToast: MonoBehaviour {
         }
 
 
-        tween = cvg.DOFade(0, duration).OnComplete(complete);
+        tween = cvg.DOFade(0, duration).OnComplete(() => {
+			complete();
+			gameObject.SetActive(false);
+		});
     }
 }
