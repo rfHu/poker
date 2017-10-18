@@ -8,17 +8,8 @@ public class AllInPlayer : MonoBehaviour {
 
     public Text Name;
 
-	private Card card1 {
-		get {
-			return CardContainers[0].CardInstance;
-		}
-	}
+    public HorizontalLayoutGroup CardsParent;
 
-	private Card card2 {
-		get {
-			return CardContainers[1].CardInstance;
-		}
-	}
     [SerializeField]
     private List<CardContainer> CardContainers; 
 
@@ -33,9 +24,16 @@ public class AllInPlayer : MonoBehaviour {
 
         Name.text = player.Name;
 
+        //omaha特殊处理
+        bool isOmaha = GameData.Shared.Type.Value == GameType.Omaha;
+        CardContainers[2].gameObject.SetActive(isOmaha);
+        CardContainers[3].gameObject.SetActive(isOmaha);
+        CardsParent.spacing = isOmaha ? -46 : 8;
 
-        card1.Show(player.Cards.Value[0]);
-        card2.Show(player.Cards.Value[1]);
+        for (int i = 0; i < player.Cards.Value.Count; i++)
+        {
+            CardContainers[i].CardInstance.Show(player.Cards.Value[i]);
+        }
 
         Kind.text = outsNumber.ToString() + "张";
         WinRateText.text = data.Int("win_rate") + "%";
