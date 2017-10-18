@@ -157,7 +157,7 @@ public class RecallPage : MonoBehaviour {
                 }
 
                 user.Show(dt);
-                user.SetComCard(comCards);
+                user.SetComCard(comCards, GameData.Shared.Type.Value);
                 user.SetTag(tag);
             } else if (users.Count > num) { // 超出的部分隐藏
                 users[num].gameObject.SetActive(false);
