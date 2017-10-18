@@ -13,21 +13,7 @@ public class HoldCardMsg : MonoBehaviour {
 
 	public Text CardType;
 
-    private Card card1
-    {
-        get
-        {
-            return CardContainers[0].CardInstance;
-        }
-    }
-
-    private Card card2
-    {
-        get
-        {
-            return CardContainers[1].CardInstance;
-        }
-    }
+    public HorizontalLayoutGroup HandCardsParent;
 
     [SerializeField]
     private List<CardContainer> CardContainers;
@@ -62,16 +48,28 @@ public class HoldCardMsg : MonoBehaviour {
 			CardType.text = desc;
 		}
 
+        //omaha特殊处理
+        bool isOmaha = GameData.Shared.Type.Value == GameType.Omaha;
+        CardContainers[2].gameObject.SetActive(isOmaha);
+        CardContainers[3].gameObject.SetActive(isOmaha);
+        HandCardsParent.spacing = isOmaha ? -46 : 6;
+
+
 		// 手牌
         var cards = dict.IL("cards");
+
         if (cards.Count <= 0)
         {
-            card1.Turnback();
-            card2.Turnback();
+            foreach (var card in CardContainers)
+            {
+                card.CardInstance.Turnback();
+            }
             return;
         }
 
-        card1.Show(cards[0]);
-        card2.Show(cards[1]);
+        for (int i = 0; i < cards.Count; i++)
+        {
+            CardContainers[i].CardInstance.Show(cards[i]);
+        }
     }
 }
