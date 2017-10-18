@@ -686,7 +686,7 @@ public class Controller : MonoBehaviour {
 			var cd = e.Data.Int("blind_countdown");
 
 			GameData.Shared.BB = bb;
-			GameData.Shared.LeftTime.Value = cd;
+			GameData.Shared.LeftTime.OnNext(cd);
 			GameData.Shared.Ante.Value = e.Data.Int("ante");
 			setBBText();
 
@@ -1059,7 +1059,7 @@ public class Controller : MonoBehaviour {
                     case "time_limit": 
 						var timeLimit = data.Int("time_limit");
                         GameData.Shared.Duration += timeLimit;
-                        GameData.Shared.LeftTime.Value += timeLimit;
+                        GameData.Shared.LeftTime.OnNext(GameData.Shared.LeftTime.Value + timeLimit);
 
 						var time = data.Long("time_limit") / 3600f;
 						var digit = "小时";

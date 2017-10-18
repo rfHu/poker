@@ -311,7 +311,7 @@ sealed public class GameData {
 
 		RxSubjects.Started.AsObservable().Subscribe((e) => {
 			GameStarted.OnNext(true);
-			LeftTime.Value = e.Data.Int("left_time");
+			LeftTime.OnNext(e.Data.Int("left_time"));
 			Paused.OnNext(0); 
 		});
 
@@ -545,7 +545,7 @@ sealed public class GameData {
 			}
 
 			var value = Math.Max(0, LeftTime.Value - 1);
-			LeftTime.Value = value;
+			LeftTime.OnNext(value);
 		});
 
 		RxSubjects.GamerState.Subscribe((e) => {
@@ -576,7 +576,7 @@ sealed public class GameData {
 
         RxSubjects.HalfBreak.Subscribe((e) => {
             MatchData.MatchRoomStatus.OnNext(MatchRoomStat.Rest);
-            LeftTime.Value = e.Data.Int("ct");
+            LeftTime.OnNext(e.Data.Int("ct"));
         });
 	}
 
@@ -771,7 +771,7 @@ sealed public class GameData {
     public bool Award27 = false;
     public bool BuryCard = false;
 	public DateTime CreateTime; 
-	public ReactiveProperty<int> LeftTime = new ReactiveProperty<int>(0);
+	public BehaviorSubject<int> LeftTime = new BehaviorSubject<int>(0);
     public ReactiveProperty<int> Ante = new ReactiveProperty<int>(0);
     public ReactiveProperty<bool> Straddle = new ReactiveProperty<bool>(false);
 
@@ -848,6 +848,11 @@ sealed public class GameData {
 		Pot.Value = json.Int("pot");
 		Pots.Value = json.DL("pots");
 
+		var startTs = json.Int("begin_time");
+		StartTime = _.DateTimeFromTimeStamp(startTs);
+		// 游戏是否已开始
+		GameStarted.OnNext(startTs != 0);
+
         if (IsMatch())
         {
             MatchData.Type = options.Int("sub_type");
@@ -859,10 +864,11 @@ sealed public class GameData {
             MatchData.JoinFee = options.Int("join_fee");
             MatchData.RebuyFee = options.Int("rebuy_fee");
 		    MatchData.MatchRoomStatus.OnNext((MatchRoomStat)json.Int("match_room_status"));
-			LeftTime.Value = MatchData.MatchRoomStatus.Value == MatchRoomStat.Rest ? json.Int("half_break_countdown") : json.Int("blind_countdown");
+			var lt = MatchData.MatchRoomStatus.Value == MatchRoomStat.Rest ? json.Int("half_break_countdown") : json.Int("blind_countdown");
+			LeftTime.OnNext(lt);
             MatchData.MTTType = options.Int("blind_type") == 0 ? MTTType.Normal : MTTType.Fast;
         } else {
-			LeftTime.Value = json.Int("left_time");
+			LeftTime.OnNext(json.Int("left_time"));
 		}
 
 		RoomName.Value = GameData.Shared.Type.Value == GameType.MTT ? json.String("match_name") : json.String("name");
@@ -881,10 +887,6 @@ sealed public class GameData {
         ShowAudit.Value = json.List("un_audit").Count > 0;
 		CreateTime = _.DateTimeFromTimeStamp(json.Int("create_time"));
 
-		var startTs = json.Int("begin_time");
-		StartTime = _.DateTimeFromTimeStamp(startTs);
-		// 游戏是否已开始
-		GameStarted.OnNext(startTs != 0);
 		Paused.OnNext(json.Int("is_pause"));
 		
 		// 删除公共牌重新添加
