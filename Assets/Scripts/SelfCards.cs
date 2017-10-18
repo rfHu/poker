@@ -43,14 +43,8 @@ public class SelfCards: MonoBehaviour {
 		hasShow = false;
 		gameover = false;
 
-		if (coroutine != null) {
-			StopCoroutine(coroutine);
-		}
-
 		Turnback();	
 	}
-
-	private IEnumerator coroutine; 
 
 	private void toggleEye(int index) {
 		var value = new System.Text.StringBuilder(player.ShowCard.Value.PadLeft(4, '0'));
@@ -77,21 +71,10 @@ public class SelfCards: MonoBehaviour {
 	}
 
 	public void Show(List<int> indexList) {
-		if (coroutine != null) {
-			StopCoroutine(coroutine);
-		}
-
-		coroutine = reShow(indexList);
-		StartCoroutine(coroutine);
+		reShow(indexList);
 	}
 
-	public void Show(List<int> indexList, bool anim) {
-		iterateIndex((card, i) => {
-			card.Show(indexList[i], anim);
-		});
-	}
-
-	private IEnumerator reShow(List<int> indexList) {
+	private void reShow(List<int> indexList) {
 		var i = 0;
 		foreach(var card in Cards) {
 			var index = indexList[i];
@@ -100,16 +83,10 @@ public class SelfCards: MonoBehaviour {
 			}
 
 			show(card, index);
-
-			if (!hasShow) {
-				yield return new WaitForSeconds(0.1f);
-			}
-
 			i++;
 		}
 
 		hasShow = true;
-		yield return null;
 	}
 
 	private void show(Card card, int index) {

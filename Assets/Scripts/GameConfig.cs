@@ -635,6 +635,7 @@ sealed public class GameData {
 	public ReactiveProperty <int> PlayerCount = new ReactiveProperty<int>(0);
 	public string Sid; 
 	public string Uid = "";
+	public string ClubID = "";
 	public string Pin = "";
 	public string Name = ""; 
 	public string Avatar = "";

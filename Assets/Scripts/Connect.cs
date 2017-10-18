@@ -105,12 +105,14 @@ public sealed class Connect  {
 		if (GameData.Shared.IsMatchState && !string.IsNullOrEmpty(GameData.Shared.MatchID)) {
 			data = new Dictionary<string, object> {
 				{"matchid", GameData.Shared.MatchID},
-				{"ver", Application.version}	
+				{"ver", Application.version},
+				{"club_id", GameData.Shared.ClubID}	
 			};	
 		} else {
 			data = new Dictionary<string, object> {
 				{"roomid", GameData.Shared.Room.Value},
-				{"ver", Application.version}
+				{"ver", Application.version},
+				{"club_id", GameData.Shared.ClubID}
 			};
 		}
 
