@@ -74,8 +74,6 @@ public class External : MonoBehaviour{
 
 		GameData.Shared.Room.Value = info[0].ToString();
 		GameData.Shared.Sid = info[1].ToString();
-        GameData.Shared.Lid = info[2].ToString();
-
 
 		if (info.Length >= 3) {
 			GameData.Shared.ClubID = info[2];
@@ -128,7 +126,6 @@ public class External : MonoBehaviour{
 		GameData.Shared.Sid = "";
 		GameData.Shared.Room.Value = "";
 		GameData.Shared.MatchID = "";
-        GameData.Shared.Lid = "";
 
 		// 延时执行退出逻辑
 		Observable.Timer(TimeSpan.FromMilliseconds(90)).AsObservable().Subscribe((_) => {
