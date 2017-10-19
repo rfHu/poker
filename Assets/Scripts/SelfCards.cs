@@ -46,8 +46,14 @@ public class SelfCards: MonoBehaviour {
 		Turnback();	
 	}
 
+	private int padNum {
+		get {
+			return Containers.Count;
+		}
+	}
+
 	private void toggleEye(int index) {
-		var value = new System.Text.StringBuilder(player.ShowCard.Value.PadLeft(4, '0'));
+		var value = new System.Text.StringBuilder(player.ShowCard.Value.PadLeft(padNum, '0'));
 
 		// 这一手结束后，只能亮牌，不能关闭亮牌
 		if (value[index] == '1' && gameover) {
@@ -75,16 +81,14 @@ public class SelfCards: MonoBehaviour {
 	}
 
 	private void reShow(List<int> indexList) {
-		var i = 0;
-		foreach(var card in Cards) {
+		iterateIndex((card, i) => {
 			var index = indexList[i];
 			if (index <= 0) {
-				continue ;
+				return ;
 			}
 
 			show(card, index);
-			i++;
-		}
+		});
 
 		hasShow = true;
 	}
@@ -140,7 +144,7 @@ public class SelfCards: MonoBehaviour {
 		}).AddTo(this);
 
 		player.ShowCard.Subscribe((value) => {
-			value = value.PadLeft(4, '0');
+			value = value.PadLeft(padNum, '0');
 
 			for(var i = 0; i < value.Length; i++) {
 				var c = value[i];
