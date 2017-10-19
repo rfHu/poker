@@ -154,12 +154,7 @@ public class Controller : MonoBehaviour {
 		SeeLeftCard.SetActive(false);
 
         Connect.Shared.Emit(new Dictionary<string, object>() {
-				{"f", "seecard"}
-        }, (data, err) => {
-            if (err != 0)
-            {
-                PokerUI.Toast(data.String("ret"));
-            }
+			{"f", "seecard"}
         });
     }
 
@@ -608,9 +603,14 @@ public class Controller : MonoBehaviour {
 				return ;
 			}
 
-            if (GameData.Shared.PublicCards.Count < 5)
+			var type = GameData.Shared.Type.Value;
+			var count = GameData.Shared.PublicCards.Count;
+
+            if (count < 5 && type != GameType.KingThree)
             {
             	SeeLeftCard.SetActive(true);
+			} else if (count < 3 && type == GameType.KingThree) {
+				SeeLeftCard.SetActive(true);
 			}
         }).AddTo(this);
 
