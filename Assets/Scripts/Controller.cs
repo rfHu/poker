@@ -154,12 +154,7 @@ public class Controller : MonoBehaviour {
 		SeeLeftCard.SetActive(false);
 
         Connect.Shared.Emit(new Dictionary<string, object>() {
-				{"f", "seecard"}
-        }, (data, err) => {
-            if (err != 0)
-            {
-                PokerUI.Toast(data.String("ret"));
-            }
+			{"f", "seecard"}
         });
     }
 

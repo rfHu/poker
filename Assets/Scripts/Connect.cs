@@ -282,6 +282,7 @@ public sealed class Connect  {
 				return ;
 			}
 
+			// @FIXME: ret可能是string？
 			var ret = json.Dict("ret");
 			if (ret.ContainsKey("cmds")) {
 				GameData.MyCmd.SetCmd(ret.Dict("cmds"));
