@@ -304,8 +304,8 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
             BuyButton.interactable = true;
         }
 
-        //翻牌圈限制
-        if (isFlop) {
+        // 金三顺没有1/3限制；其他游戏翻牌圈限制1/3底池
+        if (isFlop && GameData.Shared.Type.Value != GameType.KingThree) {
             var limit = (int)Math.Floor(potValue / 3f); 
             maxValue = Math.Min(limit, maxValue);
         }
