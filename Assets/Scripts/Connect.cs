@@ -119,8 +119,14 @@ public sealed class Connect  {
 		Emit(new Dictionary<string, object>{
 			{"f", "entergame"},
 			{"args", data}
-		}, (json) => {
+		}, (json, err) => {
 			_.Log("Unity: 进入房间逻辑执行完毕");
+
+			if (err == 1301) {
+				PokerUI.ToastThenExit("您被房主限制进入牌局");
+			} else if (err != 0) {
+				PokerUI.ToastThenExit("牌局不存在");
+			}
 
 			// 取消2s内的loading提示
 			if (connectDisposa != null) {
@@ -129,7 +135,7 @@ public sealed class Connect  {
 
 			RxSubjects.Connecting.OnNext(false);
 
-			if (cb != null) {
+			if (cb != null && err == 0) {
 				cb();
 			}
 		}, () => {
