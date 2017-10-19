@@ -35,6 +35,8 @@ public class ExplainEvent : MonoBehaviour {
 
     private void SetList(GameType type)
     {
+        GetComponent<ToggleGroup>().SetAllTogglesOff();
+
         Toggles[0].SetActive(!GameData.Shared.IsMatch() && type != GameType.SixPlus);
         Toggles[2].SetActive(type == GameType.Omaha);
 
@@ -43,7 +45,6 @@ public class ExplainEvent : MonoBehaviour {
         KingThreeList.SetActive(isKingThree);
         NormalText.SetActive(!isKingThree);
 
-        GetComponent<ToggleGroup>().SetAllTogglesOff();
         foreach (var item in Toggles)
         {
             if (item.activeInHierarchy)
