@@ -52,14 +52,12 @@ public class RoomMessage : MonoBehaviour {
                 ContinueIcon.gameObject.SetActive(false);
             }
         }).AddTo(this);
-
-         GameData.Shared.Type.Subscribe((type) => {
-             Insurance.transform.parent.gameObject.SetActive(!(type == GameType.Omaha && GameData.Shared.PlayerCount.Value > 6));
-             Award27Mes.transform.parent.gameObject.SetActive(type == GameType.Normal);
-         }).AddTo(this);
     }
 
 	public void Init () {
+        Insurance.transform.parent.gameObject.SetActive(!((GameData.Shared.Type.Value == GameType.Omaha && GameData.Shared.PlayerCount.Value > 6) || GameData.Shared.Type.Value == GameType.SixPlus));
+        Award27Mes.transform.parent.gameObject.SetActive(GameData.Shared.Type.Value == GameType.Normal);
+
         OwnerName.text = GameData.Shared.OwnerName;
 
         var cTime = GameData.Shared.CreateTime;
