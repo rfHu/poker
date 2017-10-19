@@ -55,6 +55,9 @@ public class RoomMessage : MonoBehaviour {
     }
 
 	public void Init () {
+        Insurance.transform.parent.gameObject.SetActive(!((GameData.Shared.Type.Value == GameType.Omaha && GameData.Shared.PlayerCount.Value > 6) || GameData.Shared.Type.Value == GameType.SixPlus));
+        Award27Mes.transform.parent.gameObject.SetActive(GameData.Shared.Type.Value == GameType.Normal);
+
         OwnerName.text = GameData.Shared.OwnerName;
 
         var cTime = GameData.Shared.CreateTime;
