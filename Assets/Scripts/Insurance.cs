@@ -167,12 +167,12 @@ public class Insurance : MonoBehaviour, InsuranceStruct {
         {
             if (i < buyPlayer.Cards.Value.Count)
             {
-                MyCards[i].gameObject.SetActive(true);
+                MyCards[i].parent.gameObject.SetActive(true);
                 MyCards[i].GetComponent<Card>().Show(buyPlayer.Cards.Value[i]);
             }
             else 
             {
-                MyCards[i].gameObject.SetActive(false);
+                MyCards[i].parent.gameObject.SetActive(false);
             }
         }
         CardDesc.text = Card.GetCardDesc(data.Int("maxFiveRank"));
