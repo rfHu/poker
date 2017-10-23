@@ -501,7 +501,7 @@ public class OP : MonoBehaviour {
 		}
 
 		private static void onres(Dictionary<string, object> json, int err) {
-			if (err != 0) {
+			if (err != 0 && PokerPlayer.PlayerBase.CurrentUid == GameData.Shared.Uid && GameData.Shared.InGame) {
 				setActive(true);
 			}
 		}
