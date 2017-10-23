@@ -421,7 +421,7 @@ namespace MaterialUI
             m_AlreadyInitialized = true;
         }
 
-        private void InitializePages()
+        public void InitializePages()
         {
             if (m_Pages.Length > 0)
             {

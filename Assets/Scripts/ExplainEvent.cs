@@ -3,55 +3,46 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
+using MaterialUI;
+using System.Linq;
 
 public class ExplainEvent : MonoBehaviour {
-
-    public GameObject NormalList;
-
-    public GameObject KingThreeList;
-
     public GameObject NormalText;
 
-    public GameObject[] Toggles;
+	public TabPage[] Pages;
 
-    ToggleGroup Group;
+	private TabView tabView;
 
-    void Awake() 
-    {
-        foreach (var item in Toggles)
-        {
-            item.GetComponent<Toggle>().onValueChanged.AddListener((isOn) =>
-            {
-                Text text = item.transform.GetComponentInChildren<Text>();
-                text.color = isOn ? _.HexColor("#18FFFFFF") : new Color(1, 1, 1, 0.6f);
-            });
-        }
-    }
+	void Awake()
+	{
+		tabView = GetComponent<TabView>();
 
-    void OnSpawned() 
-    {
-        SetList(GameData.Shared.Type.Value);
-    }
+		GameData.Shared.Type.Subscribe((type) => {
+			SetList(type);
+		}).AddTo(this);
+	}
 
     private void SetList(GameType type)
     {
-        GetComponent<ToggleGroup>().SetAllTogglesOff();
-
-        Toggles[0].SetActive(!GameData.Shared.IsMatch() && type != GameType.SixPlus);
-        Toggles[2].SetActive(type == GameType.Omaha);
-
         bool isKingThree = type == GameType.KingThree;
-        NormalList.SetActive(!isKingThree);
-        KingThreeList.SetActive(isKingThree);
         NormalText.SetActive(!isKingThree);
 
-        foreach (var item in Toggles)
-        {
-            if (item.activeInHierarchy)
-            {
-                item.GetComponent<Toggle>().isOn = true;
-                break;
-            }
-        }
+		// 6+隐藏保险
+		if (type == GameType.SixPlus) {
+			tabView.pages = new TabPage[]{
+				Pages[1]
+			};
+		} else if (type == GameType.Omaha) { // 展示奥马哈
+			tabView.pages = Pages.ToArray();
+		} else { // 隐藏奥马哈
+			tabView.pages = new TabPage[]{
+				Pages[0],
+				Pages[1]
+			};
+		}
+
+		tabView.InitializeTabs();
+		tabView.InitializePages();
+		tabView.tabsContainer.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
     }
 }
