@@ -44,7 +44,9 @@ public class InsureToast: MonoBehaviour {
             var url = player.Avatar;
             var toName = GameData.Shared.FindPlayer(touid).Name;
 
-            cd.Value = time;
+			if (e.Data.ContainsKey("time")) {
+            	cd.Value = time;
+			}
 
             if (type != 3)
             {
