@@ -96,6 +96,7 @@ public class OP : MonoBehaviour {
 	}
 
 	private bool canCheck = false;
+	private bool canAllin = false;
 	
 	public void StartWithCmds(Dictionary<string, object> data, int left, int buyTimeCost = 10) {
 		// 设置购买时间按钮
@@ -107,6 +108,7 @@ public class OP : MonoBehaviour {
 		var allin = cmds.Bool("all_in");
 
 		canCheck = check;
+		canAllin = allin;
 
 		range = cmds.IL("raise");
 
@@ -332,15 +334,15 @@ public class OP : MonoBehaviour {
 		var pointerDown = false;
 
 		Slid.OnValueChangedAsObservable().Subscribe((value) => {
-			if (value < range[1]) {
+			if (value >= range[1] && canAllin) {
+				Allin.SetActive(true);
+				RoundTipsGo.SetActive(false);
+			} else {
 				Allin.SetActive(false);
 
 				if (pointerDown) {
 					RoundTipsGo.SetActive(true);
 				}
-			} else {
-				Allin.SetActive(true);
-				RoundTipsGo.SetActive(false);
 			}
 			
 			RaiseNumber.text = _.Num2CnDigit(value);
@@ -412,7 +414,7 @@ public class OP : MonoBehaviour {
 	public void OnSliderOK() {
 		var value = (int)Slid.value;
 
-		if (value >= range[1]) {
+		if (value >= range[1] && canAllin) {
 			OPS.AllIn();
 		} else {
 			OPS.raise(value);
