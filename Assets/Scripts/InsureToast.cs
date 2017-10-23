@@ -23,6 +23,9 @@ public class InsureToast: MonoBehaviour {
     {
         cvg = GetComponent<CanvasGroup>();
         addEvents();
+
+		// 隐藏
+		gameObject.SetActive(false);
     }
 
     private void addEvents() {
