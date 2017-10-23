@@ -25,6 +25,7 @@ public class RoomMessage : MonoBehaviour {
     public Text IPMes;
     public Text Award27Mes;
     public Text BuryCardMes;
+    public Text OmahaLimitRule;
 
     public GameObject[] Buttons;
 
@@ -57,6 +58,7 @@ public class RoomMessage : MonoBehaviour {
 	public void Init () {
         Insurance.transform.parent.gameObject.SetActive(!((GameData.Shared.Type.Value == GameType.Omaha && GameData.Shared.PlayerCount.Value > 6) || GameData.Shared.Type.Value == GameType.SixPlus));
         Award27Mes.transform.parent.gameObject.SetActive(GameData.Shared.Type.Value == GameType.Normal);
+        OmahaLimitRule.transform.parent.gameObject.SetActive(GameData.Shared.Type.Value == GameType.Omaha);
 
         OwnerName.text = GameData.Shared.OwnerName;
 
@@ -77,6 +79,7 @@ public class RoomMessage : MonoBehaviour {
         _.SetMsgText(GameData.Shared.IPLimit.Value, IPMes);
         _.SetMsgText(GameData.Shared.Award27, Award27Mes);
         _.SetMsgText(GameData.Shared.BuryCard, BuryCardMes);
+        _.SetMsgText(GameData.Shared.LimitRule, OmahaLimitRule);
         
         foreach (var item in Buttons)
         {

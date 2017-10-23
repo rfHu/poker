@@ -765,6 +765,7 @@ sealed public class GameData {
 	public float Rake = 0;
 	public int Duration = 0;
 	public bool NeedAudit = false;
+    public bool LimitRule = false;      //omaha是否限注
 	public ReactiveProperty<bool> IPLimit = new ReactiveProperty<bool>(false);
 	public ReactiveProperty<bool> GPSLimit = new ReactiveProperty<bool>(false);
     public ReactiveProperty<bool> NeedInsurance = new ReactiveProperty<bool>(false);
@@ -842,6 +843,7 @@ sealed public class GameData {
 		Straddle.Value = options.Int("straddle") == 1;
         SettingThinkTime = ThinkTime = options.Int("turn_countdown");
 		OffScore.Value = options.Int("off_score") == 1;
+        LimitRule = options.Int("limit_rule") == 1;
 		
         NeedInsurance.Value = options.Int("need_insurance") == 1;
 		DealerSeat.Value = json.Int("dealer_seat");
