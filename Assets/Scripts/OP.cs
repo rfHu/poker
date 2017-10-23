@@ -338,7 +338,7 @@ public class OP : MonoBehaviour {
 				if (pointerDown) {
 					RoundTipsGo.SetActive(true);
 				}
-			} else if (value == GameData.Shared.Bankroll.Value) {
+			} else {
 				Allin.SetActive(true);
 				RoundTipsGo.SetActive(false);
 			}
@@ -412,7 +412,7 @@ public class OP : MonoBehaviour {
 	public void OnSliderOK() {
 		var value = (int)Slid.value;
 
-		if (value >= range[1] && range[1] == GameData.Shared.Bankroll.Value) {
+		if (value >= range[1]) {
 			OPS.AllIn();
 		} else {
 			OPS.raise(value);
