@@ -147,7 +147,7 @@ public class MatchWinner : MonoBehaviour {
 
             External.Instance.ExitCb(() =>
             {
-                Commander.Shared.GameEnd(id, toPage);
+                Commander.Shared.GameEnd(id, toPage, 0);
             });
         }
         else{

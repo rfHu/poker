@@ -752,6 +752,7 @@ public class Controller : MonoBehaviour {
 			// 获取roomID，调用ExitCb后无法获取
 			var roomID = GameData.Shared.Room.Value;
             var matchID = GameData.Shared.MatchID;
+            var fromLeague = GameData.Shared.ClubID != "" ? 1 : 0;
             var ID = "";
             var page = "";
 			// 清理
@@ -772,7 +773,7 @@ public class Controller : MonoBehaviour {
                         break;
                 }
 
-				Commander.Shared.GameEnd(ID, page);
+				Commander.Shared.GameEnd(ID, page, fromLeague);
 			});	
 		}).AddTo(this);
 

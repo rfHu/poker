@@ -64,8 +64,8 @@ public class Commander {
 		ic.PayFor();
 	}
 
-	public void GameEnd(string roomID, string gameType) {
-		ic.GameEnd(roomID, gameType);
+	public void GameEnd(string roomID, string gameType, int fromLeague) {
+		ic.GameEnd(roomID, gameType, fromLeague);
 	}
 
 	public int Power() {
@@ -122,7 +122,7 @@ public class Commander {
 public interface ICommander {
 	void Exit();
 	void PayFor();
-	void GameEnd(string roomID, string gameType);
+	void GameEnd(string roomID, string gameType, int fromLeague);
 	int Power();
 	void Audit();
 	void Chat();
@@ -153,8 +153,8 @@ public class AndroidCommander: ICommander {
 		getJo().Call("payFor");
 	}
 
-	public void GameEnd(string roomID, string gameType) {
-		getJo().Call("gameEnd", roomID, gameType);
+	public void GameEnd(string roomID, string gameType, int fromLeague) {
+		getJo().Call("gameEnd", roomID, gameType, fromLeague);
 	}
 
 	public int Power() {
@@ -238,7 +238,7 @@ public class iOSCommander: ICommander {
 	private static extern void _ex_callOpenCoinMall();
 
 	[DllImport("__Internal")]
-	private static extern void _ex_callGameOver(string roomID, string gameType);
+	private static extern void _ex_callGameOver(string roomID, string gameType, int fromLeague);
 
 	[DllImport("__Internal")]
 	private static extern void _ex_callCanAudioPlay(bool canPlay);
@@ -284,8 +284,8 @@ public class iOSCommander: ICommander {
 		_ex_callOpenCoinMall();
 	}
 
-	public void GameEnd(string roomID, string gameType) {
-		_ex_callGameOver(roomID, gameType);
+	public void GameEnd(string roomID, string gameType, int fromLeague) {
+		_ex_callGameOver(roomID, gameType, fromLeague);
 	}
 
 	public void PauseUnity() {
