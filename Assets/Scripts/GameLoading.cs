@@ -104,7 +104,7 @@ public class GameLoading : MonoBehaviour {
 			External.Instance.SetProxy("http://localhost:8888");
 
             var rid = "59ed892c2836b64085afb836";
-            var sid = "s%3AxrC5nKzQZBWdEgQVuLf6_6T68ihn_Ggq.b5eUXVyKoGKub8xfUCraBACwWvz2xuJ2r7dsmvzgLyM";
+            var sid = "s%3AfBS158gOaYKcplSt1dNjigd8EW_85TG7.%2B1JQAbSFJb9AL0hUaSpSRakH8aYaGGcsxXUWUryqnRw";
             //var cid = "590310cef0fe643c39829720";
             //External.Instance.InitGame(rid + "&" + sid); 
         External.Instance.InitGame(rid + "&" + sid);
