@@ -24,6 +24,8 @@ public class MenuPopup : MonoBehaviour {
 
 	public Text RebuyOrAddonText;
 
+	public GameObject Explain;
+
 
 	public void Supplement() {
 		if (!GameData.MyCmd.Takecoin) {
@@ -206,7 +208,7 @@ public class MenuPopup : MonoBehaviour {
 	}
 
 	public void Tips() {
-        var tip = PoolMan.Spawn("Explain");
+        var tip = PoolMan.Spawn(Explain);
 		tip.GetComponent<DOPopup>().Show();
 	}
 

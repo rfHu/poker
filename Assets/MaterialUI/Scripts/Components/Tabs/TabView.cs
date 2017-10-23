@@ -421,15 +421,15 @@ namespace MaterialUI
             m_AlreadyInitialized = true;
         }
 
-        private void InitializePages()
+        public void InitializePages()
         {
-            if (m_Pages.Length > 0)
-            {
-                for (int i = 0; i < m_Pages.Length; i++)
-                {
-                    m_Pages[i].gameObject.SetActive(true);
-                }
-            }
+            // if (m_Pages.Length > 0)
+            // {
+            //     for (int i = 0; i < m_Pages.Length; i++)
+            //     {
+                    // m_Pages[i].gameObject.SetActive(true);
+            //     }
+            // }
 
             m_PageSize = m_PagesRect.GetProperSize();
 

@@ -23,6 +23,9 @@ public class InsureToast: MonoBehaviour {
     {
         cvg = GetComponent<CanvasGroup>();
         addEvents();
+
+		// 隐藏
+		gameObject.SetActive(false);
     }
 
     private void addEvents() {
@@ -44,7 +47,9 @@ public class InsureToast: MonoBehaviour {
             var url = player.Avatar;
             var toName = GameData.Shared.FindPlayer(touid).Name;
 
-            cd.Value = time;
+			if (e.Data.ContainsKey("time")) {
+            	cd.Value = time;
+			}
 
             if (type != 3)
             {
