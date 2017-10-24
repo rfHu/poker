@@ -226,6 +226,10 @@ public class AndroidCommander: ICommander {
     {
         getJo().Call("closeChat");
     }
+
+	public string GetLocation() {
+		return getJo().Call<string>("getPlayerLocation");
+	}
 }
 #endif
 

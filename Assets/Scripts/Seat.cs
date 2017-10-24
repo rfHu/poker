@@ -4,6 +4,7 @@ using DG.Tweening;
 using UniRx;
 using UnityEngine.UI;
 using UniRx;
+using System;
 
 public enum SeatPosition {
 	Top,
@@ -57,9 +58,28 @@ public class Seat : MonoBehaviour {
 		}
 
 		if (GameData.Shared.GPSLimit.Value) {
-			StartCoroutine(Commander.Shared.Location(takeSeat, () => {
-				PokerUI.Alert("为保证公平竞技，请在设置—隐私—定位服务中开启位置权限");	
-			}));	 
+			var text = "为保证公平竞技，请在设置—隐私—定位服务中开启位置权限";
+
+			#if UNITY_ANDROID
+				var cmd = new AndroidCommander();
+				var loc = cmd.GetLocation();	
+
+				if (loc == "0") {
+					PokerUI.Alert(text);
+				} else {
+					var locArray = loc.Split("&".ToCharArray());
+
+					takeSeat(new float[] {
+						float.Parse(locArray[0]),
+						float.Parse(locArray[1])
+					});
+				}
+			#else
+				StartCoroutine(Commander.Shared.Location(takeSeat, () => {
+					PokerUI.Alert(text);	
+				}));
+			#endif
+				 
 		} else {
 			takeSeat(new float[]{0, 0});
 		}
