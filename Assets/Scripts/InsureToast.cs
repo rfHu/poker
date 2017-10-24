@@ -16,7 +16,7 @@ public class InsureToast: MonoBehaviour {
     private float duration = 0.2f;
     private Tween tween;
 
-    private ReactiveProperty<int> cd = new ReactiveProperty<int>(); 
+    private ReactiveProperty<int> countdown = new ReactiveProperty<int>(); 
     private IDisposable disposable;
 
     void Awake()
@@ -48,7 +48,7 @@ public class InsureToast: MonoBehaviour {
             var toName = GameData.Shared.FindPlayer(touid).Name;
 
 			if (e.Data.ContainsKey("time")) {
-            	cd.Value = time;
+            	countdown.Value = time;
 			} else if (disposable != null) {
 				disposable.Dispose();
 			}
@@ -119,18 +119,17 @@ public class InsureToast: MonoBehaviour {
             NameText.text = name;
             Avatar.GetComponent<Avatar>().SetImage(url);
            
-            Show();
+            Show(time > 0);
         }).AddTo(this);
 
-        cd.Subscribe((time) => {
+        countdown.Subscribe((time) => {
             if (time < 0) {
                 if (disposable != null) {
                     disposable.Dispose();
                 }
-                return ;
-            }
-
-            MsgText.text = cdText(time);
+            } else {
+            	MsgText.text = cdText(time);
+			}
         }).AddTo(this);
 
         RxSubjects.Moretime.Subscribe((e) => {
@@ -140,7 +139,7 @@ public class InsureToast: MonoBehaviour {
                 return ;
             }
 
-            cd.Value = model.total;
+            countdown.Value = model.total;
         }).AddTo(this);
 
         RxSubjects.GameOver.Subscribe((_) => {
@@ -165,16 +164,16 @@ public class InsureToast: MonoBehaviour {
             disposable.Dispose();
         }
 
-        if (cd.Value == 0) {
+        if (countdown.Value == 0) {
             return ;
         }
 
         disposable = Observable.Interval(TimeSpan.FromSeconds(1)).Subscribe((_) => {
-            cd.Value -= 1;
+            countdown.Value -= 1;
         }).AddTo(this);
     }
 
-    public void Show() {
+    public void Show(bool shouldCd) {
         if (tween != null) {
             tween.Kill();
         }
@@ -184,7 +183,11 @@ public class InsureToast: MonoBehaviour {
         }
 
 		gameObject.SetActive(true);
-        tween = cvg.DOFade(1, duration).OnComplete(startCd);
+		tween = cvg.DOFade(1, duration);
+
+		if (shouldCd) {
+        	tween.OnComplete(startCd);
+		}
     }
 
     public void Hide(TweenCallback complete = null) {
