@@ -49,6 +49,8 @@ public class InsureToast: MonoBehaviour {
 
 			if (e.Data.ContainsKey("time")) {
             	cd.Value = time;
+			} else if (disposable != null) {
+				disposable.Dispose();
 			}
 
             if (type != 3)
