@@ -166,7 +166,7 @@ public class OP : MonoBehaviour {
 		AccuratePanel.OnValueChange = (num) => {
 			accurateValue = num;
 
-			if (num >= range[1]) { // allin
+			if (num >= range[1] && canAllin) { // allin
 				setAccurateBtns(AccurateType.Allin);
 			} else if (num < range[0]) {
 				setAccurateBtns(AccurateType.Cancel);
