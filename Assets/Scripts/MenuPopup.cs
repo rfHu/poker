@@ -117,7 +117,7 @@ public class MenuPopup : MonoBehaviour {
 
         fitState(GameData.Shared.SelfState.Value);
 
-        ShareGo.SetActive(GameData.Shared.ClubID == "");
+        ShareGo.SetActive(GameData.Shared.LeagueID == "");
     }
 
 	void Awake()

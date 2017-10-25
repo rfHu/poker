@@ -636,6 +636,7 @@ sealed public class GameData {
 	public string Sid; 
 	public string Uid = "";
 	public string ClubID = "";
+    public string LeagueID = "";
 	public string Pin = "";
 	public string Name = ""; 
 	public string Avatar = "";
@@ -844,7 +845,8 @@ sealed public class GameData {
         SettingThinkTime = ThinkTime = options.Int("turn_countdown");
 		OffScore.Value = options.Int("off_score") == 1;
         LimitRule = options.Int("limit_rule") == 1;
-		
+        LeagueID = options.String("league_id");
+
         NeedInsurance.Value = options.Int("need_insurance") == 1;
 		DealerSeat.Value = json.Int("dealer_seat");
 		Pot.Value = json.Int("pot");
