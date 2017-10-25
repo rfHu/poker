@@ -100,7 +100,7 @@ public sealed class Connect  {
 	}
 
 	public void EnterGame(Action cb = null) {
-		if (MatchWinner.IsSpawned) {
+		if (GameData.Shared.GameEnd) {
 			return ;
 		}
 

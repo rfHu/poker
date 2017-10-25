@@ -340,6 +340,10 @@ sealed public class GameData {
 			byJson(e.Data);
 		});
 
+		RxSubjects.GameEnd.Subscribe((e) => {
+			GameEnd = true;
+		});
+
 		RxSubjects.Deal.Subscribe((e) => {
 			Pot.Value = e.Data.Int("pot");
 
@@ -626,6 +630,7 @@ sealed public class GameData {
 
 	// 当前的思考时间
 	public int ThinkTime = 15;
+	public bool GameEnd = false;
 
 	public ReactiveProperty<PlayerState> SelfState = new ReactiveProperty<PlayerState>();  
 

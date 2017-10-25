@@ -74,6 +74,7 @@ public class External : MonoBehaviour{
 
 		GameData.Shared.Room.Value = info[0].ToString();
 		GameData.Shared.Sid = info[1].ToString();
+		GameData.Shared.GameEnd = false;
 
 		if (info.Length >= 3) {
 			GameData.Shared.ClubID = info[2];
@@ -100,6 +101,7 @@ public class External : MonoBehaviour{
 
 		GameData.Shared.MatchID = matchID;
 		GameData.Shared.Sid = info[1].ToString();
+		GameData.Shared.GameEnd = false;
 
 		GameData.Shared.IsMatchState = true;
 		Connect.Setup();
