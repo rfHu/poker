@@ -100,6 +100,10 @@ public sealed class Connect  {
 	}
 
 	public void EnterGame(Action cb = null) {
+		if (MatchWinner.IsSpawned) {
+			return ;
+		}
+
 		Dictionary<string, object> data;
 
 		if (GameData.Shared.IsMatchState && !string.IsNullOrEmpty(GameData.Shared.MatchID)) {
