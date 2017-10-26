@@ -18,6 +18,11 @@ public class ExplainEvent : MonoBehaviour {
 		tabView = GetComponent<TabView>();
 
 		GameData.Shared.Type.Subscribe((type) => {
+			// 先隐藏所有页面
+			foreach(var page in Pages) {
+				page.gameObject.SetActive(false);
+			}
+
 			SetList(type);
 		}).AddTo(this);
 	}
