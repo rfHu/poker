@@ -46,6 +46,7 @@ public class ExplainEvent : MonoBehaviour {
 			};
 		}
 
+		tabView.currentPage = 0;
 		tabView.InitializeTabs();
 		tabView.InitializePages();
 		tabView.tabsContainer.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
