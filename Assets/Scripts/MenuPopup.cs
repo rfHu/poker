@@ -296,17 +296,12 @@ public class MenuPopup : MonoBehaviour {
 
         if (!GameData.Shared.IsMatch())
         {
-            str += "，盲注[";
-
-            if (GameData.Shared.Straddle.Value)
-                str += GameData.Shared.SB / 2 + "/";
-
-            str += GameData.Shared.SB + "/" + GameData.Shared.BB + "]";
+			var strad = GameData.Shared.Straddle.Value ? "/" + GameData.Shared.BB * 2 : "";
+			str += string.Format("，盲注[{0}/{1}{2}]", GameData.Shared.SB, GameData.Shared.BB, strad);
 
             if (GameData.Shared.Ante.Value > 0)
                 str += "，前注[" + GameData.Shared.Ante + "]";
         }
-
 
         str += "。一键约局，与好友畅享德州扑克的乐趣。";
         return str;
