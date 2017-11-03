@@ -1137,7 +1137,7 @@ public class Controller : MonoBehaviour {
             if (limit)
             {
 				setInfoText("购买保险中，全场禁言…");
-            } else {
+            } else if(GameData.Shared.GameStarted.Value){
 				infoGo.SetActive(false);
 			}
         }).AddTo(this);
