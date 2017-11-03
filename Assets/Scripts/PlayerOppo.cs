@@ -34,6 +34,15 @@ namespace PokerPlayer {
             }
         }
 
+        [SerializeField]
+        private ParticleSystem countdownParticle;
+
+        private GameObject particleParent {
+            get {
+                return countdownParticle.transform.parent.gameObject;
+            }
+        }
+
         void Awake()
         {
 			Base = PlayerBase.Load(BaseObject, transform);
@@ -41,6 +50,8 @@ namespace PokerPlayer {
             Countdown.gameObject.SetActive(false);                        
             Countdown.SetParent(Base.Circle, false);
             Countdown.SetAsFirstSibling();
+
+            stopParticle(countdownParticle);
 
             Cardfaces.SetParent(Base.Circle, false);
             Cardfaces.SetSiblingIndex(3);
@@ -157,6 +168,8 @@ namespace PokerPlayer {
             var mask = Base.Avt.GetComponent<CircleMask>();
             mask.numberText.gameObject.SetActive(true);
 
+            playParticle(countdownParticle);
+
             while (time > 0 && activated) {
                 time = time - Time.deltaTime;
                 
@@ -166,11 +179,17 @@ namespace PokerPlayer {
                 mask.SetTextColor(image.color);
                 mask.SetFillAmount(time / total, time); 
 
+                particleParent.transform.localRotation =Quaternion.Euler(new Vector3(0,0,360* percent));
+
+                ParticleSystem.MainModule main = countdownParticle.main;
+                main.startColor = image.color;
+
                 yield return new WaitForFixedUpdate();
             }
 
             activated = false;
-            Countdown.gameObject.SetActive(false); 
+            Countdown.gameObject.SetActive(false);
+            stopParticle(countdownParticle);
         }
 
         // ============= Delegate ============
@@ -234,6 +253,16 @@ namespace PokerPlayer {
             Base.DoFade(CardDesc.transform.parent.gameObject, () => {
                 NameLabel.gameObject.SetActive(true);
             });
+        }
+
+                private void playParticle(ParticleSystem particle) {
+            particle.gameObject.SetActive(true);
+            particle.Play(true);
+        }
+
+        private void stopParticle(ParticleSystem particle) {
+            particle.gameObject.SetActive(false);
+            particle.Stop(true);
         }
     }
 }
