@@ -58,6 +58,10 @@ namespace PokerPlayer {
 
             cardParent.transform.SetParent(Base.Circle, false);
             cardParent.transform.SetAsLastSibling();
+
+            RxSubjects.Look.Subscribe((_) => {
+                stopParticle(countdownParticle);
+            }).AddTo(this);
         }
 
         void OnDespawned() {
@@ -181,9 +185,6 @@ namespace PokerPlayer {
 
                 particleParent.transform.localRotation =Quaternion.Euler(new Vector3(0,0,360* percent));
 
-                ParticleSystem.MainModule main = countdownParticle.main;
-                main.startColor = image.color;
-
                 yield return new WaitForFixedUpdate();
             }
 
@@ -255,7 +256,7 @@ namespace PokerPlayer {
             });
         }
 
-                private void playParticle(ParticleSystem particle) {
+        private void playParticle(ParticleSystem particle) {
             particle.gameObject.SetActive(true);
             particle.Play(true);
         }
