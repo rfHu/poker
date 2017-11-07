@@ -65,6 +65,7 @@ public class RxSubjects {
 	public static Subject<RxData> MTTMatch = new Subject<RxData>();
     public static Subject<RxData> CurrentRank = new Subject<RxData>();
     public static Subject<RxData> HalfBreak = new Subject<RxData>();
+    public static Subject<RxData> TonicBlind = new Subject<RxData>();
 
 	// 跟网络无关事件
 	public static Subject<int> ChangeVectorsByIndex = new Subject<int>();

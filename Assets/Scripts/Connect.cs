@@ -517,7 +517,10 @@ public sealed class Connect  {
                 case "half_break":
                     RxSubjects.HalfBreak.OnNext(rxdata);
                     break;
-				default:
+                case "tonic_blind":
+                    RxSubjects.TonicBlind.OnNext(rxdata);
+                    break;
+                default:
 					break;
 			}
 		});
