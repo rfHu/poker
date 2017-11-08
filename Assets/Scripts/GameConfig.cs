@@ -14,6 +14,7 @@ public enum ActionState {
 	Raise = 5,
 	Straddle = 6,
     TonicBlind = 7,
+    BuryCard = 8
 }
 
 public enum GameType {
@@ -46,7 +47,8 @@ public static class ActionStateExt {
 			{"all_in", ActionState.Allin},
 			{"raise", ActionState.Raise},
 			{"fold", ActionState.Fold},
-            {"straddle", ActionState.Straddle}
+            {"straddle", ActionState.Straddle},
+            {"tonic_blind", ActionState.TonicBlind}
 		};
 
 		if (map.ContainsKey(str)) {
@@ -209,6 +211,13 @@ sealed public class Player {
 		readyState = json.Int("is_ready");
 		HeadValue.Value = json.Int("head_value");
 
+        // Actstate的赋值没有效果，实现其实是依靠lastact的改变，且lastact后台反应增加新值会比较麻烦，以此方式折中
+        if (json.Int("tonic_blind") == 1)
+        {
+            ActState.OnNext(ActionState.TonicBlind);
+            LastAct.Value = "tonic_blind";
+        }
+
         if (json.Int("straddle") == 1)
         {
             ActState.OnNext(ActionState.Straddle);
@@ -284,7 +293,8 @@ public class GameOverJson {
 	public int chips {get; set;}
 	public string uid { get; set; }
 	public int seat { get; set; }
-	public int maxFiveRank = 0;
+    public bool bury_card { get; set; }
+    public int maxFiveRank = 0;
 
 	public int Gain() {
 		return prize - chips;
@@ -296,7 +306,8 @@ public class GameOverJson {
 		uid = dict.String("uid");
 		seat = dict.Int("seat");
 		cards = dict.IL("cards");
-		maxFiveRank = dict.Int("maxFiveRank");	
+		maxFiveRank = dict.Int("maxFiveRank");
+        bury_card = dict.Int("bury_card") == 1;
 	}
 }
 
@@ -462,15 +473,6 @@ sealed public class GameData {
 				player.ActState.OnNext(ActionState.Fold);
 			}
 		});
-
-        RxSubjects.TonicBlind.Subscribe((e) =>{
-            var index = e.Data.Int("seat");
-            if (Players.ContainsKey(index))
-            {
-                var player = Players[index];
-                player.ActState.OnNext(ActionState.TonicBlind);
-            }
-        });
 
         Action<RxData> act = (e) => {
 			var userAction = e.Data.ToObject<UserActionModel>();

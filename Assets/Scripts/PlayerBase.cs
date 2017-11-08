@@ -382,7 +382,7 @@ namespace PokerPlayer {
 				player.InGame = false;
 
                 myDelegate.MoveOut();
-                PlayerAct.SetActive(false);
+                //PlayerAct.SetActive(false);
                 stopParticle(allinParticle);
                 player.PrChips.Value = 0;
 				player.WinPercent.OnNext(-1); // 隐藏胜率
@@ -443,9 +443,19 @@ namespace PokerPlayer {
 					winEndDisposable.Dispose();
 				}
 
+                if (data.bury_card)
+                {
+                    player.ActState.OnNext(ActionState.BuryCard);
+                }
+                else
+                {
+                    PlayerAct.SetActive(false);
+                }
+
                 // 4s后隐藏动画
                 winEndDisposable = Observable.Timer(TimeSpan.FromSeconds(4)).Subscribe((_) => {
                     hideWinAnim();
+                    PlayerAct.SetActive(false);
                 }).AddTo(this);
             }).AddTo(this);
 

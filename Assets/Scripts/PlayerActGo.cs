@@ -29,8 +29,9 @@ public class PlayerActGo: MonoBehaviour {
             {ActionState.Raise, orange},
             {ActionState.Call, _.HexColor("#40C4FF")},
             {ActionState.Allin, orange},
-			{ActionState.Straddle, orange},
-            {ActionState.TonicBlind, orange}
+			{ActionState.Straddle, _.HexColor("#ff8a65")},
+            {ActionState.TonicBlind, _.HexColor("#9ccc65")},
+            {ActionState.BuryCard, _.HexColor("#ce93d8")}
         };
 
         return map[act];
@@ -70,6 +71,7 @@ public class PlayerActGo: MonoBehaviour {
             {ActionState.Allin, "全下"},
 			{ActionState.Straddle, "抓头"},
             {ActionState.TonicBlind, "补盲"},
+            {ActionState.BuryCard, "埋牌"},
         };
 
         return map[act];
