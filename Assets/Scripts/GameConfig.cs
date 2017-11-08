@@ -12,7 +12,8 @@ public enum ActionState {
 	Allin = 3,
 	Call = 4,
 	Raise = 5,
-	Straddle = 6
+	Straddle = 6,
+    TonicBlind = 7,
 }
 
 public enum GameType {
@@ -44,7 +45,8 @@ public static class ActionStateExt {
 			{"check", ActionState.Check},
 			{"all_in", ActionState.Allin},
 			{"raise", ActionState.Raise},
-			{"fold", ActionState.Fold}
+			{"fold", ActionState.Fold},
+            {"straddle", ActionState.Straddle}
 		};
 
 		if (map.ContainsKey(str)) {
@@ -202,10 +204,17 @@ sealed public class Player {
 		AuditCD = json.Int("unaudit_countdown");
 		Coins = json.Int("coins");
 		Allin.Value = json.Bool("is_allin");
-		LastAct.Value = json.String("last_act");
+        LastAct.Value = json.String("last_act");
         Rank.Value = GameData.Shared.Type.Value == GameType.MTT ? json.Int("rank") : json.Int("match_rank");
 		readyState = json.Int("is_ready");
 		HeadValue.Value = json.Int("head_value");
+
+        if (json.Int("straddle") == 1)
+        {
+            ActState.OnNext(ActionState.Straddle);
+            LastAct.Value = "straddle";
+        }
+
 
         if (GameData.Shared.IsMatch())
         {
@@ -400,19 +409,6 @@ sealed public class GameData {
 				if (e.Data.ContainsKey("maxFive")) {
 					HighlightIndex.Value = Card.ExtractHighlightCards(e.Data.IL("maxFive"), MaxFiveRank.Value);
 				}
-
-                // if (e.Data.ContainsKey("win_rates"))
-                // {
-                //     var winRates = e.Data.Dict("win_rates");
-				// 	Player.MaxWinPercent = Convert.ToInt16(winRates.Values.Max());
-
-                //     foreach (var item in winRates)
-                //     {
-                //         var player = GetPlayer(int.Parse(item.Key));
-                //         int percent = Convert.ToInt16(item.Value);
-                //         player.WinPercent.OnNext(percent);
-                //     }
-                // }
 			}).AddTo(disposable);
 		});
 
@@ -467,7 +463,16 @@ sealed public class GameData {
 			}
 		});
 
-		Action<RxData> act = (e) => {
+        RxSubjects.TonicBlind.Subscribe((e) =>{
+            var index = e.Data.Int("seat");
+            if (Players.ContainsKey(index))
+            {
+                var player = Players[index];
+                player.ActState.OnNext(ActionState.TonicBlind);
+            }
+        });
+
+        Action<RxData> act = (e) => {
 			var userAction = e.Data.ToObject<UserActionModel>();
 			Pot.Value = userAction.pot;
 
@@ -926,11 +931,6 @@ sealed public class GameData {
 			// 大小盲
 			if (gameStart && player.PrChips.Value != 0) {
 				player.ChipsChange = true;
-				
-				// Straddle 
-				if (player.PrChips.Value == 2 * GameData.Shared.BB) {
-					player.ActState.OnNext(ActionState.Straddle);
-				}
 			}
 
 			Players[index] = player;

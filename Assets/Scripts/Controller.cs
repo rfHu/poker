@@ -1152,15 +1152,7 @@ public class Controller : MonoBehaviour {
             PokerUI.Toast(str);
         }).AddTo(this);
 
-        RxSubjects.TonicBlind.Subscribe((e) => 
-        {
-            string uid = e.Data.String("uid");
-            string str = GameData.Shared.FindPlayer(uid).Name;
-            if (String.IsNullOrEmpty(str))
-            {
-                str += " 因为更换座位与盲注位距离加大，需要补盲";
-            }
-        }).AddTo(this);
+
 
     }
 

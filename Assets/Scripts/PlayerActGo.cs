@@ -11,6 +11,7 @@ public class PlayerActGo: MonoBehaviour {
     public int AnimID;
 
     public void SetAct(ActionState act) {
+
         var color = GetColor(act); 
     
         var tab = transform.Find("Tab").GetComponent<RectTransform>();
@@ -28,7 +29,8 @@ public class PlayerActGo: MonoBehaviour {
             {ActionState.Raise, orange},
             {ActionState.Call, _.HexColor("#40C4FF")},
             {ActionState.Allin, orange},
-			{ActionState.Straddle, orange}
+			{ActionState.Straddle, orange},
+            {ActionState.TonicBlind, orange}
         };
 
         return map[act];
@@ -66,7 +68,8 @@ public class PlayerActGo: MonoBehaviour {
             {ActionState.Raise, "加注"},
             {ActionState.Call, "跟注"},
             {ActionState.Allin, "全下"},
-			{ActionState.Straddle, "抓头"}
+			{ActionState.Straddle, "抓头"},
+            {ActionState.TonicBlind, "补盲"},
         };
 
         return map[act];

@@ -58,10 +58,6 @@ namespace PokerPlayer {
 
             cardParent.transform.SetParent(Base.Circle, false);
             cardParent.transform.SetAsLastSibling();
-
-            RxSubjects.Look.Subscribe((_) => {
-                stopParticle(countdownParticle);
-            }).AddTo(this);
         }
 
         void OnDespawned() {
@@ -107,6 +103,11 @@ namespace PokerPlayer {
         }
 
         private void addEvents() {
+
+            RxSubjects.Look.Subscribe((_) => {
+                stopParticle(countdownParticle);
+            }).AddTo(this);
+
             // 中途复原行动
             player.Countdown.AsObservable().Where((obj) => obj.seconds > 0).Subscribe((obj) => {
                 TurnTo(null, obj.seconds);
