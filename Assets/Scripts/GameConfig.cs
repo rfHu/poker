@@ -6,15 +6,15 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public enum ActionState {
-	None = 0,
-	Fold = 1,
-	Check = 2,
-	Allin = 3,
-	Call = 4,
-	Raise = 5,
-	Straddle = 6,
-    TonicBlind = 7,
-    BuryCard = 8
+	None,
+	Fold, 
+	Check,
+	Allin,
+	Call,
+	Raise,
+	Straddle,
+    TonicBlind,
+    BuryCard
 }
 
 public enum GameType {
@@ -48,7 +48,8 @@ public static class ActionStateExt {
 			{"raise", ActionState.Raise},
 			{"fold", ActionState.Fold},
             {"straddle", ActionState.Straddle},
-            {"tonic_blind", ActionState.TonicBlind}
+            {"tonic_blind", ActionState.TonicBlind},
+			{"bury_card",ActionState.BuryCard }
 		};
 
 		if (map.ContainsKey(str)) {
@@ -121,9 +122,6 @@ sealed public class Player {
 	public int AuditCD = 0; 
 	public int Coins = 0;
 	public bool ChipsChange = false;
-	public ReactiveProperty<bool> Allin = new ReactiveProperty<bool>(); 
-
-	public bool ActStateTrigger = true;
 
 	public ReactiveProperty<int> HeadValue = new ReactiveProperty<int>();
 	public AutoDeposit Trust = new AutoDeposit(); 
@@ -131,7 +129,7 @@ sealed public class Player {
 
 	public BehaviorSubject<RestoreData> Countdown = new BehaviorSubject<RestoreData>(new RestoreData());
 
-	public Subject<ActionState> ActState = new Subject<ActionState>();
+	public BehaviorSubject<ActionState> ActState = new BehaviorSubject<ActionState>(ActionState.None);
 
 	public BehaviorSubject<List<int>> Cards = new BehaviorSubject<List<int>>(new List<int>());
 
@@ -140,8 +138,6 @@ sealed public class Player {
 	public BehaviorSubject<PlayerState> PlayerStat = new BehaviorSubject<PlayerState>(PlayerState.Normal);
 
 	public BehaviorSubject<int> ReservedCD = new BehaviorSubject<int>(0); 
-
-	public ReactiveProperty<String> LastAct = new ReactiveProperty<String>();
 
     public ReactiveProperty<int> Rank = new ReactiveProperty<int>();
 
@@ -205,24 +201,22 @@ sealed public class Player {
 		InGame = json.Bool("is_ingame");	
 		AuditCD = json.Int("unaudit_countdown");
 		Coins = json.Int("coins");
-		Allin.Value = json.Bool("is_allin");
-        LastAct.Value = json.String("last_act");
         Rank.Value = GameData.Shared.Type.Value == GameType.MTT ? json.Int("rank") : json.Int("match_rank");
 		readyState = json.Int("is_ready");
 		HeadValue.Value = json.Int("head_value");
 
-        // Actstate的赋值没有效果，实现其实是依靠lastact的改变，且lastact后台反应增加新值会比较麻烦，以此方式折中
-        if (json.Int("tonic_blind") == 1)
+		if (json.Bool("is_allin")) {
+			ActState.OnNext(ActionState.Allin);
+		}
+        else if (json.Int("tonic_blind") == 1)
         {
             ActState.OnNext(ActionState.TonicBlind);
-            LastAct.Value = "tonic_blind";
-        }
-
-        if (json.Int("straddle") == 1)
+        } else if (json.Int("straddle") == 1)
         {
             ActState.OnNext(ActionState.Straddle);
-            LastAct.Value = "straddle";
-        }
+        } else {
+			ActState.OnNext(json.String("last_act").ToActionEnum());
+		}
 
 
         if (GameData.Shared.IsMatch())
@@ -471,6 +465,8 @@ sealed public class GameData {
 				var player = Players[index];
 				player.InGame = false;
 				player.ActState.OnNext(ActionState.Fold);
+
+				G.PlaySound("foldpai");
 			}
 		});
 
@@ -488,7 +484,21 @@ sealed public class GameData {
 			player.PrChips.Value = userAction.pr_chips;
 			player.Bankroll.Value = userAction.bankroll;
 
-			player.ActState.OnNext(e.E.ToActionEnum());
+			var state = e.E.ToActionEnum();
+
+			// @TODO: 播放声音的地方应该统一一下
+			switch(state) {
+				case ActionState.Allin:
+					G.PlaySound("allin");
+					break;
+				case ActionState.Check:
+					G.PlaySound("check");
+					break;
+				default: 
+					break;
+			}
+
+			player.ActState.OnNext(state);
 		};
 
 		RxSubjects.Call.Subscribe(act);
@@ -930,7 +940,7 @@ sealed public class GameData {
 			var index = Convert.ToInt32(entry.Key);
 			var player = new Player(dict, index);
 
-			// 大小盲
+			// 大小盲、抓头、补盲
 			if (gameStart && player.PrChips.Value != 0) {
 				player.ChipsChange = true;
 			}

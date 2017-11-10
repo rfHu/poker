@@ -244,29 +244,9 @@ namespace PokerPlayer {
                 }
             }).AddTo(this);
 
-            player.ActState.AsObservable().Subscribe((e) => {
+            player.ActState.Subscribe((e) => {
                 if (e == ActionState.None) {
                     return ;
-                }
-
-                switch(e) {
-                    case ActionState.Check:
-                        G.PlaySound("check");
-                        break;
-                    case ActionState.Fold:
-                        G.PlaySound("foldpai");
-                        break;
-                    case ActionState.Call:
-                        break;
-                    case ActionState.Allin:
-                        if (player.ActStateTrigger) {
-                            G.PlaySound("allin");
-                        }
-                        break;
-                    case ActionState.Raise:
-                        break;
-                    default:
-                        break;
                 }
 
                 if (e == ActionState.Fold) {
@@ -293,29 +273,6 @@ namespace PokerPlayer {
                         value = Mathf.Max(value - 1, 1);
                         setReserveCd(value);
                     }).AddTo(this);
-                }
-            }).AddTo(this);
-
-            player.LastAct.Subscribe((act) => {
-				if (IsMyTurn) {
-					PlayerAct.SetActive(false, false);
-					return ;
-				}
-
-                var actState = act.ToActionEnum();
-
-                if (actState == ActionState.None) {
-                    lastState = actState;    
-                    PlayerAct.SetActive(false, false);
-                } else {
-                    dealAct(actState);	
-                }
-            }).AddTo(this);
-
-            player.Allin.Subscribe((allin) => {
-                if (allin) {
-                    player.ActStateTrigger = false;
-                    player.ActState.OnNext(ActionState.Allin);
                 }
             }).AddTo(this);
 
@@ -382,7 +339,6 @@ namespace PokerPlayer {
 				player.InGame = false;
 
                 myDelegate.MoveOut();
-                //PlayerAct.SetActive(false);
                 stopParticle(allinParticle);
                 player.PrChips.Value = 0;
 				player.WinPercent.OnNext(-1); // 隐藏胜率

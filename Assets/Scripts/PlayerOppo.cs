@@ -51,8 +51,6 @@ namespace PokerPlayer {
             Countdown.SetParent(Base.Circle, false);
             Countdown.SetAsFirstSibling();
 
-            stopParticle(countdownParticle);
-
             Cardfaces.SetParent(Base.Circle, false);
             Cardfaces.SetSiblingIndex(3);
 
@@ -71,6 +69,7 @@ namespace PokerPlayer {
 			hideCards();
             cardParent.SetActive(false);
             NameLabel.gameObject.SetActive(true);
+			stopParticle(countdownParticle);
         }
 
 		private void hideCards() {
@@ -103,11 +102,6 @@ namespace PokerPlayer {
         }
 
         private void addEvents() {
-
-            RxSubjects.Look.Subscribe((_) => {
-                stopParticle(countdownParticle);
-            }).AddTo(this);
-
             // 中途复原行动
             player.Countdown.AsObservable().Where((obj) => obj.seconds > 0).Subscribe((obj) => {
                 TurnTo(null, obj.seconds);

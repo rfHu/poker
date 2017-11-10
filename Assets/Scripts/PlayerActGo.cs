@@ -22,16 +22,17 @@ public class PlayerActGo: MonoBehaviour {
 
     public Color GetColor(ActionState act) {
 		var orange = _.HexColor("#FFAB40");
+		var grey = _.HexColor("#BDBDBD");
 
         var map = new Dictionary<ActionState, Color>() {
-            {ActionState.Fold, _.HexColor("#BDBDBD")},
+            {ActionState.Fold, grey},
             {ActionState.Check, MaterialUI.MaterialColor.cyanA200},
             {ActionState.Raise, orange},
             {ActionState.Call, _.HexColor("#40C4FF")},
             {ActionState.Allin, orange},
-			{ActionState.Straddle, _.HexColor("#ff8a65")},
-            {ActionState.TonicBlind, _.HexColor("#9ccc65")},
-            {ActionState.BuryCard, _.HexColor("#ce93d8")}
+			{ActionState.Straddle, orange},
+            {ActionState.TonicBlind, orange},
+            {ActionState.BuryCard, grey}
         };
 
         return map[act];
