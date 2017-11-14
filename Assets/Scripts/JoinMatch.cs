@@ -30,7 +30,6 @@ public class JoinMatch : MonoBehaviour {
 			}}
 		}, (json, err) =>
         {
-            Debug.Log(err);
             if (err == 1201)
             {
 
