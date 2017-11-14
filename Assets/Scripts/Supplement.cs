@@ -83,9 +83,13 @@ public class Supplement : MonoBehaviour {
 				_.PayFor(() => {
 					RxSubjects.TakeCoin.OnNext(new RxData());
 				});	
-			} 
+			}
+            else if (err == 1203)
+            {
+                PokerUI.Toast("联盟额度不足");
+            }
 
-			GetComponent<DOPopup>().Close();
+            GetComponent<DOPopup>().Close();
 		});
 	}
 }

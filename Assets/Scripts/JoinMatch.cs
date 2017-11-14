@@ -30,12 +30,19 @@ public class JoinMatch : MonoBehaviour {
 			}}
 		}, (json, err) =>
         {
+            Debug.Log(err);
             if (err == 1201)
             {
+
+                
 				_.PayFor(() => {
                     RxSubjects.TakeCoin.OnNext(new RxData());
                 });
-			} 
+			}
+            else if (err == 1203)
+            {
+                PokerUI.Toast("联盟额度不足");
+            }
 
             GetComponent<DOPopup>().Close();
         });
