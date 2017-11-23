@@ -14,6 +14,12 @@ public class Supplement : MonoBehaviour {
 	public Text Pay;
 	public Slider slider;
 
+    public GameObject ClubTitle;
+    public Transform ClubGoList;
+    public GameObject ClubToggle;
+
+    private string aimClubID;
+
 	void Awake() {
 		RxSubjects.UnSeat.Where((e) => {
 			var uid = e.Data.String("uid");
@@ -25,39 +31,111 @@ public class Supplement : MonoBehaviour {
 		slider.onValueChanged.AddListener(OnChange);
 	}
 
-	void OnSpawned() {
-		Coins.text = _.Num2CnDigit(GameData.Shared.Coins);
-		Blind.text = string.Format("{0}/{1}", GameData.Shared.BB / 2, GameData.Shared.BB);
+    void OnSpawned()
+    {
+        aimClubID = "";
+        RequestAllowClub();
+        
+        Coins.text = _.Num2CnDigit(GameData.Shared.Coins);
+        Blind.text = string.Format("{0}/{1}", GameData.Shared.BB / 2, GameData.Shared.BB);
 
-		var mul = GameData.Shared.BankrollMul;
-		var bb100 = 100 * GameData.Shared.BB;
-		var min = mul[0] * bb100;
-		var max = mul[1] * bb100;
-		var bankroll = GameData.Shared.Bankroll.Value;
+        var mul = GameData.Shared.BankrollMul;
+        var bb100 = 100 * GameData.Shared.BB;
+        var min = mul[0] * bb100;
+        var max = mul[1] * bb100;
+        var bankroll = GameData.Shared.Bankroll.Value;
 
-		if (bankroll >= max) {
-			return ;
-		}
+        if (bankroll >= max)
+        {
+            return;
+        }
 
-		int smin; 
-		int smax;
+        int smin;
+        int smax;
 
-		if (bankroll < min) {
-			smin = Mathf.CeilToInt((min - bankroll) / (float)bb100) * bb100; 
-		} else {
-			smin = bb100;
-		}
+        if (bankroll < min)
+        {
+            smin = Mathf.CeilToInt((min - bankroll) / (float)bb100) * bb100;
+        }
+        else
+        {
+            smin = bb100;
+        }
 
-		smax = Mathf.CeilToInt((max - bankroll) / (float)bb100) * bb100;
+        smax = Mathf.CeilToInt((max - bankroll) / (float)bb100) * bb100;
 
-		slider.maxValue = slider.minValue = slider.value  = 0;
-		slider.maxValue = smax;
-		slider.minValue = smin;
+        slider.maxValue = slider.minValue = slider.value = 0;
+        slider.maxValue = smax;
+        slider.minValue = smin;
 
-		OnChange(smin);
-	}
+        OnChange(smin);
+    }
 
-	public void OnChange(float value) {
+    private void RequestAllowClub()
+    {
+        ClubTitle.SetActive(false);
+        ClubGoList.gameObject.SetActive(false);
+        if (GameData.Shared.ClubID == "")
+            return;
+
+        Connect.Shared.Emit(new Dictionary<string, object>(){
+            {"f", "allowclubs"},
+            }, (e) => {
+                var clubs = e.List("clubs");
+                ClubTitle.SetActive(clubs.Count != 0);
+                ClubGoList.gameObject.SetActive(clubs.Count != 0);
+                if (clubs.Count == 0)
+                    return;
+
+            int maxNum = Mathf.Max(clubs.Count, ClubGoList.childCount);
+
+                for (int i = 0; i < maxNum ; i++)
+                {
+                    if (i < clubs.Count)
+                    {
+                        var club = clubs[i] as Dictionary<string, object>;
+                        var clubID = club.String("_id");
+                        var clubName = club.String("name");
+                        Transform clubToggle;
+
+
+                        if (i < ClubGoList.childCount)
+                        {
+                            clubToggle = ClubGoList.GetChild(i);
+                            clubToggle.gameObject.SetActive(true);
+                            clubToggle.GetComponent<Toggle>().onValueChanged.RemoveAllListeners();
+                        }
+                        else
+                        {
+                            clubToggle = Instantiate(ClubToggle, ClubGoList.transform).transform;
+                        }
+
+                        clubToggle.GetComponentInChildren<Text>().text = clubName;
+                        clubToggle.GetComponent<Toggle>().onValueChanged.AddListener((isOn) =>
+                        {
+                            if (!isOn)
+                                return;
+                            aimClubID = clubID;
+                        });
+
+                        if (GameData.Shared.ClubID == clubID)
+                        {
+                            clubToggle.GetComponent<Toggle>().isOn = true;
+                        }
+                    }
+                    else
+                    {
+                        if (ClubGoList.childCount > i)
+                        {
+                            ClubGoList.GetChild(i).gameObject.SetActive(false);
+                        }
+                    }
+                }
+            });
+    }
+    
+
+    public void OnChange(float value) {
 		int step = GameData.Shared.BB * 100; 
 		int newValue = value.StepValue(step);
 
@@ -72,12 +150,19 @@ public class Supplement : MonoBehaviour {
 	}
 
 	public void TakeCoin() {
-		float value = slider.value;	
-		Connect.Shared.Emit(new Dictionary<string, object>(){
+		float value = slider.value;
+
+        Dictionary<string, object> args = new Dictionary<string, object>();
+        args.Add("multiple", value / (100 * GameData.Shared.BB));
+        args.Add("ver", Application.version);
+        if (aimClubID != "")
+        {
+            args.Add("club_id", aimClubID);
+        }
+
+        Connect.Shared.Emit(new Dictionary<string, object>(){
 			{"f", "takecoin"},
-			{"args", new Dictionary<string, object>{
-				{"multiple", value / (100 * GameData.Shared.BB)}
-			}}
+			{"args", args}
 		}, (json, err) => {
 			if (err == 1201) {
 				_.PayFor(() => {
