@@ -103,6 +103,7 @@ public class Supplement : MonoBehaviour {
                         {
                             clubToggle = ClubGoList.GetChild(i);
                             clubToggle.gameObject.SetActive(true);
+                            clubToggle.GetComponent<Toggle>().isOn = false;
                             clubToggle.GetComponent<Toggle>().onValueChanged.RemoveAllListeners();
                         }
                         else
@@ -118,7 +119,8 @@ public class Supplement : MonoBehaviour {
                             aimClubID = clubID;
                         });
 
-                        if (GameData.Shared.ClubID == clubID)
+
+                        if (clubs.Count == 1 || GameData.Shared.ClubID == clubID)
                         {
                             clubToggle.GetComponent<Toggle>().isOn = true;
                         }
