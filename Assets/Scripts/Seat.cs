@@ -189,9 +189,15 @@ public class Seat : MonoBehaviour {
 
 				if (err == 1103) {
 					text = "您与某玩家IP地址相同，不能参与本牌局";
-				} else if(err == 1104) {
-					text = "您与某玩家距离过近，不能参与本牌局";
-				} else {
+                }
+                else if (err == 1104)
+                {
+                    text = "您与某玩家距离过近，不能参与本牌局";
+                }
+                else if (err == 1106)
+                {
+                    text = "您已提前下分，请参与其他牌局";
+                } else {
 					return ;
 				}
 
