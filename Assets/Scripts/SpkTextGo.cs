@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using DG.Tweening;
+using UniRx;
 
 public class SpkTextGo: MonoBehaviour {
     public ScrollText Text;
@@ -16,6 +17,20 @@ public class SpkTextGo: MonoBehaviour {
     void Awake()
     {
         cvg = GetComponent<CanvasGroup>();
+
+        RxSubjects.GameReset.AsObservable().Subscribe((_) => {
+            if (gameObject.activeSelf == false)
+            {
+                return;
+            }
+
+            if (tween != null)
+            {
+                tween.Kill();
+            }
+            gameObject.SetActive(false);
+
+        }).AddTo(this);
     }
     
     public void ShowMessage(string text) {
