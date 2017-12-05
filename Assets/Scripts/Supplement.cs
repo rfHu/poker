@@ -19,8 +19,9 @@ public class Supplement : MonoBehaviour {
     public GameObject ClubToggle;
 
     private string aimClubID;
+    private object aimClub;
 
-	void Awake() {
+    void Awake() {
 		RxSubjects.UnSeat.Where((e) => {
 			var uid = e.Data.String("uid");
 			return GameData.Shared.Uid == uid;
@@ -100,6 +101,7 @@ public class Supplement : MonoBehaviour {
                 if (!isOn)
                     return;
                 aimClubID = clubID;
+                aimClub = club;
             });
 
 
@@ -139,14 +141,22 @@ public class Supplement : MonoBehaviour {
 			{"f", "takecoin"},
 			{"args", args}
 		}, (json, err) => {
-			if (err == 1201) {
-				_.PayFor(() => {
-					RxSubjects.TakeCoin.OnNext(new RxData());
-				});	
-			}
+            if (err == 1201)
+            {
+                _.PayFor(() =>
+                {
+                    RxSubjects.TakeCoin.OnNext(new RxData());
+                });
+            }
             else if (err == 1203)
             {
                 PokerUI.Toast("联盟额度不足");
+            }
+            else if (err == 0 && GameData.Shared.AllowClubs.Count > 1)
+            {
+                var list = new List<object>();
+                list.Add(aimClub);
+                GameData.Shared.AllowClubs = list;
             }
 
             GetComponent<DOPopup>().Close();
