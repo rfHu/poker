@@ -15,7 +15,7 @@ public class Supplement : MonoBehaviour {
 	public Slider slider;
 
     public GameObject ClubTitle;
-    public Transform ClubGoList;
+    public Transform ClubListGo;
     public GameObject ClubToggle;
 
     private string aimClubID;
@@ -73,70 +73,43 @@ public class Supplement : MonoBehaviour {
 
     private void RequestAllowClub()
     {
-        ClubTitle.SetActive(false);
-        ClubGoList.gameObject.SetActive(false);
-        if (GameData.Shared.ClubID == "")
+        var clubs = GameData.Shared.AllowClubs;
+        ClubTitle.SetActive(clubs.Count != 0);
+        ClubListGo.gameObject.SetActive(clubs.Count != 0);
+        if (clubs.Count == 0)
             return;
 
-        Connect.Shared.Emit(new Dictionary<string, object>(){
-            {"f", "allowclubs"},
-            }, (e) => {
-                var clubs = e.List("clubs");
-                ClubTitle.SetActive(clubs.Count != 0);
-                ClubGoList.gameObject.SetActive(clubs.Count != 0);
-                if (clubs.Count == 0)
+        for (int i = 0; i < ClubListGo.childCount; i++)
+        {
+            Destroy(ClubListGo.GetChild(i).gameObject);
+        }
+
+        for (int i = 0; i < clubs.Count; i++)
+        {
+
+            var club = clubs[i] as Dictionary<string, object>;
+            var clubID = club.String("_id");
+            var clubName = club.String("name");
+            Transform clubToggle;
+
+            clubToggle = Instantiate(ClubToggle, ClubListGo.transform).transform;
+
+            clubToggle.GetComponentInChildren<Text>().text = clubName;
+            clubToggle.GetComponent<Toggle>().onValueChanged.AddListener((isOn) =>
+            {
+                if (!isOn)
                     return;
-
-            int maxNum = Mathf.Max(clubs.Count, ClubGoList.childCount);
-
-                for (int i = 0; i < maxNum ; i++)
-                {
-                    if (i < clubs.Count)
-                    {
-                        var club = clubs[i] as Dictionary<string, object>;
-                        var clubID = club.String("_id");
-                        var clubName = club.String("name");
-                        Transform clubToggle;
-
-
-                        if (i < ClubGoList.childCount)
-                        {
-                            clubToggle = ClubGoList.GetChild(i);
-                            clubToggle.gameObject.SetActive(true);
-                            clubToggle.GetComponent<Toggle>().isOn = false;
-                            clubToggle.GetComponent<Toggle>().onValueChanged.RemoveAllListeners();
-                        }
-                        else
-                        {
-                            clubToggle = Instantiate(ClubToggle, ClubGoList.transform).transform;
-                        }
-
-                        clubToggle.GetComponentInChildren<Text>().text = clubName;
-                        clubToggle.GetComponent<Toggle>().onValueChanged.AddListener((isOn) =>
-                        {
-                            if (!isOn)
-                                return;
-                            aimClubID = clubID;
-                        });
-
-
-                        if (clubs.Count == 1 || GameData.Shared.ClubID == clubID)
-                        {
-                            clubToggle.GetComponent<Toggle>().isOn = true;
-                        }
-                    }
-                    else
-                    {
-                        if (ClubGoList.childCount > i)
-                        {
-                            ClubGoList.GetChild(i).gameObject.SetActive(false);
-                        }
-                    }
-                }
+                aimClubID = clubID;
             });
+
+
+            if (clubs.Count == 1 || GameData.Shared.ClubID == clubID)
+            {
+                clubToggle.GetComponent<Toggle>().isOn = true;
+            }
+        }
     }
     
-
     public void OnChange(float value) {
 		int step = GameData.Shared.BB * 100; 
 		int newValue = value.StepValue(step);

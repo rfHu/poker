@@ -688,7 +688,10 @@ sealed public class GameData {
     public int BlindLv;
 	public ReactiveProperty<int> Rank = new ReactiveProperty<int>();
 
-	public bool IsMatch() {
+    public List<object> AllowClubs;
+
+
+    public bool IsMatch() {
 		return Type.Value == GameType.MTT || Type.Value == GameType.SNG;
 	}
 
@@ -868,6 +871,7 @@ sealed public class GameData {
 		OffScore.Value = options.Int("off_score") == 1;
         LimitRule = options.Int("limit_rule") == 1;
         LeagueID = options.String("league_id");
+        AllowClubs = json.List("allowclubs");
 
         NeedInsurance.Value = options.Int("need_insurance") == 1;
 		DealerSeat.Value = json.Int("dealer_seat");
