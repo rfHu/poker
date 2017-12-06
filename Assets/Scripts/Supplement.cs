@@ -80,6 +80,8 @@ public class Supplement : MonoBehaviour {
         if (clubs.Count == 0)
             return;
 
+        ClubListGo.GetComponent<RectTransform>().sizeDelta = new Vector2(704, (int)Math.Ceiling(clubs.Count / 2.0) * 83);
+            
         for (int i = 0; i < ClubListGo.childCount; i++)
         {
             Destroy(ClubListGo.GetChild(i).gameObject);
