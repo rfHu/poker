@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UniRx;
 using System;
 using MaterialUI;
+using System.Linq;
 
 [RequireComponent(typeof(DOPopup))]
 public class Supplement : MonoBehaviour {
@@ -19,7 +20,6 @@ public class Supplement : MonoBehaviour {
     public GameObject ClubToggle;
 
     private string aimClubID;
-    private object aimClub;
 
     void Awake() {
 		RxSubjects.UnSeat.Where((e) => {
@@ -81,11 +81,8 @@ public class Supplement : MonoBehaviour {
             return;
 
         ClubListGo.GetComponent<RectTransform>().sizeDelta = new Vector2(704, (int)Math.Ceiling(clubs.Count / 2.0) * 83);
-            
-        for (int i = 0; i < ClubListGo.childCount; i++)
-        {
-            Destroy(ClubListGo.GetChild(i).gameObject);
-        }
+
+		ClubListGo.transform.Clear();
 
         for (int i = 0; i < clubs.Count; i++)
         {
@@ -103,7 +100,6 @@ public class Supplement : MonoBehaviour {
                 if (!isOn)
                     return;
                 aimClubID = clubID;
-                aimClub = club;
             });
 
 
@@ -156,9 +152,14 @@ public class Supplement : MonoBehaviour {
             }
             else if (err == 0 && GameData.Shared.AllowClubs.Count > 1)
             {
-                var list = new List<object>();
-                list.Add(aimClub);
-                GameData.Shared.AllowClubs = list;
+				var clubs = GameData.Shared.AllowClubs;
+
+				Func<object, bool> filter = (x) => {
+					var d = x as Dictionary<string, object>;
+					return d.String("_id") == aimClubID;
+				}; 
+
+                GameData.Shared.AllowClubs = clubs.Where((dict) => filter(dict)).ToList();
             }
 
             GetComponent<DOPopup>().Close();
