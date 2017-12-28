@@ -124,6 +124,7 @@ namespace PokerPlayer {
             }
 
             CardDesc.transform.parent.gameObject.SetActive(true);
+            CardDesc.transform.parent.GetComponent<CanvasGroup>().alpha = 1;
             CardDesc.text = desc;
             NameLabel.gameObject.SetActive(false);
         }
@@ -132,7 +133,7 @@ namespace PokerPlayer {
             if (cards.Count < 2) {
                 return ;
             }
-
+            cardParent.GetComponent<CanvasGroup>().alpha = 1;
             Base.PlayerAct.SetActive(false);		
         
             if (cards.Any(c => c > 0)) {
@@ -235,7 +236,6 @@ namespace PokerPlayer {
         }
 
         public void ShowCard(List<int> cards) {
-			cardParent.GetComponent<CanvasGroup>().alpha = 1;
             showTheCards(cards, player.SeeCardAnim);
         }
 
