@@ -33,8 +33,6 @@ public class GameLoading : MonoBehaviour {
 	[SerializeField]private GameObject gameScene;
 
 	public void Exit() {
-
-        Debug.Log("2");
         External.Instance.Exit();
 	}
 
@@ -105,7 +103,7 @@ public class GameLoading : MonoBehaviour {
 			External.Instance.SetSocket("https://socket.dev.poker.top");
 			External.Instance.SetProxy("http://localhost:8888");
 
-            var rid = "5a4b0482284ba07649bff8d5";
+            var rid = "5a4b0cc31ef01e7a5d7d09c6";
             var sid = "s%3ACgt0q1hz53f_Q_CAu-xOe5we_aNSUPYM.m6o7VuDSGaK5YV4zTUv7g5QhWXq%2FtJRWSkFt5T4vPCQ";
         var cid = "590310cef0fe643c39829720";
         External.Instance.InitGame(rid + "&" + sid); 
