@@ -287,7 +287,7 @@ public class MenuPopup : MonoBehaviour {
         }
         else if (type == GameType.MTT)
         {
-            str += "MTT" + GameData.MatchData.MatchString;
+            str += "锦标赛" + GameData.MatchData.MatchString;
         }
 
         if (!string.IsNullOrEmpty(GameData.Shared.GameCode.Value))
