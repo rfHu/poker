@@ -284,7 +284,7 @@ public class UserDetail : MonoBehaviour {
 
     public void OnGamerData()
     {
-        PoolMan.Spawn("GamerDataList").GetComponent<DOPopup>().Show();
+        PoolMan.Spawn("PartnerList").GetComponent<DOPopup>().Show();
     }
 
     IEnumerator SetBGColor() 
