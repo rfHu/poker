@@ -59,7 +59,12 @@ public class PokerUI: MonoBehaviour {
 		return ShowDialog(text, yesAction, "确定", cancelAction, "取消");
 	}
 
-	static public DialogAlert DisAlert(string msg) {
+    static public DialogAlert Alert(string text, string yesText, Action yesAction, Action cancelAction)
+    {
+        return ShowDialog(text, yesAction, yesText, cancelAction, "取消");
+    }
+
+    static public DialogAlert DisAlert(string msg) {
 		if (Connect.Shared == null) {
 			return null;
 		}

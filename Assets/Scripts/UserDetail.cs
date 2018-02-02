@@ -282,17 +282,9 @@ public class UserDetail : MonoBehaviour {
         transform.GetComponent<UserRemark>().Show(Uid, remark);
     }
 
-    public void OnClickAddFriend() 
+    public void OnGamerData()
     {
-        HTTP.Post("/handle-friend", new Dictionary<string, object>()
-        {
-            {"type", 1},
-            {"uid", Uid},
-        }, (data) =>
-        {
-            PokerUI.Toast("好友请求已发送");
-            // AddFriend.interactable = false;
-        });
+        PoolMan.Spawn("GamerDataList").GetComponent<DOPopup>().Show();
     }
 
     IEnumerator SetBGColor() 
