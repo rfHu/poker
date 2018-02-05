@@ -85,18 +85,17 @@ public class PartnerList : MonoBehaviour {
              }
              else
              {
-                 Connect.Shared.Emit(new Dictionary<string, object>() {
-            {"f", "partnerinfo"},
-            {"args",  new Dictionary<string, object>(){
+                 HTTP.Get("/check-partner", new Dictionary<string, object>(){
                 {"a_uid", aimUid[0]},
-                {"b_uid", aimUid[1]}
-
-            }
-                     }
-                 },(data) => {
-                     var PartnerData = PoolMan.Spawn("PartnerData");
-                     PartnerData.GetComponent<PartnerData>().Init(data);
-                 });
+                {"b_uid", aimUid[1]},
+                     { "room_id", GameData.Shared.Room.Value},
+            }, (data) =>
+            {
+                var partnerData = PoolMan.Spawn("PartnerData");
+                partnerData.GetComponent<DOPopup>().Show();
+                var dataDic = Json.Decode(data) as Dictionary<string, object>;
+                partnerData.GetComponent<PartnerData>().Init(dataDic);
+            });
              }
          }), null);
     }
