@@ -18,7 +18,7 @@ public class PartnerList : MonoBehaviour {
 
     int checkFee;
 
-    public void OnSpawned()
+    public void Init(string uid)
     {
         EnterBtn.interactable = false;
         aimUid = new List<string>();
@@ -37,17 +37,20 @@ public class PartnerList : MonoBehaviour {
 
         var list = GameData.Shared.Players;
 
-        float num = 698 + Mathf.Ceil(list.Count / 3f) * 269 - 40;
-        GetComponent<RectTransform>().sizeDelta =new Vector2(GetComponent<RectTransform>().sizeDelta.x, num);
+        float num = 738 + Mathf.Ceil(list.Count / 3f) * 269 - 40;
+        GetComponent<RectTransform>().sizeDelta = new Vector2(GetComponent<RectTransform>().sizeDelta.x, num);
 
 
         foreach (var item in list)
         {
             var player = item.Value;
+            if (player.Uid == GameData.Shared.Uid)
+                continue;
             var go = Instantiate(ListChildPre, ToggleList);
             go.GetComponentInChildren<Text>().text = player.Name;
             go.GetComponentInChildren<Avatar>().SetImage(player.Avatar);
-            go.GetComponent<Toggle>().onValueChanged.AddListener((bool isOn) => {
+            go.GetComponent<Toggle>().onValueChanged.AddListener((bool isOn) =>
+            {
                 if (isOn)
                 {
                     if (aimUid.Count == 2)
@@ -65,16 +68,18 @@ public class PartnerList : MonoBehaviour {
                 }
 
                 EnterBtn.interactable = aimUid.Count == 2 ? true : false;
-
             });
+
+            if (player.Uid == uid)
+            {
+                go.GetComponent<Toggle>().isOn = true;
+            }
         }
-
     }
-
 
     public void OnClickEnter()
     {
-        PokerUI.Alert("请确认是否支付 <color=#ffca28>" + checkFee + "金币</color>", (() =>
+        PokerUI.Alert("请确认如为首次查询将支付 <color=#ffca28>" + checkFee + "金币</color>", (() =>
          {
              if (GameData.Shared.Coins < 100)
              {
