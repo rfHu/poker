@@ -18,8 +18,11 @@ public class PartnerList : MonoBehaviour {
 
     int checkFee;
 
+    bool hasChacked;
+
     public void Init(string uid)
     {
+        hasChacked = false;
         EnterBtn.interactable = false;
         aimUid = new List<string>();
 
@@ -30,10 +33,7 @@ public class PartnerList : MonoBehaviour {
             Text_CheckFee.text = checkFee.ToString();
         });
 
-        for (int i = 0; i < ToggleList.childCount; i++)
-        {
-            Destroy(ToggleList.GetChild(i).gameObject);
-        }
+        ToggleList.Clear();
 
         var list = GameData.Shared.Players;
 
@@ -60,14 +60,26 @@ public class PartnerList : MonoBehaviour {
                     else
                     {
                         aimUid.Add(player.Uid);
+                        if (aimUid.Count == 2)
+                        {
+                            HTTP.Get("/has-checked", new Dictionary<string, object>(){
+                {"a_uid", aimUid[0]},
+                {"b_uid", aimUid[1]},
+                     { "room_id", GameData.Shared.Room.Value},
+            }, (data) => {
+                var dataDic = Json.Decode(data) as Dictionary<string, object>;
+                hasChacked = dataDic.Int("has") == 1;
+                EnterBtn.transform.GetChild(1).gameObject.SetActive(!hasChacked);
+                EnterBtn.interactable = true;
+            });
+                        }
                     }
                 }
                 else
                 {
                     aimUid.Remove(player.Uid);
+                    EnterBtn.interactable = false;
                 }
-
-                EnterBtn.interactable = aimUid.Count == 2 ? true : false;
             });
 
             if (player.Uid == uid)
@@ -79,29 +91,41 @@ public class PartnerList : MonoBehaviour {
 
     public void OnClickEnter()
     {
-        PokerUI.Alert("如为首次查询将支付 <color=#ffca28>" + checkFee + "金币</color>", (() =>
-         {
-             if (GameData.Shared.Coins < 100)
+        if (hasChacked)
+        {
+            AskPartnersData();
+        }
+        else
+        {
+            PokerUI.Alert("请确认是否支付 <color=#ffca28>" + checkFee + "金币</color>", (() =>
              {
-                 _.PayFor(() =>
+                 if (GameData.Shared.Coins < 100)
                  {
-                     RxSubjects.TakeCoin.OnNext(new RxData());
-                 });
-             }
-             else
-             {
-                 HTTP.Get("/check-partner", new Dictionary<string, object>(){
+                     _.PayFor(() =>
+                     {
+                         RxSubjects.TakeCoin.OnNext(new RxData());
+                     });
+                 }
+                 else
+                 {
+                     AskPartnersData();
+                 }
+             }), null);
+        }
+    }
+
+    private void AskPartnersData()
+    {
+        HTTP.Get("/check-partner", new Dictionary<string, object>(){
                 {"a_uid", aimUid[0]},
                 {"b_uid", aimUid[1]},
                      { "room_id", GameData.Shared.Room.Value},
-            }, (data) =>
-            {
-                var partnerData = PoolMan.Spawn("PartnerData");
-                partnerData.GetComponent<DOPopup>().Show();
-                var dataDic = Json.Decode(data) as Dictionary<string, object>;
-                partnerData.GetComponent<PartnerData>().Init(dataDic);
-            });
-             }
-         }), null);
+                }, (data) =>
+                {
+                    var partnerData = PoolMan.Spawn("PartnerData");
+                    partnerData.GetComponent<DOPopup>().Show();
+                    var dataDic = Json.Decode(data) as Dictionary<string, object>;
+                    partnerData.GetComponent<PartnerData>().Init(dataDic);
+                });
     }
 }
