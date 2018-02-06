@@ -79,7 +79,7 @@ public class PartnerList : MonoBehaviour {
 
     public void OnClickEnter()
     {
-        PokerUI.Alert("请确认如为首次查询将支付 <color=#ffca28>" + checkFee + "金币</color>", (() =>
+        PokerUI.Alert("如为首次查询将支付 <color=#ffca28>" + checkFee + "金币</color>", (() =>
          {
              if (GameData.Shared.Coins < 100)
              {

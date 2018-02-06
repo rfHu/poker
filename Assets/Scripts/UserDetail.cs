@@ -14,9 +14,10 @@ public class UserDetail : MonoBehaviour {
     public Text CoinsNumber;
     public Text RemarkText;
 
-    public GameObject GameOptionBtn;
-    public CButton AddFriend;   
-    public GameObject UserRemark;
+    public GameObject Btn_GameOption;
+    public CButton Btn_AddFriend;
+    public GameObject Btn_Partner;
+    public GameObject Btn_UserRemark;
 
     public GameObject EmoticonsList;
     public Button[] EmoticonButtons;
@@ -118,6 +119,7 @@ public class UserDetail : MonoBehaviour {
     private void buttonInit(string Uid)
     {
         bool isMyself = Uid == GameData.Shared.Uid;
+        bool isPlayer = GameData.Shared.FindPlayerIndex(Uid) != -1;
 
         var coinGo = CoinsNumber.transform.parent.gameObject;
         coinGo.SetActive(isMyself);
@@ -127,7 +129,7 @@ public class UserDetail : MonoBehaviour {
 
         RemarkText.gameObject.SetActive(!isMyself);
 
-        var parent = GameOptionBtn.transform.parent.parent.gameObject;
+        var parent = Btn_GameOption.transform.parent.parent.gameObject;
 
         if (isMyself) {
             parent.SetActive(false);
@@ -135,12 +137,15 @@ public class UserDetail : MonoBehaviour {
             parent.SetActive(true);
             if (GameData.Shared.Owner && !GameData.Shared.IsMatch())
             {
-                GameOptionBtn.SetActive(true);
+                Btn_GameOption.SetActive(true);
             }
             else 
             {
-                GameOptionBtn.SetActive(false);
+                Btn_GameOption.SetActive(false);
             }
+
+            Btn_Partner.SetActive(isPlayer && GameData.Shared.Type.Value == GameType.Normal);
+
             // AddFriend.gameObject.SetActive(true);
         }
     }
