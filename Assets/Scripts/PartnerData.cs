@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,7 +26,7 @@ public class PartnerData : MonoBehaviour {
         }
 
         Text_RecentRoomCount.text = "近10个牌局两人同桌 <color=#18ffff>" + data.Int("recent_room_count") + "</color> 局";
-        Text_RecentRoomProfit.text = "近10个同桌牌局盈利率为： <color=#ffca28>" + data.Float("recent_room_profit") * 100 + "%</color>";
-        Text_TotalRoomProfit.text = "所有同桌牌局总盈利率为： <color=#ffca28>" + data.Float("total_room_profit") * 100 + "%</color>";
+        Text_RecentRoomProfit.text = "近10个同桌牌局盈利率为： <color=#ffca28>" + Math.Round(data.Float("recent_room_profit") * 100, 2) + "%</color>";
+        Text_TotalRoomProfit.text = "所有同桌牌局总盈利率为： <color=#ffca28>" + Math.Round(data.Float("total_room_profit") * 100, 2) + "%</color>";
     }
 }
