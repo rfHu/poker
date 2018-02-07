@@ -20,7 +20,7 @@ public class PartnerData : MonoBehaviour {
         {
             var user = users[i] as Dictionary<string, object>;
             var userGo = Partners[i];
-            userGo.GetChild(1).GetComponent<Text>().text = user.String("name");
+            userGo.GetChild(1).GetComponent<Text>().text = user.String("username");
             userGo.GetComponentInChildren<Avatar>().SetImage(user.String("avatar"));
             userGo.GetChild(2).GetComponent<Text>().text = user.String("total_count");
         }
