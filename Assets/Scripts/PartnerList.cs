@@ -78,7 +78,8 @@ public class PartnerList : MonoBehaviour {
                 else
                 {
                     aimUid.Remove(player.Uid);
-                    EnterBtn.interactable = false;
+                    if (aimUid.Count != 2)
+                        EnterBtn.interactable = false;
                 }
             });
 
