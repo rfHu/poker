@@ -129,20 +129,17 @@ public class UserDetail : MonoBehaviour {
 
         RemarkText.gameObject.SetActive(!isMyself);
 
-        var parent = Btn_GameOption.transform.parent.parent.gameObject;
+        var parent = Btn_GameOption.transform.parent.gameObject;
 
-        if (isMyself) {
+        if (isMyself)
+        {
             parent.SetActive(false);
-        } else {
+        }
+        else
+        {
             parent.SetActive(true);
-            if (GameData.Shared.Owner && !GameData.Shared.IsMatch())
-            {
-                Btn_GameOption.SetActive(true);
-            }
-            else 
-            {
-                Btn_GameOption.SetActive(false);
-            }
+
+            Btn_GameOption.SetActive(GameData.Shared.Owner && !GameData.Shared.IsMatch());
 
             Btn_Partner.SetActive(isPlayer && GameData.Shared.Type.Value == GameType.Normal);
 
