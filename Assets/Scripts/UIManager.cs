@@ -9,9 +9,10 @@ public class UIManager : MonoBehaviour {
 	public GameObject ScorePagePrefab;
 	public GameObject MTTScorePagePrefab;
     public GameObject HoldCardPagePrefab;
+	public GameObject MenuPrefab;
 
 	public void ShowMenu() {
-		var popup = PoolMan.Spawn("MenuPopup");
+		var popup = PoolMan.Spawn(MenuPrefab);
 		popup.GetComponent<DOPopup>().Show();
 	}
 

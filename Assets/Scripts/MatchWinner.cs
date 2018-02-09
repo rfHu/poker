@@ -170,7 +170,7 @@ public class MatchWinner : MonoBehaviour {
 
         Commander.Shared.ShareSNGResult(Application.persistentDataPath + "/" + filename);
 
-        Application.CaptureScreenshot(filename);
+        ScreenCapture.CaptureScreenshot(filename);
 
     }  
 }
